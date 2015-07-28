@@ -6,10 +6,6 @@ import org.springframework.web.servlet.ModelAndView;
 import carmen.dao.UserDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
 @Controller
 public class Welcome {
 
@@ -18,7 +14,7 @@ public class Welcome {
 
     @RequestMapping("")
     public ModelAndView welcome() {
-        Object count = this.userDAOImpl.count();
-        return new ModelAndView("welcome", "message", "There are " + count + " users." );
+        Object userCount = this.userDAOImpl.count();
+        return new ModelAndView("welcome", "message", "There are " + userCount + " users." );
     }
 }

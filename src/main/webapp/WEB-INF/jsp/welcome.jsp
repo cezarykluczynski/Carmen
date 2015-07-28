@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>${message}</title>
-</head>
+<jsp:include page="fragments/staticFiles.jsp"/>
 <body>
 	<div>
 		<h1>

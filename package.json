@@ -1,0 +1,18 @@
+{
+  "name": "carmen",
+  "version": "0.0.1",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-stylus": "^2.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cezarykluczynski/Carmen.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cezarykluczynski/Carmen/issues"
+  },
+  "homepage": "https://github.com/cezarykluczynski/Carmen"
+}

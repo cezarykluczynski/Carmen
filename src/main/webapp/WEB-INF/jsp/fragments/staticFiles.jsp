@@ -11,4 +11,10 @@
 
     <spring:url value="/webjars/angularjs/1.4.3/angular.js" var="Angular"/>
     <script src="${Angular}"></script>
+
+    <spring:url value="/resources/css/common.css" var="commonCss"/>
+    <link href="${commonCss}" rel="stylesheet"/>
+
+    <spring:url value="/resources/css/main-page.css" var="mainPageCss"/>
+    <link href="${mainPageCss}" rel="stylesheet"/>
 </head>

@@ -13,11 +13,12 @@
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+    <mvc:annotation-driven />
 
     <bean id="controllerClassNameHandlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
     <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-    <context:component-scan base-package="carmen.web" />
+    <context:component-scan base-package="carmen.web, carmen.rest" />
 
     <bean id="viewResolver"
         class="org.springframework.web.servlet.view.UrlBasedViewResolver">

@@ -27,4 +27,15 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <bean name="githubProvider" class="carmen.provider.github.GithubProvider">
+        <constructor-arg index="0" ref="githubJcabiProvider" />
+    </bean>
+
+    <bean name="githubJcabiProvider" class="carmen.provider.github.GithubJcabiProvider">
+        <constructor-arg index="0" ref="rtGithub" />
+    </bean>
+
+    <bean name="rtGithub" class="com.jcabi.github.RtGithub">
+    </bean>
 </beans>

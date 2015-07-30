@@ -9,3 +9,4 @@ target/*
 *.sublime*
 src/main/webapp/resources/css/*
 node_modules/
+.env

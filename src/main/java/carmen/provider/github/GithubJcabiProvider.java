@@ -12,14 +12,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import java.io.IOException;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import java.lang.AssertionError;
 
 import carmen.set.github.User;
-
-import java.lang.reflect.Method;
 
 public class GithubJcabiProvider implements GithubProviderInterface {
 
@@ -29,7 +24,7 @@ public class GithubJcabiProvider implements GithubProviderInterface {
 
     private RtGithub rtGithub;
 
-    public User getUser(String name) throws IOException, AssertionError {
+    public User getUser(String name) throws IOException {
         com.jcabi.github.User privateUser = rtGithub.users().get(name);
         Smart user = new Smart(privateUser);
 

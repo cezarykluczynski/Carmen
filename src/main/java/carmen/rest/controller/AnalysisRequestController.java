@@ -1,6 +1,7 @@
 package carmen.rest.controller;
 
 import java.io.IOException;
+
 import java.lang.AssertionError;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -10,10 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import carmen.provider.github.GithubProvider;
-import carmen.dao.UserDAOImpl;
 import carmen.rest.pojo.Analysis;
-
-import javax.json.JsonObject;
 
 import carmen.set.github.User;
 

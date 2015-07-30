@@ -2,8 +2,6 @@ package carmen.set.github;
 
 import javax.persistence.Entity;
 
-import java.util.Map;
-
 @Entity
 public class User {
 

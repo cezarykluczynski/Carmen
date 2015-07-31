@@ -1,4 +1,4 @@
-package carmen.model;
+package carmen.model.users;
 
 import javax.persistence.*;
 

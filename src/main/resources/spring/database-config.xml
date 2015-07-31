@@ -29,7 +29,7 @@
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
-  <bean id="userDao" class="carmen.dao.UserDAOImpl">
+  <bean id="userDao" class="carmen.dao.users.UserDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 </beans>

@@ -1,4 +1,4 @@
-package carmen.dao;
+package carmen.dao.users;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,7 +20,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Object count() {
         Session session = sessionFactory.openSession();
-        Object result = session.createCriteria("carmen.model.User").setProjection(Projections.rowCount()).uniqueResult();
+        Object result = session.createCriteria("carmen.model.users.User").setProjection(Projections.rowCount()).uniqueResult();
         return result;
     }
 }

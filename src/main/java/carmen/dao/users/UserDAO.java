@@ -1,4 +1,4 @@
-package carmen.dao;
+package carmen.dao.users;
 
 public interface UserDAO {
 

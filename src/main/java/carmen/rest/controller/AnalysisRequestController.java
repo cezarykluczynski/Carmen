@@ -26,6 +26,11 @@ public class AnalysisRequestController {
     public Analysis github(@PathVariable String username) throws AssertionError, IOException {
         User user = githubProvider.getUser(username);
         String status = user.exists() ? "found" : "not_found";
+
+        if (user.exists()) {
+
+        }
+
         return new Analysis(username, status);
     }
 }

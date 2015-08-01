@@ -5,23 +5,35 @@ import javax.persistence.Entity;
 @Entity
 public class User {
 
-    public User(int id, String username) {
+    public User(Long id, String login, String name) {
         this.id = id;
-        this.username = username;
+        this.login = login;
+        this.name = name;
     }
 
-    public int id;
-    public String username;
+    public User(Object id, String login) {
+        this.id = null;
+        this.login = login;
+        this.name = "";
+    }
 
-    public int getId() {
+    public Long id;
+    public String login;
+    public String name;
+
+    public Long getId() {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getLogin() {
+        return login;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean exists() {
-        return id > 0;
+        return id != null;
     }
 }

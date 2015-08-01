@@ -15,10 +15,13 @@ public class V2__Create_Github_users implements JdbcMigration {
             "    id serial," +
             "    user_id integer REFERENCES users.users," +
             "    github_id integer," +
-            "    username character varying(64)," +
-            "    last_check timestamp without time zone," +
+            "    login character varying(64)," +
+            "    name character varying(128)," +
+            "    updated timestamp without time zone," +
             "    found boolean default 'no'," +
-            "    CONSTRAINT github_users_pkey PRIMARY KEY(id)" +
+            "    CONSTRAINT github_users_pkey PRIMARY KEY(id)," +
+            "    CONSTRAINT github_users_github_id_unique UNIQUE (github_id)," +
+            "    CONSTRAINT github_users_login_unique UNIQUE (login)" +
             ");"
         );
 

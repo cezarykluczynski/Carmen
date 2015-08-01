@@ -30,11 +30,12 @@ public class GithubJcabiProvider implements GithubProviderInterface {
 
         try {
             return new User(
-                user.id(),
+                new Long(user.id()),
+                user.login(),
                 user.hasName() ? user.name() : ""
             );
         } catch (AssertionError e) {
-            return new User(0, "");
+            return new User(null, name);
         }
     }
 }

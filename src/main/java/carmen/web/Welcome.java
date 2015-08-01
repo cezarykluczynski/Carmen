@@ -12,15 +12,19 @@ import java.util.HashMap;
 public class Welcome {
 
     @Autowired
-    UserDAOImpl userDAOImpl;
+    UserDAOImpl usersUserDAOImpl;
+
+    @Autowired
+    carmen.dao.github.UserDAOImpl githubUserDAOImpl;
 
     @RequestMapping("")
     public ModelAndView welcome() {
         Map<String, Object> viewVariables = new HashMap<>();
 
-        Object userCount = this.userDAOImpl.count();
+        Object usersUserCount = usersUserDAOImpl.count();
+        Object githubUserCount = githubUserDAOImpl.countFound();
 
-        viewVariables.put("message", "There are " + userCount + " users.");
+        viewVariables.put("usersCount", githubUserCount + " users analyzed. " + usersUserCount + " users have connected.");
 
         return new ModelAndView("welcome", viewVariables);
     }

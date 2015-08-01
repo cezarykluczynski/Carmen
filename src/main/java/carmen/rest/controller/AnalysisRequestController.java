@@ -20,11 +20,11 @@ import carmen.dao.github.UserDAO;
 public class AnalysisRequestController {
 
     @Autowired
-    UserDAO githubUserDao;
+    UserDAO githubUserDAOImpl;
 
     @RequestMapping(value = "/github/{username}", method = RequestMethod.GET)
     public Analysis github(@PathVariable String username) throws AssertionError, IOException {
-        User user = githubUserDao.createOrUpdate(username);
+        User user = githubUserDAOImpl.createOrUpdate(username);
         return new Analysis(username, user.getFound() ? "found" : "not_found");
     }
 }

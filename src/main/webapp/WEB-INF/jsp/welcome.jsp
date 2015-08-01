@@ -5,20 +5,21 @@
     </div>
 </nav>
 
-    <div class="container">
+    <div class="container user-search-container">
         <div class="row">
             <div class="col-xs-12">
-                <div>
-                    <h1>
-                        ${message}
-                    </h1>
-                </div>
                 <div class="input-group input-group-lg">
-                    <span class="input-group-addon" id="sizing-addon1">@</span>
-                    <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+                    <input type="text" class="form-control"  placeholder="Enter Github login and press enter">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
                 </div>
+            </div>
+            <div class="col-xs-12">
+                <p class="text-muted users-count-summary">${usersCount}</p>
             </div>
         </div>
     </div>
+
 </body>
 </html>

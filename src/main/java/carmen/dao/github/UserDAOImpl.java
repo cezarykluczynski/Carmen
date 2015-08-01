@@ -2,12 +2,13 @@ package carmen.dao.github;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Expression;
 
 import carmen.model.github.User;
 import carmen.provider.github.GithubProvider;
@@ -95,5 +96,14 @@ public class UserDAOImpl implements UserDAO {
             carmen.set.github.User userSet = githubProvider.getUser(login);
             return create(userSet);
         }
+    }
+
+    @Override
+    public Object countFound() {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(User.class);
+        criteria.add(Restrictions.eq("found", true));
+        criteria.setProjection(Projections.rowCount());
+        return criteria.uniqueResult();
     }
 }

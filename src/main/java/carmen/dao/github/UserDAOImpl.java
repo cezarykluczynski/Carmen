@@ -43,6 +43,18 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public User update(User userEntity, carmen.set.github.User userSet) {
+        Session session = sessionFactory.openSession();
+
+        userEntity = hydrate(userEntity, userSet);
+
+        session.update(userEntity);
+        session.flush();
+
+        return userEntity;
+    }
+
+    @Override
     public User hydrate(User userEntity, carmen.set.github.User userSet) {
         userEntity.setLogin(userSet.getLogin());
         userEntity.setFound(userSet.exists());
@@ -60,25 +72,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User update(User userEntity, carmen.set.github.User userSet) {
-        Session session = sessionFactory.openSession();
-
-        userEntity = hydrate(userEntity, userSet);
-
-        session.save(userEntity);
-        session.flush();
-
-        return userEntity;
-    }
-
-    @Override
     public User findByLogin(String login) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Expression.eq("login", login));
         List<User> list = criteria.list();
-        System.console().writer().println(login);
-        System.console().writer().println(list);
         return list.size() > 0 ? list.get(0) : null;
     }
 

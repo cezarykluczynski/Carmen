@@ -20,9 +20,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Object count() {
         Session session = sessionFactory.openSession();
-        Object result = session.createCriteria("carmen.model.users.User")
+        return session.createCriteria("carmen.model.users.User")
             .setProjection(Projections.rowCount())
             .uniqueResult();
-        return result;
     }
 }

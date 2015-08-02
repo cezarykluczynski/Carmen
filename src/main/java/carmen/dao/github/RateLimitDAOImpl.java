@@ -38,11 +38,12 @@ public class RateLimitDAOImpl implements RateLimitDAO {
 
         session.save(rateLimitEntity);
         session.flush();
+        session.close();
 
         return rateLimitEntity;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public RateLimit getCoreLimit() {
         Session session = sessionFactory.openSession();
 
@@ -52,6 +53,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
             .setMaxResults(1);
 
         List<RateLimit> list = criteria.list();
+        session.close();
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -60,6 +62,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         Session session = sessionFactory.openSession();
 
         session.createQuery("update github.RateLimit set remaining = remaining - 1").executeUpdate();
+        session.close();
     }
 
     // TODO
@@ -77,5 +80,6 @@ public class RateLimitDAOImpl implements RateLimitDAO {
             .setString("resource", resource)
             .setLong("currentLimitId", currentLimit.getId())
             .executeUpdate();
+        session.close();
     }
 }

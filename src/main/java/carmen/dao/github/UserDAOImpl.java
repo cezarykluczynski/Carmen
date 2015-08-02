@@ -40,6 +40,7 @@ public class UserDAOImpl implements UserDAO {
 
         session.save(userEntity);
         session.flush();
+        session.close();
 
         return userEntity;
     }
@@ -52,6 +53,7 @@ public class UserDAOImpl implements UserDAO {
 
         session.update(userEntity);
         session.flush();
+        session.close();
 
         return userEntity;
     }
@@ -72,12 +74,13 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public User findByLogin(String login) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Expression.eq("login", login));
         List<User> list = criteria.list();
+        session.close();
         return list.size() > 0 ? list.get(0) : null;
     }
 
@@ -98,12 +101,14 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Object countFound() {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.eq("found", true));
         criteria.setProjection(Projections.rowCount());
-        return criteria.uniqueResult();
+        Object result = criteria.uniqueResult();
+        session.close();
+        return result;
     }
 }

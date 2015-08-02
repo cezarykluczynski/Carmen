@@ -19,11 +19,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Object count() {
         Session session = sessionFactory.openSession();
-        return session.createCriteria("carmen.model.users.User")
+        Object result = session.createCriteria("carmen.model.users.User")
             .setProjection(Projections.rowCount())
             .uniqueResult();
+        session.close();
+        return result;
     }
 }

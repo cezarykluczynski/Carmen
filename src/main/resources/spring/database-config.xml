@@ -36,4 +36,8 @@
   <bean id="githubUsersDao" class="carmen.dao.github.UserDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="rateLimitDao" class="carmen.dao.github.RateLimitDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 </beans>

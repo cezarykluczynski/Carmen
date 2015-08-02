@@ -4,12 +4,15 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
@@ -30,12 +33,12 @@
 
     <bean name="githubProvider" class="carmen.provider.github.GithubProvider">
         <constructor-arg index="0" ref="githubJcabiProvider" />
+        <constructor-arg index="1" ref="rateLimitDao" />
     </bean>
 
     <bean name="githubJcabiProvider" class="carmen.provider.github.GithubJcabiProvider">
         <constructor-arg index="0" ref="rtGithub" />
     </bean>
 
-    <bean name="rtGithub" class="com.jcabi.github.RtGithub">
-    </bean>
+    <bean name="rtGithub" class="com.jcabi.github.RtGithub" />
 </beans>

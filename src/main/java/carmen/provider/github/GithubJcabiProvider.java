@@ -1,21 +1,14 @@
 package carmen.provider.github;
 
-import org.springframework.beans.factory.annotation.Value;
-
-import com.jcabi.github.Coordinates;
 import com.jcabi.github.RtGithub;
-import com.jcabi.github.Github;
 import com.jcabi.github.User.Smart;
 import com.jcabi.github.Limits;
-
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 import java.io.IOException;
 
 import java.lang.AssertionError;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import carmen.set.github.User;
 import carmen.set.github.RateLimit;
@@ -28,16 +21,26 @@ public class GithubJcabiProvider implements GithubProviderInterface {
 
     private RtGithub github;
 
-    public Map getRateLimits() throws IOException {
+    public RateLimit getCoreLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart coreLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("core"));
+        return new RateLimit(
+            "core",
+            coreLimits.limit(),
+            coreLimits.remaining(),
+            correctSecondsLimit(coreLimits.reset())
+        );
+    }
+
+    public RateLimit getSearchLimit() throws IOException {
+        Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart searchLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("search"));
-
-        Map limits = new HashMap<String, RateLimit>();
-        limits.put("core",  new RateLimit(coreLimits.limit(), coreLimits.remaining(), coreLimits.reset()));
-        limits.put("search", new RateLimit(searchLimits.limit(), searchLimits.remaining(), searchLimits.reset()));
-
-        return limits;
+        return new RateLimit(
+            "search",
+            searchLimits.limit(),
+            searchLimits.remaining(),
+            correctSecondsLimit(searchLimits.reset())
+        );
     }
 
     public User getUser(String name) throws IOException {
@@ -53,5 +56,19 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         } catch (AssertionError e) {
             return new User(null, name);
         }
+    }
+
+    /**
+     * Until Jcabi fix their implementation, this fix has to be here.
+     * Basically, GitHub returns timestamp in seconds, and Date constructor expect miliseconds,
+     * but no conversion is made.
+     *
+     * @see https://github.com/jcabi/jcabi-github/pull/1153
+     */
+    private Date correctSecondsLimit(Date limit) {
+        return new Date(TimeUnit.MILLISECONDS.convert(
+            limit.getTime(),
+            TimeUnit.SECONDS
+        ));
     }
 }

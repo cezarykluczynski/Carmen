@@ -21,8 +21,8 @@ public class V3__Create_Github_rate_limits implements JdbcMigration {
             "    resource character varying(16)," +
             "    resource_limit integer NOT NULL," +
             "    remaining integer NOT NULL," +
-            "    updated timestamp without time zone," +
             "    resource_reset timestamp without time zone," +
+            "    updated timestamp without time zone," +
             "    CONSTRAINT github_rate_limits_pkey PRIMARY KEY(id)" +
             ");"
         );

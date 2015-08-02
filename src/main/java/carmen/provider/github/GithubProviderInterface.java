@@ -8,7 +8,9 @@ import carmen.set.github.RateLimit;
 
 interface GithubProviderInterface {
 
-    public Map getRateLimits() throws IOException;
+    public RateLimit getCoreLimit() throws IOException;
+
+    public RateLimit getSearchLimit() throws IOException;
 
     public User getUser(String name) throws IOException;
 }

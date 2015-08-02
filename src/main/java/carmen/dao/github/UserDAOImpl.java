@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import carmen.model.github.User;
 import carmen.provider.github.GithubProvider;
@@ -29,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
         this.sessionFactory = sessionFactory;
     }
 
-    @Override
+    @Transactional
     public User create(carmen.set.github.User userSet) {
         Session session = sessionFactory.openSession();
 
@@ -43,7 +44,7 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
-    @Override
+    @Transactional
     public User update(User userEntity, carmen.set.github.User userSet) {
         Session session = sessionFactory.openSession();
 
@@ -55,7 +56,6 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
-    @Override
     public User hydrate(User userEntity, carmen.set.github.User userSet) {
         userEntity.setLogin(userSet.getLogin());
         userEntity.setFound(userSet.exists());
@@ -72,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
-    @Override
+    @Transactional
     public User findByLogin(String login) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);
@@ -81,9 +81,9 @@ public class UserDAOImpl implements UserDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
 
-    @Override
+    @Transactional
     public User createOrUpdate(String login) throws IOException {
-       try {
+        try {
             User userEntity = findByLogin(login);
 
             if (userEntity.canBeUpdated()) {
@@ -98,7 +98,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
-    @Override
+    @Transactional
     public Object countFound() {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);

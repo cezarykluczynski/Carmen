@@ -14,6 +14,7 @@ import carmen.rest.pojo.Analysis;
 
 import carmen.model.github.User;
 import carmen.dao.github.UserDAO;
+import carmen.provider.github.GithubRateLimitExceededException;
 
 @RestController
 @RequestMapping("/rest/analyze")
@@ -24,7 +25,11 @@ public class AnalysisRequestController {
 
     @RequestMapping(value = "/github/{username}", method = RequestMethod.GET)
     public Analysis github(@PathVariable String username) throws AssertionError, IOException {
-        User user = githubUserDAOImpl.createOrUpdate(username);
-        return new Analysis(username, user.getFound() ? "found" : "not_found");
+        try {
+            User user = githubUserDAOImpl.createOrUpdate(username);
+            return new Analysis(username, user.getFound() ? "found" : "not_found");
+        } catch(GithubRateLimitExceededException e) {
+            return new Analysis(username, "core_rate_limit_exceeded");
+        }
     }
 }

@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="input-group input-group-lg">
-                    <input type="text" class="form-control"  placeholder="Enter Github login and press enter">
+                    <input type="text" class="form-control"  placeholder="Enter GitHub login">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-success">Submit</button>
                     </div>

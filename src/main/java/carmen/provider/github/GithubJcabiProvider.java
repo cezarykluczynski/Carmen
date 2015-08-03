@@ -51,7 +51,15 @@ public class GithubJcabiProvider implements GithubProviderInterface {
             return new User(
                 new Long(user.id()),
                 user.login(),
-                user.hasName() ? user.name() : ""
+                user.hasName() ? user.name() : "",
+                user.avatarUrl().toString(),
+                user.type(),
+                user.json().getBoolean("site_admin"), // There's some bug with boolean in Jcabi
+                user.company(),
+                user.blog().toString(),
+                user.location(),
+                user.email(),
+                user.json().getBoolean("hireable") // There's some bug with boolean in Jcabi
             );
         } catch (AssertionError e) {
             return new User(null, name);

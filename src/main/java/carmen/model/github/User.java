@@ -34,6 +34,39 @@ public class User {
     @Column
     private boolean found;
 
+    @Column
+    private boolean requested;
+
+    @Column(name = "opt_out")
+    private boolean optOut;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(name = "github_type")
+    private String type;
+
+    @Column(name = "site_admin")
+    private boolean siteAdmin;
+
+    @Column
+    private String company;
+
+    @Column
+    private String  blog;
+
+    @Column(name = "github_location")
+    private String  location;
+
+    @Column
+    private String  email;
+
+    @Column
+    private boolean hireable;
+
+    @Column
+    private String bio;
+
     public Long getId() {
         return id;
     }
@@ -88,6 +121,94 @@ public class User {
 
     public void setFound(boolean found) {
         this.found = found;
+    }
+
+    public boolean getRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
+    }
+
+    public boolean getOptOut() {
+        return optOut;
+    }
+
+    public void setOptOut(boolean optOut) {
+        this.optOut = optOut;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean getSiteAdmin() {
+        return siteAdmin;
+    }
+
+    public void setSiteAdmin(boolean siteAdmin) {
+        this.siteAdmin = siteAdmin;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+
+    public void setBlog(String blog) {
+        this.blog = blog;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean getHireable() {
+        return hireable;
+    }
+
+    public void setHireable(boolean hireable) {
+        this.hireable = hireable;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public boolean canBeUpdated() {

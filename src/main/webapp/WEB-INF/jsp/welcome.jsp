@@ -5,8 +5,8 @@
     </div>
 </nav>
 
-    <div class="container user-search-container">
-        <div class="row">
+    <div class="container">
+        <div class="row user-search-container">
             <div class="col-xs-12">
                 <div class="input-group input-group-lg">
                     <input type="text" class="form-control"  placeholder="Enter GitHub login">
@@ -15,8 +15,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row user-count-container">
             <div class="col-xs-12">
-                <p class="text-muted users-count-summary">${usersCount}</p>
+                <p class="text-muted users-count-summary">${analyzedUsersCount}</p>
+                <p class="text-muted users-count-summary">${connectedUsersCount}</p>
             </div>
         </div>
     </div>

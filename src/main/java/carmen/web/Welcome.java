@@ -21,10 +21,11 @@ public class Welcome {
     public ModelAndView welcome() {
         Map<String, Object> viewVariables = new HashMap<>();
 
-        Object usersUserCount = usersUserDAOImpl.count();
-        Object githubUserCount = githubUserDAOImpl.countFound();
+        Object analyzedUsersCount = githubUserDAOImpl.countFound();
+        Object connectedUsersCount = usersUserDAOImpl.count();
 
-        viewVariables.put("usersCount", githubUserCount + " users analyzed. " + usersUserCount + " users have connected.");
+        viewVariables.put("analyzedUsersCount", analyzedUsersCount + " users analyzed.");
+        viewVariables.put("connectedUsersCount", connectedUsersCount + " users have connected.");
 
         return new ModelAndView("welcome", viewVariables);
     }

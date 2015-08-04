@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @Controller
-public class Welcome {
+public class WelcomeController {
 
     @Autowired
     UserDAOImpl usersUserDAOImpl;

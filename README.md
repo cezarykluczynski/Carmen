@@ -15,11 +15,19 @@ psql -c "update pg_database set encoding = pg_char_to_encoding('UTF8') where dat
 mvn compile
 mvn flyway:migrate
 npm install --global gulp
+npm install
 gulp
 ```
 
+## Startup
 Start using:
 
 ```sh
 mvn tomcat7:run
+```
+
+## Tests
+
+```sh
+mvn test
 ```

@@ -14,4 +14,4 @@ before_install:
   - gulp
 install:
   script:
-  - make test
+  - mvn test

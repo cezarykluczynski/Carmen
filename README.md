@@ -1,5 +1,9 @@
 Work in progress.
 
+## Status
+
+[![Build Status](https://travis-ci.org/cezarykluczynski/Carmen.svg?branch=master)](https://travis-ci.org/cezarykluczynski/Carmen)
+
 ## Development
 
 For higher GitHub API limits, set CARMEN_GITHUB_ACCESS_TOKEN environment variable

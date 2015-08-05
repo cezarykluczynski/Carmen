@@ -4,14 +4,14 @@ jdk:
 addons:
   postgresql: '9.4'
 before_install:
-  - psql -c 'create database carmen;' -U postgres
-  - mvn compile
-  - mvn flyway:migrate
   - nvm install 0.12
   - nvm use 0.12
+  - psql -c 'create database carmen;' -U postgres
+  - mvn compile
+install:
+  - mvn flyway:migrate
   - npm install --global gulp
   - npm install
   - gulp
-install:
-  script:
+script:
   - mvn test

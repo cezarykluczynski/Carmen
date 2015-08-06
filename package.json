@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "devDependencies": {
     "gulp": "^3.9.0",
-    "gulp-stylus": "^2.0.5"
+    "gulp-batch": "^1.0.5",
+    "gulp-stylus": "^2.0.5",
+    "gulp-watch": "^4.3.4"
   },
   "repository": {
     "type": "git",

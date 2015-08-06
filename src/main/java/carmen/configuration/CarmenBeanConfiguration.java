@@ -2,7 +2,8 @@ package carmen.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -10,6 +11,8 @@ import com.jcabi.github.RtGithub;
 
 @Configuration
 @ComponentScan
+@EnableAsync
+@EnableScheduling
 public class CarmenBeanConfiguration {
 
     /**

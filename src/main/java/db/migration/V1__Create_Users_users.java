@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 /**
  * Create "users" table in "users" schema.
  */
-public class V1__Create_users implements JdbcMigration {
+public class V1__Create_Users_users implements JdbcMigration {
     public void migrate(Connection connection) throws Exception {
         PreparedStatement statement = connection.prepareStatement(
             "CREATE SCHEMA users;" +

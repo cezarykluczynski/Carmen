@@ -26,7 +26,7 @@ public class AnalysisRequestController {
     @RequestMapping(value = "/github/{username}", method = RequestMethod.GET)
     public Analysis github(@PathVariable String username) throws AssertionError, IOException {
         try {
-            User user = githubUserDAOImpl.createOrUpdate(username);
+            User user = githubUserDAOImpl.createOrUpdateRequestedEntity(username);
             return new Analysis(username, user.getFound() ? "found" : "not_found");
         } catch(GithubRateLimitExceededException e) {
             return new Analysis(username, "core_rate_limit_exceeded");

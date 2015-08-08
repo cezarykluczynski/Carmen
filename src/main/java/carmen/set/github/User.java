@@ -23,8 +23,6 @@ public class User {
         this.id = id;
         this.login = login;
         this.name = name;
-        this.requested = true;
-        this.optOut = false;
         this.avatarUrl = avatarUrl;
         this.type = type;
         this.siteAdmin = siteAdmin;
@@ -39,8 +37,6 @@ public class User {
         this.id = null;
         this.login = login;
         this.name = "";
-        this.requested = true;
-        this.optOut = false;
         this.avatarUrl = "";
         this.type = "";
         this.siteAdmin = false;
@@ -120,6 +116,14 @@ public class User {
 
     public String getBio() {
         return bio;
+    }
+
+    public void setRequested(boolean requested) {
+        this.requested = requested;
+    }
+
+    public void setOptOut(boolean optOut) {
+        this.optOut = optOut;
     }
 
     public boolean exists() {

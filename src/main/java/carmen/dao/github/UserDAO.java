@@ -14,7 +14,9 @@ public interface UserDAO {
 
     public Object findByLogin(String login);
 
-    public User createOrUpdate(String username) throws IOException;
+    public User createOrUpdateRequestedEntity(String username) throws IOException;
+
+    public User createOrUpdateGhostEntity(String username) throws IOException;
 
     public Object countFound();
 }

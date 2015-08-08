@@ -15,6 +15,9 @@ import carmen.model.github.User;
 import carmen.provider.github.GithubProvider;
 
 import java.util.List;
+import java.lang.Boolean;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.IOException;
 
 @Repository
@@ -113,20 +116,47 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Transactional
-    public User createOrUpdate(String login) throws IOException {
+    private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
         try {
             User userEntity = findByLogin(login);
 
             if (userEntity.canBeUpdated()) {
                 carmen.set.github.User userSet = githubProvider.getUser(login);
+                applyFlagsToSet(userSet, flags);
                 return update(userEntity, userSet);
             }
 
             return userEntity;
         } catch (NullPointerException e) {
             carmen.set.github.User userSet = githubProvider.getUser(login);
+            applyFlagsToSet(userSet, flags);
             return create(userSet);
         }
+    }
+
+    private void applyFlagsToSet(carmen.set.github.User userSet, Map<String, Boolean> flags) {
+        if (flags.containsKey("requested")) {
+            userSet.setRequested(flags.get("requested"));
+        }
+        if (flags.containsKey("optOut")) {
+            userSet.setOptOut(flags.get("optOut"));
+        }
+    }
+
+    @Transactional
+    public User createOrUpdateRequestedEntity(String login) throws IOException {
+        Map flags = new HashMap<String, Boolean>();
+        flags.put("requested", true);
+        flags.put("optOut", false);
+        return createOrUpdate(login, flags);
+    }
+
+    @Transactional
+    public User createOrUpdateGhostEntity(String login) throws IOException {
+        Map flags = new HashMap<String, Boolean>();
+        flags.put("requested", false);
+        flags.put("optOut", false);
+        return createOrUpdate(login, flags);
     }
 
     @Transactional(readOnly = true)

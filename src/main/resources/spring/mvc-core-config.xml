@@ -20,6 +20,8 @@
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <mvc:annotation-driven />
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
     <!-- Todo: -->
     <!-- <tx:annotation-driven /> -->
 
@@ -29,7 +31,7 @@
     <bean id="controllerClassNameHandlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
     <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-    <context:component-scan base-package="carmen.web, carmen.rest, carmen.configuration, carmen.cron" />
+    <context:component-scan base-package="carmen.web, carmen.rest, carmen.configuration, carmen.cron, carmen.propagation" />
 
     <bean id="viewResolver"
         class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -47,4 +49,9 @@
     <bean name="githubJcabiProvider" class="carmen.provider.github.GithubJcabiProvider">
         <constructor-arg index="0" ref="rtGithub" />
     </bean>
+
+    <bean name="propagationUserFollowers" class="carmen.propagation.UserFollowers" />
+
+    <!-- Aspects -->
+    <bean id="userPropagationFollowers" class="carmen.aspect.UserPropagationFollowers" />
 </beans>

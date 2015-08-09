@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import carmen.model.github.User;
-import carmen.propagation.UserFollowers;
+import carmen.propagation.UserFollowing;
 
 @Aspect
 @Component
-public class UserPropagationFollowers {
+public class UserPropagationFollowing {
 
     @Autowired
-    UserFollowers propagationUserFollowers;
+    UserFollowing propagationUserFollowing;
 
     @AfterReturning(
         pointcut = "execution(* carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",
         returning = "userEntity"
     )
-    public void userFollowers(JoinPoint joinPoint, User userEntity) {
-        propagationUserFollowers.setUserEntity(userEntity);
-        propagationUserFollowers.propagate();
+    public void userFollowing(JoinPoint joinPoint, User userEntity) {
+        propagationUserFollowing.setUserEntity(userEntity);
+        propagationUserFollowing.propagate();
     }
 
 }

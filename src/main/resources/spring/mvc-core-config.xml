@@ -54,4 +54,5 @@
 
     <!-- Aspects -->
     <bean id="userPropagationFollowers" class="carmen.aspect.UserPropagationFollowers" />
+    <bean id="userPropagationFollowing" class="carmen.aspect.UserPropagationFollowing" />
 </beans>

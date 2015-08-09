@@ -44,4 +44,8 @@
   <bean id="propagationsUserFollowersDao" class="carmen.dao.propagations.UserFollowersDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="propagationsUserFollowingDao" class="carmen.dao.propagations.UserFollowingDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 </beans>

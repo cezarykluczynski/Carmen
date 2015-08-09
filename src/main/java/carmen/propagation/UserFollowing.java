@@ -7,16 +7,16 @@ import java.util.List;
 
 import carmen.model.github.User;
 import carmen.dao.github.UserDAOImpl;
-import carmen.dao.propagations.UserFollowersDAOImpl;
+import carmen.dao.propagations.UserFollowingDAOImpl;
 
 @Component
-public class UserFollowers implements Propagation {
+public class UserFollowing implements Propagation {
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao;
+    UserFollowingDAOImpl propagationsUserFollowingDao;
 
     private User userEntity;
 
@@ -29,18 +29,18 @@ public class UserFollowers implements Propagation {
             return;
         }
 
-        List<carmen.model.propagations.UserFollowers> userFollowersPropagations = propagationsUserFollowersDao.findByUser(userEntity);
+        List<carmen.model.propagations.UserFollowing> userFollowingPropagations = propagationsUserFollowingDao.findByUser(userEntity);
 
-        tryCreateDiscoverPhase(userFollowersPropagations);
+        tryCreateDiscoverPhase(userFollowingPropagations);
     }
 
-    private void tryCreateDiscoverPhase(List<carmen.model.propagations.UserFollowers> userFollowersPropagations) {
-        if (userFollowersPropagations.isEmpty()) {
+    private void tryCreateDiscoverPhase(List<carmen.model.propagations.UserFollowing> userFollowingPropagations) {
+        if (userFollowingPropagations.isEmpty()) {
             createDiscoverPhase(userEntity);
             return;
         }
 
-        for (carmen.model.propagations.UserFollowers propagation : userFollowersPropagations) {
+        for (carmen.model.propagations.UserFollowing propagation : userFollowingPropagations) {
             if (propagation.getPhase().equals("discover")) {
                 return;
             }
@@ -50,7 +50,7 @@ public class UserFollowers implements Propagation {
     }
 
     private void createDiscoverPhase(User userEntity) {
-        propagationsUserFollowersDao.create(userEntity, "discover");
+        propagationsUserFollowingDao.create(userEntity, "discover");
     }
 
 }

@@ -6,9 +6,9 @@ import java.util.Date;
 
 import carmen.model.github.User;
 
-@Entity(name = "propagations.UserFollowers")
-@Table(schema = "propagations", name = "user_followers")
-public class UserFollowers {
+@Entity(name = "propagations.UserFollowing")
+@Table(schema = "propagations", name = "user_following")
+public class UserFollowing {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

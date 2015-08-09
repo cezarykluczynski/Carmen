@@ -1,6 +1,6 @@
 package carmen.cron;
 
-public class PropagationExecutor {
+public class APIQueryExecutor {
 
     public void run() {
         //

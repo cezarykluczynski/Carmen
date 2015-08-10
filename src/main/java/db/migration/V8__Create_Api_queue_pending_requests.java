@@ -17,7 +17,7 @@ public class V8__Create_Api_queue_pending_requests implements JdbcMigration {
             "    path_params json," +
             "    query_params json," +
             "    priority integer NOT NULL DEFAULT 0," +
-            "    github_id integer references github.users(github_id)," +
+            "    github_user_id integer references github.users(id)," +
             "    CONSTRAINT api_queue_pending_requests_pkey PRIMARY KEY(id)" +
             ");"
         );

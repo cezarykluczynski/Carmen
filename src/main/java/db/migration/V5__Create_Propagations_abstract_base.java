@@ -13,7 +13,7 @@ public class V5__Create_Propagations_abstract_base implements JdbcMigration {
             "CREATE SCHEMA propagations;" +
             "CREATE table propagations.abstract_base(" +
             "    id serial," +
-            "    github_id integer references github.users(github_id)," +
+            "    github_user_id integer references github.users(id)," +
             "    phase character varying(64)," +
             "    page integer," +
             "    updated timestamp without time zone," +

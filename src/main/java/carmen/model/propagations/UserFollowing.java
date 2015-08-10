@@ -16,7 +16,7 @@ public class UserFollowing {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "github_id")
+    @JoinColumn(name = "github_user_id")
     private User user;
 
     @Column

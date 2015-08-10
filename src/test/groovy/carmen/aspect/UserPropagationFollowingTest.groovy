@@ -2,6 +2,7 @@ package carmen.aspect
 
 import static org.hamcrest.CoreMatchers.is
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty
 
 import static org.mockito.Mockito.mock
@@ -20,9 +21,11 @@ import org.testng.annotations.Test
 
 import carmen.dao.github.UserDAOImpl
 import carmen.dao.propagations.UserFollowingDAOImpl
+import carmen.dao.apiqueue.PendingRequestDAOImpl
 import carmen.model.github.User
 import carmen.set.github.User as UserSet
 import carmen.model.propagations.UserFollowing
+import carmen.model.apiqueue.PendingRequest
 
 @ContextConfiguration(locations = [ "classpath:spring/database-config.xml", "classpath:spring/mvc-core-config.xml" ])
 class UserFollowingTest extends AbstractTestNGSpringContextTests {
@@ -36,9 +39,14 @@ class UserFollowingTest extends AbstractTestNGSpringContextTests {
     @Autowired
     UserFollowingDAOImpl userFollowingDAOImpl
 
+    @Autowired
+    PendingRequestDAOImpl pendingRequestDAOImpl
+
     private User userEntity
 
     private UserFollowing userFollowing
+
+    private List<PendingRequest> pendingRequestsList
 
     private String login
 
@@ -66,11 +74,20 @@ class UserFollowingTest extends AbstractTestNGSpringContextTests {
             userFollowing,
             hasProperty("phase", is("discover"))
         )
+
+        pendingRequestsList = pendingRequestDAOImpl.findByUser userEntity
+
+        assertThat pendingRequestsList.size(), equalTo(2)
+
+        // TODO: assert endpoints
     }
 
     @AfterMethod
     void tearDown() {
         Session session = sessionFactory.openSession()
+        for (pendingRequest in pendingRequestsList) {
+            session.delete pendingRequest
+        }
         session.delete userEntity
         session.delete userFollowing
         session.flush()

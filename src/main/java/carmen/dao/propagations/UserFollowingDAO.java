@@ -9,4 +9,6 @@ public interface UserFollowingDAO {
 
     public List<UserFollowing> findByUser(User userEntity);
 
+    public UserFollowing create(User userEntity, String phase);
+
 }

@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.HashMap;
 
 import carmen.model.github.User;
 import carmen.dao.github.UserDAOImpl;
 import carmen.dao.propagations.UserFollowingDAOImpl;
+import carmen.dao.apiqueue.PendingRequestDAOImpl;
 
 @Component
 public class UserFollowing implements Propagation {
@@ -17,6 +19,9 @@ public class UserFollowing implements Propagation {
 
     @Autowired
     UserFollowingDAOImpl propagationsUserFollowingDao;
+
+    @Autowired
+    PendingRequestDAOImpl apiqueuePendingRequestDao;
 
     private User userEntity;
 
@@ -51,6 +56,10 @@ public class UserFollowing implements Propagation {
 
     private void createDiscoverPhase(User userEntity) {
         propagationsUserFollowingDao.create(userEntity, "discover");
+        HashMap<String, Object> pathParams = new HashMap<String, Object>();
+        pathParams.put("endpoint", "following_url");
+        pathParams.put("user", userEntity.getLogin());
+        apiqueuePendingRequestDao.create("UsersGhost", userEntity, pathParams, new HashMap<String, Object>(), 1);
     }
 
 }

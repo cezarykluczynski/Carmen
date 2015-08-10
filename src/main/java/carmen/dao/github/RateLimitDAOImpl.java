@@ -26,16 +26,14 @@ public class RateLimitDAOImpl implements RateLimitDAO {
 
     @Transactional
     public RateLimit create(carmen.set.github.RateLimit rateLimitSet) {
-        Session session = sessionFactory.openSession();
-
         RateLimit rateLimitEntity = new RateLimit();
-
         rateLimitEntity.setResource(rateLimitSet.getResource());
         rateLimitEntity.setLimit(rateLimitSet.getLimit());
         rateLimitEntity.setRemaining(rateLimitSet.getRemaining());
         rateLimitEntity.setReset(rateLimitSet.getReset());
         rateLimitEntity.setUpdated();
 
+        Session session = sessionFactory.openSession();
         session.save(rateLimitEntity);
         session.flush();
         session.close();

@@ -48,4 +48,8 @@
   <bean id="propagationsUserFollowingDao" class="carmen.dao.propagations.UserFollowingDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="apiqueuePendingRequestDao" class="carmen.dao.apiqueue.PendingRequestDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
 </beans>

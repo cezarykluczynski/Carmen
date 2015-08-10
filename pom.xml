@@ -226,6 +226,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20141113</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -266,6 +272,8 @@
             <schema>public</schema>
             <schema>users</schema>
             <schema>github</schema>
+            <schema>propagations</schema>
+            <schema>api_queue</schema>
           </schemas>
           <placeholders>
           </placeholders>

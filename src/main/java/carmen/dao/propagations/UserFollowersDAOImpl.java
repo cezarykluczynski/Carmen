@@ -35,6 +35,8 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
         return list;
     }
 
+    @Override
+    @Transactional
     public UserFollowers create(User userEntity, String phase) {
         Session session = sessionFactory.openSession();
 

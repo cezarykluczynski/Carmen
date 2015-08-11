@@ -5,6 +5,7 @@ import com.jcabi.github.User.Smart;
 import com.jcabi.github.Limits;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import java.lang.AssertionError;
 import java.util.Date;
@@ -64,6 +65,14 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         } catch (AssertionError e) {
             return new User(null, name);
         }
+    }
+
+    public ArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+        throw new IOException("Implemented in different provider.");
+    }
+
+    public ArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+        throw new IOException("Implemented in different provider.");
     }
 
     /**

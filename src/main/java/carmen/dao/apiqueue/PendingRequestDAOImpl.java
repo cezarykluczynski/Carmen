@@ -4,6 +4,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.CriteriaSpecification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import carmen.provider.github.GithubProvider;
 import carmen.model.apiqueue.PendingRequest;
 import carmen.model.github.User;
+import carmen.exception.EmptyPendingRequestListException;
 
 import java.util.List;
 import java.util.HashMap;
@@ -63,6 +66,33 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         session.close();
 
         return pendingRequest;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(PendingRequest.class);
+        criteria.addOrder(Order.asc("id"));
+        criteria.setMaxResults(1);
+
+        List<PendingRequest> list = criteria.list();
+        session.close();
+
+        if (list.size() == 0) {
+            throw new EmptyPendingRequestListException();
+        }
+
+        return list.get(0);
+    }
+
+    @Override
+    @Transactional
+    public void delete(PendingRequest pendingRequest) {
+        Session session = sessionFactory.openSession();
+        session.delete(pendingRequest);
+        session.flush();
+        session.close();
     }
 
 }

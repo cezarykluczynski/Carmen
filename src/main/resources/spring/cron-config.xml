@@ -14,7 +14,7 @@
         <property name="queueCapacity" value="3" />
     </bean>
 
-    <bean id="scheduledAPIQueryExecutor" class="carmen.cron.ScheduledAPIQueryExecutor">
+    <bean id="scheduledAPIRequestExecutor" class="carmen.cron.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
     <bean id="scheduledPropagationExecutor" class="carmen.cron.ScheduledPropagationExecutor">
@@ -22,5 +22,7 @@
     </bean>
 
     <bean id="propagationExecutor" class="carmen.cron.PropagationExecutor" />
-    <bean id="apiQueryExecutor" class="carmen.cron.APIQueryExecutor" />
+    <bean id="APIRequestExecutor" class="carmen.cron.APIRequestExecutor" />
+
+    <bean id="UserGhostPaginator" class="carmen.executor.UserGhostPaginator" />
 </beans>

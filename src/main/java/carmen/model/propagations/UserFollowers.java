@@ -11,7 +11,7 @@ import carmen.model.github.User;
 public class UserFollowers {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 

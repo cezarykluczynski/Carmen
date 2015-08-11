@@ -35,6 +35,8 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
         return list;
     }
 
+    @Override
+    @Transactional
     public UserFollowing create(User userEntity, String phase) {
         Session session = sessionFactory.openSession();
 

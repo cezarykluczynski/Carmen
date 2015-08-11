@@ -79,7 +79,7 @@ class UserFollowingTest extends AbstractTestNGSpringContextTests {
 
         assertThat pendingRequestsList.size(), equalTo(2)
 
-        // TODO: assert endpoints
+        // TODO: assert executors
     }
 
     @AfterMethod

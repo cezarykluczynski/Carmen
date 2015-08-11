@@ -1,6 +1,7 @@
 package carmen.provider.github;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import carmen.dao.github.RateLimitDAO;
 import carmen.set.github.User;
@@ -10,27 +11,47 @@ import java.util.Date;
 
 public class GithubProvider implements GithubProviderInterface {
 
-    public GithubProvider(GithubProviderInterface githubProvider, RateLimitDAO rateLimitDAOImpl) {
-        this.githubProvider = githubProvider;
+    public GithubProvider(
+        GithubProviderInterface githubJcabiProvider,
+        GithubProviderInterface githubKohsukeProvider,
+        GithubProviderInterface githubEgitProvider,
+        RateLimitDAO rateLimitDAOImpl
+    ) {
+        this.githubJcabiProvider = githubJcabiProvider;
+        this.githubKohsukeProvider = githubKohsukeProvider;
+        this.githubEgitProvider = githubEgitProvider;
         this.rateLimitDAOImpl = rateLimitDAOImpl;
     }
 
-    private GithubProviderInterface githubProvider;
+    private GithubProviderInterface githubJcabiProvider;
+
+    private GithubProviderInterface githubKohsukeProvider;
+
+    private GithubProviderInterface githubEgitProvider;
+
     private RateLimitDAO rateLimitDAOImpl;
 
     public RateLimit getCoreLimit() throws IOException {
-        return githubProvider.getCoreLimit();
+        return githubJcabiProvider.getCoreLimit();
     }
 
     public RateLimit getSearchLimit() throws IOException {
-        return githubProvider.getSearchLimit();
+        return githubJcabiProvider.getSearchLimit();
     }
 
     public User getUser(String name) throws IOException {
         checkApiLimit("getUser");
-        User user = githubProvider.getUser(name);
+        User user = githubJcabiProvider.getUser(name);
         decrementRateLimitRemainingCounter("getUser");
         return user;
+    }
+
+    public ArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+        return githubEgitProvider.getFollowers(name, limit, offset);
+    }
+
+    public ArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+        return githubEgitProvider.getFollowing(name, limit, offset);
     }
 
     public void checkApiLimit(String methodName) throws GithubRateLimitExceededException, IOException {
@@ -93,7 +114,7 @@ public class GithubProvider implements GithubProviderInterface {
     }
 
     private boolean methodIsCoreMethod(String methodName) {
-        return methodName == "getUser";
+        return methodName == "getUser" || methodName == "getFollowers";
     }
 
     private void refreshCoreLimit() throws IOException {

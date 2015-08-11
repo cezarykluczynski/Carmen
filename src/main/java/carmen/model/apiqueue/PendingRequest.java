@@ -4,10 +4,16 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
+import java.lang.reflect.Type;
 
 import org.json.JSONObject;
 
 import carmen.model.github.User;
+
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
 
 @Entity(name = "api_queue.PendingRequests")
 @Table(schema = "api_queue", name = "pending_requests")
@@ -57,16 +63,30 @@ public class PendingRequest {
         this.pathParams = new JSONObject(pathParams).toString();
     }
 
-    public String getPathParams() {
-        return pathParams;
+    public HashMap<String, Object> getPathParams() {
+        return jsonToHashMap(pathParams);
     }
 
     public void setQueryParams(HashMap<String, Object> queryParams) {
         this.queryParams = new JSONObject(queryParams).toString();
     }
 
-    public String getQueryParams() {
-        return queryParams;
+    public HashMap<String, Object> getQueryParams() {
+        return jsonToHashMap(queryParams);
+    }
+
+    private HashMap<String, Object> jsonToHashMap(String jsonString) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        JSONObject json = new JSONObject(jsonString);
+        Iterator keys = json.keys();
+        String key;
+
+        while (keys.hasNext()) {
+            key = (String) keys.next();
+            hashMap.put(key, json.get(key));
+        }
+
+        return hashMap;
     }
 
     public void setPriority(Integer priority) {

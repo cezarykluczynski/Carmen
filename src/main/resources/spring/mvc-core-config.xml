@@ -43,11 +43,21 @@
 
     <bean name="githubProvider" class="carmen.provider.github.GithubProvider">
         <constructor-arg index="0" ref="githubJcabiProvider" />
-        <constructor-arg index="1" ref="rateLimitDao" />
+        <constructor-arg index="1" ref="githubKohsukeProvider" />
+        <constructor-arg index="2" ref="githubEgitProvider" />
+        <constructor-arg index="3" ref="rateLimitDao" />
     </bean>
 
     <bean name="githubJcabiProvider" class="carmen.provider.github.GithubJcabiProvider">
         <constructor-arg index="0" ref="rtGithub" />
+    </bean>
+
+    <bean name="githubKohsukeProvider" class="carmen.provider.github.GithubKohsukeProvider">
+        <constructor-arg index="0" ref="kohsukeGithubApi" />
+    </bean>
+
+    <bean name="githubEgitProvider" class="carmen.provider.github.GithubEgitProvider">
+        <constructor-arg index="0" ref="egitGithubClient" />
     </bean>
 
     <bean name="propagationUserFollowers" class="carmen.propagation.UserFollowers" />

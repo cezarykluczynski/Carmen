@@ -21,6 +21,8 @@ public interface PendingRequestDAO {
 
     public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException;
 
+    public void update(PendingRequest pendingRequest);
+
     public void delete(PendingRequest pendingRequest);
 
 }

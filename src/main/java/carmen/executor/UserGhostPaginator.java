@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import carmen.set.github.User;
-
 import carmen.model.apiqueue.PendingRequest;
 import carmen.dao.apiqueue.PendingRequestDAOImpl;
 import carmen.provider.github.GithubProvider;
+import carmen.util.PaginationAwareArrayList;
 
 @Component
 public class UserGhostPaginator implements Executor {
@@ -26,31 +26,37 @@ public class UserGhostPaginator implements Executor {
     private Integer limit = 50;
 
     public void execute(PendingRequest pendingRequest) throws IOException {
-        ArrayList<User> users = getUserListFromPendingRequest(pendingRequest);
+        PaginationAwareArrayList<User> users = getUserListFromPendingRequest(pendingRequest);
 
         if (users.size() > 0) {
             createUserGhostPendingRequests(users);
         }
 
-        if (users.size() < limit) {
+        if (users.isLastPage()) {
             apiqueuePendingRequestDao.delete(pendingRequest);
+        } else {
+            continuePagination(pendingRequest, users);
         }
     }
 
-    public ArrayList<User> getUserListFromPendingRequest(PendingRequest pendingRequest) throws IOException {
-        String login = (String) pendingRequest.getPathParams().get("login");
-        String endpoint = (String) pendingRequest.getPathParams().get("endpoint");
+    private PaginationAwareArrayList<User> getUserListFromPendingRequest(PendingRequest pendingRequest) throws IOException {
+        HashMap<String, Object> pathParams = pendingRequest.getPathParams();
+        HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
+
+        String login = (String) pathParams.get("login");
+        String endpoint = (String) pathParams.get("endpoint");
+        Integer page = (Integer) (queryParams.containsKey("page") ? queryParams.get("page") : 1);
 
         if (endpoint.equals("followers_url")) {
-            return githubProvider.getFollowers(login, limit, 0);
+            return githubProvider.getFollowers(login, limit, page);
         } else if (endpoint.equals("following_url")) {
-            return githubProvider.getFollowing(login, limit, 0);
+            return githubProvider.getFollowing(login, limit, page);
         } else {
-            throw new IOException("Endpoint not implemented.");
+            throw new IOException("Endpoint " + endpoint + " not implemented.");
         }
     }
 
-    private void createUserGhostPendingRequests(ArrayList<User> users) {
+    private void createUserGhostPendingRequests(PaginationAwareArrayList<User> users) {
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         HashMap<String, Object> queryParams = new HashMap<String, Object>();
 
@@ -58,6 +64,11 @@ public class UserGhostPaginator implements Executor {
             pathParams.put("login", user.getLogin());
             apiqueuePendingRequestDao.create("UserGhost", null, pathParams, queryParams, 1);
         }
+    }
+
+    private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<User> users) {
+        pendingRequest.getQueryParams().put("page", users.getNextPage());
+        apiqueuePendingRequestDao.update(pendingRequest);
     }
 
 }

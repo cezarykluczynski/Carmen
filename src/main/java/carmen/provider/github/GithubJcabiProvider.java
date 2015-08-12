@@ -5,7 +5,6 @@ import com.jcabi.github.User.Smart;
 import com.jcabi.github.Limits;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import java.lang.AssertionError;
 import java.util.Date;
@@ -13,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import carmen.set.github.User;
 import carmen.set.github.RateLimit;
+import carmen.util.PaginationAwareArrayList;
 
 public class GithubJcabiProvider implements GithubProviderInterface {
 
@@ -67,11 +67,11 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         }
     }
 
-    public ArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public ArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 

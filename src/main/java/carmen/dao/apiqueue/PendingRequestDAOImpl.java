@@ -88,6 +88,15 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
 
     @Override
     @Transactional
+    public void update(PendingRequest pendingRequest) {
+        Session session = sessionFactory.openSession();
+        session.update(pendingRequest);
+        session.flush();
+        session.close();
+    }
+
+    @Override
+    @Transactional
     public void delete(PendingRequest pendingRequest) {
         Session session = sessionFactory.openSession();
         session.delete(pendingRequest);

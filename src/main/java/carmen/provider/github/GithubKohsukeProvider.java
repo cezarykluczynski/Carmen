@@ -1,10 +1,10 @@
 package carmen.provider.github;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import carmen.set.github.User;
 import carmen.set.github.RateLimit;
+import carmen.util.PaginationAwareArrayList;
 
 import org.kohsuke.github.GitHub;
 
@@ -28,11 +28,11 @@ public class GithubKohsukeProvider implements GithubProviderInterface {
         throw new IOException("Implemented in different provider.");
     }
 
-    public ArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public ArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 

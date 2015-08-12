@@ -50,12 +50,14 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         User userEntity,
         HashMap<String, Object> pathParams,
         HashMap<String, Object> queryParams,
+        HashMap<String, Object> params,
         Integer priority
     ) {
         PendingRequest pendingRequest = new PendingRequest();
         pendingRequest.setExecutor(executor);
         pendingRequest.setQueryParams(queryParams);
         pendingRequest.setPathParams(pathParams);
+        pendingRequest.setParams(params);
         pendingRequest.setPriority(priority);
         pendingRequest.setUser(userEntity);
         pendingRequest.setUpdated();

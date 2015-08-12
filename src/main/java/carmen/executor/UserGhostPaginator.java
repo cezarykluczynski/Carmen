@@ -29,7 +29,7 @@ public class UserGhostPaginator implements Executor {
         PaginationAwareArrayList<User> users = getUserListFromPendingRequest(pendingRequest);
 
         if (users.size() > 0) {
-            createUserGhostPendingRequests(users);
+            createUserGhostPendingRequests(users, pendingRequest);
         }
 
         if (users.isLastPage()) {
@@ -39,7 +39,9 @@ public class UserGhostPaginator implements Executor {
         }
     }
 
-    private PaginationAwareArrayList<User> getUserListFromPendingRequest(PendingRequest pendingRequest) throws IOException {
+    private PaginationAwareArrayList<User> getUserListFromPendingRequest(
+        PendingRequest pendingRequest
+    ) throws IOException {
         HashMap<String, Object> pathParams = pendingRequest.getPathParams();
         HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
 
@@ -56,19 +58,38 @@ public class UserGhostPaginator implements Executor {
         }
     }
 
-    private void createUserGhostPendingRequests(PaginationAwareArrayList<User> users) {
+    private void createUserGhostPendingRequests(
+        PaginationAwareArrayList<User> users,
+        PendingRequest pendingRequest
+    ) throws IOException {
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         HashMap<String, Object> queryParams = new HashMap<String, Object>();
+        HashMap<String, Object> params = new HashMap<String, Object>();
+
+        params.put("link_with", pendingRequest.getUser().getId());
+        params.put("link_as", linkAsRole(pendingRequest));
 
         for (User user : users) {
             pathParams.put("login", user.getLogin());
-            apiqueuePendingRequestDao.create("UserGhost", null, pathParams, queryParams, 1);
+            apiqueuePendingRequestDao.create("UserGhost", null, pathParams, queryParams, params, 1);
         }
     }
 
     private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<User> users) {
         pendingRequest.getQueryParams().put("page", users.getNextPage());
         apiqueuePendingRequestDao.update(pendingRequest);
+    }
+
+    private String linkAsRole(PendingRequest pendingRequest) throws IOException {
+        String endpoint = (String) pendingRequest.getPathParams().get("endpoint");
+
+        if (endpoint.equals("followers_url")) {
+            return "follower";
+        } else if (endpoint.equals("following_url")) {
+            return "following";
+        } else {
+            throw new IOException("Endpoint " + endpoint + " not implemented.");
+        }
     }
 
 }

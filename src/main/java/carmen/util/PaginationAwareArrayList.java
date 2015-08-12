@@ -45,7 +45,6 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
         return nextPage;
     }
 
-
     public Boolean isLastPage() {
         return lastPage;
     }

@@ -59,7 +59,14 @@ public class UserFollowers implements Propagation {
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         pathParams.put("endpoint", "followers_url");
         pathParams.put("login", userEntity.getLogin());
-        apiqueuePendingRequestDao.create("UsersGhostPaginator", userEntity, pathParams, new HashMap<String, Object>(), 1);
+        apiqueuePendingRequestDao.create(
+            "UsersGhostPaginator",
+            userEntity,
+            pathParams,
+            new HashMap<String, Object>(),
+            new HashMap<String, Object>(),
+            1
+        );
     }
 
 }

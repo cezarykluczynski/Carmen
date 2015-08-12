@@ -31,6 +31,8 @@ public class APIRequestExecutor {
     private void runExecutor(PendingRequest pendingRequest) throws IOException {
         String executor = pendingRequest.getExecutor();
 
+        System.out.println("Executor: " + executor);
+
         switch (executor) {
             case "UsersGhostPaginator":
                 userGhostPaginator.execute(pendingRequest);

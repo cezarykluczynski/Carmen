@@ -31,6 +31,9 @@ public class PendingRequest {
     @Column
     private String executor;
 
+    @Column(name = "params")
+    private String params;
+
     @Column(name = "path_params")
     private String pathParams;
 
@@ -57,6 +60,14 @@ public class PendingRequest {
 
     public String getExecutor() {
         return executor;
+    }
+
+    public void setParams(HashMap<String, Object> params) {
+        this.params = new JSONObject(params).toString();
+    }
+
+    public HashMap<String, Object> getParams() {
+        return jsonToHashMap(params);
     }
 
     public void setPathParams(HashMap<String, Object> pathParams) {

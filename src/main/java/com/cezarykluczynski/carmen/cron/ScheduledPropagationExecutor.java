@@ -28,7 +28,7 @@ public class ScheduledPropagationExecutor {
         this.taskExecutor = taskExecutor;
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 5000)
     public void executePropagation() {
         taskExecutor.execute(new ScheduledPropagationExecutorRunnable(propagationExecutor));
     }

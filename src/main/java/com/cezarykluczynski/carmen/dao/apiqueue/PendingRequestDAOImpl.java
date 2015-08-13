@@ -15,6 +15,7 @@ import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
+import com.cezarykluczynski.carmen.model.propagations.Propagation;
 
 import java.util.List;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         HashMap<String, Object> pathParams,
         HashMap<String, Object> queryParams,
         HashMap<String, Object> params,
+        Object propagation,
         Integer priority
     ) {
         PendingRequest pendingRequest = new PendingRequest();
@@ -62,12 +64,31 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         pendingRequest.setUser(userEntity);
         pendingRequest.setUpdated();
 
+        if (propagation != null) {
+            if (propagation instanceof Propagation) {
+                pendingRequest.setPropagation((Propagation) propagation);
+            } else if (propagation instanceof Long) {
+                pendingRequest.setPropagation((Long) propagation);
+            }
+        }
+
         Session session = sessionFactory.openSession();
         session.save(pendingRequest);
         session.flush();
         session.close();
 
         return pendingRequest;
+    }
+
+    public PendingRequest create(
+        String executor,
+        User userEntity,
+        HashMap<String, Object> pathParams,
+        HashMap<String, Object> queryParams,
+        HashMap<String, Object> params,
+        Integer priority
+    ) {
+        return create(executor, userEntity, pathParams, queryParams, params, null, 1);
     }
 
     @Override

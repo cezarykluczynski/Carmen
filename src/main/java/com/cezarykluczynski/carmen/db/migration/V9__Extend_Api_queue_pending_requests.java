@@ -11,7 +11,7 @@ public class V9__Extend_Api_queue_pending_requests implements JdbcMigration {
     public void migrate(Connection connection) throws Exception {
         PreparedStatement statement = connection.prepareStatement(
             "ALTER TABLE api_queue.pending_requests ADD COLUMN params text;" +
-            "ALTER TABLE api_queue.pending_requests ADD COLUMN propagation_id integer REFERENCES propagations.abstract_base(id);"
+            "ALTER TABLE api_queue.pending_requests ADD COLUMN propagation_id integer;"
         );
 
         try {

@@ -8,7 +8,7 @@ import com.cezarykluczynski.carmen.model.github.User;
 
 @Entity(name = "propagations.UserFollowers")
 @Table(schema = "propagations", name = "user_followers")
-public class UserFollowers {
+public class UserFollowers implements Propagation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,10 @@ public class UserFollowers {
 
     @Column
     private Date updated;
+
+    public Long getId() {
+        return id;
+    }
 
     public void setUpdated() {
         updated = new Date();

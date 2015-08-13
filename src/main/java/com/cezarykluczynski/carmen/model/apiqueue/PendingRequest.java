@@ -11,6 +11,11 @@ import java.lang.reflect.Type;
 import org.json.JSONObject;
 
 import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
+import com.cezarykluczynski.carmen.model.propagations.Propagation;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -39,6 +44,9 @@ public class PendingRequest {
 
     @Column(name = "query_params")
     private String queryParams;
+
+    @Column(name = "propagation_id")
+    private Long propagationId;
 
     @Column
     private Integer priority;
@@ -110,6 +118,18 @@ public class PendingRequest {
 
     public Integer getPriority() {
         return priority;
+    }
+
+    public Long getPropagationId() {
+        return propagationId;
+    }
+
+    public void setPropagation(Propagation propagation) {
+        propagationId = propagation.getId();
+    }
+
+    public void setPropagation(Long propagationId) {
+        this.propagationId = propagationId;
     }
 
     public void setUpdated() {

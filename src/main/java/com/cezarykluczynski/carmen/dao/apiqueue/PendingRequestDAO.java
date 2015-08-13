@@ -17,6 +17,16 @@ public interface PendingRequestDAO {
         HashMap<String, Object> pathParams,
         HashMap<String, Object> queryParams,
         HashMap<String, Object> params,
+        Object propagation,
+        Integer priotity
+    );
+
+    public PendingRequest create(
+        String executor,
+        User userEntity,
+        HashMap<String, Object> pathParams,
+        HashMap<String, Object> queryParams,
+        HashMap<String, Object> params,
         Integer priotity
     );
 

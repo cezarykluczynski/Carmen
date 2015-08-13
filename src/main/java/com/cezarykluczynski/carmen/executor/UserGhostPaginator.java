@@ -71,7 +71,15 @@ public class UserGhostPaginator implements Executor {
 
         for (User user : users) {
             pathParams.put("login", user.getLogin());
-            apiqueuePendingRequestDao.create("UserGhost", null, pathParams, queryParams, params, 1);
+            apiqueuePendingRequestDao.create(
+                "UserGhost",
+                null,
+                pathParams,
+                queryParams,
+                params,
+                pendingRequest.getPropagationId(),
+                1
+            );
         }
     }
 

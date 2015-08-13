@@ -10,9 +10,10 @@ import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.model.propagations.Propagation;
 
 @Component
-public class UserFollowers implements Propagation {
+public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;
@@ -55,7 +56,7 @@ public class UserFollowers implements Propagation {
     }
 
     private void createDiscoverPhase(User userEntity) {
-        propagationsUserFollowersDao.create(userEntity, "discover");
+        Propagation propagation = propagationsUserFollowersDao.create(userEntity, "discover");
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         pathParams.put("endpoint", "followers_url");
         pathParams.put("login", userEntity.getLogin());
@@ -65,6 +66,7 @@ public class UserFollowers implements Propagation {
             pathParams,
             new HashMap<String, Object>(),
             new HashMap<String, Object>(),
+            propagation,
             1
         );
     }

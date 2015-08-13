@@ -32,7 +32,7 @@ public class ApiLimitsCoreAreHonoredTest {
     @Autowired
     private RateLimitDAO rateLimitDAOImpl;
 
-    private carmen.model.github.RateLimit mockRateLimitEntity;
+    private com.cezarykluczynski.carmen.model.github.RateLimit mockRateLimitEntity;
 
     @Before
     public void setup() {

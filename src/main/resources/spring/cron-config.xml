@@ -14,16 +14,16 @@
         <property name="queueCapacity" value="3" />
     </bean>
 
-    <bean id="scheduledAPIRequestExecutor" class="carmen.cron.ScheduledAPIRequestExecutor">
+    <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-    <bean id="scheduledPropagationExecutor" class="carmen.cron.ScheduledPropagationExecutor">
+    <bean id="scheduledPropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledPropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
 
-    <bean id="propagationExecutor" class="carmen.cron.PropagationExecutor" />
-    <bean id="APIRequestExecutor" class="carmen.cron.APIRequestExecutor" />
+    <bean id="propagationExecutor" class="com.cezarykluczynski.carmen.cron.PropagationExecutor" />
+    <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
-    <bean id="UserGhostPaginator" class="carmen.executor.UserGhostPaginator" />
-    <bean id="UserGhost" class="carmen.executor.UserGhost" />
+    <bean id="UserGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />
+    <bean id="UserGhost" class="com.cezarykluczynski.carmen.executor.UserGhost" />
 </beans>

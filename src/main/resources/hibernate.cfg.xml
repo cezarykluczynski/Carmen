@@ -15,6 +15,6 @@
         <property name="show_sql">true</property>
 
         <!-- Annotated entity classes -->
-        <mapping class="carmen.model.users.User"/>
+        <mapping class="com.cezarykluczynski.carmen.model.users.User"/>
     </session-factory>
 </hibernate-configuration>

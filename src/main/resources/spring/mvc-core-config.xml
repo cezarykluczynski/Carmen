@@ -32,7 +32,7 @@
     <bean id="controllerClassNameHandlerMapping" class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
     <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-    <context:component-scan base-package="carmen.web, carmen.rest, carmen.configuration, carmen.cron, carmen.propagation" />
+    <context:component-scan base-package="com.cezarykluczynski.carmen.web, com.cezarykluczynski.carmen.rest, com.cezarykluczynski.carmen.configuration, com.cezarykluczynski.carmen.cron, com.cezarykluczynski.carmen.propagation" />
 
     <bean id="viewResolver"
         class="org.springframework.web.servlet.view.UrlBasedViewResolver">
@@ -42,28 +42,28 @@
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <bean name="githubProvider" class="carmen.provider.github.GithubProvider">
+    <bean name="githubProvider" class="com.cezarykluczynski.carmen.provider.github.GithubProvider">
         <constructor-arg index="0" ref="githubJcabiProvider" />
         <constructor-arg index="1" ref="githubKohsukeProvider" />
         <constructor-arg index="2" ref="githubEgitProvider" />
         <constructor-arg index="3" ref="rateLimitDao" />
     </bean>
 
-    <bean name="githubJcabiProvider" class="carmen.provider.github.GithubJcabiProvider">
+    <bean name="githubJcabiProvider" class="com.cezarykluczynski.carmen.provider.github.GithubJcabiProvider">
         <constructor-arg index="0" ref="rtGithub" />
     </bean>
 
-    <bean name="githubKohsukeProvider" class="carmen.provider.github.GithubKohsukeProvider">
+    <bean name="githubKohsukeProvider" class="com.cezarykluczynski.carmen.provider.github.GithubKohsukeProvider">
         <constructor-arg index="0" ref="kohsukeGithubApi" />
     </bean>
 
-    <bean name="githubEgitProvider" class="carmen.provider.github.GithubEgitProvider">
+    <bean name="githubEgitProvider" class="com.cezarykluczynski.carmen.provider.github.GithubEgitProvider">
         <constructor-arg index="0" ref="egitGithubClient" />
     </bean>
 
-    <bean name="propagationUserFollowers" class="carmen.propagation.UserFollowers" />
+    <bean name="propagationUserFollowers" class="com.cezarykluczynski.carmen.propagation.UserFollowers" />
 
     <!-- Aspects -->
-    <bean id="userPropagationFollowers" class="carmen.aspect.UserPropagationFollowers" />
-    <bean id="userPropagationFollowing" class="carmen.aspect.UserPropagationFollowing" />
+    <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowers" />
+    <bean id="userPropagationFollowing" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowing" />
 </beans>

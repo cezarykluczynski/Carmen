@@ -284,6 +284,9 @@
           <url>jdbc:postgresql://localhost/carmen</url>
           <user>postgres</user>
           <password></password>
+          <locations>
+            <location>classpath:com/cezarykluczynski/carmen/db/migration</location>
+          </locations>
           <schemas>
             <schema>public</schema>
             <schema>users</schema>

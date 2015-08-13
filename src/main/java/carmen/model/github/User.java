@@ -2,9 +2,17 @@ package carmen.model.github;
 
 import javax.persistence.*;
 
+import org.hibernate.Hibernate;
+
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.joda.time.MutableDateTime;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity(name = "github.User")
 @Table(schema = "github", name = "users")
@@ -66,6 +74,40 @@ public class User {
 
     @Column
     private String bio;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable
+    (
+        name="github.user_followers",
+        joinColumns={ @JoinColumn(name="follower_id", referencedColumnName="id") },
+        inverseJoinColumns={ @JoinColumn(name="followee_id", referencedColumnName="id") }
+    )
+    private Set<User> followers = new HashSet<User>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable
+    (
+        name="github.user_followers",
+        joinColumns={ @JoinColumn(name="followee_id", referencedColumnName="id") },
+        inverseJoinColumns={ @JoinColumn(name="follower_id", referencedColumnName="id") }
+    )
+    private Set<User> followees = new HashSet<User>();
+
+    public void addFollower(User follower) {
+        followers.add(follower);
+    }
+
+    public void addFollowee(User followee) {
+        followees.add(followee);
+    }
+
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public Set<User> getFollowees() {
+        return followees;
+    }
 
     public Long getId() {
         return id;

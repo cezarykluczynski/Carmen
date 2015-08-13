@@ -25,4 +25,5 @@
     <bean id="APIRequestExecutor" class="carmen.cron.APIRequestExecutor" />
 
     <bean id="UserGhostPaginator" class="carmen.executor.UserGhostPaginator" />
+    <bean id="UserGhost" class="carmen.executor.UserGhost" />
 </beans>

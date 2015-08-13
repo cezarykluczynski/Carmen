@@ -28,7 +28,7 @@ public class ScheduledAPIRequestExecutor {
         this.taskExecutor = taskExecutor;
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 1000)
     public void executePropagation() {
         taskExecutor.execute(new ScheduledAPIRequestExecutorRunnable(apiRequestExecutor));
     }

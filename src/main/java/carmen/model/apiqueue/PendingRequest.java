@@ -46,6 +46,10 @@ public class PendingRequest {
     @Column
     private Date updated;
 
+    public Long getId() {
+        return id;
+    }
+
     public void setUser(User user) {
         this.user = user;
     }

@@ -10,6 +10,8 @@ public interface UserDAO {
 
     public User update(User userEntity, carmen.set.github.User userSet);
 
+    public void linkFollowerWithFollowee(User follower, User followee);
+
     public User hydrate(User userEntity, carmen.set.github.User userSet);
 
     public Object findByLogin(String login);

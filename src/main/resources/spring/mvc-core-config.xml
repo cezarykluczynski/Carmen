@@ -23,6 +23,7 @@
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
     <!-- Todo: -->
+    <tx:annotation-driven proxy-target-class="true" />
     <!-- <tx:annotation-driven /> -->
 
     <mvc:view-controller path="/" view-name="welcome" />

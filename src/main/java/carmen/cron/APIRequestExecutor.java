@@ -8,6 +8,7 @@ import carmen.dao.apiqueue.PendingRequestDAOImpl;
 import carmen.model.apiqueue.PendingRequest;
 import carmen.exception.EmptyPendingRequestListException;
 import carmen.executor.UserGhostPaginator;
+import carmen.executor.UserGhost;
 
 public class APIRequestExecutor {
 
@@ -16,6 +17,9 @@ public class APIRequestExecutor {
 
     @Autowired
     UserGhostPaginator userGhostPaginator;
+
+    @Autowired
+    UserGhost userGhost;
 
     public void run() {
         try {
@@ -34,6 +38,9 @@ public class APIRequestExecutor {
         switch (executor) {
             case "UsersGhostPaginator":
                 userGhostPaginator.execute(pendingRequest);
+                break;
+            case "UserGhost":
+                userGhost.execute(pendingRequest);
                 break;
             default:
                 break;

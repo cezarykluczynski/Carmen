@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 @ComponentScan
 @EnableAsync
 @EnableScheduling
+@EnableTransactionManagement
 public class CarmenBeanConfiguration {
 
     private String githubAccessToken;

@@ -86,7 +86,7 @@ public class UserGhostPaginator implements Executor {
         if (endpoint.equals("followers_url")) {
             return "follower";
         } else if (endpoint.equals("following_url")) {
-            return "following";
+            return "followee";
         } else {
             throw new IOException("Endpoint " + endpoint + " not implemented.");
         }

@@ -1,11 +1,13 @@
 package carmen.dao.github;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.persister.collection.BasicCollectionPersister;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -59,6 +61,30 @@ public class UserDAOImpl implements UserDAO {
         session.close();
 
         return userEntity;
+    }
+
+    @Transactional
+    public void linkFollowerWithFollowee(User follower, User followee) {
+        Session session = sessionFactory.openSession();
+
+        Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
+        BasicCollectionPersister followersCollectionPersister = (BasicCollectionPersister) collectionMetadata.get("carmen.model.github.User.followers");
+        BasicCollectionPersister followeesCollectionPersister = (BasicCollectionPersister) collectionMetadata.get("carmen.model.github.User.followees");
+        String tableName = followersCollectionPersister.getTableName();
+        String followersColumn = followersCollectionPersister.getKeyColumnNames()[0];
+        String followeesColumn = followeesCollectionPersister.getKeyColumnNames()[0];
+
+        try {
+            session
+                .createSQLQuery("INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") VALUES (:followerId, :followeeId)" )
+                .setParameter("followerId", follower.getId())
+                .setParameter("followeeId", followee.getId())
+                .executeUpdate();
+        } catch (org.hibernate.exception.ConstraintViolationException e) {
+
+        } finally {
+            session.close();
+        }
     }
 
     public User hydrate(User userEntity, carmen.set.github.User userSet) {
@@ -119,8 +145,10 @@ public class UserDAOImpl implements UserDAO {
     private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
         try {
             User userEntity = findByLogin(login);
+            Boolean requested = flags.get("requested");
+            Boolean userEntityHasBeenRequested = requested && !userEntity.getRequested();
 
-            if (userEntity.canBeUpdated()) {
+            if (userEntity.canBeUpdated() || userEntityHasBeenRequested) {
                 carmen.set.github.User userSet = githubProvider.getUser(login);
                 applyFlagsToSet(userSet, flags);
                 return update(userEntity, userSet);
@@ -159,14 +187,34 @@ public class UserDAOImpl implements UserDAO {
         return createOrUpdate(login, flags);
     }
 
+    public User findById(Integer userId) {
+        return findById(new Long(userId));
+    }
+
+    @Transactional(readOnly = true)
+    public User findById(Long userId) {
+        Session session = sessionFactory.openSession();
+        User user = null;
+
+        try {
+            user = (User) session.get(User.class, userId);
+        } catch(Exception e) {
+        }
+
+        session.close();
+        return user;
+    }
+
     @Transactional(readOnly = true)
     public Object countFound() {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.eq("found", true));
+        criteria.add(Restrictions.eq("requested", true));
         criteria.setProjection(Projections.rowCount());
         Object result = criteria.uniqueResult();
         session.close();
         return result;
     }
+
 }

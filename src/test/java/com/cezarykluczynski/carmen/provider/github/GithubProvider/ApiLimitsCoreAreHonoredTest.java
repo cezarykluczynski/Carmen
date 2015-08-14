@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring/database-config.xml", "classpath:spring/mvc-core-config.xml" })
+@ContextConfiguration({ "classpath:spring/database-config.xml", "classpath:spring/mvc-core-config.xml", "classpath:spring/cron-config.xml" })
 public class ApiLimitsCoreAreHonoredTest {
 
     @Autowired

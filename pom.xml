@@ -335,6 +335,11 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <systemPropertyVariables>
+            <noScheduledTasks>1</noScheduledTasks>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
 
       <plugin>

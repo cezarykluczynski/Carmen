@@ -30,6 +30,6 @@
     <bean id="propagationExecutor" class="com.cezarykluczynski.carmen.cron.PropagationExecutor" />
     <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
-    <bean id="UserGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />
-    <bean id="UserGhost" class="com.cezarykluczynski.carmen.executor.UserGhost" />
+    <bean id="userGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />
+    <bean id="userGhost" class="com.cezarykluczynski.carmen.executor.UserGhost" />
 </beans>

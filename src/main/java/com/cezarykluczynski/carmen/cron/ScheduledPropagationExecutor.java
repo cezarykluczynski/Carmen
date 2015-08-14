@@ -30,7 +30,11 @@ public class ScheduledPropagationExecutor {
 
     @Scheduled(fixedDelay = 5000)
     public void executePropagation() {
-        taskExecutor.execute(new ScheduledPropagationExecutorRunnable(propagationExecutor));
+        Object noTasks = System.getProperty("noScheduledTasks");
+
+        if (noTasks == null) {
+            taskExecutor.execute(new ScheduledPropagationExecutorRunnable(propagationExecutor));
+        }
     }
 
 }

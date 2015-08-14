@@ -30,7 +30,11 @@ public class ScheduledAPIRequestExecutor {
 
     @Scheduled(fixedDelay = 5000)
     public void executePropagation() {
-        taskExecutor.execute(new ScheduledAPIRequestExecutorRunnable(apiRequestExecutor));
+        Object noTasks = System.getProperty("noScheduledTasks");
+
+        if (noTasks == null) {
+            taskExecutor.execute(new ScheduledAPIRequestExecutorRunnable(apiRequestExecutor));
+        }
     }
 
 }

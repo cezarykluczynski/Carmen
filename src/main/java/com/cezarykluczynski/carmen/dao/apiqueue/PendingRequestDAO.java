@@ -36,4 +36,6 @@ public interface PendingRequestDAO {
 
     public void delete(PendingRequest pendingRequest);
 
+    public Long countByPropagationId(Long propagationId);
+
 }

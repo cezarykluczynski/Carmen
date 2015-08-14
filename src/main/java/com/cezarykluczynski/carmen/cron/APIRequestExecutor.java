@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron;
 
+import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.executor.UserGhostPaginator;
 import com.cezarykluczynski.carmen.executor.UserGhost;
 
+@Component
 public class APIRequestExecutor {
 
     @Autowired
@@ -32,18 +34,27 @@ public class APIRequestExecutor {
         }
     }
 
-    private void runExecutor(PendingRequest pendingRequest) throws IOException {
+    public void runExecutor(PendingRequest pendingRequest) throws IOException {
         String executor = pendingRequest.getExecutor();
 
         switch (executor) {
             case "UsersGhostPaginator":
-                userGhostPaginator.execute(pendingRequest);
+                executeUsersGhostPaginator(pendingRequest);
                 break;
             case "UserGhost":
-                userGhost.execute(pendingRequest);
+                executeUserGhost(pendingRequest);
                 break;
             default:
                 break;
         }
     }
+
+    public void executeUsersGhostPaginator(PendingRequest pendingRequest) throws IOException {
+        userGhostPaginator.execute(pendingRequest);
+    }
+
+    public void executeUserGhost(PendingRequest pendingRequest) throws IOException {
+        userGhost.execute(pendingRequest);
+    }
+
 }

@@ -53,4 +53,29 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
         return userFollowingEntity;
     }
 
+    @Override
+    @Transactional
+    public void update(UserFollowing userFollowing) {
+        Session session = sessionFactory.openSession();
+        session.update(userFollowing);
+        session.flush();
+        session.close();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserFollowing findById(Long userId) {
+        Session session = sessionFactory.openSession();
+        UserFollowing user = null;
+
+        try {
+            user = (UserFollowing) session.get(UserFollowing.class, userId);
+        } catch(Exception e) {
+        }
+
+        session.close();
+        return user;
+    }
+
+
 }

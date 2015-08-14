@@ -11,4 +11,8 @@ public interface UserFollowingDAO {
 
     public UserFollowing create(User userEntity, String phase);
 
+    public void update(UserFollowing userFollowing);
+
+    public UserFollowing findById(Long id);
+
 }

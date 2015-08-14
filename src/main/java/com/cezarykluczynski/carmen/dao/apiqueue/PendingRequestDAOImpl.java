@@ -6,6 +6,8 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
+import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 
 import java.util.List;
 import java.util.HashMap;
@@ -125,6 +127,18 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         session.delete(pendingRequest);
         session.flush();
         session.close();
+    }
+
+    @Override
+    @Transactional
+    public Long countByPropagationId(Long propagationId) {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(PendingRequest.class);
+        criteria.add(Restrictions.eq("propagationId", propagationId));
+        criteria.setProjection(Projections.rowCount());
+        Long result = (Long) criteria.uniqueResult();
+        session.close();
+        return result;
     }
 
 }

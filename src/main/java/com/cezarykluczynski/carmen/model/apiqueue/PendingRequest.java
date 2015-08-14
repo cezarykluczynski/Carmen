@@ -98,6 +98,7 @@ public class PendingRequest {
         return jsonToHashMap(queryParams);
     }
 
+    // TODO: move to utils
     private HashMap<String, Object> jsonToHashMap(String jsonString) {
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         JSONObject json = new JSONObject(jsonString);

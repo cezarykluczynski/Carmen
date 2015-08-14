@@ -11,6 +11,7 @@ import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 
 @Component
 public class UserFollowing implements com.cezarykluczynski.carmen.propagation.Propagation {
@@ -38,6 +39,25 @@ public class UserFollowing implements com.cezarykluczynski.carmen.propagation.Pr
         List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations = propagationsUserFollowingDao.findByUser(userEntity);
 
         tryCreateDiscoverPhase(userFollowingPropagations);
+    }
+
+    public void tryToMoveToReportPhase(PendingRequest pendingRequest) {
+        Long propagationId = pendingRequest.getPropagationId();
+        Long count = apiqueuePendingRequestDao.countByPropagationId(propagationId);
+
+        if (count > 0) {
+            return;
+        }
+
+        com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
+            propagationsUserFollowingDao.findById(pendingRequest.getPropagationId());
+
+        if (!userFollowing.getPhase().equals("discover")) {
+            return;
+        }
+
+        userFollowing.setPhase("summary");
+        propagationsUserFollowingDao.update(userFollowing);
     }
 
     private void tryCreateDiscoverPhase(List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations) {

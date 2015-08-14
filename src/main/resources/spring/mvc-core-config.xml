@@ -20,11 +20,14 @@
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <mvc:annotation-driven />
-    <aop:aspectj-autoproxy proxy-target-class="true" />
 
-    <!-- Todo: -->
+    <aop:aspectj-autoproxy proxy-target-class="true">
+      <aop:include name="userPropagationFollowers"/>
+      <aop:include name="userPropagationFollowing"/>
+      <aop:include name="userGhostEndDiscoverPhase"/>
+    </aop:aspectj-autoproxy>
+
     <tx:annotation-driven proxy-target-class="true" />
-    <!-- <tx:annotation-driven /> -->
 
     <mvc:view-controller path="/" view-name="welcome" />
     <mvc:default-servlet-handler />
@@ -66,4 +69,5 @@
     <!-- Aspects -->
     <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowers" />
     <bean id="userPropagationFollowing" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowing" />
+    <bean id="userGhostEndDiscoverPhase" class="com.cezarykluczynski.carmen.aspect.UserGhostEndDiscoverPhase" />
 </beans>

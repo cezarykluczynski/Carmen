@@ -70,7 +70,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
             if (propagation instanceof Propagation) {
                 pendingRequest.setPropagation((Propagation) propagation);
             } else if (propagation instanceof Long) {
-                pendingRequest.setPropagation((Long) propagation);
+                pendingRequest.setPropagationId((Long) propagation);
             }
         }
 

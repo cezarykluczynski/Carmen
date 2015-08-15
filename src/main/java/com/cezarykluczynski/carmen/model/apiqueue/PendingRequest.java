@@ -129,7 +129,7 @@ public class PendingRequest {
         propagationId = propagation.getId();
     }
 
-    public void setPropagation(Long propagationId) {
+    public void setPropagationId(Long propagationId) {
         this.propagationId = propagationId;
     }
 

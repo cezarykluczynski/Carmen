@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Order;
+import org.hibernate.ObjectNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -46,9 +47,17 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
             .addOrder(Order.asc("updated"))
             .setMaxResults(1);
 
-        List<UserFollowers> list = criteria.list();
-        session.close();
-        return list.size() > 0 ? list.get(0) : null;
+        UserFollowers entity = null;
+
+        try {
+            List<UserFollowers> list = criteria.list();
+            entity = list.size() > 0 ? list.get(0) : null;
+        } catch(ObjectNotFoundException e) {
+        } finally {
+            session.close();
+        }
+
+        return entity;
     }
 
     @Override

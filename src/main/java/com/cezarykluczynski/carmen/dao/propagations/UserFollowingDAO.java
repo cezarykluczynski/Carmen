@@ -9,6 +9,8 @@ public interface UserFollowingDAO {
 
     public List<UserFollowing> findByUser(User userEntity);
 
+    public UserFollowing findOldestPropagationInDiscoverPhase();
+
     public UserFollowing create(User userEntity, String phase);
 
     public void update(UserFollowing userFollowing);

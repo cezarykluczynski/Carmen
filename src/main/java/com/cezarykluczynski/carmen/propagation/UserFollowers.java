@@ -43,6 +43,10 @@ public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Pr
 
     public void tryToMoveToReportPhase(PendingRequest pendingRequest) {
         Long propagationId = pendingRequest.getPropagationId();
+        tryToMoveToReportPhase(propagationId);
+    }
+
+    public void tryToMoveToReportPhase(Long propagationId) {
         Long count = apiqueuePendingRequestDao.countByPropagationId(propagationId);
 
         if (count > 0) {

@@ -43,6 +43,10 @@ public class UserFollowing implements com.cezarykluczynski.carmen.propagation.Pr
 
     public void tryToMoveToReportPhase(PendingRequest pendingRequest) {
         Long propagationId = pendingRequest.getPropagationId();
+        tryToMoveToReportPhase(propagationId);
+    }
+
+    public void tryToMoveToReportPhase(Long propagationId) {
         Long count = apiqueuePendingRequestDao.countByPropagationId(propagationId);
 
         if (count > 0) {
@@ -50,7 +54,7 @@ public class UserFollowing implements com.cezarykluczynski.carmen.propagation.Pr
         }
 
         com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
-            propagationsUserFollowingDao.findById(pendingRequest.getPropagationId());
+            propagationsUserFollowingDao.findById(propagationId);
 
         if (!userFollowing.getPhase().equals("discover")) {
             return;

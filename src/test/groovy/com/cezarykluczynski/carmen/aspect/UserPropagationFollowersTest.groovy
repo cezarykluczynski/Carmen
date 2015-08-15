@@ -79,8 +79,8 @@ class UserFollowersTest extends AbstractTestNGSpringContextTests {
         pendingRequestsList = pendingRequestDAOImpl.findByUser userEntity
 
         assertThat pendingRequestsList.size(), equalTo(2)
-
-        // TODO: assert executors
+        assertThat pendingRequestsList.get(1).getExecutor(), equalTo("UsersGhostPaginator")
+        assertThat pendingRequestsList.get(1).getPropagationId(), equalTo(userFollowers.getId())
     }
 
     @AfterMethod

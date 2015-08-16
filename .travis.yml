@@ -3,10 +3,13 @@ jdk:
   - oraclejdk8
 addons:
   postgresql: '9.4'
+services:
+  - cassandra
 before_install:
   - nvm install 0.12
   - nvm use 0.12
   - psql -c 'create database carmen;' -U postgres
+  - cp src/main/resources/travis/cassandra.properties src/main/resources/cassandra.properties
   - mvn compile
 install:
   - mvn flyway:migrate

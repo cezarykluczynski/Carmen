@@ -14,6 +14,7 @@ This is your personal token. Do not commit it.
 ## Installation
 Install using:
 ```sh
+cp src/main/resources/example/cassandra.properties src/main/resources/cassandra.properties
 psql -c 'create database carmen;' -U postgres
 mvn compile
 mvn flyway:migrate
@@ -21,6 +22,8 @@ npm install --global gulp
 npm install
 gulp
 ```
+
+You may need to customize PostgreSQL and Cassandra credendials.
 
 ## Startup
 Start using:

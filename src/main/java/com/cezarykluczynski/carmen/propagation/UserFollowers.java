@@ -60,7 +60,7 @@ public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Pr
             return;
         }
 
-        userFollowers.setPhase("summary");
+        userFollowers.setPhase("report");
         propagationsUserFollowersDao.update(userFollowers);
     }
 

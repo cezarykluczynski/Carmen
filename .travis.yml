@@ -13,6 +13,7 @@ before_install:
   - mvn compile
 install:
   - mvn flyway:migrate
+  - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
   - npm install --global gulp
   - npm install
   - gulp

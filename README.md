@@ -15,6 +15,7 @@ This is your personal token. Do not commit it.
 Install using:
 ```sh
 cp src/main/resources/example/cassandra.properties src/main/resources/cassandra.properties
+mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
 psql -c 'create database carmen;' -U postgres
 mvn compile
 mvn flyway:migrate

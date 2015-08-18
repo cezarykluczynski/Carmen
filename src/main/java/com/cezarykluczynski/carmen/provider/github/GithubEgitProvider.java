@@ -11,7 +11,6 @@ import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.client.PageIterator;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Collection;
 
 public class GithubEgitProvider implements GithubProviderInterface {

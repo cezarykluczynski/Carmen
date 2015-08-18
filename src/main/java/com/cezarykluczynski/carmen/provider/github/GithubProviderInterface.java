@@ -1,8 +1,6 @@
 package com.cezarykluczynski.carmen.provider.github;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.List;
 
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;

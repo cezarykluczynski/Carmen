@@ -7,20 +7,12 @@ import com.netflix.astyanax.connectionpool.*;
 import com.netflix.astyanax.connectionpool.impl.*;
 import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 
-import org.springframework.core.env.Environment;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.google.common.collect.ImmutableMap;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.InputStream;
 import java.util.Properties;
-
-import java.util.HashMap;
 
 class CassandraMigrations {
 

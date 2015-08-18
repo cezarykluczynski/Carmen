@@ -2,8 +2,6 @@ package com.cezarykluczynski.carmen.set.github;
 
 import javax.persistence.Entity;
 
-import java.util.Date;
-
 @Entity
 public class User {
 

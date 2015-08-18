@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.web.GithubProvider;
+package com.cezarykluczynski.carmen.provider.github.githubprovider;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,7 +40,7 @@ public class ApiLimitsCoreAreHonoredTest {
         calendar.setTime(new Date());
         /**
          * Create limit that will expire in one second,
-         * so we're fairlu sure it will be picked by GithubProvider.
+         * so we're fairly sure it will be picked by GithubProvider.
          */
         Date reset = new Date(calendar.getTimeInMillis() + 1000 * 60 * 60 - 1000);
 

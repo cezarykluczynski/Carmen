@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.dao.github;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;

@@ -4,21 +4,11 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
-import java.lang.reflect.Type;
-
 import org.json.JSONObject;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
-
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.Gson;
 
 @Entity(name = "api_queue.PendingRequests")
 @Table(schema = "api_queue", name = "pending_requests")

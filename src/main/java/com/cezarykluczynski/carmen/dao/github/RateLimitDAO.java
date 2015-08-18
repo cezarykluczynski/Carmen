@@ -2,8 +2,6 @@ package com.cezarykluczynski.carmen.dao.github;
 
 import com.cezarykluczynski.carmen.model.github.RateLimit;
 
-import java.util.Map;
-
 public interface RateLimitDAO {
 
     public RateLimit create(com.cezarykluczynski.carmen.set.github.RateLimit rateLimit);

@@ -2,17 +2,11 @@ package com.cezarykluczynski.carmen.model.github;
 
 import javax.persistence.*;
 
-import org.hibernate.Hibernate;
-
 import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
 import org.joda.time.MutableDateTime;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity(name = "github.User")
 @Table(schema = "github", name = "users")

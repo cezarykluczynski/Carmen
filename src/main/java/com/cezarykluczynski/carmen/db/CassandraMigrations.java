@@ -41,11 +41,6 @@ class CassandraMigrations {
             port = Integer.parseInt(properties.getProperty("cassandra.thrift_port"));
             cluster = properties.getProperty("cassandra.cluster");
             keyspaceName = properties.getProperty("cassandra.keyspace");
-
-            System.out.println(contactpoints);
-            System.out.println(port);
-            System.out.println(cluster);
-            System.out.println(keyspaceName);
         } catch (IOException ioe) {
             System.out.println("Carmen: cassandra.properties not found or incomplete.");
 

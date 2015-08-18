@@ -1,9 +1,6 @@
 <jsp:include page="fragments/staticFiles.jsp"/>
 <body>
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-    </div>
-</nav>
+<jsp:include page="fragments/topbar.jsp"/>
 
     <div class="container">
         <div class="row user-search-container">

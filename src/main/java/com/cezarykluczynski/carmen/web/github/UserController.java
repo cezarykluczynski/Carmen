@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.cezarykluczynski.carmen.model.github.User;
 
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 
 @Controller
@@ -23,7 +26,7 @@ public class UserController {
     com.cezarykluczynski.carmen.dao.github.UserDAOImpl githubUserDAOImpl;
 
     @RequestMapping("/{login}")
-    public ModelAndView user(@PathVariable String login) {
+    public ModelAndView user(@PathVariable String login, HttpServletResponse response) {
         User user = githubUserDAOImpl.findByLogin(login);
 
         Map<String, Object> viewVariables = new HashMap<>();
@@ -32,6 +35,10 @@ public class UserController {
 
         Boolean userWasFound = user instanceof User && user.getFound();
         String templateName = userWasFound ? "github/user/user" : "github/user/404";
+
+        if (!userWasFound) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
 
         return new ModelAndView(templateName, viewVariables);
     }

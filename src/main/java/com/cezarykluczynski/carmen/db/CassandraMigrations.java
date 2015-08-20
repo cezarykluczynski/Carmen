@@ -2,7 +2,10 @@ package com.cezarykluczynski.carmen.db;
 
 import com.netflix.astyanax.*;
 import com.netflix.astyanax.impl.*;
-import com.netflix.astyanax.thrift.*;
+import com.netflix.astyanax.model.ColumnFamily;
+import com.netflix.astyanax.model.CqlResult;
+import com.netflix.astyanax.serializers.StringSerializer;
+import com.netflix.astyanax.serializers.UUIDSerializer;
 import com.netflix.astyanax.connectionpool.*;
 import com.netflix.astyanax.connectionpool.impl.*;
 import com.netflix.astyanax.thrift.ThriftFamilyFactory;
@@ -13,6 +16,7 @@ import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.UUID;
 
 class CassandraMigrations {
 
@@ -23,6 +27,7 @@ class CassandraMigrations {
         Integer port = null;
         String cluster = null;
         String keyspaceName = null;
+        String version = null;
 
         try {
             Properties properties = new Properties();
@@ -33,6 +38,9 @@ class CassandraMigrations {
             port = Integer.parseInt(properties.getProperty("cassandra.thrift_port"));
             cluster = properties.getProperty("cassandra.cluster");
             keyspaceName = properties.getProperty("cassandra.keyspace");
+            version = (String) properties.getProperty("cassandra.version");
+
+            System.out.println(version);
         } catch (IOException ioe) {
             System.out.println("Carmen: cassandra.properties not found or incomplete.");
 
@@ -43,6 +51,8 @@ class CassandraMigrations {
             .forCluster(cluster)
             .forKeyspace(keyspaceName)
             .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
+                .setTargetCassandraVersion(version)
+                .setCqlVersion("3.0.0")
                 .setDiscoveryType(NodeDiscoveryType.NONE)
             )
             .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
@@ -55,6 +65,16 @@ class CassandraMigrations {
 
         context.start();
         Keyspace keyspace = context.getClient();
+
+        createKeyspace(keyspace);
+        createMigrationsTable(keyspace);
+
+        context.shutdown();
+        System.exit(0);
+    }
+
+    private static void createKeyspace(Keyspace keyspace) throws ConnectionException {
+        String keyspaceName = keyspace.getKeyspaceName();
 
         try {
             keyspace.describeKeyspace();
@@ -75,9 +95,22 @@ class CassandraMigrations {
                 throw ce;
             }
         }
+    }
 
-        context.shutdown();
-        System.exit(0);
+    private static void createMigrationsTable(Keyspace keyspace) throws ConnectionException {
+        String keyspaceName = keyspace.getKeyspaceName();
+
+        ColumnFamily<UUID, String> SCHEMA_MIGRATIONS = ColumnFamily.newColumnFamily(
+            "schema_migrations",
+            UUIDSerializer.get(),
+            StringSerializer.get()
+        );
+
+        OperationResult<CqlResult<UUID, String>> result
+            = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+                .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".schema_migrations " +
+                    "(id uuid, name varchar, created timestamp, PRIMARY KEY(id));")
+                .execute();
     }
 
 }

@@ -73,7 +73,8 @@ class CassandraMigrations {
 
         createKeyspace(keyspace);
         createMigrationsTable(keyspace);
-        migrate(keyspace);
+        migrateFollowersAndFollowees(keyspace);
+        migrateFollowingBeingFollowees(keyspace);
 
         context.shutdown();
         System.exit(0);
@@ -119,52 +120,36 @@ class CassandraMigrations {
                 .execute();
     }
 
-    private static void migrate(Keyspace keyspace) throws ConnectionException {
-        ColumnFamily<String, String> SCHEMA_MIGRATIONS = ColumnFamily.newColumnFamily(
-                "schema_migrations",
-                StringSerializer.get(),
-                StringSerializer.get()
-            );
+    private static void migrateFollowersAndFollowees(Keyspace keyspace) throws ConnectionException {
+        String keyspaceName = keyspace.getKeyspaceName();
 
-        Rows<String, String> rows = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
-            .getAllRows()
-            .setBlockSize(10)
-            .withColumnRange(new RangeBuilder().setMaxSize(10).build())
-            .execute().getResult();
+        ColumnFamily<UUID, String> SCHEMA_MIGRATIONS = ColumnFamily.newColumnFamily(
+            "followers_and_followees",
+            UUIDSerializer.get(),
+            StringSerializer.get()
+        );
 
-        Iterator iterator = rows.iterator();
+        OperationResult<CqlResult<UUID, String>> result
+            = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+                .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".followers_and_followees " +
+                    "(id uuid, user_id int, followers_count int, followees_count int, shared_count int, PRIMARY key(id));")
+                .execute();
+    }
 
-        String columnName;
-        Integer version;
-        String name;
-        java.util.Date created;
+    private static void migrateFollowingBeingFollowees(Keyspace keyspace) throws ConnectionException {
+    	String keyspaceName = keyspace.getKeyspaceName();
 
-        while(iterator.hasNext()) {
-            ThriftRowImpl row = (ThriftRowImpl) iterator.next();
-            ColumnList columns = row.getColumns();
-            Iterator columnsIterator = columns.iterator();
+        ColumnFamily<UUID, String> SCHEMA_MIGRATIONS = ColumnFamily.newColumnFamily(
+            "followeers_being_followees",
+            UUIDSerializer.get(),
+            StringSerializer.get()
+        );
 
-            columnName = null;
-            version = null;
-            name = null;
-            created = null;
-
-            while(columnsIterator.hasNext()) {
-                Column column = (Column) columnsIterator.next();
-                columnName = (String) column.getName();
-                System.out.println("columnName: '" + columnName + "'");
-                if (columnName.equals("version")) {
-                    version = column.getIntegerValue();
-                } else if (columnName.equals("name")) {
-                    name = column.getStringValue();
-                } else if (columnName.equals("created")) {
-                    created = column.getDateValue();
-                }
-            }
-            System.out.println(version);
-            System.out.println(name);
-            System.out.println(created);
-        }
+        OperationResult<CqlResult<UUID, String>> result
+        = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+            .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".followers_being_followees " +
+                "(id uuid, user_id int, follower_being_followee int, PRIMARY key(id));")
+            .execute();
     }
 
 }

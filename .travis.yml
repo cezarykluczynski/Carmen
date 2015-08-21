@@ -10,6 +10,7 @@ before_install:
   - nvm use 0.12
   - psql -c 'create database carmen;' -U postgres
   - cp src/main/resources/travis/cassandra.properties src/main/resources/cassandra.properties
+  - cp src/main/resources/travis/postgres.properties src/main/resources/postgres.properties
   - mvn compile
 install:
   - mvn flyway:migrate

@@ -5,11 +5,15 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:postgres.properties" />
+  </bean>
+
   <bean id="myDataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="org.postgresql.Driver"/>
-    <property name="url" value="jdbc:postgresql://localhost/carmen"/>
-    <property name="username" value="postgres"/>
-    <property name="password" value=""/>
+    <property name="driverClassName" value="${postgres.driverClassName}"/>
+    <property name="url" value="${postgres.url}"/>
+    <property name="username" value="${postgres.username}"/>
+    <property name="password" value="${postgres.password}"/>
   </bean>
 
   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

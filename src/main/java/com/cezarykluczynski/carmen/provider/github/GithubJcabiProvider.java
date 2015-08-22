@@ -32,22 +32,24 @@ public class GithubJcabiProvider implements GithubProviderInterface {
     public RateLimit getCoreLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart coreLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("core"));
+        JsonObject coreLimitsJson = coreLimits.json();
         return new RateLimit(
             "core",
-            coreLimits.limit(),
-            coreLimits.remaining(),
-            correctSecondsLimit(coreLimits.reset())
+            coreLimitsJson.getInt("limit"),
+            coreLimitsJson.getInt("remaining"),
+            dateFromSecondsTimestamp(coreLimitsJson.getInt("reset"))
         );
     }
 
     public RateLimit getSearchLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart searchLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("search"));
+        JsonObject searchLimitsJson = searchLimits.json();
         return new RateLimit(
             "search",
-            searchLimits.limit(),
-            searchLimits.remaining(),
-            correctSecondsLimit(searchLimits.reset())
+            searchLimitsJson.getInt("limit"),
+            searchLimitsJson.getInt("remaining"),
+            dateFromSecondsTimestamp(searchLimitsJson.getInt("reset"))
         );
     }
 
@@ -84,18 +86,8 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         throw new IOException("Implemented in different provider.");
     }
 
-    /**
-     * Until Jcabi fix their implementation, this fix has to be here.
-     * Basically, GitHub returns timestamp in seconds, and Date constructor expect miliseconds,
-     * but no conversion is made.
-     *
-     * @see https://github.com/jcabi/jcabi-github/pull/1153
-     */
-    private Date correctSecondsLimit(Date limit) {
-        return new Date(TimeUnit.MILLISECONDS.convert(
-            limit.getTime(),
-            TimeUnit.SECONDS
-        ));
+    private Date dateFromSecondsTimestamp(Integer limit) {
+        return new Date(TimeUnit.MILLISECONDS.convert(limit, TimeUnit.SECONDS));
     }
 
     private String getUserName(JsonObject userJson) {

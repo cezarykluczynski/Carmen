@@ -2,6 +2,9 @@ package com.cezarykluczynski.carmen.model.github;
 
 import javax.persistence.*;
 
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
+
 import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
@@ -14,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
     @OneToOne
@@ -91,16 +94,38 @@ public class User {
         followers.add(follower);
     }
 
-    public void addFollowee(User followee) {
-        followees.add(followee);
-    }
-
     public Set<User> getFollowers() {
         return followers;
     }
 
+    public void addFollowee(User followee) {
+        followees.add(followee);
+    }
+
     public Set<User> getFollowees() {
         return followees;
+    }
+
+    @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private UserFollowers userFollowers;
+
+    public void setUserFollowers(UserFollowers userFollowers) {
+        this.userFollowers = userFollowers;
+    }
+
+    public UserFollowers getUserFollowers() {
+        return userFollowers;
+    }
+
+    @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private UserFollowing userFollowing;
+
+    public void setUserFollowing(UserFollowing userFollowing) {
+        this.userFollowing = userFollowing;
+    }
+
+    public UserFollowing getUserFollowing() {
+        return userFollowing;
     }
 
     public Long getId() {

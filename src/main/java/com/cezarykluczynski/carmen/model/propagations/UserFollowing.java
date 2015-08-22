@@ -16,7 +16,7 @@ public class UserFollowing implements Propagation {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "github_user_id")
+    @JoinColumn(name = "github_user_id", referencedColumnName = "id")
     private User user;
 
     @Column

@@ -102,5 +102,4 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
         return user;
     }
 
-
 }

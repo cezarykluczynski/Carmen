@@ -64,6 +64,8 @@
     </bean>
 
     <bean name="propagationUserFollowers" class="com.cezarykluczynski.carmen.propagation.UserFollowers" />
+    <bean name="propagationUserFollowing" class="com.cezarykluczynski.carmen.propagation.UserFollowing" />
+    <bean name="propagationUserFollowersFollowingReportToSleepPhase" class="com.cezarykluczynski.carmen.propagation.UserFollowersFollowingReportToSleepPhase" />
 
     <!-- Aspects -->
     <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowers" />

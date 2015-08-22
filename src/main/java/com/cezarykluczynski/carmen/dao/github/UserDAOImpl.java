@@ -20,6 +20,7 @@ import java.lang.Boolean;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
+import java.math.BigInteger;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -77,7 +78,10 @@ public class UserDAOImpl implements UserDAO {
 
         try {
             session
-                .createSQLQuery("INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") VALUES (:followerId, :followeeId)" )
+                .createSQLQuery(
+                    "INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") " +
+                    "VALUES (:followerId, :followeeId)"
+                )
                 .setParameter("followerId", follower.getId())
                 .setParameter("followeeId", followee.getId())
                 .executeUpdate();
@@ -215,6 +219,54 @@ public class UserDAOImpl implements UserDAO {
         Object result = criteria.uniqueResult();
         session.close();
         return result;
+    }
+
+    public User findUserInReportFollowersFolloweesPhase() throws IOException {
+        Session session = sessionFactory.openSession();
+        List<User> list = session.createQuery(
+            "SELECT u FROM github.User u " +
+            "LEFT JOIN u.userFollowers fs " +
+            "LEFT JOIN u.userFollowing fg " +
+            "WHERE fs.phase = :phase AND fg.phase = :phase " +
+            "ORDER BY fs.updated ASC, fg.updated ASC"
+        )
+            .setString("phase", "report")
+            .setMaxResults(1)
+            .list();
+        session.close();
+       return list.size() > 0 ? list.get(0) : null;
+    }
+
+    public Integer countFollowers(User user) {
+        Session session = sessionFactory.openSession();
+
+        return ((BigInteger) session.createSQLQuery(
+            "SELECT count(*) FROM github.user_followers WHERE followee_id = :followeeId"
+        )
+            .setParameter("followeeId", user.getId())
+            .uniqueResult()).intValue();
+    }
+
+    public Integer countFollowing(User user) {
+        Session session = sessionFactory.openSession();
+
+        return ((BigInteger) session.createSQLQuery(
+            "SELECT count(*) FROM github.user_followers WHERE follower_id = :followerId"
+        )
+            .setParameter("followerId", user.getId())
+            .uniqueResult()).intValue();
+    }
+
+    public Integer countFollowersFollowing(User user) {
+        Session session = sessionFactory.openSession();
+
+        return ((BigInteger) session.createSQLQuery(
+            "SELECT count(*) FROM github.user_followers f1 " +
+            "INNER JOIN github.user_followers f2 ON f2.follower_id = f1.followee_id " +
+            "WHERE f1.follower_id = :userId AND f2.followee_id = :userId"
+        )
+            .setParameter("userId", user.getId())
+            .uniqueResult()).intValue();
     }
 
 }

@@ -21,4 +21,13 @@ public interface UserDAO {
     public User createOrUpdateGhostEntity(String username) throws IOException;
 
     public Object countFound();
+
+    public User findUserInReportFollowersFolloweesPhase() throws IOException;
+
+    public Integer countFollowers(User user);
+
+    public Integer countFollowing(User user);
+
+    public Integer countFollowersFollowing(User user);
+
 }

@@ -95,8 +95,7 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
 
         try {
             user = (UserFollowers) session.get(UserFollowers.class, userId);
-        } catch(Exception e) {
-        }
+        } catch(Exception e) {}
 
         session.close();
         return user;

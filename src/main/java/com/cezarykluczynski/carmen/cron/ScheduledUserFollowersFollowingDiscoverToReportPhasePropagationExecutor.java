@@ -33,7 +33,7 @@ public class ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExec
         this.taskExecutor = taskExecutor;
     }
 
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
         Object noTasks = System.getProperty("noScheduledTasks");
 

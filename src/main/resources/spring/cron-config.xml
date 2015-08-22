@@ -20,14 +20,20 @@
         <property name="queueCapacity" value="1" />
     </bean>
 
+    <!-- Cron executors -->
     <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
     <bean id="scheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
+    <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
 
+    <!-- Cron jobs -->
     <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
+    <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
     <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
     <bean id="userGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />

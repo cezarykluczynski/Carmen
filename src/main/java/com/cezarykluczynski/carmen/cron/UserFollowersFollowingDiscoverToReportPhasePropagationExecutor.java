@@ -60,4 +60,5 @@ public class UserFollowersFollowingDiscoverToReportPhasePropagationExecutor {
         Integer randomNum = rand.nextInt((max - min) + 1) + min;
         return randomNum;
     }
+
 }

@@ -9,12 +9,17 @@ import java.io.IOException;
 import java.lang.AssertionError;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import javax.json.JsonObject;
+import javax.json.JsonValue;
+
 import java.lang.ClassCastException;
 import java.lang.IllegalStateException;
 
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
+
 
 public class GithubJcabiProvider implements GithubProviderInterface {
 
@@ -51,18 +56,20 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         Smart user = new Smart(privateUser);
 
         try {
+            JsonObject userJson = user.json();
+
             return new User(
-                new Long(user.id()),
-                user.login(),
-                getUserName(user),
-                user.avatarUrl().toString(),
-                user.type(),
-                user.json().getBoolean("site_admin"), // There's some bug with boolean in Jcabi
-                getUserCompany(user),
-                getUserBlog(user),
-                getUserLocation(user),
-                getUserEmail(user),
-                getHireable(user)
+                new Long(userJson.getInt("id")),
+                userJson.getString("login"),
+                getUserName(userJson),
+                userJson.getString("avatar_url"),
+                userJson.getString("type"),
+                userJson.getBoolean("site_admin"),
+                getUserCompany(userJson),
+                getUserBlog(userJson),
+                getUserLocation(userJson),
+                getUserEmail(userJson),
+                getUserHireable(userJson)
             );
         } catch (AssertionError e) {
             return new User(null, name);
@@ -91,15 +98,12 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         ));
     }
 
-    private String getUserName(com.jcabi.github.User.Smart user) {
+    private String getUserName(JsonObject userJson) {
         String name = null;
 
         try {
-            if (user.hasName()) {
-                name = user.name();
-            }
+            name = userJson.getString("name");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         }
 
@@ -110,13 +114,12 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         return name;
     }
 
-    private String getUserCompany(com.jcabi.github.User.Smart user) {
+    private String getUserCompany(JsonObject userJson) {
         String company = null;
 
         try {
-            company = user.company();
+            company = userJson.getString("company");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         }
 
@@ -127,13 +130,12 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         return company;
     }
 
-    private String getUserLocation(com.jcabi.github.User.Smart user) {
+    private String getUserLocation(JsonObject userJson) {
         String location = null;
 
         try {
-            location = user.location();
+            location = userJson.getString("location");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         }
 
@@ -144,13 +146,12 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         return location;
     }
 
-    private String getUserBlog(com.jcabi.github.User.Smart user) {
+    private String getUserBlog(JsonObject userJson) {
         String blog = null;
 
         try {
-            blog = user.blog().toString();
+            blog = userJson.getString("blog");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         }
 
@@ -161,30 +162,28 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         return blog;
     }
 
-    private String getUserEmail(com.jcabi.github.User.Smart user) {
+    private String getUserEmail(JsonObject userJson) {
         String email = null;
 
         try {
-            email = user.email();
+           email = userJson.getString("email");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         }
 
-        if (email == null) {
-            email = "";
-        }
+       if (email == null) {
+           email = "";
+       }
 
-        return email;
+       return email;
     }
 
-    private Boolean getHireable(com.jcabi.github.User.Smart user) {
+    private Boolean getUserHireable(JsonObject userJson) {
         Boolean hireable = false;
 
         try {
-            hireable = user.json().getBoolean("hireable"); // There's some bug with boolean in Jcabi
+            hireable = userJson.getBoolean("hireable");
         } catch (ClassCastException e) {
-        } catch (IOException e) {
         } catch (IllegalStateException e) {
         } catch (NullPointerException e) {
         }

@@ -285,6 +285,7 @@
       <version>2.2.0</version>
     </dependency>
 
+    <!-- This is here to resolve dependency conflict. -->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>

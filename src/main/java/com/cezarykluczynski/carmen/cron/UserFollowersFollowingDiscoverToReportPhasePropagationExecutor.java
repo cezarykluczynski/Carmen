@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Random;
 
-public class PropagationExecutor {
+public class UserFollowersFollowingDiscoverToReportPhasePropagationExecutor {
 
     @Autowired
     UserFollowersDAOImpl propagationsUserFollowersDao;

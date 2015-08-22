@@ -23,11 +23,11 @@
     <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-    <bean id="scheduledPropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledPropagationExecutor">
+    <bean id="scheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
 
-    <bean id="propagationExecutor" class="com.cezarykluczynski.carmen.cron.PropagationExecutor" />
+    <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
     <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
     <bean id="userGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />

@@ -7,7 +7,7 @@
         <div class="col-md-12 text-center">
             <h1>Hang tight</h1>
             <h2 class="glyphicon glyphicon-hourglass"></h2>
-            <p class="text-center">GitHub user <strong>${login}</strong> was found and is not being processed.</p>
+            <p class="text-center">GitHub user <strong>${login}</strong> was found and is now being processed.</p>
         </div>
     </div>
 </div>

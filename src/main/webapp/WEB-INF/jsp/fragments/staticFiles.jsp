@@ -12,6 +12,11 @@
     <spring:url value="/webjars/angularjs/1.4.3/angular.js" var="Angular"/>
     <script src="${Angular}"></script>
 
+    <spring:url value="/resources/javascript/module/carmen.js" var="moduleCarmen"/>
+    <script src="${moduleCarmen}"></script>
+    <spring:url value="/resources/javascript/controller/MainPageSearchController.js" var="MainPageSearchController"/>
+    <script src="${MainPageSearchController}"></script>
+
     <spring:url value="/resources/css/common.css" var="commonCss"/>
     <link href="${commonCss}" rel="stylesheet"/>
 

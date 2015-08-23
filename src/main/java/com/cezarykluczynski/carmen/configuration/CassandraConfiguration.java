@@ -15,14 +15,22 @@ import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.data.cassandra.mapping.BasicCassandraMappingContext;
 import org.springframework.data.cassandra.mapping.CassandraMappingContext;
 import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
+import org.springframework.data.cassandra.core.CassandraAdminOperations;
+import org.springframework.data.cassandra.core.CassandraAdminTemplate;
 
 @Configuration
 @PropertySource(value = { "classpath:cassandra.properties" })
-@EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository.github" })
-public class CassandraConfiguration {
+@EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository.githubstats" })
+public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Autowired
     private Environment env;
+
+    @Override
+    public String getKeyspaceName() {
+        return "github_stats";
+    }
 
     @Bean
     public CassandraClusterFactoryBean cluster() {
@@ -55,8 +63,8 @@ public class CassandraConfiguration {
     }
 
     @Bean
-    public CassandraOperations cassandraTemplate() throws Exception {
-        return new CassandraTemplate(session().getObject());
+    public CassandraAdminOperations cassandraTemplate() throws Exception {
+        return new CassandraAdminTemplate(session().getObject(), converter());
     }
 
 }

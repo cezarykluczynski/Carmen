@@ -26,7 +26,7 @@ public interface UserDAO {
 
     public Integer countFollowers(User user);
 
-    public Integer countFollowing(User user);
+    public Integer countFollowees(User user);
 
     public Integer countFollowersFollowing(User user);
 

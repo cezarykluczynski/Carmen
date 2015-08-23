@@ -247,7 +247,7 @@ public class UserDAOImpl implements UserDAO {
             .uniqueResult()).intValue();
     }
 
-    public Integer countFollowing(User user) {
+    public Integer countFollowees(User user) {
         Session session = sessionFactory.openSession();
 
         return ((BigInteger) session.createSQLQuery(

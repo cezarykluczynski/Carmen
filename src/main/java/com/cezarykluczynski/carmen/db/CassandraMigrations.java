@@ -129,10 +129,13 @@ class CassandraMigrations {
             StringSerializer.get()
         );
 
-        OperationResult<CqlResult<UUID, String>> result
-            = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
-                .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".followers_and_followees " +
-                    "(id uuid, user_id int, followers_count int, followees_count int, shared_count int, PRIMARY key(id));")
+        keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+            .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".followers_and_followees " +
+                "(id uuid, user_id int, followers_count int, followees_count int, shared_count int, PRIMARY key(id));")
+            .execute();
+
+        keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+                .withCql("CREATE INDEX ON " + keyspaceName + ".followers_and_followees (user_id);")
                 .execute();
     }
 
@@ -145,10 +148,13 @@ class CassandraMigrations {
             StringSerializer.get()
         );
 
-        OperationResult<CqlResult<UUID, String>> result
-        = keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+        keyspace.prepareQuery(SCHEMA_MIGRATIONS)
             .withCql("CREATE TABLE IF NOT EXISTS " + keyspaceName  +".followers_being_followees " +
                 "(id uuid, user_id int, follower_being_followee int, PRIMARY key(id));")
+            .execute();
+
+        keyspace.prepareQuery(SCHEMA_MIGRATIONS)
+            .withCql("CREATE INDEX ON " + keyspaceName + ".followers_being_followees (user_id);")
             .execute();
     }
 

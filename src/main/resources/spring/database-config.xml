@@ -56,4 +56,6 @@
   <bean id="apiqueuePendingRequestDao" class="com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+
+  <bean id="followersAndFolloweesRepository" class="com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository" />
 </beans>

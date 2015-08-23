@@ -29,26 +29,6 @@ public class FollowersAndFollowees {
     @Column(value = "shared_count")
     private int sharedCount;
 
-   //  public FollowersAndFollowees(int userId, int followersCount, int followeesCount, int sharedCount) {
-   //      this.userId = userId;
-   //      this.followersCount = followersCount;
-   //      this.followeesCount = followeesCount;
-   //      this.sharedCount = sharedCount;
-   //  }
-
-   // public FollowersAndFollowees(Long userId, int followersCount, int followeesCount, int sharedCount) {
-   //     this.id = UUIDs.random();
-   //     this.userId = new BigDecimal(userId).intValueExact();
-   //     this.followersCount = followersCount;
-   //     this.followeesCount = followeesCount;
-   //     this.sharedCount = sharedCount;
-   // }
-
-    // public FollowersAndFollowees(Long userId) {
-    //     setUserId(userId);
-    //     setId();
-    // }
-
     public void setId(UUID id) {
         this.id = id;
     }

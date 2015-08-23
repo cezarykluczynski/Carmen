@@ -69,14 +69,6 @@ public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Pr
             createDiscoverPhase(userEntity);
             return;
         }
-
-        for (com.cezarykluczynski.carmen.model.propagations.UserFollowers propagation : userFollowersPropagations) {
-            if (propagation.getPhase().equals("discover")) {
-                return;
-            }
-        }
-
-        createDiscoverPhase(userEntity);
     }
 
     private void createDiscoverPhase(User userEntity) {

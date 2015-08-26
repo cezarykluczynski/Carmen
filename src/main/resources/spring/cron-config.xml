@@ -36,6 +36,6 @@
     <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
     <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
-    <bean id="userGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginator" />
-    <bean id="userGhost" class="com.cezarykluczynski.carmen.executor.UserGhost" />
+    <bean id="userGhostPaginator" class="com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor" />
+    <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.UserGhostExecutor" />
 </beans>

@@ -12,7 +12,7 @@ import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 
 @Component
-public class UserGhost implements Executor {
+public class UserGhostExecutor implements Executor {
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDao;

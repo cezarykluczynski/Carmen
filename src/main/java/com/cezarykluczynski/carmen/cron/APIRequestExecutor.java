@@ -8,8 +8,8 @@ import java.io.IOException;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
-import com.cezarykluczynski.carmen.executor.UserGhostPaginator;
-import com.cezarykluczynski.carmen.executor.UserGhost;
+import com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor;
+import com.cezarykluczynski.carmen.executor.UserGhostExecutor;
 
 @Component
 public class APIRequestExecutor {
@@ -18,10 +18,10 @@ public class APIRequestExecutor {
     PendingRequestDAOImpl apiqueuePendingRequestDao;
 
     @Autowired
-    UserGhostPaginator userGhostPaginator;
+    UserGhostPaginatorExecutor userGhostPaginator;
 
     @Autowired
-    UserGhost userGhost;
+    UserGhostExecutor userGhost;
 
     public void run() {
         try {

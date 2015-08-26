@@ -13,7 +13,7 @@ import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 @Component
-public class UserGhostPaginator implements Executor {
+public class UserGhostPaginatorExecutor implements Executor {
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDao;

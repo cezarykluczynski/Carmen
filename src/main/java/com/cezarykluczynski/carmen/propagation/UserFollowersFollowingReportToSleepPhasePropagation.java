@@ -19,7 +19,7 @@ import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 
 @Component
-public class UserFollowersFollowingReportToSleepPhase implements com.cezarykluczynski.carmen.propagation.Propagation {
+public class UserFollowersFollowingReportToSleepPhasePropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;

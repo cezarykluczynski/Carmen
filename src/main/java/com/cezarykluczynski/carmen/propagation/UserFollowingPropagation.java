@@ -8,19 +8,19 @@ import java.util.HashMap;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 
 @Component
-public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Propagation {
+public class UserFollowingPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao;
+    UserFollowingDAOImpl propagationsUserFollowingDao;
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDao;
@@ -36,9 +36,9 @@ public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Pr
             return;
         }
 
-        List<com.cezarykluczynski.carmen.model.propagations.UserFollowers> userFollowersPropagations = propagationsUserFollowersDao.findByUser(userEntity);
+        List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations = propagationsUserFollowingDao.findByUser(userEntity);
 
-        tryCreateDiscoverPhase(userFollowersPropagations);
+        tryCreateDiscoverPhase(userFollowingPropagations);
     }
 
     public void tryToMoveToReportPhase(PendingRequest pendingRequest) {
@@ -53,28 +53,28 @@ public class UserFollowers implements com.cezarykluczynski.carmen.propagation.Pr
             return;
         }
 
-        com.cezarykluczynski.carmen.model.propagations.UserFollowers userFollowers =
-            propagationsUserFollowersDao.findById(propagationId);
+        com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
+            propagationsUserFollowingDao.findById(propagationId);
 
-        if (!userFollowers.getPhase().equals("discover")) {
+        if (!userFollowing.getPhase().equals("discover")) {
             return;
         }
 
-        userFollowers.setPhase("report");
-        propagationsUserFollowersDao.update(userFollowers);
+        userFollowing.setPhase("report");
+        propagationsUserFollowingDao.update(userFollowing);
     }
 
-    private void tryCreateDiscoverPhase(List<com.cezarykluczynski.carmen.model.propagations.UserFollowers> userFollowersPropagations) {
-        if (userFollowersPropagations.isEmpty()) {
+    private void tryCreateDiscoverPhase(List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations) {
+        if (userFollowingPropagations.isEmpty()) {
             createDiscoverPhase(userEntity);
             return;
         }
     }
 
     private void createDiscoverPhase(User userEntity) {
-        Propagation propagation = propagationsUserFollowersDao.create(userEntity, "discover");
+        Propagation propagation = propagationsUserFollowingDao.create(userEntity, "discover");
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
-        pathParams.put("endpoint", "followers_url");
+        pathParams.put("endpoint", "following_url");
         pathParams.put("login", userEntity.getLogin());
         apiqueuePendingRequestDao.create(
             "UsersGhostPaginator",

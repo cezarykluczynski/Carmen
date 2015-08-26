@@ -8,22 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.propagation.UserFollowing;
+import com.cezarykluczynski.carmen.propagation.UserFollowingPropagation;
 
 @Aspect
 @Component
 public class UserPropagationFollowing {
 
     @Autowired
-    UserFollowing propagationUserFollowing;
+    UserFollowingPropagation userFollowingPropagation;
 
     @AfterReturning(
         pointcut = "execution(* com.cezarykluczynski.carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",
         returning = "userEntity"
     )
     public void userFollowing(JoinPoint joinPoint, User userEntity) {
-        propagationUserFollowing.setUserEntity(userEntity);
-        propagationUserFollowing.propagate();
+        userFollowingPropagation.setUserEntity(userEntity);
+        userFollowingPropagation.propagate();
     }
 
 }

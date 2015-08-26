@@ -2,8 +2,8 @@ package com.cezarykluczynski.carmen.cron;
 
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl;
-import com.cezarykluczynski.carmen.propagation.UserFollowers;
-import com.cezarykluczynski.carmen.propagation.UserFollowing;
+import com.cezarykluczynski.carmen.propagation.UserFollowersPropagation;
+import com.cezarykluczynski.carmen.propagation.UserFollowingPropagation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,10 +18,10 @@ public class UserFollowersFollowingDiscoverToReportPhasePropagationExecutor {
     UserFollowingDAOImpl propagationsUserFollowingDao;
 
     @Autowired
-    UserFollowers propagationUserFollowers;
+    UserFollowersPropagation userFollowersPropagation;
 
     @Autowired
-    UserFollowing propagationUserFollowing;
+    UserFollowingPropagation userFollowingPropagation;
 
     private String[] propagationEntities = {
         "UserFollowers",
@@ -43,7 +43,7 @@ public class UserFollowersFollowingDiscoverToReportPhasePropagationExecutor {
         com.cezarykluczynski.carmen.model.propagations.UserFollowers userFollowers =
             propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase();
         if (userFollowers != null) {
-            propagationUserFollowers.tryToMoveToReportPhase(userFollowers.getId());
+            userFollowersPropagation.tryToMoveToReportPhase(userFollowers.getId());
         }
     }
 
@@ -51,7 +51,7 @@ public class UserFollowersFollowingDiscoverToReportPhasePropagationExecutor {
         com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
             propagationsUserFollowingDao.findOldestPropagationInDiscoverPhase();
         if (userFollowing != null) {
-            propagationUserFollowing.tryToMoveToReportPhase(userFollowing.getId());
+            userFollowingPropagation.tryToMoveToReportPhase(userFollowing.getId());
         }
     }
 

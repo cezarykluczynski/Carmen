@@ -36,8 +36,7 @@ public class RateLimit {
         this.id = id;
     }
 
-    public String getResource()
-    {
+    public String getResource() {
         return resource;
     }
 
@@ -72,4 +71,5 @@ public class RateLimit {
     public void setUpdated() {
         updated = new Date();
     }
+
 }

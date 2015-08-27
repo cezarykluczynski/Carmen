@@ -38,16 +38,21 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
 
     private User userEntity;
 
+    FollowersAndFollowees followersAndFollowees;
+
     public void setUserEntity(User userEntity) {
         this.userEntity = userEntity;
     }
 
     public void propagate() {
-        int followersCount = githubUserDAOImpl.countFollowers(userEntity);
-        int followeesCount = githubUserDAOImpl.countFollowees(userEntity);
-        int followersFolloweesCount = githubUserDAOImpl.countFollowersFollowing(userEntity);
+        setFollowersAndFollowingFromUserEntity();
+        hydrateFollowersAndFollowees();
+        saveFollowersAndFollowees();
+        moveFollowersFollowingPropagationToSleepPhase();
+    }
 
-        FollowersAndFollowees followersAndFollowees = null;
+    private void setFollowersAndFollowingFromUserEntity() {
+        followersAndFollowees = null;
 
         followersAndFollowees = followersAndFolloweesRepository.findByUserId(userEntity.getId());
 
@@ -56,13 +61,23 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
             followersAndFollowees.setId();
             followersAndFollowees.setUserId(userEntity.getId());
         }
+    }
+
+    private void hydrateFollowersAndFollowees() {
+        int followersCount = githubUserDAOImpl.countFollowers(userEntity);
+        int followeesCount = githubUserDAOImpl.countFollowees(userEntity);
+        int followersFolloweesCount = githubUserDAOImpl.countFollowersFollowing(userEntity);
 
         followersAndFollowees.setFollowersCount(followersCount);
         followersAndFollowees.setFolloweesCount(followeesCount);
         followersAndFollowees.setSharedCount(followersFolloweesCount);
+    }
 
+    private void saveFollowersAndFollowees() {
         followersAndFolloweesRepository.save(followersAndFollowees);
+    }
 
+    private void moveFollowersFollowingPropagationToSleepPhase() {
         UserFollowers userFollowers = propagationsUserFollowersDao.findByUser(userEntity).get(0);
         UserFollowing userFollowing = propagationsUserFollowingDao.findByUser(userEntity).get(0);
 

@@ -36,7 +36,8 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
             return;
         }
 
-        List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations = propagationsUserFollowingDao.findByUser(userEntity);
+        List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations =
+            propagationsUserFollowingDao.findByUser(userEntity);
 
         tryCreateDiscoverPhase(userFollowingPropagations);
     }
@@ -64,7 +65,9 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
         propagationsUserFollowingDao.update(userFollowing);
     }
 
-    private void tryCreateDiscoverPhase(List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations) {
+    private void tryCreateDiscoverPhase(
+        List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations
+    ) {
         if (userFollowingPropagations.isEmpty()) {
             createDiscoverPhase(userEntity);
             return;

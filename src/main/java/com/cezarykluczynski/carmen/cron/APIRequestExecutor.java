@@ -18,10 +18,10 @@ public class APIRequestExecutor {
     PendingRequestDAOImpl apiqueuePendingRequestDao;
 
     @Autowired
-    UserGhostPaginatorExecutor userGhostPaginator;
+    UserGhostPaginatorExecutor userGhostPaginatorExecutor;
 
     @Autowired
-    UserGhostExecutor userGhost;
+    UserGhostExecutor userGhostExecutor;
 
     public void run() {
         try {
@@ -34,7 +34,7 @@ public class APIRequestExecutor {
         }
     }
 
-    public void runExecutor(PendingRequest pendingRequest) throws IOException {
+    private void runExecutor(PendingRequest pendingRequest) throws IOException {
         String executor = pendingRequest.getExecutor();
 
         switch (executor) {
@@ -50,11 +50,11 @@ public class APIRequestExecutor {
     }
 
     public void executeUsersGhostPaginator(PendingRequest pendingRequest) throws IOException {
-        userGhostPaginator.execute(pendingRequest);
+        userGhostPaginatorExecutor.execute(pendingRequest);
     }
 
     public void executeUserGhost(PendingRequest pendingRequest) throws IOException {
-        userGhost.execute(pendingRequest);
+        userGhostExecutor.execute(pendingRequest);
     }
 
 }

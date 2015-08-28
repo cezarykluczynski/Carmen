@@ -29,7 +29,7 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Override
     public String getKeyspaceName() {
-        return "github_stats";
+        return env.getProperty("cassandra.keyspace");
     }
 
     @Bean
@@ -55,7 +55,7 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
     public CassandraSessionFactoryBean session() throws Exception {
         CassandraSessionFactoryBean session = new CassandraSessionFactoryBean();
         session.setCluster(cluster().getObject());
-        session.setKeyspaceName(env.getProperty("cassandra.keyspace"));
+        session.setKeyspaceName(getKeyspaceName());
         session.setConverter(converter());
         session.setSchemaAction(SchemaAction.NONE);
 

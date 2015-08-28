@@ -27,7 +27,11 @@ import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 
-@ContextConfiguration(locations = [ "classpath:spring/database-config.xml", "classpath:spring/mvc-core-config.xml", "classpath:spring/cron-config.xml" ])
+@ContextConfiguration([
+    "classpath:spring/database-config.xml",
+    "classpath:spring/mvc-core-config.xml",
+    "classpath:spring/cron-config.xml"
+])
 class UserFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

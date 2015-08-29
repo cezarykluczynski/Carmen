@@ -34,7 +34,7 @@
     <!-- Cron jobs -->
     <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
-    <bean id="APIRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
+    <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
 
     <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor" />
     <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.UserGhostExecutor" />

@@ -23,7 +23,11 @@ import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 import com.cezarykluczynski.carmen.model.github.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath:spring/database-config.xml", "classpath:spring/mvc-core-config.xml", "classpath:spring/cron-config.xml" })
+@ContextConfiguration({
+    "classpath:spring/database-config.xml",
+    "classpath:spring/mvc-core-config.xml",
+    "classpath:spring/cron-config.xml"
+})
 @WebAppConfiguration
 public class UserControllerTest {
 

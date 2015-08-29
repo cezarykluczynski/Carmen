@@ -9,7 +9,7 @@ public class ScheduledAPIRequestExecutor {
     @Autowired
     APIRequestExecutor apiRequestExecutor;
 
-    private class ScheduledAPIRequestExecutorRunnable implements Runnable {
+    public class ScheduledAPIRequestExecutorRunnable implements Runnable {
 
         private APIRequestExecutor apiRequestExecutor;
 
@@ -26,6 +26,10 @@ public class ScheduledAPIRequestExecutor {
 
     public ScheduledAPIRequestExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
+    }
+
+    public void setApiRequestExecutor(APIRequestExecutor apiRequestExecutor) {
+        this.apiRequestExecutor = apiRequestExecutor;
     }
 
     @Scheduled(fixedDelay = 5000)

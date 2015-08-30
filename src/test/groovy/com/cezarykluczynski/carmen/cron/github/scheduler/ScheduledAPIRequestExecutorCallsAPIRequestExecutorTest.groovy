@@ -41,7 +41,6 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
     void setUp() {
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
-        apiRequestExecutor = mock(APIRequestExecutor.class)
         MockitoAnnotations.initMocks this
         when apiRequestExecutor.run() thenThrow RuntimeException
     }
@@ -49,6 +48,11 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
     @Test
     void testScheduledAPIRequestExecutorCallsAPIRequestExecutor() {
         scheduledAPIRequestExecutor.executePropagation()
+        /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
+           for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
+           verification of apiRequestExecutor.run() would fail if we wouldn't wait a tiny bit.
+           This can be tuned to a few more milliseconds if it fails for anyone. */
+        Thread.sleep 1
         verify(apiRequestExecutor).run()
     }
 

@@ -31,10 +31,6 @@ public class ScheduledAPIRequestExecutor {
         this.taskExecutor = taskExecutor;
     }
 
-    public void setApiRequestExecutor(APIRequestExecutor apiRequestExecutor) {
-        this.apiRequestExecutor = apiRequestExecutor;
-    }
-
     @Scheduled(fixedDelay = 5000)
     public void executePropagation() {
         Object noTasks = System.getProperty("noScheduledTasks");

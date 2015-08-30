@@ -42,8 +42,8 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
         apiRequestExecutor = mock(APIRequestExecutor.class)
-        when(apiRequestExecutor.run()).thenThrow(RuntimeException)
         MockitoAnnotations.initMocks this
+        when apiRequestExecutor.run() thenThrow RuntimeException
     }
 
     @Test

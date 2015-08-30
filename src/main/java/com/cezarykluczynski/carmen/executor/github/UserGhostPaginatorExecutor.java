@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.executor;
+package com.cezarykluczynski.carmen.executor.github;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

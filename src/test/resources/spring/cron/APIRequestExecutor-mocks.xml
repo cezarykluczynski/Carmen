@@ -11,9 +11,9 @@
         <constructor-arg index="0" value="com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl" />
     </bean>
     <bean id="userGhostExecutor" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg index="0" value="com.cezarykluczynski.carmen.executor.UserGhostExecutor" />
+        <constructor-arg index="0" value="com.cezarykluczynski.carmen.executor.github.UserGhostExecutor" />
     </bean>
     <bean id="userGhostPaginatorExecutor" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg index="0" value="com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor" />
+        <constructor-arg index="0" value="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor" />
     </bean>
 </beans>

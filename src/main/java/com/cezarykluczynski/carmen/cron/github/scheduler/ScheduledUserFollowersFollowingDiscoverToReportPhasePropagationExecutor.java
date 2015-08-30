@@ -1,7 +1,10 @@
-package com.cezarykluczynski.carmen.cron;
+package com.cezarykluczynski.carmen.cron.github.scheduler;
 
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor {

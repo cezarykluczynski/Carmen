@@ -8,6 +8,6 @@
         ">
 
     <bean id="apiRequestExecutor" class="org.mockito.Mockito" factory-method="mock">
-        <constructor-arg index="0" value="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
+        <constructor-arg index="0" value="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />
     </bean>
 </beans>

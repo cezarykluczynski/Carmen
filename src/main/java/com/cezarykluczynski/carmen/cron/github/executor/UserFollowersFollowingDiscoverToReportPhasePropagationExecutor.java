@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron;
+package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl;

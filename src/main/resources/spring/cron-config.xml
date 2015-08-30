@@ -21,21 +21,21 @@
     </bean>
 
     <!-- Cron executors -->
-    <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledAPIRequestExecutor">
+    <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor">
+    <bean id="scheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
+    <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
 
     <!-- Cron jobs -->
-    <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
-    <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
-    <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.APIRequestExecutor" />
+    <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
+    <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
+    <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />
 
-    <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor" />
-    <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.UserGhostExecutor" />
+    <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor" />
+    <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostExecutor" />
 </beans>

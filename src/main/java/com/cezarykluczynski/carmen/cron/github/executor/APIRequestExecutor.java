@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron;
+package com.cezarykluczynski.carmen.cron.github.executor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,8 @@ import java.io.IOException;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
-import com.cezarykluczynski.carmen.executor.UserGhostPaginatorExecutor;
-import com.cezarykluczynski.carmen.executor.UserGhostExecutor;
+import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
+import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 
 @Component
 public class APIRequestExecutor {

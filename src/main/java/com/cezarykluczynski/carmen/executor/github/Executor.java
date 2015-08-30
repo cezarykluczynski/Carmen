@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.executor;
+package com.cezarykluczynski.carmen.executor.github;
 
 import java.io.IOException;
 

@@ -1,8 +1,10 @@
-package com.cezarykluczynski.carmen.cron
+package com.cezarykluczynski.carmen.cron.github.scheduler
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+
+import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when

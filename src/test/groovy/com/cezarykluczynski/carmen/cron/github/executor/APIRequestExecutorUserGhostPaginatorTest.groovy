@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron
+package com.cezarykluczynski.carmen.cron.github.executor
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -6,9 +6,8 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
-import com.cezarykluczynski.carmen.executor.UserGhostExecutor
+import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 
-import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doThrow
 import static org.mockito.Mockito.times
@@ -28,13 +27,13 @@ import org.testng.annotations.Test
     "classpath:spring/cron-config.xml",
     "classpath:spring/cron/APIRequestExecutor-mocks.xml"
 ])
-class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
+class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
     PendingRequestDAOImpl apiqueuePendingRequestDao
 
     @Mock
-    UserGhostExecutor userGhostExecutor
+    UserGhostPaginatorExecutor userGhostPaginatorExecutor
 
     @Autowired
     @InjectMocks
@@ -46,21 +45,21 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
     void setUp() {
         MockitoAnnotations.initMocks this
         pendingRequestEntity = new PendingRequest()
-        pendingRequestEntity.setExecutor "UserGhost"
+        pendingRequestEntity.setExecutor "UsersGhostPaginator"
         when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenReturn pendingRequestEntity
-        when(userGhostExecutor.execute()).thenThrow(RuntimeException)
+        when(userGhostPaginatorExecutor.execute()).thenThrow(RuntimeException)
     }
 
     @Test
-    void testAPIRequestExecutorRunsUserGhostExecutor() {
+    void testAPIRequestExecutorRunsUserGhostPaginatorExecutor() {
         apiRequestExecutor.run()
-        verify(userGhostExecutor, times(1)).execute(pendingRequestEntity)
+        verify(userGhostPaginatorExecutor, times(1)).execute(pendingRequestEntity)
     }
 
     @AfterMethod
     void tearDown() {
         Mockito.reset apiqueuePendingRequestDao
-        Mockito.reset userGhostExecutor
+        Mockito.reset userGhostPaginatorExecutor
     }
 
 }

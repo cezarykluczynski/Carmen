@@ -17,10 +17,6 @@ public class UserFollowingDiscoverToReportPhasePropagationExecutor {
     UserFollowingPropagation userFollowingPropagation;
 
     public void run() {
-        tryToMoveUserToReportPhase();
-    }
-
-    public void tryToMoveUserToReportPhase() {
         UserFollowing userFollowing = propagationsUserFollowingDao.findOldestPropagationInDiscoverPhase();
         if (userFollowing != null) {
             userFollowingPropagation.tryToMoveToReportPhase(userFollowing.getId());

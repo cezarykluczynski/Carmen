@@ -40,8 +40,6 @@ public class ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor {
     public void executePropagation() {
         Object noTasks = System.getProperty("noScheduledTasks");
 
-        System.out.println("Followers");
-
         if (noTasks == null) {
             taskExecutor.execute(new ScheduledUserFollowersDiscoverToReportPhasePropagationExecutorRunnable(
                 userFollowersDiscoverToReportPhasePropagationExecutor

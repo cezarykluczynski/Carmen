@@ -24,7 +24,10 @@
     <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingDiscoverToReportPhasePropagationExecutor">
+    <bean id="scheduledUserFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
+    <bean id="scheduledUserFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowingDiscoverToReportPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
     <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
@@ -32,7 +35,8 @@
     </bean>
 
     <!-- Cron jobs -->
-    <bean id="userFollowersFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingDiscoverToReportPhasePropagationExecutor" />
+    <bean id="userFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToReportPhasePropagationExecutor" />
+    <bean id="userFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowingDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
     <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />
 

@@ -50,7 +50,7 @@ class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorTest extends
            for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
            verification of scheduledUserFollowingDiscoverToReportPhasePropagationExecutor.run() would fail if we wouldn't wait a tiny bit.
            This can be tuned to a few more milliseconds if it fails for anyone. */
-        Thread.sleep 1
+        Thread.sleep 10
         verify(userFollowingDiscoverToReportPhasePropagationExecutor).run()
     }
 

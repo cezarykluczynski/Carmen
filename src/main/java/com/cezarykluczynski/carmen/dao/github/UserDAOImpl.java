@@ -35,32 +35,43 @@ public class UserDAOImpl implements UserDAO {
         this.sessionFactory = sessionFactory;
     }
 
-    @Transactional
     public User create(com.cezarykluczynski.carmen.set.github.User userSet) {
-        Session session = sessionFactory.openSession();
-
         User userEntity = new User();
-
         userEntity = hydrate(userEntity, userSet);
-
-        session.save(userEntity);
-        session.flush();
-        session.close();
-
+        create(userEntity);
         return userEntity;
     }
 
     @Transactional
-    public User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
+    public User create(User userEntity) {
         Session session = sessionFactory.openSession();
+        session.save(userEntity);
+        session.flush();
+        session.close();
+        return userEntity;
+    }
 
+    public User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
         userEntity = hydrate(userEntity, userSet);
+        update(userEntity);
+        return userEntity;
+    }
 
+    @Transactional
+    public User update(User userEntity) {
+        Session session = sessionFactory.openSession();
         session.update(userEntity);
         session.flush();
         session.close();
-
         return userEntity;
+    }
+
+    @Transactional
+    public void delete(User userEntity) {
+        Session session = sessionFactory.openSession();
+        session.delete(userEntity);
+        session.flush();
+        session.close();
     }
 
     @Transactional

@@ -15,6 +15,8 @@ public interface UserFollowingDAO {
 
     public void update(UserFollowing userFollowing);
 
+    public void delete(UserFollowing userFollowing);
+
     public UserFollowing findById(Long id);
 
 }

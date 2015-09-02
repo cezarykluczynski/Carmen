@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 
 import java.util.HashMap
 
@@ -16,13 +17,26 @@ class PendingRequestDAOImplFixtures {
     PendingRequestDAOImpl apiqueuePendingRequestDao
 
     public PendingRequest createPendingRequestEntityUsingUserEntity(User userEntity) {
-        HashMap<String, Object> emptyParams = new HashMap<String, Object>();
+        HashMap<String, Object> emptyParams = new HashMap<String, Object>()
         PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
             "RandomExecutor",
             userEntity,
             emptyParams,
             emptyParams,
             emptyParams,
+            0
+        )
+    }
+
+    public PendingRequest createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(User userEntity, UserFollowers userFollowersEntity) {
+        HashMap<String, Object> emptyParams = new HashMap<String, Object>()
+        PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
+            "RandomExecutor",
+            userEntity,
+            emptyParams,
+            emptyParams,
+            emptyParams,
+            userFollowersEntity,
             0
         )
 

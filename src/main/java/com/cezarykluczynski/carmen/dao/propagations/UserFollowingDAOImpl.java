@@ -88,6 +88,15 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
     }
 
     @Override
+    @Transactional
+    public void delete(UserFollowing userFollowing) {
+        Session session = sessionFactory.openSession();
+        session.delete(userFollowing);
+        session.flush();
+        session.close();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public UserFollowing findById(Long userId) {
         Session session = sessionFactory.openSession();

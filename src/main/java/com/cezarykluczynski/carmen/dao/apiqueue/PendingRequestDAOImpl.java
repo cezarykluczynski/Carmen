@@ -65,12 +65,8 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         pendingRequest.setUser(userEntity);
         pendingRequest.setUpdated();
 
-        if (propagation != null) {
-            if (propagation instanceof Propagation) {
-                pendingRequest.setPropagation((Propagation) propagation);
-            } else if (propagation instanceof Long) {
-                pendingRequest.setPropagationId((Long) propagation);
-            }
+        if (propagation instanceof Propagation) {
+            pendingRequest.setPropagation((Propagation) propagation);
         }
 
         Session session = sessionFactory.openSession();

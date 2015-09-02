@@ -15,6 +15,8 @@ public interface UserFollowersDAO {
 
     public void update(UserFollowers userFollowers);
 
+    public void delete(UserFollowers userFollowers);
+
     public UserFollowers findById(Long id);
 
 }

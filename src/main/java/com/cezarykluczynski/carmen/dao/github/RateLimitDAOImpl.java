@@ -24,6 +24,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    @Override
     @Transactional
     public RateLimit create(com.cezarykluczynski.carmen.set.github.RateLimit rateLimitSet) {
         RateLimit rateLimitEntity = new RateLimit();
@@ -41,6 +42,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         return rateLimitEntity;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public RateLimit getCoreLimit() {
         Session session = sessionFactory.openSession();
@@ -55,6 +57,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         return list.size() > 0 ? list.get(0) : null;
     }
 
+    @Override
     @Transactional
     public void decrementRateLimitRemainingCounter() {
         Session session = sessionFactory.openSession();
@@ -64,10 +67,12 @@ public class RateLimitDAOImpl implements RateLimitDAO {
     }
 
     // TODO
+    @Override
     public RateLimit getSearchLimit() {
         return new RateLimit();
     }
 
+    @Override
     @Transactional
     public void deleteOldLimits(String resource) {
         Session session = sessionFactory.openSession();

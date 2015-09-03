@@ -8,7 +8,13 @@ public interface UserDAO {
 
     public User create(com.cezarykluczynski.carmen.set.github.User user);
 
+    public User create(User userEntity);
+
     public User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet);
+
+    public User update(User userEntity);
+
+    public void delete(User userEntity);
 
     public void linkFollowerWithFollowee(User follower, User followee);
 
@@ -19,6 +25,10 @@ public interface UserDAO {
     public User createOrUpdateRequestedEntity(String username) throws IOException;
 
     public User createOrUpdateGhostEntity(String username) throws IOException;
+
+    public User findById(Integer userId);
+
+    public User findById(Long userId);
 
     public Object countFound();
 

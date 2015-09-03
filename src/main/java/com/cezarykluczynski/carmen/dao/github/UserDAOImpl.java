@@ -35,6 +35,7 @@ public class UserDAOImpl implements UserDAO {
         this.sessionFactory = sessionFactory;
     }
 
+    @Override
     public User create(com.cezarykluczynski.carmen.set.github.User userSet) {
         User userEntity = new User();
         userEntity = hydrate(userEntity, userSet);
@@ -42,6 +43,7 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
+    @Override
     @Transactional
     public User create(User userEntity) {
         Session session = sessionFactory.openSession();
@@ -51,12 +53,14 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
+    @Override
     public User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
         userEntity = hydrate(userEntity, userSet);
         update(userEntity);
         return userEntity;
     }
 
+    @Override
     @Transactional
     public User update(User userEntity) {
         Session session = sessionFactory.openSession();
@@ -66,6 +70,7 @@ public class UserDAOImpl implements UserDAO {
         return userEntity;
     }
 
+    @Override
     @Transactional
     public void delete(User userEntity) {
         Session session = sessionFactory.openSession();
@@ -74,6 +79,7 @@ public class UserDAOImpl implements UserDAO {
         session.close();
     }
 
+    @Override
     @Transactional
     public void linkFollowerWithFollowee(User follower, User followee) {
         Session session = sessionFactory.openSession();
@@ -102,6 +108,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     public User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
         userEntity.setLogin(userSet.getLogin());
         userEntity.setFound(userSet.exists());
@@ -186,6 +193,7 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
     @Transactional
     public User createOrUpdateRequestedEntity(String login) throws IOException {
         Map flags = new HashMap<String, Boolean>();
@@ -194,6 +202,7 @@ public class UserDAOImpl implements UserDAO {
         return createOrUpdate(login, flags);
     }
 
+    @Override
     @Transactional
     public User createOrUpdateGhostEntity(String login) throws IOException {
         Map flags = new HashMap<String, Boolean>();
@@ -202,10 +211,12 @@ public class UserDAOImpl implements UserDAO {
         return createOrUpdate(login, flags);
     }
 
+    @Override
     public User findById(Integer userId) {
         return findById(new Long(userId));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         Session session = sessionFactory.openSession();
@@ -220,6 +231,7 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Object countFound() {
         Session session = sessionFactory.openSession();
@@ -232,6 +244,7 @@ public class UserDAOImpl implements UserDAO {
         return result;
     }
 
+    @Override
     public User findUserInReportFollowersFolloweesPhase() throws IOException {
         Session session = sessionFactory.openSession();
         List<User> list = session.createQuery(
@@ -248,6 +261,7 @@ public class UserDAOImpl implements UserDAO {
        return list.size() > 0 ? list.get(0) : null;
     }
 
+    @Override
     public Integer countFollowers(User user) {
         Session session = sessionFactory.openSession();
 
@@ -258,6 +272,7 @@ public class UserDAOImpl implements UserDAO {
             .uniqueResult()).intValue();
     }
 
+    @Override
     public Integer countFollowees(User user) {
         Session session = sessionFactory.openSession();
 
@@ -268,6 +283,7 @@ public class UserDAOImpl implements UserDAO {
             .uniqueResult()).intValue();
     }
 
+    @Override
     public Integer countFollowersFollowing(User user) {
         Session session = sessionFactory.openSession();
 

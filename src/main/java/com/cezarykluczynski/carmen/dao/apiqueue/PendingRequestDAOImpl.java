@@ -86,7 +86,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         HashMap<String, Object> params,
         Integer priority
     ) {
-        return create(executor, userEntity, pathParams, queryParams, params, null, 1);
+        return create(executor, userEntity, pathParams, queryParams, params, null, priority);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
     public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(PendingRequest.class);
-        criteria.addOrder(Order.asc("id"));
+        criteria.addOrder(Order.desc("priority"));
         criteria.setMaxResults(1);
 
         List<PendingRequest> list = criteria.list();

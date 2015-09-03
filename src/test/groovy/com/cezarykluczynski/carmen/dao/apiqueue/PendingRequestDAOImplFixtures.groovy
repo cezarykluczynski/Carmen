@@ -16,7 +16,7 @@ class PendingRequestDAOImplFixtures {
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDao
 
-    public PendingRequest createPendingRequestEntityUsingUserEntity(User userEntity) {
+    public PendingRequest createPendingRequestEntityUsingUserEntityAndPriority(User userEntity, Integer priority) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
         PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
             "RandomExecutor",
@@ -24,8 +24,12 @@ class PendingRequestDAOImplFixtures {
             emptyParams,
             emptyParams,
             emptyParams,
-            0
+            priority
         )
+    }
+
+    public PendingRequest createPendingRequestEntityUsingUserEntity(User userEntity) {
+        createPendingRequestEntityUsingUserEntityAndPriority userEntity, 0
     }
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(User userEntity, UserFollowers userFollowersEntity) {

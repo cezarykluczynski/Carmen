@@ -51,6 +51,13 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
     @Test
     void testFindByUser() {
         // setup
@@ -114,7 +121,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test(expectedExceptions = EmptyPendingRequestListException.class)
+    @Test
     void testFindMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
         // setup
         SessionFactory sessionFactoryMock = mock SessionFactory.class
@@ -125,6 +132,39 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         when sessionMock.createCriteria(PendingRequest.class) thenReturn criteriaMock
         when criteriaMock.list() thenReturn new ArrayList<PendingRequest>()
 
-        apiqueuePendingRequestDao.findMostImportantPendingRequest()
+        try {
+            apiqueuePendingRequestDao.findMostImportantPendingRequest()
+        } catch (Throwable e) {
+            Assert.assertTrue e instanceof EmptyPendingRequestListException
+        }
+
+        // teardown
+        apiqueuePendingRequestDao.setSessionFactory sessionFactory
     }
+
+    @Test
+    void testUpdate() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        PendingRequest pendingRequestEntity =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
+        pendingRequestEntity.setExecutor "ExecutorForUpdateTest"
+        apiqueuePendingRequestDao.update pendingRequestEntity
+
+        Session session = sessionFactory.openSession()
+        List<PendingRequest> list = session.createQuery(
+            "SELECT pr FROM api_queue.PendingRequests pr " +
+            "WHERE pr.id = :id"
+        )
+            .setLong("id", pendingRequestEntity.getId())
+            .setMaxResults(1)
+            .list();
+        session.close();
+        Assert.assertEquals list.get(0).getExecutor(), "ExecutorForUpdateTest"
+
+        // teardown
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
 }

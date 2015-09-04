@@ -13,4 +13,7 @@ public interface RateLimitDAO {
     public RateLimit getSearchLimit();
 
     public void deleteOldLimits(String resource);
+
+    public void delete(RateLimit rateLimitEntity);
+
 }

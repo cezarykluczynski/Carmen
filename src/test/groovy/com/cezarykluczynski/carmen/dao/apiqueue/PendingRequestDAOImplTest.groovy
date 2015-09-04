@@ -206,7 +206,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
                 userEntity, userFollowersEntity
             )
 
-         Assert.assertEquals apiqueuePendingRequestDao.countByPropagationId(userFollowersEntity.getId()), 2
+        Assert.assertEquals apiqueuePendingRequestDao.countByPropagationId(userFollowersEntity.getId()), 2
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity

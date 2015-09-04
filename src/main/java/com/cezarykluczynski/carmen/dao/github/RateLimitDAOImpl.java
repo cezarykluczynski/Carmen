@@ -85,4 +85,14 @@ public class RateLimitDAOImpl implements RateLimitDAO {
             .executeUpdate();
         session.close();
     }
+
+    @Override
+    @Transactional
+    public void delete(RateLimit rateLimitEntity) {
+        Session session = sessionFactory.openSession();
+        session.delete(rateLimitEntity);
+        session.flush();
+        session.close();
+    }
+
 }

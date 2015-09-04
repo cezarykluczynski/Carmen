@@ -51,7 +51,7 @@ class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Ab
     }
 
     @Test
-    void testUserFollowersFollowingReportToSleepPhasePropagationExecutor() {
+    void userFollowersFollowingReportToSleepPhasePropagationExecutor() {
         userFollowersFollowingReportToSleepPhasePropagationExecutor.run()
         verify(propagationUserFollowersFollowingReportToSleepPhase).propagate()
     }

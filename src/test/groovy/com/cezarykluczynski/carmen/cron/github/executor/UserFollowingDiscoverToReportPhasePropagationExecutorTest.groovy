@@ -55,7 +55,7 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
     }
 
     @Test
-    void testUserFollowingDiscoverToReportPhasePropagationExecutor() {
+    void userFollowingDiscoverToReportPhasePropagationExecutor() {
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
         verify userFollowingPropagation tryToMoveToReportPhase(userFollowingEntityId)
     }

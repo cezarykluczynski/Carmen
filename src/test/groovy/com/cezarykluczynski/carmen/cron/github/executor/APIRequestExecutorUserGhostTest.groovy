@@ -52,7 +52,7 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testAPIRequestExecutorRunsUserGhostExecutor() {
+    void apiRequestExecutorRunsUserGhostExecutor() {
         apiRequestExecutor.run()
         verify(userGhostExecutor, times(1)).execute(pendingRequestEntity)
     }

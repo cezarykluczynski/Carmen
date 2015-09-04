@@ -59,7 +59,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testFindByUser() {
+    void findByUser() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
@@ -75,7 +75,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testCreate() {
+    void create() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity
@@ -101,7 +101,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testFindMostImportantPendingRequestExistingEntities() throws EmptyPendingRequestListException {
+    void findMostImportantPendingRequestExistingEntities() throws EmptyPendingRequestListException {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntityWith101Priority =
@@ -122,7 +122,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testFindMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
+    void findMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
         // setup
         SessionFactory sessionFactoryMock = mock SessionFactory.class
         Session sessionMock = mock Session.class
@@ -143,7 +143,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testUpdate() {
+    void update() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
@@ -168,7 +168,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testDelete() {
+    void delete() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
@@ -193,7 +193,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void testCountByPropagationId() {
+    void countByPropagationId() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity

@@ -46,7 +46,7 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
     }
 
     @Test
-    void testScheduledAPIRequestExecutorCallsAPIRequestExecutor() {
+    void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
         scheduledAPIRequestExecutor.executePropagation()
         /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
            for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,

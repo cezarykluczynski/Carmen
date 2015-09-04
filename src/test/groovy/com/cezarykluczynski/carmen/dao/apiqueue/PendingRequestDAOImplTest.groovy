@@ -192,4 +192,27 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
+    @Test
+    void testCountByPropagationId() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity
+        PendingRequest pendingRequestEntity1 =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(
+                userEntity, userFollowersEntity
+            )
+        PendingRequest pendingRequestEntity2 =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(
+                userEntity, userFollowersEntity
+            )
+
+         Assert.assertEquals apiqueuePendingRequestDao.countByPropagationId(userFollowersEntity.getId()), 2
+
+        // teardown
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity1
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity2
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
 }

@@ -167,4 +167,29 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
+    @Test
+    void testDelete() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        PendingRequest pendingRequestEntity =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
+
+        Long pendingRequestEntityId = pendingRequestEntity.getId()
+
+        apiqueuePendingRequestDao.delete pendingRequestEntity
+        Session session = sessionFactory.openSession()
+        List<PendingRequest> list = session.createQuery(
+            "SELECT pr FROM api_queue.PendingRequests pr " +
+            "WHERE pr.id = :id"
+        )
+            .setLong("id", pendingRequestEntityId)
+            .setMaxResults(1)
+            .list();
+        session.close();
+        Assert.assertEquals list.size(), 0
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
 }

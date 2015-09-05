@@ -8,9 +8,9 @@ public interface RateLimitDAO {
 
     public RateLimit getCoreLimit();
 
-    public void decrementRateLimitRemainingCounter();
-
     public RateLimit getSearchLimit();
+
+    public void decrementRateLimitRemainingCounter();
 
     public void deleteOldLimits(String resource);
 

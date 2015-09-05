@@ -67,7 +67,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void getCoreLimitExisting() {
         // setup
-        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second()
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
 
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getCoreLimit()
         Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
@@ -94,9 +94,38 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    void getSearchLimitExisting() {
+        // setup
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("search")
+
+        RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getSearchLimit()
+        Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
+
+        // teardown
+        rateLimitDAOImpl.delete rateLimitEntityMock
+    }
+
+    @Test
+    void getSearchLimitNotExisting() {
+        // setup
+        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        rateLimitDAOImpl.setSessionFactory sessionFactoryMock
+
+        try {
+            rateLimitDAOImpl.getSearchLimit()
+            Assert.assertTrue false
+        } catch (Throwable e) {
+            Assert.assertTrue e instanceof NullPointerException
+        }
+
+        // teardown
+        rateLimitDAOImpl.setSessionFactory sessionFactory
+    }
+
+    @Test
     void decrementRateLimitRemainingCounter() {
         // setup
-        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second()
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
         Integer previousRemaining = rateLimitEntityMock.getRemaining()
 
         rateLimitDAOImpl.decrementRateLimitRemainingCounter()

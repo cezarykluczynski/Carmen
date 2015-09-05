@@ -43,18 +43,13 @@ public class RateLimitDAOImpl implements RateLimitDAO {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public RateLimit getCoreLimit() {
-        Session session = sessionFactory.openSession();
+        return getLimitByResource("core");
+    }
 
-        Criteria criteria = session.createCriteria(RateLimit.class)
-            .add(Restrictions.eq("resource", "core"))
-            .addOrder(Order.desc("reset"))
-            .setMaxResults(1);
-
-        List<RateLimit> list = criteria.list();
-        session.close();
-        return list.get(0);
+    @Override
+    public RateLimit getSearchLimit() {
+        return getLimitByResource("search");
     }
 
     @Override
@@ -64,12 +59,6 @@ public class RateLimitDAOImpl implements RateLimitDAO {
 
         session.createQuery("update github.RateLimit set remaining = remaining - 1").executeUpdate();
         session.close();
-    }
-
-    // TODO
-    @Override
-    public RateLimit getSearchLimit() {
-        return new RateLimit();
     }
 
     @Override
@@ -93,6 +82,20 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         session.delete(rateLimitEntity);
         session.flush();
         session.close();
+    }
+
+    @Transactional(readOnly = true)
+    private RateLimit getLimitByResource(String resource) {
+        Session session = sessionFactory.openSession();
+
+        Criteria criteria = session.createCriteria(RateLimit.class)
+            .add(Restrictions.eq("resource", resource))
+            .addOrder(Order.desc("reset"))
+            .setMaxResults(1);
+
+        List<RateLimit> list = criteria.list();
+        session.close();
+        return list.get(0);
     }
 
 }

@@ -36,7 +36,7 @@ public class ApiLimitsCoreAreHonoredTest {
 
     @Before
     void setup() {
-        mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second()
+        mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
     }
 
     @Test(expected = GithubRateLimitExceededException.class)

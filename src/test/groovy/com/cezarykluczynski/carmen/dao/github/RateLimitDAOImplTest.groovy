@@ -144,4 +144,32 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         rateLimitDAOImpl.setSessionFactory sessionFactory
     }
 
+    @Test
+    void deleteOldLimits() {
+        // setup
+        RateLimit rateLimitEntityOldMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second "core"
+        Long rateLimitEntityOldMockId = rateLimitEntityOldMock.getId()
+        Thread.sleep 1100
+        RateLimit rateLimitEntityCurrentMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second "core"
+
+        rateLimitDAOImpl.deleteOldLimits "core"
+
+        Session session = sessionFactory.openSession()
+        List<RateLimit> rateLimitEntityOldMockList = session
+            .createQuery("from github.RateLimit as r where r.id = :rateLimitId")
+            .setLong("rateLimitId", rateLimitEntityOldMockId)
+            .list()
+        List<RateLimit> rateLimitEntityCurrentMockList = session
+            .createQuery("from github.RateLimit as r where r.resource = :resource")
+            .setString("resource", "core")
+            .list()
+        session.close()
+
+        Assert.assertEquals rateLimitEntityOldMockList.size(), 0
+        Assert.assertEquals rateLimitEntityCurrentMockList.size(), 1
+
+        // teardown
+        rateLimitDAOImpl.delete rateLimitEntityCurrentMock
+    }
+
 }

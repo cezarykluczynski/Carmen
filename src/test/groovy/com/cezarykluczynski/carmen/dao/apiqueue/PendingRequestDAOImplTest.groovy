@@ -2,7 +2,6 @@ package com.cezarykluczynski.carmen.dao.apiqueue
 
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-import org.hibernate.Criteria
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -16,6 +15,7 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
+import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
@@ -52,7 +52,10 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    private SessionFactory sessionFactory;
+    SessionFactoryFixtures sessionFactoryFixtures
+
+    @Autowired
+    private SessionFactory sessionFactory
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -124,16 +127,12 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void findMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
         // setup
-        SessionFactory sessionFactoryMock = mock SessionFactory.class
-        Session sessionMock = mock Session.class
-        Criteria criteriaMock = mock Criteria.class
+        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
         apiqueuePendingRequestDao.setSessionFactory sessionFactoryMock
-        when sessionFactoryMock.openSession() thenReturn sessionMock
-        when sessionMock.createCriteria(PendingRequest.class) thenReturn criteriaMock
-        when criteriaMock.list() thenReturn new ArrayList<PendingRequest>()
 
         try {
             apiqueuePendingRequestDao.findMostImportantPendingRequest()
+            Assert.assertTrue false
         } catch (Throwable e) {
             Assert.assertTrue e instanceof EmptyPendingRequestListException
         }

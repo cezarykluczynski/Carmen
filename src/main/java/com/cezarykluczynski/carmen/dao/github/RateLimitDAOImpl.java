@@ -54,7 +54,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
 
         List<RateLimit> list = criteria.list();
         session.close();
-        return list.size() > 0 ? list.get(0) : null;
+        return list.get(0);
     }
 
     @Override

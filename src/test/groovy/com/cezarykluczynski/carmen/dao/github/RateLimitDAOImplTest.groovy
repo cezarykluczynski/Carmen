@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.dao.github
 
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -7,6 +10,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
+import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 
 import org.testng.annotations.Test
 
@@ -24,6 +28,19 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private RateLimitDAOImpl rateLimitDAOImpl
+
+    @Autowired
+    RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
+
+    @Autowired
+    SessionFactoryFixtures sessionFactoryFixtures
+
+    @Autowired
+    private SessionFactory sessionFactory
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Test
     void create() {
@@ -45,6 +62,35 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         rateLimitDAOImpl.delete rateLimitEntity
+    }
+
+    @Test
+    void getCoreLimitExisting() {
+        // setup
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second()
+
+        RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getCoreLimit()
+        Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
+
+        // teardown
+        rateLimitDAOImpl.delete rateLimitEntityMock
+    }
+
+    @Test
+    void getCoreLimitNotExisting() {
+        // setup
+        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        rateLimitDAOImpl.setSessionFactory sessionFactoryMock
+
+        try {
+            rateLimitDAOImpl.getCoreLimit()
+            Assert.assertTrue false
+        } catch (Throwable e) {
+            Assert.assertTrue e instanceof NullPointerException
+        }
+
+        // teardown
+        rateLimitDAOImpl.setSessionFactory sessionFactory
     }
 
 }

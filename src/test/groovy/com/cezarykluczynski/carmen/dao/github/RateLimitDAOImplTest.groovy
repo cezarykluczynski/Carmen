@@ -93,4 +93,26 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         rateLimitDAOImpl.setSessionFactory sessionFactory
     }
 
+    @Test
+    void decrementRateLimitRemainingCounter() {
+        // setup
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second()
+        Integer previousRemaining = rateLimitEntityMock.getRemaining()
+
+        rateLimitDAOImpl.decrementRateLimitRemainingCounter()
+
+        Session session = sessionFactory.openSession()
+        RateLimit rateLimitEntityMockUpdated = (RateLimit) session
+            .createQuery("from github.RateLimit as r where r.id = :rateLimitId")
+            .setLong("rateLimitId", rateLimitEntityMock.getId())
+            .list()
+            .get(0)
+        session.close()
+
+        Assert.assertEquals previousRemaining - 1, rateLimitEntityMockUpdated.getRemaining()
+
+        // teardown
+        rateLimitDAOImpl.setSessionFactory sessionFactory
+    }
+
 }

@@ -30,7 +30,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void create() {
         // setup
-        Long id = 2147483647;
+        Long id = 2147483647
         String login = "random_login" + System.currentTimeMillis()
         String name = "Random Name"
         String avatarUrl = "http://avatar.url/"
@@ -68,6 +68,25 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals userEntity.getLocation(), location
         Assert.assertEquals userEntity.getEmail(), email
         Assert.assertEquals userEntity.getHireable(), hireable
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
+    void update() {
+        // setup
+        Long id = 2147483647
+        String login = "random_login" + System.currentTimeMillis()
+        String newLogin = "new_random_login" + System.currentTimeMillis()
+        UserSet userSet = new UserSet(id, login)
+        User userEntity = githubUserDAOImpl.create userSet
+
+        userEntity.setLogin newLogin
+        githubUserDAOImpl.update userEntity
+        User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
+        Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
+        Assert.assertEquals newLogin, userEntityUpdated.getLogin()
 
         // teardown
         githubUserDAOImpl.delete userEntity

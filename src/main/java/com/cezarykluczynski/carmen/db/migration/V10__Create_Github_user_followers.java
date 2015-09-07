@@ -11,8 +11,8 @@ public class V10__Create_Github_user_followers implements JdbcMigration {
     public void migrate(Connection connection) throws Exception {
         PreparedStatement statement = connection.prepareStatement(
             "CREATE table github.user_followers(" +
-            "    followee_id integer NOT NULL REFERENCES github.users(id)," +
-            "    follower_id integer NOT NULL REFERENCES github.users(id)," +
+            "    followee_id integer NOT NULL REFERENCES github.users(id) ON DELETE CASCADE," +
+            "    follower_id integer NOT NULL REFERENCES github.users(id) ON DELETE CASCADE," +
             "    CONSTRAINT github_user_followers_joined_unique UNIQUE (followee_id, follower_id)" +
             ");"
         );

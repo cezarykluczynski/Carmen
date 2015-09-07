@@ -74,16 +74,29 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void update() {
+    void updateUserEntity() {
         // setup
-        Long id = 2147483647
-        String login = "random_login" + System.currentTimeMillis()
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
         String newLogin = "new_random_login" + System.currentTimeMillis()
-        UserSet userSet = new UserSet(id, login)
-        User userEntity = githubUserDAOImpl.create userSet
 
         userEntity.setLogin newLogin
         githubUserDAOImpl.update userEntity
+        User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
+        Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
+        Assert.assertEquals newLogin, userEntityUpdated.getLogin()
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
+    void updateUserEntityUsingUserSet() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
+        String newLogin = "new_random_login" + System.currentTimeMillis()
+        UserSet userSet = new UserSet(null, newLogin)
+
+        githubUserDAOImpl.update userEntity, userSet
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
         Assert.assertEquals newLogin, userEntityUpdated.getLogin()

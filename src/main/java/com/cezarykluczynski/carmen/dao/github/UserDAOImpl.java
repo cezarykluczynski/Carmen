@@ -80,32 +80,52 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    @Transactional
     public void linkFollowerWithFollowee(User follower, User followee) {
+        String tableName = getTableNameForLinkedUserEntities();
+        String followersColumn = getKeyColumnNameForLinkedUserEntities("followers");
+        String followeesColumn = getKeyColumnNameForLinkedUserEntities("followees");
+        Long followerId = follower.getId();
+        Long followeeId = followee.getId();
+        doLinkFollowerWithFollowee(tableName, followersColumn, followeesColumn, followerId, followeeId);
+    }
+
+    @Transactional
+    private void doLinkFollowerWithFollowee(
+        String tableName, String followersColumn, String followeesColumn, Long followerId, Long followeeId
+    ) {
         Session session = sessionFactory.openSession();
-
-        Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
-        BasicCollectionPersister followersCollectionPersister =
-            (BasicCollectionPersister) collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User.followers");
-        BasicCollectionPersister followeesCollectionPersister =
-            (BasicCollectionPersister) collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User.followees");
-        String tableName = followersCollectionPersister.getTableName();
-        String followersColumn = followersCollectionPersister.getKeyColumnNames()[0];
-        String followeesColumn = followeesCollectionPersister.getKeyColumnNames()[0];
-
         try {
             session
                 .createSQLQuery(
                     "INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") " +
                     "VALUES (:followerId, :followeeId)"
                 )
-                .setParameter("followerId", follower.getId())
-                .setParameter("followeeId", followee.getId())
+                .setParameter("followerId", followerId)
+                .setParameter("followeeId", followeeId)
                 .executeUpdate();
         } catch (org.hibernate.exception.ConstraintViolationException e) {
         } finally {
             session.close();
         }
+    }
+
+    private String getKeyColumnNameForLinkedUserEntities(String relationName) {
+        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister(relationName);
+        String columnName = collectionPersister.getKeyColumnNames()[0];
+        return columnName;
+    }
+
+    private String getTableNameForLinkedUserEntities() {
+        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister("followers");
+        String tableName = collectionPersister.getTableName();
+        return tableName;
+    }
+
+    private BasicCollectionPersister getLinkedCollectionPersister(String relationName) {
+        Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
+        BasicCollectionPersister collectionPersister =
+            (BasicCollectionPersister) collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User." + relationName);
+        return collectionPersister;
     }
 
     @Override

@@ -18,8 +18,6 @@ public interface UserDAO {
 
     public void linkFollowerWithFollowee(User follower, User followee);
 
-    public User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet);
-
     public Object findByLogin(String login);
 
     public User createOrUpdateRequestedEntity(String username) throws IOException;

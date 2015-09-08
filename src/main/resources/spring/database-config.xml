@@ -41,6 +41,10 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="githubUserFollowersFolloweesLinker" class="com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <bean id="rateLimitDao" class="com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>

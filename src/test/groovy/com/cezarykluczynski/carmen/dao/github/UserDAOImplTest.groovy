@@ -142,4 +142,9 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
     }
 
+    @Test
+    void findById() {
+        //
+    }
+
 }

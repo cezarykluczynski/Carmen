@@ -6,7 +6,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.persister.collection.BasicCollectionPersister;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.dao.github.user.UserHydrator;
+import com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker;
 
 import java.util.List;
 import java.lang.Boolean;
@@ -30,6 +31,11 @@ public class UserDAOImpl implements UserDAO {
 
     @Autowired
     GithubProvider githubProvider;
+
+    @Autowired
+    FollowersFolloweesLinker githubUserFollowersFolloweesLinker;
+
+    UserHydrator userHydrator = new UserHydrator();
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -81,96 +87,27 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void linkFollowerWithFollowee(User follower, User followee) {
-        String tableName = getTableNameForLinkedUserEntities();
-        String followersColumn = getKeyColumnNameForLinkedUserEntities("followers");
-        String followeesColumn = getKeyColumnNameForLinkedUserEntities("followees");
-        Long followerId = follower.getId();
-        Long followeeId = followee.getId();
-        doLinkFollowerWithFollowee(tableName, followersColumn, followeesColumn, followerId, followeeId);
-    }
-
-    @Transactional
-    private void doLinkFollowerWithFollowee(
-        String tableName, String followersColumn, String followeesColumn, Long followerId, Long followeeId
-    ) {
-        Session session = sessionFactory.openSession();
-        try {
-            session
-                .createSQLQuery(
-                    "INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") " +
-                    "VALUES (:followerId, :followeeId)"
-                )
-                .setParameter("followerId", followerId)
-                .setParameter("followeeId", followeeId)
-                .executeUpdate();
-        } catch (org.hibernate.exception.ConstraintViolationException e) {
-        } finally {
-            session.close();
-        }
-    }
-
-    private String getKeyColumnNameForLinkedUserEntities(String relationName) {
-        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister(relationName);
-        String columnName = collectionPersister.getKeyColumnNames()[0];
-        return columnName;
-    }
-
-    private String getTableNameForLinkedUserEntities() {
-        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister("followers");
-        String tableName = collectionPersister.getTableName();
-        return tableName;
-    }
-
-    private BasicCollectionPersister getLinkedCollectionPersister(String relationName) {
-        Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
-        BasicCollectionPersister collectionPersister =
-            (BasicCollectionPersister) collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User." + relationName);
-        return collectionPersister;
+        githubUserFollowersFolloweesLinker.linkFollowerWithFollowee(follower, followee);
     }
 
     @Override
-    public User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
-        userEntity.setLogin(userSet.getLogin());
-        userEntity.setFound(userSet.exists());
-        userEntity.setRequested(userSet.getRequested());
-        userEntity.setOptOut(userSet.getOptOut());
-        userEntity.setUpdated();
-
-        if (userEntity.getFound()) {
-            hydrateUserEntityUsingExistingUserSet(userEntity, userSet);
-        } else {
-            hydrateUserEntityWithNonExistingUser(userEntity);
-        }
-
-        return userEntity;
+    public User createOrUpdateRequestedEntity(String login) throws IOException {
+        Map flags = new HashMap<String, Boolean>();
+        flags.put("requested", true);
+        flags.put("optOut", false);
+        return createOrUpdate(login, flags);
     }
 
-    private void hydrateUserEntityUsingExistingUserSet(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
-        userEntity.setGithubId(userSet.getId());
-        userEntity.setName(userSet.getName());
-        userEntity.setAvatarUrl(userSet.getAvatarUrl());
-        userEntity.setType(userSet.getType());
-        userEntity.setSiteAdmin(userSet.getSiteAdmin());
-        userEntity.setCompany(userSet.getCompany());
-        userEntity.setBlog(userSet.getBlog());
-        userEntity.setLocation(userSet.getLocation());
-        userEntity.setEmail(userSet.getEmail());
-        userEntity.setHireable(userSet.getHireable());
-        userEntity.setBio(userSet.getBio());
+    @Override
+    public User createOrUpdateGhostEntity(String login) throws IOException {
+        Map flags = new HashMap<String, Boolean>();
+        flags.put("requested", false);
+        flags.put("optOut", false);
+        return createOrUpdate(login, flags);
     }
 
-    private void hydrateUserEntityWithNonExistingUser(User userEntity) {
-        userEntity.setGithubId();
-        userEntity.setName("");
-        userEntity.setAvatarUrl("");
-        userEntity.setType("");
-        userEntity.setSiteAdmin(false);
-        userEntity.setCompany("");
-        userEntity.setBlog("");
-        userEntity.setLocation("");
-        userEntity.setEmail("");
-        userEntity.setHireable(false);
-        userEntity.setBio("");
+    private User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
+        return userHydrator.hydrate(userEntity, userSet);
     }
 
     @Transactional(readOnly = true)
@@ -211,24 +148,6 @@ public class UserDAOImpl implements UserDAO {
         if (flags.containsKey("optOut")) {
             userSet.setOptOut(flags.get("optOut"));
         }
-    }
-
-    @Override
-    @Transactional
-    public User createOrUpdateRequestedEntity(String login) throws IOException {
-        Map flags = new HashMap<String, Boolean>();
-        flags.put("requested", true);
-        flags.put("optOut", false);
-        return createOrUpdate(login, flags);
-    }
-
-    @Override
-    @Transactional
-    public User createOrUpdateGhostEntity(String login) throws IOException {
-        Map flags = new HashMap<String, Boolean>();
-        flags.put("requested", false);
-        flags.put("optOut", false);
-        return createOrUpdate(login, flags);
     }
 
     @Override

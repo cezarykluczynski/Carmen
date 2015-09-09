@@ -6,7 +6,7 @@ import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
-interface GithubProviderInterface {
+public interface GithubProviderInterface {
 
     public RateLimit getCoreLimit() throws IOException;
 
@@ -17,4 +17,5 @@ interface GithubProviderInterface {
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException;
 
     public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException;
+
 }

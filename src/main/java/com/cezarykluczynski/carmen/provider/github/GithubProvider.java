@@ -2,6 +2,8 @@ package com.cezarykluczynski.carmen.provider.github;
 
 import java.io.IOException;
 
+import org.springframework.stereotype.Component;
+
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
@@ -9,6 +11,7 @@ import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import java.util.Date;
 
+@Component
 public class GithubProvider implements GithubProviderInterface {
 
     public GithubProvider(

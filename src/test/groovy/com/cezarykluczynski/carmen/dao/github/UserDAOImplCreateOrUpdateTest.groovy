@@ -1,0 +1,109 @@
+package com.cezarykluczynski.carmen.dao.github
+
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+
+import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.set.github.User as UserSet
+import com.cezarykluczynski.carmen.provider.github.GithubProvider
+
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
+import static org.mockito.Mockito.times
+import static org.mockito.Mockito.never
+import static org.mockito.Mockito.thenReturn
+import static org.mockito.Mockito.doNothing
+import static org.mockito.Mockito.verify
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.InjectMocks
+import org.mockito.MockitoAnnotations
+
+import org.testng.annotations.AfterMethod
+import org.testng.annotations.BeforeMethod
+import org.testng.annotations.Test
+import org.testng.Assert
+
+import org.joda.time.MutableDateTime
+
+@ContextConfiguration([
+    "classpath:spring/database-config.xml",
+    "classpath:spring/mvc-core-config.xml",
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
+])
+class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
+
+    @Autowired
+    private SessionFactory sessionFactory
+
+    @Autowired
+    UserDAOImplFixtures githubUserDAOImplFixtures
+
+    @Autowired
+    RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
+
+    @Autowired
+    UserDAOImpl githubUserDAOImpl
+
+    @Autowired
+    GithubProvider githubProvider
+
+    @Test
+    void createOrUpdateExistingRequestedEntityThatCannotBeUpdated() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        String currentLogin = userEntity.getLogin()
+        UserSet userSet = new UserSet(null, currentLogin)
+        GithubProvider githubProviderMock = mock GithubProvider.class
+        when githubProviderMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+
+        User userEntityUpdated = githubUserDAOImpl.findByLogin currentLogin
+        verify(githubProviderMock, never()).getUser currentLogin
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    @Test
+    void createOrUpdateExistingRequestedEntityThatCanBeUpdated() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        setUserEntityUpdatedDateToTwoDaysAgo userEntity
+        String currentLogin = userEntity.getLogin()
+        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        UserSet userSetMock = new UserSet(null, newLogin)
+        GithubProvider githubProviderMock = mock GithubProvider.class
+        when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
+        doNothing().when(githubProviderMock).checkApiLimit "getUser"
+        doNothing().when(githubProviderMock).decrementRateLimitRemainingCounter "getUser"
+        githubUserDAOImpl.setGithubProvider githubProviderMock
+
+        githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+        User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
+        Assert.assertTrue userEntityUpdated instanceof User
+        verify(githubProviderMock).getUser currentLogin
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    private void setUserEntityUpdatedDateToTwoDaysAgo(User userEntity) {
+        MutableDateTime twoDaysAgo = new MutableDateTime()
+        twoDaysAgo.addDays(-2)
+        Date twoDaysAgoDate = twoDaysAgo.toDate()
+        userEntity.setUpdated twoDaysAgoDate
+        githubUserDAOImpl.update userEntity
+    }
+
+}

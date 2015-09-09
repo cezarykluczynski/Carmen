@@ -23,10 +23,14 @@ class UserDAOImplFixtures {
 
     public User createNotFoundEntity() {
         Long id = 2147483647
-        String login = "random_login" + System.currentTimeMillis()
+        String login = getRandomLogin()
         UserSet userSet = new UserSet(id, login)
         User userEntity = githubUserDAOImpl.create userSet
         return userEntity
+    }
+
+    public String getRandomLogin() {
+        return "random_login" + System.currentTimeMillis()
     }
 
     public void deleteUserEntity(User userEntity) {

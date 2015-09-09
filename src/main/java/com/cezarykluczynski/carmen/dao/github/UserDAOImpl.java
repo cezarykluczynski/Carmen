@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.provider.github.GithubProviderInterface;
 import com.cezarykluczynski.carmen.dao.github.user.UserHydrator;
 import com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker;
 
@@ -39,6 +40,10 @@ public class UserDAOImpl implements UserDAO {
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    public void setGithubProvider(GithubProvider githubProvider) {
+        this.githubProvider = githubProvider;
     }
 
     @Override
@@ -118,36 +123,6 @@ public class UserDAOImpl implements UserDAO {
         List<User> list = criteria.list();
         session.close();
         return list.size() > 0 ? list.get(0) : null;
-    }
-
-    @Transactional
-    private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
-        try {
-            User userEntity = findByLogin(login);
-            Boolean requested = flags.get("requested");
-            Boolean userEntityHasBeenRequested = requested && !userEntity.getRequested();
-
-            if (userEntity.canBeUpdated() || userEntityHasBeenRequested) {
-                com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
-                applyFlagsToSet(userSet, flags);
-                return update(userEntity, userSet);
-            }
-
-            return userEntity;
-        } catch (NullPointerException e) {
-            com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
-            applyFlagsToSet(userSet, flags);
-            return create(userSet);
-        }
-    }
-
-    private void applyFlagsToSet(com.cezarykluczynski.carmen.set.github.User userSet, Map<String, Boolean> flags) {
-        if (flags.containsKey("requested")) {
-            userSet.setRequested(flags.get("requested"));
-        }
-        if (flags.containsKey("optOut")) {
-            userSet.setOptOut(flags.get("optOut"));
-        }
     }
 
     @Override
@@ -233,6 +208,36 @@ public class UserDAOImpl implements UserDAO {
         )
             .setParameter("userId", user.getId())
             .uniqueResult()).intValue();
+    }
+
+    @Transactional
+    private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
+        try {
+            User userEntity = findByLogin(login);
+            Boolean requested = flags.get("requested");
+            Boolean userEntityHasBeenRequested = requested && !userEntity.getRequested();
+
+            if (userEntity.canBeUpdated() || userEntityHasBeenRequested) {
+                com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
+                applyFlagsToSet(userSet, flags);
+                return update(userEntity, userSet);
+            }
+
+            return userEntity;
+        } catch (NullPointerException e) {
+            com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
+            applyFlagsToSet(userSet, flags);
+            return create(userSet);
+        }
+    }
+
+    private void applyFlagsToSet(com.cezarykluczynski.carmen.set.github.User userSet, Map<String, Boolean> flags) {
+        if (flags.containsKey("requested")) {
+            userSet.setRequested(flags.get("requested"));
+        }
+        if (flags.containsKey("optOut")) {
+            userSet.setOptOut(flags.get("optOut"));
+        }
     }
 
 }

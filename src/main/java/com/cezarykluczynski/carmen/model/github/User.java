@@ -173,7 +173,11 @@ public class User {
     }
 
     public void setUpdated() {
-        updated = new Date();
+        setUpdated(new Date());
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     public boolean getFound() {

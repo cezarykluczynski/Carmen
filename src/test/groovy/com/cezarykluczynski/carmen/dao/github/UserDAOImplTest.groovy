@@ -1,8 +1,5 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -23,9 +20,6 @@ import org.testng.Assert
     "classpath:spring/fixtures/fixtures.xml"
 ])
 class UserDAOImplTest extends AbstractTestNGSpringContextTests {
-
-    @Autowired
-    private SessionFactory sessionFactory
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -140,11 +134,6 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
-    }
-
-    @Test
-    void findById() {
-        //
     }
 
 }

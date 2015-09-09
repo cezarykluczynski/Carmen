@@ -21,7 +21,7 @@ import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
     "classpath:spring/cron-config.xml",
     "classpath:spring/fixtures/fixtures.xml"
 ])
-public class ApiLimitsCoreAreHonoredTest {
+public class GithubProviderApiLimitsCoreAreHonoredTest {
 
     @Autowired
     GithubProvider githubProvider
@@ -36,7 +36,7 @@ public class ApiLimitsCoreAreHonoredTest {
 
     @Before
     void setup() {
-        mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
+        mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
     }
 
     @Test(expected = GithubRateLimitExceededException.class)

@@ -15,7 +15,12 @@ class RateLimitDAOImplFixtures {
     @Autowired
     RateLimitDAO rateLimitDAOImpl
 
-    RateLimit createRateLimitExpiringIn1Second(String resource) {
+    RateLimit createRateLimitEntityExpiringIn1Second(String resource) {
+        RateLimitSet mockRateLimitSet = createRateLimitSetExpiringIn1Second resource
+        rateLimitDAOImpl.create mockRateLimitSet
+    }
+
+    RateLimitSet createRateLimitSetExpiringIn1Second(String resource) {
         Calendar calendar = Calendar.getInstance()
         calendar.setTime new Date()
         /**
@@ -26,7 +31,7 @@ class RateLimitDAOImplFixtures {
 
         /** Limit has to be bellow 10. The 50 part is irrelevant at this point. */
         RateLimitSet mockRateLimitSet = new RateLimitSet(resource, 50, 9, reset)
-        rateLimitDAOImpl.create mockRateLimitSet
+        return mockRateLimitSet
     }
 
     void deleteRateLimitEntity(RateLimit rateLimitEntity) {

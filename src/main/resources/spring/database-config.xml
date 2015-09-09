@@ -37,7 +37,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="githubUsersDao" class="com.cezarykluczynski.carmen.dao.github.UserDAOImpl">
+  <bean id="githubUserDAOImpl" class="com.cezarykluczynski.carmen.dao.github.UserDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 

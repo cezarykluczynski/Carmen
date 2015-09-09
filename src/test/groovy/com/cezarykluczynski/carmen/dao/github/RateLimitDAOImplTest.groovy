@@ -67,7 +67,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void getCoreLimitExisting() {
         // setup
-        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getCoreLimit()
         Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
@@ -96,7 +96,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void getSearchLimitExisting() {
         // setup
-        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("search")
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "search"
 
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getSearchLimit()
         Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
@@ -125,7 +125,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void decrementRateLimitRemainingCounter() {
         // setup
-        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second("core")
+        RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
         Integer previousRemaining = rateLimitEntityMock.getRemaining()
 
         rateLimitDAOImpl.decrementRateLimitRemainingCounter()
@@ -147,10 +147,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void deleteOldLimits() {
         // setup
-        RateLimit rateLimitEntityOldMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second "core"
+        RateLimit rateLimitEntityOldMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
         Long rateLimitEntityOldMockId = rateLimitEntityOldMock.getId()
         Thread.sleep 1100
-        RateLimit rateLimitEntityCurrentMock = githubRateLimitDAOImplFixtures.createRateLimitExpiringIn1Second "core"
+        RateLimit rateLimitEntityCurrentMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
         rateLimitDAOImpl.deleteOldLimits "core"
 

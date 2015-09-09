@@ -62,12 +62,14 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         String currentLogin = userEntity.getLogin()
         UserSet userSet = new UserSet(null, currentLogin)
-        GithubProvider githubProviderMock = mock GithubProvider.class
+        GithubProvider githubProviderMock = getGithubProviderMock()
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+        githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
         User userEntityUpdated = githubUserDAOImpl.findByLogin currentLogin
         verify(githubProviderMock, never()).getUser currentLogin
+        Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
@@ -82,20 +84,86 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.getRandomLogin()
         UserSet userSetMock = new UserSet(null, newLogin)
-        GithubProvider githubProviderMock = mock GithubProvider.class
+        GithubProvider githubProviderMock = getGithubProviderMock()
         when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
-        doNothing().when(githubProviderMock).checkApiLimit "getUser"
-        doNothing().when(githubProviderMock).decrementRateLimitRemainingCounter "getUser"
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertTrue userEntityUpdated instanceof User
+        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
         verify(githubProviderMock).getUser currentLogin
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    @Test
+    void createOrUpdateExistingGhostEntity() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
+        setUserEntityUpdatedDateToTwoDaysAgo userEntity
+        String currentLogin = userEntity.getLogin()
+        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        UserSet userSet = new UserSet(null, newLogin)
+        GithubProvider githubProviderMock = getGithubProviderMock()
+        when githubProviderMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.setGithubProvider githubProviderMock
+
+        githubUserDAOImpl.createOrUpdateGhostEntity currentLogin
+        User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
+        Assert.assertEquals userEntityUpdated.getRequested(), false
+        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    @Test
+    void createOrUpdateExistingGhostEntityWithExistingRequestedEntity() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
+        String currentLogin = userEntity.getLogin()
+        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        UserSet userSet = new UserSet(null, newLogin)
+        GithubProvider githubProviderMock = getGithubProviderMock()
+        when githubProviderMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.setGithubProvider githubProviderMock
+
+        githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+        User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
+        Assert.assertEquals userEntityUpdated.getRequested(), true
+        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    @Test
+    void createOrUpdateNonExistingEntity() {
+        // setup
+        String currentLogin = githubUserDAOImplFixtures.getRandomLogin()
+        GithubProvider githubProviderMock = getGithubProviderMock()
+        UserSet userSetMock = new UserSet(null, currentLogin)
+        when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
+        githubUserDAOImpl.setGithubProvider githubProviderMock
+
+        User userEntityUpdated = githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+        Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntityUpdated
+        githubUserDAOImpl.setGithubProvider githubProvider
+    }
+
+    private GithubProvider getGithubProviderMock() {
+        GithubProvider githubProviderMock = mock GithubProvider.class
+        doNothing().when(githubProviderMock).checkApiLimit "getUser"
+        doNothing().when(githubProviderMock).decrementRateLimitRemainingCounter "getUser"
+        return githubProviderMock
     }
 
     private void setUserEntityUpdatedDateToTwoDaysAgo(User userEntity) {

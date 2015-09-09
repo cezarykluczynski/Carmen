@@ -111,10 +111,6 @@ public class UserDAOImpl implements UserDAO {
         return createOrUpdate(login, flags);
     }
 
-    private User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
-        return userHydrator.hydrate(userEntity, userSet);
-    }
-
     @Transactional(readOnly = true)
     public User findByLogin(String login) {
         Session session = sessionFactory.openSession();
@@ -210,14 +206,17 @@ public class UserDAOImpl implements UserDAO {
             .uniqueResult()).intValue();
     }
 
+    private User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
+        return userHydrator.hydrate(userEntity, userSet);
+    }
+
     @Transactional
     private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
         try {
             User userEntity = findByLogin(login);
             Boolean requested = flags.get("requested");
-            Boolean userEntityHasBeenRequested = requested && !userEntity.getRequested();
 
-            if (userEntity.canBeUpdated() || userEntityHasBeenRequested) {
+            if (userEntity.canBeUpdated() || requested && !userEntity.getRequested()) {
                 com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
                 applyFlagsToSet(userSet, flags);
                 return update(userEntity, userSet);

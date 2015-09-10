@@ -141,7 +141,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void updateUserEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
-        String newLogin = "new_random_login" + System.currentTimeMillis()
+        String newLogin = "new_random_login${System.currentTimeMillis()}"
 
         userEntity.setLogin newLogin
         githubUserDAOImpl.update userEntity
@@ -157,7 +157,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void updateUserEntityUsingUserSet() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
-        String newLogin = "new_random_login" + System.currentTimeMillis()
+        String newLogin = "new_random_login${System.currentTimeMillis()}"
         UserSet userSet = new UserSet(null, newLogin)
 
         githubUserDAOImpl.update userEntity, userSet
@@ -244,11 +244,11 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntityFollower2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         Session session = sessionFactory.openSession()
-        session.createSQLQuery(
-                "INSERT INTO github.user_followers (follower_id, followee_id) VALUES " +
-                "(:userEntityFollower1Id, :userEntityFolloweeId)," +
-                "(:userEntityFollower2Id, :userEntityFolloweeId)"
-            )
+        session.createSQLQuery('''\
+                INSERT INTO github.user_followers (follower_id, followee_id) VALUES
+                (:userEntityFollower1Id, :userEntityFolloweeId),
+                (:userEntityFollower2Id, :userEntityFolloweeId)
+            ''')
             .setParameter("userEntityFolloweeId", userEntityFollowee.getId())
             .setParameter("userEntityFollower1Id", userEntityFollower1.getId())
             .setParameter("userEntityFollower2Id", userEntityFollower2.getId())
@@ -271,11 +271,11 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntityFollowee2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         Session session = sessionFactory.openSession()
-        session.createSQLQuery(
-                "INSERT INTO github.user_followers (follower_id, followee_id) VALUES " +
-                "(:userEntityFollowerId, :userEntityFollowee1Id)," +
-                "(:userEntityFollowerId, :userEntityFollowee2Id)"
-            )
+        session.createSQLQuery('''\
+                INSERT INTO github.user_followers (follower_id, followee_id) VALUES
+                (:userEntityFollowerId, :userEntityFollowee1Id),
+                (:userEntityFollowerId, :userEntityFollowee2Id)
+            ''')
             .setParameter("userEntityFollowerId", userEntityFollower.getId())
             .setParameter("userEntityFollowee1Id", userEntityFollowee1.getId())
             .setParameter("userEntityFollowee2Id", userEntityFollowee2.getId())

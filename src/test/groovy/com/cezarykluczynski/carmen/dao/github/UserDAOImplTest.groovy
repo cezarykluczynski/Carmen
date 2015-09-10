@@ -74,6 +74,54 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    void findByLogin() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
+
+        User userEntityFound = githubUserDAOImpl.findByLogin userEntity.getLogin()
+        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
+    void findByIdInteger() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
+
+        User userEntityFound = githubUserDAOImpl.findById userEntity.getId().intValue()
+        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
+    void findByIdLong() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
+
+        User userEntityFound = githubUserDAOImpl.findById userEntity.getId()
+        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
+    void findByNotExistingId() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
+
+        User userEntityFound = githubUserDAOImpl.findById 2147483647
+        Assert.assertNull userEntityFound
+
+        // teardown
+        githubUserDAOImpl.delete userEntity
+    }
+
+    @Test
     void updateUserEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()

@@ -282,4 +282,5 @@ public class User {
         Date date = yesterday.toDate();
         return date.after(updated);
     }
+
 }

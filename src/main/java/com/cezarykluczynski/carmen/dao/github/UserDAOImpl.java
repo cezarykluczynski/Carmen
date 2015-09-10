@@ -130,13 +130,7 @@ public class UserDAOImpl implements UserDAO {
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         Session session = sessionFactory.openSession();
-        User user = null;
-
-        try {
-            user = (User) session.get(User.class, userId);
-        } catch(Exception e) {
-        }
-
+        User user = (User) session.get(User.class, userId);
         session.close();
         return user;
     }

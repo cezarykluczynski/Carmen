@@ -9,6 +9,10 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 
@@ -29,6 +33,12 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
+
+    @Autowired
+    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
     UserDAOImpl githubUserDAOImpl
@@ -188,6 +198,42 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
+    }
+
+    @Test
+    void findUserInReportFollowersFolloweesPhaseExistingEntity() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "report")
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
+
+        User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
+        Assert.assertEquals userEntity.getId(), userEntityFound.getId()
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
+    }
+
+    @Test
+    void findUserInReportFollowersFolloweesPhaseNonExistingEntity() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
+
+        User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
+        Assert.assertNull userEntityFound
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
     @Test

@@ -7,8 +7,6 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
 
-import java.util.HashMap
-
 @Component
 class UserFollowersDAOImplFixtures {
 
@@ -16,9 +14,13 @@ class UserFollowersDAOImplFixtures {
     UserFollowersDAOImpl propagationsUserFollowersDao
 
     public UserFollowers createUserFollowersEntityUsingUserEntity(User userEntity) {
+        return createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
+    }
+
+    public UserFollowers createUserFollowersEntityUsingUserEntityAndPhase(User userEntity, String phase) {
         UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(
             userEntity,
-            "discover"
+            phase
         )
 
         return userFollowersEntity

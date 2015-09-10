@@ -10,6 +10,7 @@
     <bean id="githubUserDAOImplFixtures" class="com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures" />
     <bean id="apiqueuePendingRequestDAOImplFixtures" class="com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures" />
     <bean id="propagationsUserFollowersDAOImplFixtures" class="com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures" />
+    <bean id="propagationsUserFollowingDAOImplFixtures" class="com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures" />
     <bean id="githubRateLimitDAOImplFixtures" class="com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures" />
     <bean id="sessionFactoryFixtures" class="com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures" />
 </beans>

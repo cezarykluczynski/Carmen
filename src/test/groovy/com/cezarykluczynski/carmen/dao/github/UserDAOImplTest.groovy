@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.dao.github
 
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -20,6 +23,9 @@ import org.testng.Assert
     "classpath:spring/fixtures/fixtures.xml"
 ])
 class UserDAOImplTest extends AbstractTestNGSpringContextTests {
+
+    @Autowired
+    private SessionFactory sessionFactory
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -182,6 +188,97 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
+    }
+
+    @Test
+    void countFollowers() {
+        // setup
+        User userEntityFollowee = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntityFollower1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntityFollower2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+
+        Session session = sessionFactory.openSession()
+        session.createSQLQuery(
+                "INSERT INTO github.user_followers (follower_id, followee_id) VALUES " +
+                "(:userEntityFollower1Id, :userEntityFolloweeId)," +
+                "(:userEntityFollower2Id, :userEntityFolloweeId)"
+            )
+            .setParameter("userEntityFolloweeId", userEntityFollowee.getId())
+            .setParameter("userEntityFollower1Id", userEntityFollower1.getId())
+            .setParameter("userEntityFollower2Id", userEntityFollower2.getId())
+            .executeUpdate()
+        session.close()
+
+        Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 2
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollower1
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollower2
+    }
+
+    @Test
+    void countFollowees() {
+        // setup
+        User userEntityFollower = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntityFollowee1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntityFollowee2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+
+        Session session = sessionFactory.openSession()
+        session.createSQLQuery(
+                "INSERT INTO github.user_followers (follower_id, followee_id) VALUES " +
+                "(:userEntityFollowerId, :userEntityFollowee1Id)," +
+                "(:userEntityFollowerId, :userEntityFollowee2Id)"
+            )
+            .setParameter("userEntityFollowerId", userEntityFollower.getId())
+            .setParameter("userEntityFollowee1Id", userEntityFollowee1.getId())
+            .setParameter("userEntityFollowee2Id", userEntityFollowee2.getId())
+            .executeUpdate()
+        session.close()
+
+        Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 2
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee1
+        githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee2
+    }
+
+    @Test
+    void countFollowersFollowing() {
+        // setup
+        User userEntityBase = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntitySatelite1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntitySatelite2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntitySatelite3 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        User userEntitySatelite4 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+
+        Session session = sessionFactory.openSession()
+        session.createSQLQuery('''\
+                INSERT INTO github.user_followers (follower_id, followee_id) VALUES
+                (:userEntityBaseId, :userEntitySatelite1Id),
+                (:userEntityBaseId, :userEntitySatelite2Id),
+                (:userEntityBaseId, :userEntitySatelite3Id),
+                (:userEntitySatelite2Id, :userEntityBaseId),
+                (:userEntitySatelite3Id, :userEntityBaseId),
+                (:userEntitySatelite4Id, :userEntityBaseId)
+            ''')
+            .setParameter("userEntityBaseId", userEntityBase.getId())
+            .setParameter("userEntitySatelite1Id", userEntitySatelite1.getId())
+            .setParameter("userEntitySatelite2Id", userEntitySatelite2.getId())
+            .setParameter("userEntitySatelite3Id", userEntitySatelite3.getId())
+            .setParameter("userEntitySatelite4Id", userEntitySatelite4.getId())
+            .executeUpdate()
+        session.close()
+
+        Assert.assertEquals githubUserDAOImpl.countFollowersFollowing(userEntityBase), 2
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntityBase
+        githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite1
+        githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite2
+        githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite3
+        githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite4
     }
 
 }

@@ -162,42 +162,48 @@ public class UserDAOImpl implements UserDAO {
             .setMaxResults(1)
             .list();
         session.close();
-       return list.size() > 0 ? list.get(0) : null;
+        return list.size() > 0 ? list.get(0) : null;
     }
 
     @Override
     public Integer countFollowers(User user) {
         Session session = sessionFactory.openSession();
 
-        return ((BigInteger) session.createSQLQuery(
+        Integer count = ((BigInteger) session.createSQLQuery(
             "SELECT count(*) FROM github.user_followers WHERE followee_id = :followeeId"
         )
             .setParameter("followeeId", user.getId())
             .uniqueResult()).intValue();
+        session.close();
+        return count;
     }
 
     @Override
     public Integer countFollowees(User user) {
         Session session = sessionFactory.openSession();
 
-        return ((BigInteger) session.createSQLQuery(
+        Integer count = ((BigInteger) session.createSQLQuery(
             "SELECT count(*) FROM github.user_followers WHERE follower_id = :followerId"
         )
             .setParameter("followerId", user.getId())
             .uniqueResult()).intValue();
+        session.close();
+        return count;
     }
 
     @Override
     public Integer countFollowersFollowing(User user) {
         Session session = sessionFactory.openSession();
 
-        return ((BigInteger) session.createSQLQuery(
+        Integer count = ((BigInteger) session.createSQLQuery(
             "SELECT count(*) FROM github.user_followers f1 " +
             "INNER JOIN github.user_followers f2 ON f2.follower_id = f1.followee_id " +
             "WHERE f1.follower_id = :userId AND f2.followee_id = :userId"
         )
             .setParameter("userId", user.getId())
             .uniqueResult()).intValue();
+        session.close();
+        return count;
     }
 
     private User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {

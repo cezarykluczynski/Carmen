@@ -37,7 +37,8 @@ public class UserGhostExecutor implements Executor {
 
         if (userLinkType.equals("follower")) {
             githubUserDAOImpl.linkFollowerWithFollowee(user, subject);
-        } else if (userLinkType.equals("followee")) {
+        }
+        if (userLinkType.equals("followee")) {
             githubUserDAOImpl.linkFollowerWithFollowee(subject, user);
         }
     }

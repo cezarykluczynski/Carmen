@@ -49,14 +49,9 @@ public class UserGhostPaginatorExecutor implements Executor {
         String endpoint = (String) pathParams.get("endpoint");
         Integer page = (Integer) (queryParams.containsKey("page") ? queryParams.get("page") : 1);
 
-        if (endpoint.equals("followers_url")) {
-            return githubProvider.getFollowers(login, limit, page);
-        }
-        if (endpoint.equals("following_url")) {
-            return githubProvider.getFollowing(login, limit, page);
-        }
-
-        throw new IOException("Endpoint " + endpoint + " not implemented.");
+        return endpoint.equals("followers_url") ?
+            githubProvider.getFollowers(login, limit, page) :
+            githubProvider.getFollowing(login, limit, page);
     }
 
     private void createUserGhostPendingRequests(
@@ -85,21 +80,15 @@ public class UserGhostPaginatorExecutor implements Executor {
     }
 
     private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<User> users) {
-        pendingRequest.getQueryParams().put("page", users.getNextPage());
+        HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
+        queryParams.put("page", users.getNextPage());
+        pendingRequest.setQueryParams(queryParams);
         apiqueuePendingRequestDao.update(pendingRequest);
     }
 
-    private String linkAsRole(PendingRequest pendingRequest) throws IOException {
+    private String linkAsRole(PendingRequest pendingRequest) {
         String endpoint = (String) pendingRequest.getPathParams().get("endpoint");
-
-        if (endpoint.equals("followers_url")) {
-            return "follower";
-        }
-        if (endpoint.equals("following_url")) {
-            return "followee";
-        }
-
-        throw new IOException("Endpoint " + endpoint + " not implemented.");
+        return endpoint.equals("followers_url") ? "follower" : "followee";
     }
 
 }

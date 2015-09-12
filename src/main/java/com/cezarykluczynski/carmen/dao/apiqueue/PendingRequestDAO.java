@@ -40,4 +40,6 @@ public interface PendingRequestDAO {
 
     public Long countByPropagationId(Long propagationId);
 
+    public PendingRequest findById(Long pendingRequestId);
+
 }

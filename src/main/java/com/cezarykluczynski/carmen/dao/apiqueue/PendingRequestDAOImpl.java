@@ -142,4 +142,13 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         return result;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PendingRequest findById(Long pendingRequestId) {
+        Session session = sessionFactory.openSession();
+        PendingRequest pendingRequest = (PendingRequest) session.get(PendingRequest.class, pendingRequestId);
+        session.close();
+        return pendingRequest;
+    }
+
 }

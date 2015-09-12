@@ -109,14 +109,14 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
         when githubProvider.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList
 
-        // excercise
+        // exercise
         userGhostPaginatorExecutor.execute pendingRequestEntity
 
         // assertion
         verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
-
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 0
+        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
     }
 
     @Test
@@ -133,14 +133,14 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
         when githubProvider.getFollowing(userEntitylogin, limit, 1) thenReturn userSetsList
 
-        // excercise
+        // exercise
         userGhostPaginatorExecutor.execute pendingRequestEntity
 
         // assertion
         verify(githubProvider).getFollowing(userEntitylogin, limit, 1)
-
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 0
+        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
     }
 
     @Test
@@ -159,14 +159,14 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         userSetsList.add userSetFollower
         when githubProvider.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList
 
-        // excercise
+        // exercise
         userGhostPaginatorExecutor.execute pendingRequestEntity
 
         // assertion
         verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
-
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 1
+        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
 
         // teardown
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
@@ -188,18 +188,52 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         userSetsList.add userSetFollower
         when githubProvider.getFollowing(userEntitylogin, limit, 1) thenReturn userSetsList
 
-        // excercise
+        // exercise
         userGhostPaginatorExecutor.execute pendingRequestEntity
 
         // assertion
         verify(githubProvider).getFollowing(userEntitylogin, limit, 1)
-
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 1
+        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
 
         // teardown
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
     }
+
+    @Test
+    void executePaginationIsMoved() {
+        // setup
+        pathParams.put("endpoint", "followers_url")
+        pendingRequestEntity.setPathParams pathParams
+        queryParams.put("page", 1)
+        pendingRequestEntity.setQueryParams queryParams
+        apiqueuePendingRequestDao.create pendingRequestEntity
+
+        String userEntitylogin = userEntity.getLogin()
+        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+
+        userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, false)
+        UserSet userSetFollower = new UserSet(null, userSetLogin)
+        userSetsList.setNextPage 2
+        userSetsList.add userSetFollower
+        when githubProvider.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList
+
+        // exercise
+        userGhostPaginatorExecutor.execute pendingRequestEntity
+
+        // assertion
+        verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
+        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
+        Assert.assertEquals pendingRequestList.size(), 1
+        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        Assert.assertNotNull pendingRequestEntityFound
+        Assert.assertEquals pendingRequestEntityFound.getQueryParams().get("page"), 2
+
+        // teardown
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
+    }
+
 
     @AfterMethod
     void tearDown() {
@@ -221,6 +255,10 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         session.close()
 
         return list
+    }
+
+    private PendingRequest findById(Long pendingRequestId) {
+        //
     }
 
     private PaginationAwareArrayList<UserSet> createPaginationAwareArrayListWithUserSets(limit, offset, lastPage) {

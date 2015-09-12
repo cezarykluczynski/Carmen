@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.executor.github;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,8 +22,8 @@ public class UserGhostPaginatorExecutor implements Executor {
     @Autowired
     GithubProvider githubProvider;
 
-    // TODO: move to config
-    private Integer limit = 50;
+    @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}")
+    private Integer limit;
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         PaginationAwareArrayList<User> users = getUserListFromPendingRequest(pendingRequest);

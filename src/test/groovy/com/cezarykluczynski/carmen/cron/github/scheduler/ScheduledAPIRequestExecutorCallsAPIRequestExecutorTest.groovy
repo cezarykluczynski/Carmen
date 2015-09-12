@@ -23,8 +23,7 @@ import org.testng.annotations.Test
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/cron/ScheduledAPIRequestExecutor-mocks.xml"
+    "classpath:spring/cron-config.xml"
 ])
 class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTestNGSpringContextTests {
 

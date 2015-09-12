@@ -25,8 +25,7 @@ import org.testng.annotations.Test
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/cron/APIRequestExecutor-mocks.xml"
+    "classpath:spring/cron-config.xml"
 ])
 class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
 

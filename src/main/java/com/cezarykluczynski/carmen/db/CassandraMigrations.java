@@ -38,7 +38,7 @@ class CassandraMigrations {
 
         try {
             Properties properties = new Properties();
-            InputStream inputStream = CassandraMigrations.class.getClassLoader().getResourceAsStream("cassandra.properties");
+            InputStream inputStream = CassandraMigrations.class.getClassLoader().getResourceAsStream("config.properties");
             properties.load(inputStream);
 
             contactpoints = properties.getProperty("cassandra.contactpoints");
@@ -47,7 +47,7 @@ class CassandraMigrations {
             keyspaceName = properties.getProperty("cassandra.keyspace");
             version = (String) properties.getProperty("cassandra.version");
         } catch (IOException ioe) {
-            System.out.println("Carmen: cassandra.properties not found or incomplete.");
+            System.out.println("Carmen: config.properties for Cassandra not found or incomplete.");
 
             throw ioe;
         }
@@ -135,7 +135,7 @@ class CassandraMigrations {
             .execute();
 
         keyspace.prepareQuery(SCHEMA_MIGRATIONS)
-                .withCql("CREATE INDEX ON " + keyspaceName + ".followers_and_followees (user_id);")
+                .withCql("CREATE INDEX IF NOT EXISTS ON " + keyspaceName + ".followers_and_followees (user_id);")
                 .execute();
     }
 
@@ -154,7 +154,7 @@ class CassandraMigrations {
             .execute();
 
         keyspace.prepareQuery(SCHEMA_MIGRATIONS)
-            .withCql("CREATE INDEX ON " + keyspaceName + ".followers_being_followees (user_id);")
+            .withCql("CREATE INDEX IF NOT EXISTS ON " + keyspaceName + ".followers_being_followees (user_id);")
             .execute();
     }
 

@@ -20,7 +20,7 @@ import org.springframework.data.cassandra.core.CassandraAdminOperations;
 import org.springframework.data.cassandra.core.CassandraAdminTemplate;
 
 @Configuration
-@PropertySource(value = { "classpath:cassandra.properties" })
+@PropertySource(value = { "classpath:config.properties" })
 @EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository.githubstats" })
 public class CassandraConfiguration extends AbstractCassandraConfiguration {
 

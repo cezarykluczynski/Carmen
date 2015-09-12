@@ -51,11 +51,12 @@ public class UserGhostPaginatorExecutor implements Executor {
 
         if (endpoint.equals("followers_url")) {
             return githubProvider.getFollowers(login, limit, page);
-        } else if (endpoint.equals("following_url")) {
-            return githubProvider.getFollowing(login, limit, page);
-        } else {
-            throw new IOException("Endpoint " + endpoint + " not implemented.");
         }
+        if (endpoint.equals("following_url")) {
+            return githubProvider.getFollowing(login, limit, page);
+        }
+
+        throw new IOException("Endpoint " + endpoint + " not implemented.");
     }
 
     private void createUserGhostPendingRequests(
@@ -93,11 +94,12 @@ public class UserGhostPaginatorExecutor implements Executor {
 
         if (endpoint.equals("followers_url")) {
             return "follower";
-        } else if (endpoint.equals("following_url")) {
-            return "followee";
-        } else {
-            throw new IOException("Endpoint " + endpoint + " not implemented.");
         }
+        if (endpoint.equals("following_url")) {
+            return "followee";
+        }
+
+        throw new IOException("Endpoint " + endpoint + " not implemented.");
     }
 
 }

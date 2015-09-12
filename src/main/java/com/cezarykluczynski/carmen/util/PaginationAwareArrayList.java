@@ -23,6 +23,7 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
         lastPage = !pageIterator.hasNext();
     }
 
+
     public void extractPaginationDataFromCollection(Collection collection) {
         count = collection.size();
     }
@@ -32,8 +33,16 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
         this.limit = limit;
     }
 
+    public void setOffset(Integer offset) {
+        this.offset = offset;
+    }
+
     public Integer getOffset() {
         return offset;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public Integer getLimit() {
@@ -44,8 +53,15 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
         return count;
     }
 
+    public void setNextPage(Integer nextPage) {
+        this.nextPage = nextPage;
+    }
     public Integer getNextPage() {
         return nextPage;
+    }
+
+    public void setLastPage(Boolean lastPage) {
+        this.lastPage = lastPage;
     }
 
     public Boolean isLastPage() {

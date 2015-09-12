@@ -30,6 +30,8 @@ public interface PendingRequestDAO {
         Integer priotity
     );
 
+    public PendingRequest create(PendingRequest pendingRequest);
+
     public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException;
 
     public void update(PendingRequest pendingRequest);

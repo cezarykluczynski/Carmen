@@ -46,7 +46,6 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
     }
 
     @Override
-    @Transactional
     public PendingRequest create(
         String executor,
         User userEntity,
@@ -69,6 +68,12 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
             pendingRequest.setPropagation((Propagation) propagation);
         }
 
+        return create(pendingRequest);
+    }
+
+    @Override
+    @Transactional
+    public PendingRequest create(PendingRequest pendingRequest) {
         Session session = sessionFactory.openSession();
         session.save(pendingRequest);
         session.flush();

@@ -33,7 +33,11 @@ public class UserFollowing implements Propagation {
     }
 
     public void setUpdated() {
-        updated = new Date();
+        setUpdated(new Date());
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     public Date getUpdated() {

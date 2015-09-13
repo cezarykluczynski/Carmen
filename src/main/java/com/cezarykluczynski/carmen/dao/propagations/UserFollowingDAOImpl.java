@@ -48,14 +48,12 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
             .setMaxResults(1);
 
         UserFollowing entity = null;
-
-        try {
-            List<UserFollowing> list = criteria.list();
-            entity = list.size() > 0 ? list.get(0) : null;
-        } catch(ObjectNotFoundException e) {
-        } finally {
-            session.close();
+        List<UserFollowing> list = criteria.list();
+        if (list.size() > 0) {
+            entity = list.get(0);
         }
+        session.close();
+
 
         return entity;
     }
@@ -100,13 +98,7 @@ public class UserFollowingDAOImpl implements UserFollowingDAO {
     @Transactional(readOnly = true)
     public UserFollowing findById(Long userId) {
         Session session = sessionFactory.openSession();
-        UserFollowing user = null;
-
-        try {
-            user = (UserFollowing) session.get(UserFollowing.class, userId);
-        } catch(Exception e) {
-        }
-
+        UserFollowing user = (UserFollowing) session.get(UserFollowing.class, userId);
         session.close();
         return user;
     }

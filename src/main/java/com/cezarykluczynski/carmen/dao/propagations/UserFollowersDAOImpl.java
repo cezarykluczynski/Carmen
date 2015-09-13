@@ -41,21 +41,17 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
     @Transactional(readOnly = true)
     public UserFollowers findOldestPropagationInDiscoverPhase() {
         Session session = sessionFactory.openSession();
-
         Criteria criteria = session.createCriteria(UserFollowers.class)
             .add(Restrictions.eq("phase", "discover"))
             .addOrder(Order.asc("updated"))
             .setMaxResults(1);
 
         UserFollowers entity = null;
-
-        try {
-            List<UserFollowers> list = criteria.list();
-            entity = list.size() > 0 ? list.get(0) : null;
-        } catch(ObjectNotFoundException e) {
-        } finally {
-            session.close();
+        List<UserFollowers> list = criteria.list();
+        if (list.size() > 0) {
+            entity = list.get(0);
         }
+        session.close();
 
         return entity;
     }
@@ -100,12 +96,7 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
     @Transactional(readOnly = true)
     public UserFollowers findById(Long userId) {
         Session session = sessionFactory.openSession();
-        UserFollowers user = null;
-
-        try {
-            user = (UserFollowers) session.get(UserFollowers.class, userId);
-        } catch(Exception e) {}
-
+        UserFollowers user = (UserFollowers) session.get(UserFollowers.class, userId);
         session.close();
         return user;
     }

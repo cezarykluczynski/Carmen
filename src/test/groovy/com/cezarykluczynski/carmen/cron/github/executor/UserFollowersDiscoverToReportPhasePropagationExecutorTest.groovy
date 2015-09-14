@@ -12,8 +12,8 @@ import com.cezarykluczynski.carmen.propagation.UserFollowersPropagation
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
+import static org.mockito.Mockito.never
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.InjectMocks
@@ -50,14 +50,37 @@ class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends Abstract
         MockitoAnnotations.initMocks this
         userFollowersEntity = mock UserFollowers.class
         when userFollowersEntity.getId() thenReturn userFollowersEntityId
-        doNothing().when(userFollowersPropagation).tryToMoveToReportPhase(userFollowersEntityId)
-        when propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase() thenReturn userFollowersEntity
     }
 
     @Test
-    void userFollowersDiscoverToReportPhasePropagationExecutor() {
+    void userFollowersDiscoverToReportPhasePropagationExecutorExistingEntity() {
+        // setup
+        doNothing().when(userFollowersPropagation).tryToMoveToReportPhase(userFollowersEntityId)
+        when propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase() thenReturn userFollowersEntity
+
+        // exercise
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
+
+        // assertion
         verify userFollowersPropagation tryToMoveToReportPhase(userFollowersEntityId)
+    }
+
+    @Test
+    void userFollowersDiscoverToReportPhasePropagationExecutorNonExistingEntity() {
+        // setup
+        doNothing().when(userFollowersPropagation).tryToMoveToReportPhase userFollowersEntityId
+        when propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase() thenReturn null
+
+        // exercise
+        userFollowersDiscoverToReportPhasePropagationExecutor.run()
+
+        // assertion
+        verify(userFollowersPropagation, never()).tryToMoveToReportPhase userFollowersEntityId
+    }
+
+    @AfterMethod
+    void tearDown() {
+        Mockito.reset propagationsUserFollowersDao
     }
 
 }

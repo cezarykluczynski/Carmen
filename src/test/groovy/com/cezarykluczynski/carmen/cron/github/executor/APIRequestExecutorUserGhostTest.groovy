@@ -11,7 +11,6 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doThrow
-import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -47,13 +46,13 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor "UserGhost"
         when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenReturn pendingRequestEntity
-        when(userGhostExecutor.execute()).thenThrow(RuntimeException)
+        when(userGhostExecutor.execute()).thenThrow RuntimeException
     }
 
     @Test
     void apiRequestExecutorRunsUserGhostExecutor() {
         apiRequestExecutor.run()
-        verify(userGhostExecutor, times(1)).execute(pendingRequestEntity)
+        verify(userGhostExecutor).execute(pendingRequestEntity)
     }
 
     @AfterMethod

@@ -10,8 +10,8 @@ import com.cezarykluczynski.carmen.model.github.User
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doThrow
-import static org.mockito.Mockito.times
+import static org.mockito.Mockito.doNothing
+import static org.mockito.Mockito.never
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -39,20 +39,40 @@ class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Ab
     @InjectMocks
     UserFollowersFollowingReportToSleepPhasePropagationExecutor userFollowersFollowingReportToSleepPhasePropagationExecutor
 
+    User userEntity
+
     @BeforeMethod
     void setUp() {
-        User userEntity = new User()
+        userEntity = new User()
         githubUserDAOImpl = mock UserDAOImpl.class
         propagationUserFollowersFollowingReportToSleepPhase = mock UserFollowersFollowingReportToSleepPhasePropagation.class
         MockitoAnnotations.initMocks this
-        when githubUserDAOImpl.findUserInReportFollowersFolloweesPhase() thenReturn userEntity
-        when propagationUserFollowersFollowingReportToSleepPhase.propagate() thenThrow RuntimeException
     }
 
     @Test
-    void userFollowersFollowingReportToSleepPhasePropagationExecutor() {
+    void userFollowersFollowingReportToSleepPhasePropagationExecutorExistingEntity() {
+        // setup
+        when githubUserDAOImpl.findUserInReportFollowersFolloweesPhase() thenReturn userEntity
+        doNothing().when(propagationUserFollowersFollowingReportToSleepPhase).propagate()
+
+        // exercise
         userFollowersFollowingReportToSleepPhasePropagationExecutor.run()
+
+        // assertion
         verify(propagationUserFollowersFollowingReportToSleepPhase).propagate()
+    }
+
+    @Test
+    void userFollowersFollowingReportToSleepPhasePropagationExecutorNonExistingEntity() {
+        // setup
+        when githubUserDAOImpl.findUserInReportFollowersFolloweesPhase() thenReturn null
+        doNothing().when(propagationUserFollowersFollowingReportToSleepPhase).propagate()
+
+        // exercise
+        userFollowersFollowingReportToSleepPhasePropagationExecutor.run()
+
+        // assertion
+        verify(propagationUserFollowersFollowingReportToSleepPhase, never()).propagate()
     }
 
     @AfterMethod

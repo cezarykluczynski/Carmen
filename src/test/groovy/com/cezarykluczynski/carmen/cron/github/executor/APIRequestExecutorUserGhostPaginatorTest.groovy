@@ -10,7 +10,6 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doThrow
-import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -52,7 +51,7 @@ class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringConte
     @Test
     void apiRequestExecutorRunsUserGhostPaginatorExecutor() {
         apiRequestExecutor.run()
-        verify(userGhostPaginatorExecutor, times(1)).execute(pendingRequestEntity)
+        verify(userGhostPaginatorExecutor).execute(pendingRequestEntity)
     }
 
     @AfterMethod

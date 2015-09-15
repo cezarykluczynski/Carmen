@@ -52,8 +52,6 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
     }
 
     private void setFollowersAndFollowingFromUserEntity() {
-        followersAndFollowees = null;
-
         followersAndFollowees = followersAndFolloweesRepository.findByUserId(userEntity.getId());
 
         if (followersAndFollowees == null) {

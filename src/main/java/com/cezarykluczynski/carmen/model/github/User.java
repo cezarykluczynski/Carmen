@@ -90,22 +90,6 @@ public class User {
     )
     private Set<User> followees = new HashSet<User>();
 
-    public void addFollower(User follower) {
-        followers.add(follower);
-    }
-
-    public Set<User> getFollowers() {
-        return followers;
-    }
-
-    public void addFollowee(User followee) {
-        followees.add(followee);
-    }
-
-    public Set<User> getFollowees() {
-        return followees;
-    }
-
     @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserFollowers userFollowers;
 

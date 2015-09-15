@@ -8,7 +8,7 @@ import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToR
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.thenThrow
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -40,7 +40,7 @@ class ScheduledUserFollowersDiscoverToReportPhasePropagationExecutorTest extends
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
         MockitoAnnotations.initMocks this
-        when userFollowersDiscoverToReportPhasePropagationExecutor.run() thenThrow RuntimeException
+        doNothing().when(userFollowersDiscoverToReportPhasePropagationExecutor).run()
     }
 
     @Test

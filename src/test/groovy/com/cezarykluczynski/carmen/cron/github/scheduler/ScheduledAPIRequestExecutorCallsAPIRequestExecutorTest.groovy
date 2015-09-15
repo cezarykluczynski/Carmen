@@ -8,7 +8,7 @@ import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doThrow
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
@@ -41,7 +41,7 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
         MockitoAnnotations.initMocks this
-        when apiRequestExecutor.run() thenThrow RuntimeException
+        doNothing().when(apiRequestExecutor).run()
     }
 
     @Test

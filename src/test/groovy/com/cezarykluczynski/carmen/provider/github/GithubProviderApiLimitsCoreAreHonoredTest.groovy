@@ -39,8 +39,10 @@ public class GithubProviderApiLimitsCoreAreHonoredTest {
         mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
     }
 
+    // assertion: annotated
     @Test(expected = GithubRateLimitExceededException.class)
     void apiLimitsAreHonored() throws Exception {
+        // exercise
         githubProvider.getUser "cezarykluczynski"
     }
 

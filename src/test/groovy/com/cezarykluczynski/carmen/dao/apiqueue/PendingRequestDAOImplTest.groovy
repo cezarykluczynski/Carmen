@@ -67,7 +67,10 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity(userEntity)
 
+        // exercise
         List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser userEntity
+
+        // assertion
         Assert.assertEquals pendingRequestEntitiesList.get(0).getId(), pendingRequestEntity.getId()
         Assert.assertEquals pendingRequestEntitiesList.size(), 1
 
@@ -81,8 +84,9 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity
-
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
+
+        // exercise
         PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
             "RandomExecutor",
             userEntity,
@@ -93,6 +97,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             0
         )
 
+        // assertion
         Assert.assertNotNull pendingRequestEntity.getId()
         Assert.assertEquals pendingRequestEntity.getPropagationId(), userFollowersEntity.getId()
 
@@ -113,7 +118,10 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         PendingRequest pendingRequestEntityWith100Priority =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndPriority userEntity, 100
 
+        // exercise
         PendingRequest pendingRequestEntityMostImportant = apiqueuePendingRequestDao.findMostImportantPendingRequest()
+
+        // assertion
         Assert.assertEquals pendingRequestEntityMostImportant.getId(), pendingRequestEntityWith102Priority.getId()
 
         // teardown
@@ -130,9 +138,13 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.setSessionFactory sessionFactoryMock
 
         try {
+            // exercise
             apiqueuePendingRequestDao.findMostImportantPendingRequest()
+
+            // assertion
             Assert.assertTrue false
         } catch (Throwable e) {
+            // assertion
             Assert.assertTrue e instanceof EmptyPendingRequestListException
         }
 
@@ -147,8 +159,11 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
         pendingRequestEntity.setExecutor "ExecutorForUpdateTest"
+
+        // exercise
         apiqueuePendingRequestDao.update pendingRequestEntity
 
+        // assertion
         Session session = sessionFactory.openSession()
         List<PendingRequest> list = session.createQuery(
             "SELECT pr FROM api_queue.PendingRequests pr " +
@@ -174,7 +189,10 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
 
         Long pendingRequestEntityId = pendingRequestEntity.getId()
 
+        // exercise
         apiqueuePendingRequestDao.delete pendingRequestEntity
+
+        // assertion
         Session session = sessionFactory.openSession()
         List<PendingRequest> list = session.createQuery(
             "SELECT pr FROM api_queue.PendingRequests pr " +
@@ -183,7 +201,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             .setLong("id", pendingRequestEntityId)
             .setMaxResults(1)
             .list();
-        session.close();
+        session.close()
         Assert.assertEquals list.size(), 0
 
         // teardown
@@ -204,6 +222,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
                 userEntity, userFollowersEntity
             )
 
+        // exercise, assertion
         Assert.assertEquals apiqueuePendingRequestDao.countByPropagationId(userFollowersEntity.getId()), 2
 
         // teardown

@@ -66,7 +66,10 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin currentLogin
         verify(githubProviderMock, never()).getUser currentLogin
         Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
@@ -88,7 +91,10 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertTrue userEntityUpdated instanceof User
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
@@ -111,7 +117,10 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        // exercise
         githubUserDAOImpl.createOrUpdateGhostEntity currentLogin
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertEquals userEntityUpdated.getRequested(), false
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
@@ -132,7 +141,10 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertEquals userEntityUpdated.getRequested(), true
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
@@ -151,7 +163,10 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
         githubUserDAOImpl.setGithubProvider githubProviderMock
 
+        // exercise
         User userEntityUpdated = githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
+
+        // assertion
         Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
 
         // teardown

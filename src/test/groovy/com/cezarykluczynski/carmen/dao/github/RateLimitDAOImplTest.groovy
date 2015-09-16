@@ -52,8 +52,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
             new Date()
         )
 
+        // exercise
         RateLimit rateLimitEntity = rateLimitDAOImpl.create rateLimitSet
 
+        // assertion
         Assert.assertEquals rateLimitEntity.getResource(), "core"
         Assert.assertEquals rateLimitEntity.getLimit(), 5000
         Assert.assertEquals rateLimitEntity.getRemaining(), 4999
@@ -69,7 +71,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
+        // exercise
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getCoreLimit()
+
+        // assertion
         Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
 
         // teardown
@@ -83,9 +88,13 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         rateLimitDAOImpl.setSessionFactory sessionFactoryMock
 
         try {
+            // exercise
             rateLimitDAOImpl.getCoreLimit()
+
+            // assertion
             Assert.assertTrue false
         } catch (Throwable e) {
+            // assertion
             Assert.assertTrue e instanceof NullPointerException
         }
 
@@ -98,7 +107,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "search"
 
+        // exercise
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getSearchLimit()
+
+        // assertion
         Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
 
         // teardown
@@ -112,9 +124,13 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         rateLimitDAOImpl.setSessionFactory sessionFactoryMock
 
         try {
+            // exercise
             rateLimitDAOImpl.getSearchLimit()
+
+            // assertion
             Assert.assertTrue false
         } catch (Throwable e) {
+            // assertion
             Assert.assertTrue e instanceof NullPointerException
         }
 
@@ -128,8 +144,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
         Integer previousRemaining = rateLimitEntityMock.getRemaining()
 
+        // exercise
         rateLimitDAOImpl.decrementRateLimitRemainingCounter()
 
+        // assertion
         Session session = sessionFactory.openSession()
         RateLimit rateLimitEntityMockUpdated = (RateLimit) session
             .createQuery("from github.RateLimit as r where r.id = :rateLimitId")
@@ -152,8 +170,10 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         Thread.sleep 1100
         RateLimit rateLimitEntityCurrentMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
+        // exercise
         rateLimitDAOImpl.deleteOldLimits "core"
 
+        // assertion
         Session session = sessionFactory.openSession()
         List<RateLimit> rateLimitEntityOldMockList = session
             .createQuery("from github.RateLimit as r where r.id = :rateLimitId")

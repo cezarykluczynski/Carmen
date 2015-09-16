@@ -72,8 +72,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             hireable
         )
 
+        // exercise
         User userEntity = githubUserDAOImpl.create userSet
 
+        // assertion
         Assert.assertNotNull userEntity.getId()
         Assert.assertEquals userEntity.getLogin(), login
         Assert.assertEquals userEntity.getName(), name
@@ -94,7 +96,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        // exercise
         User userEntityFound = githubUserDAOImpl.findByLogin userEntity.getLogin()
+
+        // assertion
         Assert.assertEquals userEntityFound.getId(), userEntity.getId()
 
         // teardown
@@ -142,9 +147,12 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
         String newLogin = "new_random_login${System.currentTimeMillis()}"
-
         userEntity.setLogin newLogin
+
+        // exercise
         githubUserDAOImpl.update userEntity
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
         Assert.assertEquals newLogin, userEntityUpdated.getLogin()
@@ -160,7 +168,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         String newLogin = "new_random_login${System.currentTimeMillis()}"
         UserSet userSet = new UserSet(null, newLogin)
 
+        // exercise
         githubUserDAOImpl.update userEntity, userSet
+
+        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
         Assert.assertEquals newLogin, userEntityUpdated.getLogin()
@@ -175,7 +186,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntityFollowee = githubUserDAOImplFixtures.createNotFoundEntity()
         User userEntityFollower = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        // exercise
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
+
+        // assertion
         Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 1
         Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 1
 
@@ -190,8 +204,11 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntityFollowee = githubUserDAOImplFixtures.createNotFoundEntity()
         User userEntityFollower = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        // exercise
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
+
+        // assertion
         Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 1
         Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 1
 
@@ -209,7 +226,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
             .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
+        // exercise
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
+
+        // assertion
         Assert.assertEquals userEntity.getId(), userEntityFound.getId()
 
         // teardown
@@ -227,7 +247,10 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
             .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
+        // exercise
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
+
+        // assertion
         Assert.assertNull userEntityFound
 
         // teardown
@@ -282,6 +305,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             .executeUpdate()
         session.close()
 
+        // exercise, assertion
         Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 2
 
         // teardown
@@ -317,6 +341,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             .executeUpdate()
         session.close()
 
+        // exercise, assertion
         Assert.assertEquals githubUserDAOImpl.countFollowersFollowing(userEntityBase), 2
 
         // teardown

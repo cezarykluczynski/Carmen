@@ -50,7 +50,10 @@ class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringConte
 
     @Test
     void apiRequestExecutorRunsUserGhostPaginatorExecutor() {
+        // exercise
         apiRequestExecutor.run()
+
+        // assertion
         verify(userGhostPaginatorExecutor).execute(pendingRequestEntity)
     }
 

@@ -79,7 +79,10 @@ class UserGhostExecutorTest extends AbstractTestNGSpringContextTests {
         when githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) thenReturn userEntity1
         when githubUserDAOImpl.findById(userEntity2.getId().intValue()) thenReturn userEntity2
 
+        // exercise
         userGhostExecutor.execute pendingRequestEntity
+
+        // assertion
         verify(githubUserDAOImpl).linkFollowerWithFollowee(userEntity1, userEntity2)
     }
 
@@ -94,7 +97,10 @@ class UserGhostExecutorTest extends AbstractTestNGSpringContextTests {
         when githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) thenReturn userEntity1
         when githubUserDAOImpl.findById(userEntity2.getId().intValue()) thenReturn userEntity2
 
+        // exercise
         userGhostExecutor.execute pendingRequestEntity
+
+        // assertion
         verify(githubUserDAOImpl).linkFollowerWithFollowee(userEntity2, userEntity1)
     }
 

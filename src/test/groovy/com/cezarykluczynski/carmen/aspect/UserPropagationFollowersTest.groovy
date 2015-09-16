@@ -71,16 +71,17 @@ class UserFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void followersPropagateAfterUserCreation() {
+        // exercise
         userEntity = githubUserDAOImpl.createOrUpdateRequestedEntity login
-
         List<UserFollowers> userFollowersList = userFollowersDAOImpl.findByUser userEntity
         userFollowers = userFollowersList.get 0
+        pendingRequestsList = pendingRequestDAOImpl.findByUser userEntity
+
+        // assertion
         assertThat(
             userFollowers,
             hasProperty("phase", is("discover"))
         )
-
-        pendingRequestsList = pendingRequestDAOImpl.findByUser userEntity
 
         assertThat pendingRequestsList.size(), equalTo(2)
         assertThat pendingRequestsList.get(1).getExecutor(), equalTo("UsersGhostPaginator")

@@ -45,12 +45,15 @@ class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorTest extends
 
     @Test
     void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
+        // exercise
         scheduledUserFollowingDiscoverToReportPhasePropagationExecutor.executePropagation()
         /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
            for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
            verification of scheduledUserFollowingDiscoverToReportPhasePropagationExecutor.run() would fail if we wouldn't wait a tiny bit.
            This can be tuned to a few more milliseconds if it fails for anyone. */
         Thread.sleep 10
+
+        // assertion
         verify(userFollowingDiscoverToReportPhasePropagationExecutor).run()
     }
 

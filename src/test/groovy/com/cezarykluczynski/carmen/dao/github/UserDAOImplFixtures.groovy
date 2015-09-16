@@ -21,6 +21,15 @@ class UserDAOImplFixtures {
         return userEntity
     }
 
+    public User createNotFoundRequestedUserEntity() {
+        UserSet userSetEntity = getUserSetEntityWithRandomLogin()
+        User userEntity = githubUserDAOImpl.create userSetEntity
+        userEntity.setFound false
+        userEntity.setRequested true
+        githubUserDAOImpl.update userEntity
+        return userEntity
+    }
+
     public User createFoundGhostUserEntity() {
         UserSet userSetEntity = getUserSetEntityWithRandomLogin()
         User userEntity = githubUserDAOImpl.create userSetEntity

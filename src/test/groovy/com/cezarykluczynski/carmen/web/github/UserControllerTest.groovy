@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +28,8 @@ import com.cezarykluczynski.carmen.model.github.User
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
 @WebAppConfiguration
 class UserControllerTest {
@@ -36,6 +39,9 @@ class UserControllerTest {
 
     @Autowired
     private UserController userController
+
+    @Autowired
+    UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
     UserDAOImpl githubUserDAOImpl
@@ -56,48 +62,27 @@ class UserControllerTest {
     @Test
     void existingNotFoundUser() throws Exception {
         // setup
-        User userEntity = createUser(false)
+        User userEntity = githubUserDAOImplFixtures.createNotFoundRequestedUserEntity()
 
         // exercise, assertion
         mockMvc.perform(get("/github/" + userEntity.getLogin()))
             .andExpect(status().isNotFound())
 
         // teardown
-        deleteUserEntity(userEntity)
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
     void existingFoundUser() throws Exception {
         // setup
-        User userEntity = createUser(true)
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         // exercise, assertion
         mockMvc.perform(get("/github/" + userEntity.getLogin()))
             .andExpect(status().isOk())
 
         // teardown
-        deleteUserEntity(userEntity)
-    }
-
-    private User createUser(Boolean found) {
-        String login = "random_login" + System.currentTimeMillis()
-        com.cezarykluczynski.carmen.set.github.User mockedUserSet = mock(com.cezarykluczynski.carmen.set.github.User.class)
-        when(mockedUserSet.getLogin()).thenReturn(login)
-        when(mockedUserSet.getRequested()).thenReturn(true)
-        User userEntity = githubUserDAOImpl.create(mockedUserSet)
-        userEntity.setFound(found)
-        Session session = sessionFactory.openSession()
-        session.update(userEntity)
-        session.flush()
-        session.close()
-        return userEntity
-    }
-
-    private void deleteUserEntity(User userEntity) {
-        Session session = sessionFactory.openSession()
-        session.delete(userEntity)
-        session.flush()
-        session.close()
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
 }

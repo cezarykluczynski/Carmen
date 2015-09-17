@@ -3,6 +3,13 @@ package com.cezarykluczynski.carmen.web.github
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -11,20 +18,13 @@ import static org.mockito.Mockito.when
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
-import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.testng.annotations.BeforeMethod
+import org.testng.annotations.Test
+import org.testng.Assert
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.model.github.User
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
@@ -32,7 +32,7 @@ import com.cezarykluczynski.carmen.model.github.User
     "classpath:spring/fixtures/fixtures.xml"
 ])
 @WebAppConfiguration
-class UserControllerTest {
+class UserControllerTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory
@@ -48,7 +48,7 @@ class UserControllerTest {
 
     private MockMvc mockMvc
 
-    @Before
+    @BeforeMethod
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build()
     }

@@ -1,12 +1,9 @@
 package com.cezarykluczynski.carmen.provider.github
 
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.provider.github.GithubProvider
@@ -14,14 +11,17 @@ import com.cezarykluczynski.carmen.provider.github.GithubRateLimitExceededExcept
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
 
-@RunWith(SpringJUnit4ClassRunner.class)
+import org.testng.annotations.AfterMethod
+import org.testng.annotations.BeforeMethod
+import org.testng.annotations.Test
+
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml",
     "classpath:spring/fixtures/fixtures.xml"
 ])
-public class GithubProviderApiLimitsCoreAreHonoredTest {
+public class GithubProviderApiLimitsCoreAreHonoredTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     GithubProvider githubProvider
@@ -34,19 +34,19 @@ public class GithubProviderApiLimitsCoreAreHonoredTest {
 
     RateLimit mockRateLimitEntity
 
-    @Before
+    @BeforeMethod
     void setup() {
         mockRateLimitEntity = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
     }
 
     // assertion: annotated
-    @Test(expected = GithubRateLimitExceededException.class)
+    @Test(expectedExceptions = GithubRateLimitExceededException.class)
     void apiLimitsAreHonored() throws Exception {
         // exercise
         githubProvider.getUser "cezarykluczynski"
     }
 
-    @After
+    @AfterMethod
     void teardown() {
         githubRateLimitDAOImplFixtures.deleteRateLimitEntity mockRateLimitEntity
     }

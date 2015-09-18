@@ -27,10 +27,12 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
 
     private User userEntity;
 
+    @Override
     public void setUserEntity(User userEntity) {
         this.userEntity = userEntity;
     }
 
+    @Override
     public void propagate() {
         if (!userEntity.getFound()) {
             return;

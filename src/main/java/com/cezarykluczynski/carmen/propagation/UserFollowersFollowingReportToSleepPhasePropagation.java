@@ -40,10 +40,12 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
 
     FollowersAndFollowees followersAndFollowees;
 
+    @Override
     public void setUserEntity(User userEntity) {
         this.userEntity = userEntity;
     }
 
+    @Override
     public void propagate() {
         setFollowersAndFollowingFromUserEntity();
         hydrateFollowersAndFollowees();

@@ -18,6 +18,6 @@ install:
   - npm install
   - gulp
 script:
-  - mvn mvn cobertura:cobertura-integration-test -Dcobertura.report.format=xml
+  - mvn cobertura:cobertura-integration-test -Dcobertura.report.format=xml
 after_success:
   - bash <(curl -s https://codecov.io/bash)

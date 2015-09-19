@@ -84,6 +84,28 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    void propagateNonEmptyPropagations() {
+        // setup
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
+
+        userFollowersPropagation.setUserEntity userEntity
+
+        // exercise
+        userFollowersPropagation.propagate()
+
+        // assertion: another propagation should not be created
+        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        Assert.assertEquals propagationsUserFollowersDAOImplList.size(), 1
+        Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getId(), userFollowersEntity.getId()
+        Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), userFollowersEntity.getPhase()
+
+        // teardown
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+    }
+
+    @Test
     void propagateFoundEntity() {
         // setup
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()

@@ -366,16 +366,28 @@
         <version>2.18.1</version>
         <executions>
           <execution>
-            <phase>test</phase>
+            <id>integration-test</id>
             <goals>
               <goal>test</goal>
             </goals>
+            <phase>integration-test</phase>
+            <configuration>
+              <excludes>
+                <exclude>none</exclude>
+              </excludes>
+              <includes>
+                <include>**/*IntegrationTest.java</include>
+              </includes>
+            </configuration>
           </execution>
         </executions>
         <configuration>
           <systemPropertyVariables>
             <noScheduledTasks>1</noScheduledTasks>
           </systemPropertyVariables>
+          <excludes>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
         </configuration>
       </plugin>
 

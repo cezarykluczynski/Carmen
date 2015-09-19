@@ -36,6 +36,14 @@ mvn tomcat7:run
 
 ## Tests
 
+There are unit tests and integration tests. Cobertura is used for code coverage.
+Integration tests run unit tests by default.
+
+Following Maven phases are available, with or without code coverage:
+
 ```sh
 mvn test
+mvn integration-test
+mvn cobertura:cobertura
+mvn cobertura:cobertura-integration-test
 ```

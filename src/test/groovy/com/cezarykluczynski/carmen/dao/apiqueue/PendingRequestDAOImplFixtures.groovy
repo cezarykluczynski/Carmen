@@ -7,6 +7,7 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 
 import java.util.HashMap
 
@@ -41,6 +42,21 @@ class PendingRequestDAOImplFixtures {
             emptyParams,
             emptyParams,
             userFollowersEntity,
+            0
+        )
+
+        return pendingRequestEntity
+    }
+
+    public PendingRequest createPendingRequestEntityUsingUserEntityAndUserFollowingEntity(User userEntity, UserFollowing userFollowingEntity) {
+        HashMap<String, Object> emptyParams = new HashMap<String, Object>()
+        PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
+            "RandomExecutor",
+            userEntity,
+            emptyParams,
+            emptyParams,
+            emptyParams,
+            userFollowingEntity,
             0
         )
 

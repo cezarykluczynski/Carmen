@@ -11,24 +11,9 @@ import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository
-
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.never
-import org.mockito.Mock
-import org.mockito.Spy
-import org.mockito.Mockito
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
 
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
@@ -47,23 +32,13 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    @Spy
     UserFollowersPropagation userFollowersPropagation
-
-    @Autowired
-    FollowersAndFolloweesRepository followersAndFolloweesRepository
 
     @Autowired
     UserFollowersDAOImpl propagationsUserFollowersDao
 
     @Autowired
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
-
-    @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDao
-
-    @Autowired
-    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
     PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
@@ -96,7 +71,7 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowersPropagation.propagate()
 
         // assertion: another propagation should not be created
-        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.size(), 1
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getId(), userFollowersEntity.getId()
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), userFollowersEntity.getPhase()
@@ -115,7 +90,7 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowersPropagation.propagate()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.size(), 1
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "discover"
     }
@@ -132,13 +107,12 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowersPropagation.tryToMoveToReportPhase userFollowersEntity.getId()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "report"
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
     }
-
 
     @Test
     void tryToMoveToReportPhaseNoPendingRequestSleepPhase() {
@@ -152,7 +126,7 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowersPropagation.tryToMoveToReportPhase userFollowersEntity.getId()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "sleep"
 
         // teardown
@@ -176,7 +150,7 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowersPropagation.tryToMoveToReportPhase pendingRequestEntity
 
         // assertion
-        List<UserFollowing> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
+        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "discover"
 
         // teardown

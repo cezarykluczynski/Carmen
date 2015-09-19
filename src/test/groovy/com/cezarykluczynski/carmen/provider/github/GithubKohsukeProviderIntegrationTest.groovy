@@ -1,16 +1,10 @@
 package com.cezarykluczynski.carmen.provider.github
 
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
-import org.testng.Assert
 
 import java.io.IOException
 

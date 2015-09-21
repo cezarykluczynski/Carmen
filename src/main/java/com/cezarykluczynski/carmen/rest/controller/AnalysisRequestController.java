@@ -32,4 +32,5 @@ public class AnalysisRequestController {
             return new Analysis(login, "core_rate_limit_exceeded");
         }
     }
+
 }

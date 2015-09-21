@@ -20,4 +20,5 @@ public class Analysis {
     public String getStatus() {
         return status;
     }
+
 }

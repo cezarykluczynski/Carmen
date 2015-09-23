@@ -36,14 +36,14 @@ public class GithubEgitProvider implements GithubProviderInterface {
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
         UserService userService = new UserService(github);
         PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowers(name, offset, limit));
-        userList.addPaginationLimitAndOffset(offset, limit);
+        userList.addPaginationLimitAndOffset(limit, offset);
         return userList;
     }
 
     public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
         UserService userService = new UserService(github);
         PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowing(name, offset, limit));
-        userList.addPaginationLimitAndOffset(offset, limit);
+        userList.addPaginationLimitAndOffset(limit, offset);
         return userList;
     }
 

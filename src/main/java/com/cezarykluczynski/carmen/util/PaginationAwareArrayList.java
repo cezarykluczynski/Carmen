@@ -19,18 +19,17 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
     private Boolean lastPage;
 
     public void extractPaginationDataFromIterator(PageIterator pageIterator) {
-        nextPage = pageIterator.getNextPage();
-        lastPage = !pageIterator.hasNext();
+        setNextPage(pageIterator.getNextPage());
+        setLastPage(!pageIterator.hasNext());
     }
-
 
     public void extractPaginationDataFromCollection(Collection collection) {
-        count = collection.size();
+        setCount(collection.size());
     }
 
-    public void addPaginationLimitAndOffset(Integer offset, Integer limit) {
-        this.offset = offset;
-        this.limit = limit;
+    public void addPaginationLimitAndOffset(Integer limit, Integer offset) {
+        setLimit(limit);
+        setOffset(offset);
     }
 
     public void setOffset(Integer offset) {
@@ -47,6 +46,10 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
 
     public Integer getLimit() {
         return limit;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public Integer getCount() {

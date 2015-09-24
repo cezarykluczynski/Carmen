@@ -4,9 +4,9 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import org.json.JSONObject;
 
+import com.cezarykluczynski.carmen.util.HashMapJsonConverter;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 
@@ -65,42 +65,27 @@ public class PendingRequest {
     }
 
     public void setParams(HashMap<String, Object> params) {
-        this.params = new JSONObject(params).toString();
+        this.params = HashMapJsonConverter.hashMapToString(params);
     }
 
     public HashMap<String, Object> getParams() {
-        return jsonToHashMap(params);
+        return HashMapJsonConverter.jsonToHashMap(params);
     }
 
     public void setPathParams(HashMap<String, Object> pathParams) {
-        this.pathParams = new JSONObject(pathParams).toString();
+        this.pathParams = HashMapJsonConverter.hashMapToString(pathParams);
     }
 
     public HashMap<String, Object> getPathParams() {
-        return jsonToHashMap(pathParams);
+        return HashMapJsonConverter.jsonToHashMap(pathParams);
     }
 
     public void setQueryParams(HashMap<String, Object> queryParams) {
-        this.queryParams = new JSONObject(queryParams).toString();
+        this.queryParams = HashMapJsonConverter.hashMapToString(queryParams);
     }
 
     public HashMap<String, Object> getQueryParams() {
-        return jsonToHashMap(queryParams);
-    }
-
-    // TODO: move to utils
-    private HashMap<String, Object> jsonToHashMap(String jsonString) {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        JSONObject json = new JSONObject(jsonString);
-        Iterator keys = json.keys();
-        String key;
-
-        while (keys.hasNext()) {
-            key = (String) keys.next();
-            hashMap.put(key, json.get(key));
-        }
-
-        return hashMap;
+        return HashMapJsonConverter.jsonToHashMap(queryParams);
     }
 
     public void setPriority(Integer priority) {

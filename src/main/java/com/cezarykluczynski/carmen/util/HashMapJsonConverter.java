@@ -7,11 +7,11 @@ import org.json.JSONObject;
 
 public class HashMapJsonConverter {
 
-    public static String hashMapToString(HashMap<String, Object> hashMap) {
+    public static String hashMapToJsonString(HashMap<String, Object> hashMap) {
         return new JSONObject(hashMap).toString();
     }
 
-    public static HashMap<String, Object> jsonToHashMap(String jsonString) {
+    public static HashMap<String, Object> jsonStringToHashMap(String jsonString) {
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         JSONObject json = new JSONObject(jsonString);
         Iterator keys = json.keys();

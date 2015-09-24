@@ -65,27 +65,27 @@ public class PendingRequest {
     }
 
     public void setParams(HashMap<String, Object> params) {
-        this.params = HashMapJsonConverter.hashMapToString(params);
+        this.params = HashMapJsonConverter.hashMapToJsonString(params);
     }
 
     public HashMap<String, Object> getParams() {
-        return HashMapJsonConverter.jsonToHashMap(params);
+        return HashMapJsonConverter.jsonStringToHashMap(params);
     }
 
     public void setPathParams(HashMap<String, Object> pathParams) {
-        this.pathParams = HashMapJsonConverter.hashMapToString(pathParams);
+        this.pathParams = HashMapJsonConverter.hashMapToJsonString(pathParams);
     }
 
     public HashMap<String, Object> getPathParams() {
-        return HashMapJsonConverter.jsonToHashMap(pathParams);
+        return HashMapJsonConverter.jsonStringToHashMap(pathParams);
     }
 
     public void setQueryParams(HashMap<String, Object> queryParams) {
-        this.queryParams = HashMapJsonConverter.hashMapToString(queryParams);
+        this.queryParams = HashMapJsonConverter.hashMapToJsonString(queryParams);
     }
 
     public HashMap<String, Object> getQueryParams() {
-        return HashMapJsonConverter.jsonToHashMap(queryParams);
+        return HashMapJsonConverter.jsonStringToHashMap(queryParams);
     }
 
     public void setPriority(Integer priority) {

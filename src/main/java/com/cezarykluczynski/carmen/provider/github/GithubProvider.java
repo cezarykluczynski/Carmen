@@ -58,28 +58,14 @@ public class GithubProvider implements GithubProviderInterface {
     }
 
     public void checkApiLimit(String methodName) throws GithubRateLimitExceededException, IOException {
-        if (methodIsIgnored(methodName)) {
-            /**
-             *  Accessing /rate_limit endpoint does not count against our rate limit.
-             *
-             * @see https://developer.github.com/v3/rate_limit/
-             */
-            return;
-        } else if (methodIsCoreMethod(methodName)) {
+        if (methodIsCoreMethod(methodName)) {
             validateCoreRateLimit();
         }
     }
 
     // @After("execution(* carmen.provider.github.GithubProvider.*(..))")
     public void decrementRateLimitRemainingCounter(String methodName) throws GithubRateLimitExceededException, IOException {
-        if (methodIsIgnored(methodName)) {
-            /**
-             *  Accessing /rate_limit endpoint does not count against our rate limit.
-             *
-             * @see https://developer.github.com/v3/rate_limit/
-             */
-            return;
-        } else if (methodIsCoreMethod(methodName)) {
+        if (methodIsCoreMethod(methodName)) {
             decrementCoreRateLimitRemainingCounter();
         }
     }
@@ -110,10 +96,6 @@ public class GithubProvider implements GithubProviderInterface {
 
     private void deleteOldCoreLimits() {
         rateLimitDAOImpl.deleteOldLimits("core");
-    }
-
-    private boolean methodIsIgnored(String methodName) {
-        return methodName == "getCoreLimit" || methodName == "getSearchLimit";
     }
 
     private boolean methodIsCoreMethod(String methodName) {

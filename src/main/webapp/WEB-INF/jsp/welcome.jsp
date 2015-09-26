@@ -1,5 +1,5 @@
 <jsp:include page="fragments/staticFiles.jsp"/>
-<body ng-app="carmen">
+<body ng-app="carmenMainPage">
 <jsp:include page="fragments/topbar.jsp"/>
 
     <div class="container">

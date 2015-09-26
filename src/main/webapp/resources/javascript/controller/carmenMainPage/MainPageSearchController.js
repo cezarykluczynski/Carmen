@@ -1,6 +1,6 @@
 "use strict";
 
-carmen
+carmenMainPage
     .controller( "MainPageSearchController", [ "$scope", "$http", "$window", function( $scope, $http, $window ) {
         $scope.search = "";
         $scope.searching = false;
@@ -14,7 +14,7 @@ carmen
                     var status = response.data.status;
 
                     if ( "found" === status ) {
-                        $window.location += "github/" + $scope.search
+                        $window.location += "github/" + $scope.search;
                     } else {
                         $scope.searching = false;
                     }

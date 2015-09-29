@@ -3,7 +3,8 @@ package com.cezarykluczynski.carmen.web.github;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.cezarykluczynski.carmen.dao.users.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.users.CarmenUserDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -20,10 +21,10 @@ import java.util.HashMap;
 public class UserController {
 
     @Autowired
-    UserDAOImpl usersUserDAOImpl;
+    CarmenUserDAOImpl usersUserDAOImpl;
 
     @Autowired
-    com.cezarykluczynski.carmen.dao.github.UserDAOImpl githubUserDAOImpl;
+    UserDAOImpl githubUserDAOImpl;
 
     @RequestMapping("/{login}")
     public ModelAndView user(@PathVariable String login, HttpServletResponse response) {

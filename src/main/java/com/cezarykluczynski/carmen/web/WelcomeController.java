@@ -3,7 +3,8 @@ package com.cezarykluczynski.carmen.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.cezarykluczynski.carmen.dao.users.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.users.CarmenUserDAOImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -13,10 +14,10 @@ import java.util.HashMap;
 public class WelcomeController {
 
     @Autowired
-    UserDAOImpl usersUserDAOImpl;
+    CarmenUserDAOImpl usersUserDAOImpl;
 
     @Autowired
-    com.cezarykluczynski.carmen.dao.github.UserDAOImpl githubUserDAOImpl;
+    UserDAOImpl githubUserDAOImpl;
 
     @RequestMapping("")
     public ModelAndView welcome() {

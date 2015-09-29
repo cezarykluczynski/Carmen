@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class UserDAOImpl implements UserDAO {
+public class CarmenUserDAOImpl implements CarmenUserDAO {
 
     @Autowired
     private SessionFactory sessionFactory;

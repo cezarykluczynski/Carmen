@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.dao.users;
 
-public interface UserDAO {
+public interface CarmenUserDAO {
 
     public Object count();
 }

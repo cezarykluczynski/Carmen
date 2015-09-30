@@ -160,6 +160,7 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 

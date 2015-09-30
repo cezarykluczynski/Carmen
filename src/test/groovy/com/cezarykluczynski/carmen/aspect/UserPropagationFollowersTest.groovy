@@ -21,6 +21,8 @@ import org.testng.annotations.Test
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
@@ -30,9 +32,10 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
-class UserFollowersTest extends AbstractTestNGSpringContextTests {
+class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory
@@ -42,6 +45,12 @@ class UserFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     UserFollowersDAOImpl userFollowersDAOImpl
+
+    @Autowired
+    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
     PendingRequestDAOImpl pendingRequestDAOImpl
@@ -54,6 +63,7 @@ class UserFollowersTest extends AbstractTestNGSpringContextTests {
 
     private String login
 
+    //@Test
     @BeforeMethod
     void setUp() {
         login = "random_login" + System.currentTimeMillis()
@@ -90,13 +100,16 @@ class UserFollowersTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
+
         Session session = sessionFactory.openSession()
         for (pendingRequest in pendingRequestsList) {
             session.delete pendingRequest
         }
         session.delete userEntity
-        session.delete userFollowers
         session.flush()
         session.close()
     }
+
 }

@@ -21,6 +21,8 @@ import org.testng.annotations.Test
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
@@ -30,9 +32,10 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
-class UserFollowingTest extends AbstractTestNGSpringContextTests {
+class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory
@@ -42,6 +45,12 @@ class UserFollowingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     UserFollowingDAOImpl userFollowingDAOImpl
+
+    @Autowired
+    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
     PendingRequestDAOImpl pendingRequestDAOImpl
@@ -90,12 +99,14 @@ class UserFollowingTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
+
         Session session = sessionFactory.openSession()
         for (pendingRequest in pendingRequestsList) {
             session.delete pendingRequest
         }
         session.delete userEntity
-        session.delete userFollowing
         session.flush()
         session.close()
     }

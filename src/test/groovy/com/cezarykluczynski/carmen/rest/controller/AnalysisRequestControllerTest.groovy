@@ -8,9 +8,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.set.github.User as UserSet
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.provider.github.GithubProvider
 import com.cezarykluczynski.carmen.provider.github.GithubRateLimitExceededException
 
@@ -42,6 +47,15 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
 
+    @Autowired
+    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+
+    @Autowired
+    PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
+
     @Mock
     UserDAOImpl githubUserDAOImpl
 
@@ -67,6 +81,12 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
             .andExpect(status().isOk())
             .andExpect(jsonPath('$.status', is("found")))
             .andExpect(jsonPath('$.username', is(userEntity.getLogin())))
+
+        // teardown
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntityByUserEntity userEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test

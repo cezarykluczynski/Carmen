@@ -67,4 +67,13 @@ class PendingRequestDAOImplFixtures {
         apiqueuePendingRequestDao.delete pendingRequestEntity
     }
 
+    public void deletePendingRequestEntityByUserEntity(User userEntity) {
+        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser userEntity
+        Iterator<PendingRequest> pendingRequestEntitiesListIterator = pendingRequestEntitiesList.iterator()
+
+        while (pendingRequestEntitiesListIterator.hasNext()) {
+            deletePendingRequestEntity pendingRequestEntitiesListIterator.next()
+        }
+    }
+
 }

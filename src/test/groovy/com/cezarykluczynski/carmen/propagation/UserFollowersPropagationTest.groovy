@@ -93,6 +93,8 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
         List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDao.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowersDAOImplList.size(), 1
         Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "discover"
+
+
     }
 
     @Test
@@ -160,6 +162,7 @@ class UserFollowersPropagationTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 

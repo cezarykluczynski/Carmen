@@ -72,7 +72,6 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
     ) {
         if (userFollowingPropagations.isEmpty()) {
             createDiscoverPhase(userEntity);
-            return;
         }
     }
 

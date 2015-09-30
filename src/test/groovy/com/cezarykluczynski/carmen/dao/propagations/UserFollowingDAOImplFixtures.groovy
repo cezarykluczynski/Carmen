@@ -7,6 +7,9 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
 
+import java.util.List
+import java.util.Iterator
+
 @Component
 class UserFollowingDAOImplFixtures {
 
@@ -28,6 +31,15 @@ class UserFollowingDAOImplFixtures {
 
     public void deleteUserFollowingEntity(UserFollowing userFollowingEntity) {
         propagationsUserFollowingDao.delete userFollowingEntity
+    }
+
+    public void deleteUserFollowingEntityByUserEntity(User userEntity) {
+        List<UserFollowing> userFollowingEntitiesList = propagationsUserFollowingDao.findByUser userEntity
+        Iterator<UserFollowing> userFollowingEntitiesListIterator = userFollowingEntitiesList.iterator()
+
+        while (userFollowingEntitiesListIterator.hasNext()) {
+            deleteUserFollowingEntity userFollowingEntitiesListIterator.next()
+        }
     }
 
 }

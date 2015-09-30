@@ -10,6 +10,8 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.provider.github.GithubProvider
@@ -51,6 +53,12 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
     RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
 
     @Autowired
+    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+
+    @Autowired
     UserDAOImpl githubUserDAOImpl
 
     @Autowired
@@ -75,6 +83,8 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
 
         // teardown
+        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         githubUserDAOImpl.setGithubProvider githubProvider
     }

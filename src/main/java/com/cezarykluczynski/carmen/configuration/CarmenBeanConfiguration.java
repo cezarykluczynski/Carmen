@@ -75,8 +75,9 @@ public class CarmenBeanConfiguration {
             githubClient.setOAuth2Token(githubAccessToken);
         } else {
             System.out.println("Carmen: initializing org.eclipse.egit.github.core.client.GitHubClient without access token.");
-
         }
+
+        githubClient.setUserAgent(userAgentString);
 
         return githubClient;
     }

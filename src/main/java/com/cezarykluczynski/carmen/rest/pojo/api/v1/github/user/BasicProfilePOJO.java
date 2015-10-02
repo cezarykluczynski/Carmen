@@ -12,39 +12,33 @@ public class BasicProfilePOJO {
         String login,
         String name,
         String avatarUrl,
-        String type,
-        boolean siteAdmin,
         String company,
         String blog,
         String location,
         String email,
+        String bio,
         boolean hireable
     ) {
         this.login = login;
         this.name = name;
         this.avatarUrl = avatarUrl;
-        this.type = type;
-        this.siteAdmin = siteAdmin;
         this.company = company;
         this.blog = blog;
         this.location = location;
         this.email = email;
+        this.bio = bio;
         this.hireable = hireable;
     }
 
     private String login;
     private String name;
-    private boolean requested;
-    private boolean optOut;
     private String avatarUrl;
-    private String type;
-    private boolean siteAdmin;
     private String company;
     private String  blog;
     private String  location;
     private String  email;
-    private boolean hireable;
     private String bio;
+    private boolean hireable;
 
     public String getLogin() {
         return login;
@@ -54,24 +48,8 @@ public class BasicProfilePOJO {
         return name;
     }
 
-    public boolean getRequested() {
-        return requested;
-    }
-
-    public boolean getOptOut() {
-        return optOut;
-    }
-
     public String getAvatarUrl() {
         return avatarUrl;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public boolean getSiteAdmin() {
-        return siteAdmin;
     }
 
     public String getCompany() {
@@ -90,12 +68,12 @@ public class BasicProfilePOJO {
         return email;
     }
 
-    public boolean getHireable() {
-        return hireable;
-    }
-
     public String getBio() {
         return bio;
+    }
+
+    public boolean getHireable() {
+        return hireable;
     }
 
 }

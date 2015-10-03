@@ -5,9 +5,6 @@ import javax.persistence.Entity;
 @Entity
 public class BasicProfilePOJO {
 
-    public BasicProfilePOJO() {
-    }
-
     public BasicProfilePOJO(
         String login,
         String name,

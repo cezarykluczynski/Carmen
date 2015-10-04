@@ -66,7 +66,7 @@ class GithubProviderTest extends AbstractTestNGSpringContextTests {
         followersList = mock PaginationAwareArrayList.class
         followingList = mock PaginationAwareArrayList.class
 
-        login = githubUserDAOImplFixtures.getRandomLogin()
+        login = githubUserDAOImplFixtures.generateRandomLogin()
 
         when githubJcabiProviderMock.getCoreLimit() thenReturn rateLimitSetCore
         when githubJcabiProviderMock.getSearchLimit() thenReturn rateLimitSetSearch

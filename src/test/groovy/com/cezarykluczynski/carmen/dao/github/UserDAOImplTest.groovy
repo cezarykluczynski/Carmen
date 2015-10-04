@@ -47,7 +47,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void create() {
         // setup
         Long id = 2147483647
-        String login = "random_login" + System.currentTimeMillis()
+        String login = githubUserDAOImplFixtures.generateRandomLogin()
         String name = "Random Name"
         String avatarUrl = "http://avatar.url/"
         String type = "User"
@@ -146,7 +146,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void updateUserEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
-        String newLogin = "new_random_login${System.currentTimeMillis()}"
+        String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         userEntity.setLogin newLogin
 
         // exercise
@@ -165,7 +165,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void updateUserEntityUsingUserSet() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
-        String newLogin = "new_random_login${System.currentTimeMillis()}"
+        String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = new UserSet(null, newLogin)
 
         // exercise

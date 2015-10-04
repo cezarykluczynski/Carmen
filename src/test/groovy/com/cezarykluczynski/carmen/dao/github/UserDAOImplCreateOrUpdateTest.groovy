@@ -95,7 +95,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
-        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSetMock = new UserSet(null, newLogin)
         GithubProvider githubProviderMock = getGithubProviderMock()
         when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
@@ -121,7 +121,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
-        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = new UserSet(null, newLogin)
         GithubProvider githubProviderMock = getGithubProviderMock()
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
@@ -145,7 +145,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
         String currentLogin = userEntity.getLogin()
-        String newLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = new UserSet(null, newLogin)
         GithubProvider githubProviderMock = getGithubProviderMock()
         when githubProviderMock.getUser(currentLogin) thenReturn userSet
@@ -167,7 +167,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
     @Test
     void createOrUpdateNonExistingEntity() {
         // setup
-        String currentLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String currentLogin = githubUserDAOImplFixtures.generateRandomLogin()
         GithubProvider githubProviderMock = getGithubProviderMock()
         UserSet userSetMock = new UserSet(null, currentLogin)
         when githubProviderMock.getUser(currentLogin) thenReturn userSetMock

@@ -104,7 +104,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
         when githubProvider.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList
@@ -128,7 +128,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
         when githubProvider.getFollowing(userEntitylogin, limit, 1) thenReturn userSetsList
@@ -152,7 +152,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
         UserSet userSetFollower = new UserSet(null, userSetLogin)
@@ -181,7 +181,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
         UserSet userSetFollower = new UserSet(null, userSetLogin)
@@ -211,7 +211,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDao.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.getRandomLogin()
+        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, false)
         UserSet userSetFollower = new UserSet(null, userSetLogin)

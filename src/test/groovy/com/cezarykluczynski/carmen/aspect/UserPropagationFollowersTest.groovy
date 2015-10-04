@@ -20,6 +20,7 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
@@ -44,6 +45,9 @@ class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
     UserDAOImpl githubUserDAOImpl
 
     @Autowired
+    UserDAOImplFixtures githubUserDAOImplFixtures
+
+    @Autowired
     UserFollowersDAOImpl userFollowersDAOImpl
 
     @Autowired
@@ -66,7 +70,7 @@ class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
     //@Test
     @BeforeMethod
     void setUp() {
-        login = "random_login" + System.currentTimeMillis()
+        login = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet mockedUserSet = mock UserSet.class
         when mockedUserSet.getLogin() thenReturn login
         when mockedUserSet.getRequested() thenReturn true

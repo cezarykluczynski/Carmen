@@ -94,7 +94,7 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
         // setup
         githubUserDAOImpl = mock UserDAOImpl.class
         MockitoAnnotations.initMocks this
-        String login = githubUserDAOImplFixtures.getRandomLogin()
+        String login = githubUserDAOImplFixtures.generateRandomLogin()
         User userEntityMock = mock User.class
         when userEntityMock.getFound() thenReturn false
         when githubUserDAOImpl.createOrUpdateRequestedEntity(login) thenReturn userEntityMock
@@ -112,7 +112,7 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
         // setup
         githubUserDAOImpl = mock UserDAOImpl.class
         MockitoAnnotations.initMocks this
-        String login = githubUserDAOImplFixtures.getRandomLogin()
+        String login = githubUserDAOImplFixtures.generateRandomLogin()
         when githubUserDAOImpl.createOrUpdateRequestedEntity(login) thenThrow GithubRateLimitExceededException
 
         // exercise

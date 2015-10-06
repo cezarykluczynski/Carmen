@@ -43,11 +43,13 @@ public class RateLimitDAOImpl implements RateLimitDAO {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RateLimit getCoreLimit() {
         return getLimitByResource("core");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RateLimit getSearchLimit() {
         return getLimitByResource("search");
     }
@@ -84,7 +86,6 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         session.close();
     }
 
-    @Transactional(readOnly = true)
     private RateLimit getLimitByResource(String resource) {
         Session session = sessionFactory.openSession();
 

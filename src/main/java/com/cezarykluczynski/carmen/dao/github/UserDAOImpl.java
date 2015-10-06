@@ -96,6 +96,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    @Transactional
     public User createOrUpdateRequestedEntity(String login) throws IOException {
         Map flags = new HashMap<String, Boolean>();
         flags.put("requested", true);
@@ -104,6 +105,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    @Transactional
     public User createOrUpdateGhostEntity(String login) throws IOException {
         Map flags = new HashMap<String, Boolean>();
         flags.put("requested", false);
@@ -210,7 +212,6 @@ public class UserDAOImpl implements UserDAO {
         return userHydrator.hydrate(userEntity, userSet);
     }
 
-    @Transactional
     private User createOrUpdate(String login, Map<String, Boolean> flags) throws IOException {
         try {
             User userEntity = findByLogin(login);

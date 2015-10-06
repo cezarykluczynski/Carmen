@@ -27,6 +27,7 @@ public class FollowersFolloweesLinker {
     public FollowersFolloweesLinker() {
     }
 
+    @Transactional
     public void linkFollowerWithFollowee(User follower, User followee) {
         String tableName = getTableNameForLinkedUserEntities();
         String followersColumn = getKeyColumnNameForLinkedUserEntities("followers");
@@ -36,7 +37,6 @@ public class FollowersFolloweesLinker {
         doLinkFollowerWithFollowee(tableName, followersColumn, followeesColumn, followerId, followeeId);
     }
 
-    @Transactional
     private void doLinkFollowerWithFollowee(
         String tableName, String followersColumn, String followeesColumn, Long followerId, Long followeeId
     ) {

@@ -18,7 +18,7 @@ Install using:
 cp src/main/resources/example/config.properties src/main/resources/config.properties
 mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
 psql -c 'create database carmen;' -U postgres
-mvn compile
+mvn clean compile
 mvn flyway:migrate
 npm install --global gulp
 npm install
@@ -31,7 +31,7 @@ You may need to customize PostgreSQL and Cassandra credendials.
 Start using:
 
 ```sh
-mvn tomcat7:run
+mvn clean tomcat7:run
 ```
 
 ## Tests
@@ -42,8 +42,8 @@ Integration tests run unit tests by default.
 Following Maven phases are available, with or without code coverage:
 
 ```sh
-mvn test
-mvn integration-test
-mvn cobertura:cobertura
-mvn cobertura:cobertura-integration-test
+mvn clean test
+mvn clean verify
+mvn clean cobertura:cobertura
+mvn clean cobertura:cobertura-integration-test
 ```

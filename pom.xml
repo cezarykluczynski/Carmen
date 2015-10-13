@@ -27,7 +27,7 @@
     </repository>
   </repositories>
 
- <dependencies>
+  <dependencies>
 
     <dependency>
       <groupId>org.springframework</groupId>
@@ -297,6 +297,26 @@
       <version>2.6.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.jayway.restassured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+
+    <!-- Test scope is required, Tomcat woudn't start otherwise for some reason. -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-bundle-jaxrs</artifactId>
+      <version>2.2.9</version>
+      <scope>test</scope>
+    </dependency>
+
     <!-- Workaround. See https://github.com/Netflix/astyanax/issues/583 -->
     <dependency>
       <groupId>org.apache.cassandra</groupId>
@@ -322,7 +342,59 @@
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.1</version>
+
+        <configuration>
+          <path>/Carmen</path>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-tomcat</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>run-war</goal>
+            </goals>
+            <configuration>
+              <fork>true</fork>
+              <tomcatWebXml>src/main/webapp/WEB-INF/web.xml</tomcatWebXml>
+              <serverXml>src/main/webapp/tomcat/server.xml</serverXml>
+              <port>8080</port>
+              <username>tomcat</username>
+              <password>tomcat</password>
+              <url>http://localhost:8080/Carmen</url>
+              <systemProperties>
+                <noScheduledTasks>1</noScheduledTasks>
+              </systemProperties>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-tomcat</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>shutdown</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.18.1</version>
+        <configuration>
+          <includes>
+            <include>**/*IntegrationTest*</include>
+          </includes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
@@ -331,14 +403,18 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>2.6</version>
         <configuration>
-          <warSourceDirectory>WebContent</warSourceDirectory>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <warSourceDirectory>webapp</warSourceDirectory>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+          <failOnMissingWebXml>true</failOnMissingWebXml>
+          <outputDirectory>target/tomcat/webapps/</outputDirectory>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>

@@ -69,6 +69,6 @@
     <bean name="userFollowersFollowingReportToSleepPhasePropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation" />
 
     <!-- Aspects -->
-    <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowers" />
-    <bean id="userPropagationFollowing" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowing" />
+    <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.github.UserPropagationFollowers" />
+    <bean id="userPropagationFollowing" class="com.cezarykluczynski.carmen.aspect.github.UserPropagationFollowing" />
 </beans>

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.aspect
+package com.cezarykluczynski.carmen.aspect.github
 
 import static org.hamcrest.CoreMatchers.is
 import static org.hamcrest.MatcherAssert.assertThat
@@ -21,13 +21,13 @@ import org.testng.annotations.Test
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 
 @ContextConfiguration([
@@ -36,7 +36,7 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
     "classpath:spring/cron-config.xml",
     "classpath:spring/fixtures/fixtures.xml"
 ])
-class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
+class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory
@@ -48,7 +48,7 @@ class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImpl userFollowingDAOImpl
+    UserFollowersDAOImpl userFollowersDAOImpl
 
     @Autowired
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
@@ -61,12 +61,13 @@ class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
 
     private User userEntity
 
-    private UserFollowing userFollowing
+    private UserFollowers userFollowers
 
     private List<PendingRequest> pendingRequestsList
 
     private String login
 
+    //@Test
     @BeforeMethod
     void setUp() {
         login = githubUserDAOImplFixtures.generateRandomLogin()
@@ -83,22 +84,22 @@ class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void followingPropagateAfterUserCreation() {
+    void followersPropagateAfterUserCreation() {
         // exercise
         userEntity = githubUserDAOImpl.createOrUpdateRequestedEntity login
-        List<UserFollowing> userFollowingList = userFollowingDAOImpl.findByUser userEntity
-        userFollowing = userFollowingList.get 0
+        List<UserFollowers> userFollowersList = userFollowersDAOImpl.findByUser userEntity
+        userFollowers = userFollowersList.get 0
         pendingRequestsList = pendingRequestDAOImpl.findByUser userEntity
 
         // assertion
         assertThat(
-            userFollowing,
+            userFollowers,
             hasProperty("phase", is("discover"))
         )
 
         assertThat pendingRequestsList.size(), equalTo(2)
-        assertThat pendingRequestsList.get(0).getExecutor(), equalTo("UsersGhostPaginator")
-        assertThat pendingRequestsList.get(0).getPropagationId(), equalTo(userFollowing.getId())
+        assertThat pendingRequestsList.get(1).getExecutor(), equalTo("UsersGhostPaginator")
+        assertThat pendingRequestsList.get(1).getPropagationId(), equalTo(userFollowers.getId())
     }
 
     @AfterMethod
@@ -114,4 +115,5 @@ class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
         session.flush()
         session.close()
     }
+
 }

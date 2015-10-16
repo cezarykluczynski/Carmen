@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.aspect;
+package com.cezarykluczynski.carmen.aspect.github;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

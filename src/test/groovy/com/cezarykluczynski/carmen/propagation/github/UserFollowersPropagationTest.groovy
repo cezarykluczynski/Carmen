@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.propagation
+package com.cezarykluczynski.carmen.propagation.github
 
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation
 import org.hibernate.Session

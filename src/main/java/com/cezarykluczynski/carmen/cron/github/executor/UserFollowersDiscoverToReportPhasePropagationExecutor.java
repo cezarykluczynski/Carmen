@@ -2,11 +2,9 @@ package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
-import com.cezarykluczynski.carmen.propagation.UserFollowersPropagation;
+import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Random;
 
 public class UserFollowersDiscoverToReportPhasePropagationExecutor {
 

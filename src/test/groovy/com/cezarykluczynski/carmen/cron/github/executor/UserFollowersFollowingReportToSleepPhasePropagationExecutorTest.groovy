@@ -5,7 +5,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
-import com.cezarykluczynski.carmen.propagation.UserFollowersFollowingReportToSleepPhasePropagation
+import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation
 import com.cezarykluczynski.carmen.model.github.User
 
 import static org.mockito.Mockito.mock

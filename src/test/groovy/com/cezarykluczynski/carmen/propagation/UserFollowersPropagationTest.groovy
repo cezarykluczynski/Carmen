@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.propagation
 
+import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 

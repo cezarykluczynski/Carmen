@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.propagation.UserFollowersPropagation;
+import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation;
 
 @Aspect
 @Component

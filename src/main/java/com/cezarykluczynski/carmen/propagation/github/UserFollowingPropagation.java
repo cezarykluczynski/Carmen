@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.propagation;
+package com.cezarykluczynski.carmen.propagation.github;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

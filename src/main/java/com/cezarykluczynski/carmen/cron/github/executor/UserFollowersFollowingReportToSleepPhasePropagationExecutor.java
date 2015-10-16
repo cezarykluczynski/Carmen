@@ -1,12 +1,10 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.propagation.UserFollowersFollowingReportToSleepPhasePropagation;
+import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation;
 import com.cezarykluczynski.carmen.model.github.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
 
 public class UserFollowersFollowingReportToSleepPhasePropagationExecutor {
 

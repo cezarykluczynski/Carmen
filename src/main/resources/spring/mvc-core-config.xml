@@ -64,9 +64,9 @@
         <constructor-arg index="0" ref="egitGithubClient" />
     </bean>
 
-    <bean name="userFollowersPropagation" class="com.cezarykluczynski.carmen.propagation.UserFollowersPropagation" />
-    <bean name="userFollowingPropagation" class="com.cezarykluczynski.carmen.propagation.UserFollowingPropagation" />
-    <bean name="userFollowersFollowingReportToSleepPhasePropagation" class="com.cezarykluczynski.carmen.propagation.UserFollowersFollowingReportToSleepPhasePropagation" />
+    <bean name="userFollowersPropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation" />
+    <bean name="userFollowingPropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation" />
+    <bean name="userFollowersFollowingReportToSleepPhasePropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation" />
 
     <!-- Aspects -->
     <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.UserPropagationFollowers" />

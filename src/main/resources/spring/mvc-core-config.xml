@@ -25,6 +25,7 @@
     <aop:aspectj-autoproxy proxy-target-class="true">
       <aop:include name="userPropagationFollowers"/>
       <aop:include name="userPropagationFollowing"/>
+      <aop:include name="userPropagationRepositories"/>
     </aop:aspectj-autoproxy>
 
     <tx:annotation-driven proxy-target-class="true" />
@@ -72,4 +73,5 @@
     <!-- Aspects -->
     <bean id="userPropagationFollowers" class="com.cezarykluczynski.carmen.aspect.github.UserPropagationFollowers" />
     <bean id="userPropagationFollowing" class="com.cezarykluczynski.carmen.aspect.github.UserPropagationFollowing" />
+    <bean id="userPropagationRepositories" class="com.cezarykluczynski.carmen.aspect.github.UserPropagationRepositories" />
 </beans>

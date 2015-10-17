@@ -66,6 +66,7 @@
 
     <bean name="userFollowersPropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation" />
     <bean name="userFollowingPropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation" />
+    <bean name="userRepositoriesPropagation" class="com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation" />
     <bean name="userFollowersFollowingReportToSleepPhasePropagation" class="com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation" />
 
     <!-- Aspects -->

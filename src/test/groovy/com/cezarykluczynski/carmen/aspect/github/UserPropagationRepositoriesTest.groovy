@@ -49,13 +49,15 @@ class UserPropagationRepositoriesTest extends AbstractTestNGSpringContextTests {
         userRepositoriesPropagation = mock UserRepositoriesPropagation.class
         doNothing().when(userRepositoriesPropagation).propagate()
         MockitoAnnotations.initMocks this
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
     }
 
     @Test
     void repositoriesPropagationIsFired() {
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-
+        // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity userEntity.getLogin()
+
+        // assertion
         verify(userRepositoriesPropagation).propagate()
     }
 

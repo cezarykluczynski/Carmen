@@ -1,11 +1,15 @@
 package com.cezarykluczynski.carmen.propagation.github;
 
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl;
 import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
 
 public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
@@ -14,6 +18,9 @@ public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.
 
     @Autowired
     private RepositoriesDAOImpl propagationsRepositoriesDAOImpl;
+
+    @Autowired
+    PendingRequestDAOImpl apiqueuePendingRequestDao;
 
     private User userEntity;
 
@@ -38,7 +45,19 @@ public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.
     }
 
     private void createDiscoverPhase() {
-        propagationsRepositoriesDAOImpl.create(userEntity);
+        Propagation propagationEntity = propagationsRepositoriesDAOImpl.create(userEntity);
+        HashMap<String, Object> pathParams = new HashMap<String, Object>();
+        pathParams.put("endpoint", "repositories");
+        pathParams.put("login", userEntity.getLogin());
+        apiqueuePendingRequestDao.create(
+            "Repositories",
+            userEntity,
+            pathParams,
+            new HashMap<String, Object>(),
+            new HashMap<String, Object>(),
+            propagationEntity,
+            1
+        );
     }
 
 }

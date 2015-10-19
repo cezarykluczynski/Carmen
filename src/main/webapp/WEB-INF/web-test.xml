@@ -17,6 +17,7 @@
 
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
@@ -29,13 +30,12 @@
     <servlet-class>
         org.springframework.web.servlet.DispatcherServlet
     </servlet-class>
+    <servlet-class>
+        org.apache.catalina.servlets.DefaultServlet
+    </servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>
-        classpath:spring/database-config.xml,
-        classpath:spring/mvc-core-config.xml,
-        classpath:spring/cron-config.xml
-      </param-value>
+      <param-value></param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

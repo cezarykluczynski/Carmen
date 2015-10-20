@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.model.github;
 
 import com.cezarykluczynski.carmen.model.users.User;
+import com.cezarykluczynski.carmen.util.github.GitHubResource;
 
 import javax.persistence.*;
 
@@ -12,7 +13,7 @@ import org.joda.time.MutableDateTime;
 
 @Entity(name = "github.Repository")
 @Table(schema = "github", name = "repositories")
-public class Repository {
+public class Repository implements GitHubResource {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -34,14 +35,19 @@ public class Repository {
     private String name;
 
     @Column
+    private String fullName;
+
+    @Column
     private String description;
+
+    @Column
+    private String homepage;
 
     @Column
     private boolean fork;
 
     @Column(name = "default_branch")
     private String defaultBranch;
-
 
     @Column(name = "clone_url")
     private String cloneUrl;
@@ -87,12 +93,29 @@ public class Repository {
         this.name = name;
     }
 
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
     }
 
     public boolean getFork() {
@@ -141,6 +164,10 @@ public class Repository {
 
     public void setPushed(Date pushed) {
         this.pushed = pushed;
+    }
+
+    public Long getGitHubResourceId() {
+        return getId();
     }
 
 }

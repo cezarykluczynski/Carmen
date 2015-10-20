@@ -4,14 +4,18 @@ import java.io.IOException;
 
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GithubEgitProvider implements GithubProviderInterface {
 
@@ -33,6 +37,12 @@ public class GithubEgitProvider implements GithubProviderInterface {
         throw new IOException("Implemented in different provider.");
     }
 
+    public List<Repository> getRepositories(String login) throws IOException {
+        RepositoryService repositoryService = new RepositoryService(github);
+        List<org.eclipse.egit.github.core.Repository> repositoriesList = repositoryService.getRepositories(login);
+        return mapToNativeRepositoriesPOJOList(repositoriesList);
+    }
+
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
         UserService userService = new UserService(github);
         PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowers(name, offset, limit));
@@ -45,6 +55,29 @@ public class GithubEgitProvider implements GithubProviderInterface {
         PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowing(name, offset, limit));
         userList.addPaginationLimitAndOffset(limit, offset);
         return userList;
+    }
+
+    private List<Repository> mapToNativeRepositoriesPOJOList(List<org.eclipse.egit.github.core.Repository> repositoriesListRemote) {
+        List<Repository> repositoryListLocal = new ArrayList<Repository>();
+
+        for (org.eclipse.egit.github.core.Repository repository : repositoriesListRemote) {
+            repositoryListLocal.add(new Repository(
+                repository.getId(),
+                repository.getParent() == null ? null : repository.getParent().getId(),
+                repository.getName(),
+                repository.generateId(),
+                repository.getDescription(),
+                repository.getHomepage(),
+                repository.isFork(),
+                repository.getMasterBranch(),
+                repository.getCloneUrl(),
+                repository.getCreatedAt(),
+                repository.getPushedAt(),
+                repository.getUpdatedAt()
+            ));
+        }
+
+        return repositoryListLocal;
     }
 
     private PaginationAwareArrayList<User> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users) throws IOException {

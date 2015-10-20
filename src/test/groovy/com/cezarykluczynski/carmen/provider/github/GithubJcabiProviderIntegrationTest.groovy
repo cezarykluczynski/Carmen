@@ -54,6 +54,11 @@ class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTest
         Assert.assertEquals userSet.getCompany(), "GitHub"
     }
 
+    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
+    void getRepositories() {
+        githubJcabiProvider.getRepositories "name"
+    }
+
     @Test
     void getNonExistingUser() {
         User userSet = githubJcabiProvider.getUser "carmen-user-404-integration-test"

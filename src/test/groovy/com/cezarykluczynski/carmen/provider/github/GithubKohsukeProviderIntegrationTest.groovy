@@ -34,6 +34,11 @@ class GithubKohsukeProviderIntegrationTest extends AbstractTestNGSpringContextTe
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
+    void getRepositories() {
+        githubKohsukeProvider.getRepositories "name"
+    }
+
+    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getFollowers() {
         githubKohsukeProvider.getFollowers "name", 1, 0
     }

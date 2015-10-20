@@ -5,6 +5,7 @@ import java.io.IOException;
 public class GithubRateLimitExceededException extends IOException {
 
     public GithubRateLimitExceededException() {
-       super();
+        super();
     }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.annotations.Test
 import org.testng.Assert
 
+import com.cezarykluczynski.carmen.set.github.Repository
 import com.cezarykluczynski.carmen.set.github.User
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
 
@@ -36,6 +37,19 @@ class GithubEgitProviderIntegrationTest extends AbstractTestNGSpringContextTests
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getUser() {
         githubEgitProvider.getUser()
+    }
+
+    @Test
+    void getRepositories() {
+        List<Repository> repositoriesList = githubEgitProvider.getRepositories "cezarykluczynski"
+        for(Repository repository in repositoriesList) {
+            if (repository.getName() == "Carmen") {
+                Assert.assertTrue true
+                return;
+            }
+        }
+
+        Assert.fail()
     }
 
     @Test

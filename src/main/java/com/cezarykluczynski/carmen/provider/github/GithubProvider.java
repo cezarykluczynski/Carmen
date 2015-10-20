@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class GithubProvider implements GithubProviderInterface {
@@ -49,6 +51,13 @@ public class GithubProvider implements GithubProviderInterface {
         return user;
     }
 
+    public List<Repository> getRepositories(String name) throws IOException {
+        checkApiLimit("getRepositories");
+        List<Repository> repositoriesList = githubEgitProvider.getRepositories(name);
+        decrementRateLimitRemainingCounter("getRepositories");
+        return repositoriesList;
+    }
+
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
         return githubEgitProvider.getFollowers(name, limit, offset);
     }
@@ -63,7 +72,6 @@ public class GithubProvider implements GithubProviderInterface {
         }
     }
 
-    // @After("execution(* carmen.provider.github.GithubProvider.*(..))")
     public void decrementRateLimitRemainingCounter(String methodName) throws GithubRateLimitExceededException, IOException {
         if (methodIsCoreMethod(methodName)) {
             decrementCoreRateLimitRemainingCounter();
@@ -99,7 +107,7 @@ public class GithubProvider implements GithubProviderInterface {
     }
 
     private boolean methodIsCoreMethod(String methodName) {
-        return methodName == "getUser" || methodName == "getFollowers";
+        return methodName == "getUser" || methodName == "getFollowers" || methodName == "getRepositories";
     }
 
     private void refreshCoreLimit() throws IOException {

@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import java.lang.AssertionError;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.json.JsonObject;
@@ -18,6 +19,7 @@ import java.lang.IllegalStateException;
 
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 
@@ -76,6 +78,10 @@ public class GithubJcabiProvider implements GithubProviderInterface {
         } catch (AssertionError e) {
             return new User(null, name);
         }
+    }
+
+    public List<Repository> getRepositories(String login) throws IOException {
+        throw new IOException("Implemented in different provider.");
     }
 
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {

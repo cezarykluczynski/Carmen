@@ -108,8 +108,6 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
     @AfterMethod
     void tearDown() {
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
 }

@@ -16,10 +16,10 @@ import org.testng.annotations.Test
 import org.testng.Assert
 
 @ContextConfiguration([
-        "classpath:spring/database-config.xml",
-        "classpath:spring/mvc-core-config.xml",
-        "classpath:spring/cron-config.xml",
-        "classpath:spring/fixtures/fixtures.xml"
+    "classpath:spring/database-config.xml",
+    "classpath:spring/mvc-core-config.xml",
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
 class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
 
@@ -73,7 +73,7 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals repositoriesEntity.getUser().getId(), userEntity.getId()
 
         PendingRequest pendingRequestEntityFound = null
-        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser userEntity
+        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser(userEntity)
         for(PendingRequest pendingRequestEntity in pendingRequestEntitiesList) {
             if (pendingRequestEntity.getExecutor() == "Repositories") {
                 if (pendingRequestEntityFound == null) {
@@ -103,6 +103,9 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         Assert.assertNull propagationsRepositoriesDAOImpl.findByUser(userEntity)
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
 }

@@ -56,7 +56,6 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue repositoriesEntityFound instanceof Repositories
 
         // teardown
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntityFound
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
@@ -73,7 +72,6 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue repositoriesEntityFound instanceof Repositories
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
     }
 
     @Test
@@ -92,7 +90,6 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
     }
 
     @Test
@@ -125,7 +122,6 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
     }
 
     @Test

@@ -234,8 +234,6 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
     @Test
@@ -255,8 +253,6 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
     @Test

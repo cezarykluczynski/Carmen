@@ -113,8 +113,8 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "sleep"
 
         // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
         propagationsUserFollowersDao.delete userFollowersEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
@@ -132,8 +132,8 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "discover"
 
         // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
         propagationsUserFollowersDao.delete userFollowersEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
@@ -165,8 +165,8 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue userFollowersFoundEntity instanceof UserFollowers
 
         // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
         propagationsUserFollowersDao.delete userFollowersEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test

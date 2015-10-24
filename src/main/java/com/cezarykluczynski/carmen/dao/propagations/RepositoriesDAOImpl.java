@@ -82,4 +82,5 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
         session.close();
         return user;
     }
+
 }

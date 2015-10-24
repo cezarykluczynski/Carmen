@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.dao.github
+package com.cezarykluczynski.carmen.dao.propagations
 
 import org.hibernate.Session
 import org.hibernate.SessionFactory

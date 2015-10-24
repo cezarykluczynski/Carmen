@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.model.github;
 
-import com.cezarykluczynski.carmen.model.users.User;
+import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
 
 import javax.persistence.*;
@@ -17,11 +17,11 @@ public class Repository implements GitHubResource {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
+    @Column
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "github_user_id", referencedColumnName = "id")
     private User user;
 
     @OneToOne(optional=true)
@@ -34,7 +34,7 @@ public class Repository implements GitHubResource {
     @Column
     private String name;
 
-    @Column
+    @Column(name = "full_name")
     private String fullName;
 
     @Column
@@ -74,7 +74,7 @@ public class Repository implements GitHubResource {
     }
 
     public void setUser(User user) {
-        user = this.user;
+        this.user = user;
     }
 
     public Long getGithubId() {

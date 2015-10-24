@@ -47,7 +47,7 @@ public class GitHubResourcesSynchronizer {
             if (!listHasItem(storedResources, currentResource)) {
                 resourcesToCreate.add(currentResource);
             } else {
-                resourcesToPreserve.add(findCorrespondingResourceInList(currentResource, storedResources));
+                resourcesToPreserve.add(currentResource);
             }
         }
     }

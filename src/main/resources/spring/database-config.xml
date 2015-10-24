@@ -49,6 +49,10 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="githubRepositoriesDAOImpl" class="com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <bean id="propagationsUserFollowersDao" class="com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>

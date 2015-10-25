@@ -8,6 +8,7 @@ import java.io.IOException;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
+import com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 
@@ -16,6 +17,9 @@ public class APIRequestExecutor {
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDao;
+
+    @Autowired
+    RepositoriesExecutor repositoriesExecutor;
 
     @Autowired
     UserGhostPaginatorExecutor userGhostPaginatorExecutor;
@@ -44,6 +48,9 @@ public class APIRequestExecutor {
             case "UserGhost":
                 executeUserGhost(pendingRequest);
                 break;
+            case "Repositories":
+                executeRepositories(pendingRequest);
+                break;
             default:
                 break;
         }
@@ -55,6 +62,10 @@ public class APIRequestExecutor {
 
     public void executeUserGhost(PendingRequest pendingRequest) throws IOException {
         userGhostExecutor.execute(pendingRequest);
+    }
+
+    public void executeRepositories(PendingRequest pendingRequest) throws IOException {
+        repositoriesExecutor.execute(pendingRequest);
     }
 
 }

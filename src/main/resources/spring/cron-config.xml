@@ -36,10 +36,9 @@
     <bean id="userFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowingDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
+
     <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />
-
-    <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor">
-
-    </bean>
+    <bean id="repositoriesExecutor" class="com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor" />
+    <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor" />
     <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostExecutor" />
 </beans>

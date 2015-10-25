@@ -34,4 +34,5 @@ public class RateLimit {
     public Date getReset() {
         return reset;
     }
+
 }

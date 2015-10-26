@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
-import com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker;
 
 import java.util.List;
 import java.lang.Boolean;
@@ -32,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
     GithubProvider githubProvider;
 
     @Autowired
-    FollowersFolloweesLinker githubUserFollowersFolloweesLinker;
+    UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate;
 
     UserDAOImplUserEntityHydrator userHydrator = new UserDAOImplUserEntityHydrator();
 
@@ -90,7 +89,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void linkFollowerWithFollowee(User follower, User followee) {
-        githubUserFollowersFolloweesLinker.linkFollowerWithFollowee(follower, followee);
+        githubUserDAOImplFollowersFolloweesLinkerDelegate.linkFollowerWithFollowee(follower, followee);
     }
 
     @Override

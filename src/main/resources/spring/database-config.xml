@@ -41,7 +41,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="githubUserFollowersFolloweesLinker" class="com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker">
+  <bean id="githubUserFollowersFolloweesLinker" class="com.cezarykluczynski.carmen.dao.github.UserDAOImplFollowersFolloweesLinkerDelegate">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 

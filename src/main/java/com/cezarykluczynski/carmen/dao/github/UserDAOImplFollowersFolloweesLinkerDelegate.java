@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.dao.github.user;
+package com.cezarykluczynski.carmen.dao.github;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,7 +15,7 @@ import com.cezarykluczynski.carmen.model.github.User;
 import java.util.Map;
 
 @Component
-public class FollowersFolloweesLinker {
+public class UserDAOImplFollowersFolloweesLinkerDelegate {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -24,7 +24,7 @@ public class FollowersFolloweesLinker {
         this.sessionFactory = sessionFactory;
     }
 
-    public FollowersFolloweesLinker() {
+    public UserDAOImplFollowersFolloweesLinkerDelegate() {
     }
 
     @Transactional

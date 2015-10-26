@@ -1,10 +1,10 @@
-package com.cezarykluczynski.carmen.dao.github.user;
+package com.cezarykluczynski.carmen.dao.github;
 
 import com.cezarykluczynski.carmen.model.github.User;
 
-public class UserHydrator {
+class UserDAOImplUserEntityHydrator {
 
-    public UserHydrator() {
+    public UserDAOImplUserEntityHydrator() {
     }
 
     public User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {

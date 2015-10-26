@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
-import com.cezarykluczynski.carmen.provider.github.GithubProviderInterface;
-import com.cezarykluczynski.carmen.dao.github.user.UserHydrator;
 import com.cezarykluczynski.carmen.dao.github.user.FollowersFolloweesLinker;
 
 import java.util.List;
@@ -36,7 +34,7 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     FollowersFolloweesLinker githubUserFollowersFolloweesLinker;
 
-    UserHydrator userHydrator = new UserHydrator();
+    UserDAOImplUserEntityHydrator userHydrator = new UserDAOImplUserEntityHydrator();
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

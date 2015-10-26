@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 
 import java.util.List;
 
-class RepositoriesDAOImplListRefresher {
+class RepositoriesDAOImplListRefresherDelegate {
 
     SessionFactory sessionFactory;
 
@@ -35,10 +35,10 @@ class RepositoriesDAOImplListRefresher {
         this.sessionFactory = sessionFactory;
     }
 
-    public RepositoriesDAOImplListRefresher(
-        User userEntity,
-        List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesSetList,
-        List<Repository> repositoriesListExisting
+    public RepositoriesDAOImplListRefresherDelegate(
+            User userEntity,
+            List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesSetList,
+            List<Repository> repositoriesListExisting
     ) {
         this.userEntity = userEntity;
         this.repositoriesSetList = repositoriesSetList;

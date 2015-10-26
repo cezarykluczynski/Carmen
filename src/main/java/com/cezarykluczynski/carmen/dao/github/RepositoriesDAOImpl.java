@@ -36,8 +36,8 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
     @Override
     public void refresh(User userEntity, List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesSetList) {
         List<Repository> repositoriesListExisting = findByUser(userEntity);
-        RepositoriesDAOImplListRefresher repositoriesDAOImplListRefresher =
-            new RepositoriesDAOImplListRefresher(userEntity, repositoriesSetList, repositoriesListExisting);
+        RepositoriesDAOImplListRefresherDelegate repositoriesDAOImplListRefresher =
+            new RepositoriesDAOImplListRefresherDelegate(userEntity, repositoriesSetList, repositoriesListExisting);
 
         repositoriesDAOImplListRefresher.setSessionFactory(sessionFactory);
         repositoriesDAOImplListRefresher.refresh();

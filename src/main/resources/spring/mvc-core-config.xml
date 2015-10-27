@@ -50,7 +50,7 @@
         <constructor-arg index="0" ref="githubJcabiProvider" />
         <constructor-arg index="1" ref="githubKohsukeProvider" />
         <constructor-arg index="2" ref="githubEgitProvider" />
-        <constructor-arg index="3" ref="rateLimitDao" />
+        <constructor-arg index="3" ref="rateLimitDAOImpl" />
     </bean>
 
     <bean name="githubJcabiProvider" class="com.cezarykluczynski.carmen.provider.github.GithubJcabiProvider">

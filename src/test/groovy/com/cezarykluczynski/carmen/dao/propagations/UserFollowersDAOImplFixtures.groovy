@@ -14,14 +14,14 @@ import java.util.Iterator
 class UserFollowersDAOImplFixtures {
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao
+    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
 
     public UserFollowers createUserFollowersEntityUsingUserEntity(User userEntity) {
         return createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
     }
 
     public UserFollowers createUserFollowersEntityUsingUserEntityAndPhase(User userEntity, String phase) {
-        UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(
             userEntity,
             phase
         )
@@ -30,11 +30,11 @@ class UserFollowersDAOImplFixtures {
     }
 
     public void deleteUserFollowersEntity(UserFollowers userFollowersEntity) {
-        propagationsUserFollowersDao.delete userFollowersEntity
+        propagationsUserFollowersDAOImpl.delete userFollowersEntity
     }
 
     public void deleteUserFollowersEntityByUserEntity(User userEntity) {
-        List<UserFollowers> userFollowersEntitiesList = propagationsUserFollowersDao.findByUser userEntity
+        List<UserFollowers> userFollowersEntitiesList = propagationsUserFollowersDAOImpl.findByUser userEntity
         Iterator<UserFollowers> userFollowersEntitiesListIterator = userFollowersEntitiesList.iterator()
 
         while (userFollowersEntitiesListIterator.hasNext()) {

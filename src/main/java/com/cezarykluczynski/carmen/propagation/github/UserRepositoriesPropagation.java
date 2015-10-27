@@ -20,7 +20,7 @@ public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.
     private RepositoriesDAOImpl propagationsRepositoriesDAOImpl;
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     private User userEntity;
 
@@ -49,7 +49,7 @@ public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         pathParams.put("endpoint", "repositories");
         pathParams.put("login", userEntity.getLogin());
-        apiqueuePendingRequestDao.create(
+        apiqueuePendingRequestDAOImpl.create(
             "Repositories",
             userEntity,
             pathParams,

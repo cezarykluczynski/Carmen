@@ -18,7 +18,7 @@ import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 public class RepositoriesExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;
@@ -34,7 +34,7 @@ public class RepositoriesExecutor implements Executor {
         User userEntity = githubUserDAOImpl.findByLogin(login);
         List<Repository> repositoriesSetList = githubProvider.getRepositories(login);
         propagationsRepositoriesDAOImpl.refresh(userEntity, repositoriesSetList);
-        apiqueuePendingRequestDao.delete(pendingRequest);
+        apiqueuePendingRequestDAOImpl.delete(pendingRequest);
     }
 
 }

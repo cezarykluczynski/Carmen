@@ -28,7 +28,7 @@ import org.joda.time.DateTimeConstants
 class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao
+    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -50,7 +50,7 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
             .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
 
         // exercise
-        List<UserFollowers> list = propagationsUserFollowersDao.findByUser userEntity
+        List<UserFollowers> list = propagationsUserFollowersDAOImpl.findByUser userEntity
 
         // assertion
         Assert.assertEquals list.size(), 1
@@ -69,10 +69,10 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
 
         Date oneDaySinceEpoch = new Date(DateTimeConstants.SECONDS_PER_DAY)
         userFollowersEntity.setUpdated oneDaySinceEpoch
-        propagationsUserFollowersDao.update userFollowersEntity
+        propagationsUserFollowersDAOImpl.update userFollowersEntity
 
         // exercise
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase()
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findOldestPropagationInDiscoverPhase()
 
         // assertion
         Assert.assertEquals userFollowersFoundEntity.getId(), userFollowersEntity.getId()
@@ -87,16 +87,16 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         SessionFactory sessionFactoryMock = sessionFactoryFixtures
             .createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowers.class
-        propagationsUserFollowersDao.setSessionFactory sessionFactoryMock
+        propagationsUserFollowersDAOImpl.setSessionFactory sessionFactoryMock
 
         // exercise
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase()
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findOldestPropagationInDiscoverPhase()
 
          // assertion
         Assert.assertNull userFollowersFoundEntity
 
         // teardown
-        propagationsUserFollowersDao.setSessionFactory sessionFactory
+        propagationsUserFollowersDAOImpl.setSessionFactory sessionFactory
     }
 
     @Test
@@ -105,15 +105,15 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         // exercise
-        UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(userEntity, "sleep")
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, "sleep")
 
         // assertion
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findByUser(userEntity).get 0
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity).get 0
         Assert.assertEquals userFollowersFoundEntity.getId(), userFollowersEntity.getId()
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "sleep"
 
         // teardown
-        propagationsUserFollowersDao.delete userFollowersEntity
+        propagationsUserFollowersDAOImpl.delete userFollowersEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
@@ -121,18 +121,18 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
     void update() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(userEntity, "sleep")
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, "sleep")
         userFollowersEntity.setPhase "discover"
 
         // exercise
-        propagationsUserFollowersDao.update userFollowersEntity
+        propagationsUserFollowersDAOImpl.update userFollowersEntity
 
         // assertion
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findByUser(userEntity).get 0
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity).get 0
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "discover"
 
         // teardown
-        propagationsUserFollowersDao.delete userFollowersEntity
+        propagationsUserFollowersDAOImpl.delete userFollowersEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
@@ -140,13 +140,13 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
     void delete() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(userEntity, "sleep")
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, "sleep")
 
         // exercise
-        propagationsUserFollowersDao.delete userFollowersEntity
+        propagationsUserFollowersDAOImpl.delete userFollowersEntity
 
         // assertion
-        Assert.assertNull propagationsUserFollowersDao.findById(userFollowersEntity.getId())
+        Assert.assertNull propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId())
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
@@ -156,23 +156,23 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
     void findByIdExistingEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDao.create(userEntity, "sleep")
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, "sleep")
 
         // exercise
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findById(userFollowersEntity.getId())
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId())
 
         // assertion
         Assert.assertTrue userFollowersFoundEntity instanceof UserFollowers
 
         // teardown
-        propagationsUserFollowersDao.delete userFollowersEntity
+        propagationsUserFollowersDAOImpl.delete userFollowersEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
     void findByIdNonExistingEntity() {
         // exercise
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDao.findById 2147483647
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findById 2147483647
 
         // assertion
         Assert.assertNull userFollowersFoundEntity

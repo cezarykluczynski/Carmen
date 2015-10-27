@@ -39,7 +39,7 @@ import java.util.List
 class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -68,7 +68,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity(userEntity)
 
         // exercise
-        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser userEntity
+        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser userEntity
 
         // assertion
         Assert.assertEquals pendingRequestEntitiesList.get(0).getId(), pendingRequestEntity.getId()
@@ -87,7 +87,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
 
         // exercise
-        PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
+        PendingRequest pendingRequestEntity = apiqueuePendingRequestDAOImpl.create(
             "RandomExecutor",
             userEntity,
             emptyParams,
@@ -119,7 +119,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndPriority userEntity, 100
 
         // exercise
-        PendingRequest pendingRequestEntityMostImportant = apiqueuePendingRequestDao.findMostImportantPendingRequest()
+        PendingRequest pendingRequestEntityMostImportant = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
 
         // assertion
         Assert.assertEquals pendingRequestEntityMostImportant.getId(), pendingRequestEntityWith102Priority.getId()
@@ -135,11 +135,11 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     void findMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
         // setup
         SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
-        apiqueuePendingRequestDao.setSessionFactory sessionFactoryMock
+        apiqueuePendingRequestDAOImpl.setSessionFactory sessionFactoryMock
 
         try {
             // exercise
-            apiqueuePendingRequestDao.findMostImportantPendingRequest()
+            apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
 
             // assertion
             Assert.assertTrue false
@@ -149,7 +149,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         }
 
         // teardown
-        apiqueuePendingRequestDao.setSessionFactory sessionFactory
+        apiqueuePendingRequestDAOImpl.setSessionFactory sessionFactory
     }
 
     @Test
@@ -161,7 +161,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity.setExecutor "ExecutorForUpdateTest"
 
         // exercise
-        apiqueuePendingRequestDao.update pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.update pendingRequestEntity
 
         // assertion
         Session session = sessionFactory.openSession()
@@ -190,7 +190,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         Long pendingRequestEntityId = pendingRequestEntity.getId()
 
         // exercise
-        apiqueuePendingRequestDao.delete pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.delete pendingRequestEntity
 
         // assertion
         Session session = sessionFactory.openSession()
@@ -223,7 +223,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             )
 
         // exercise, assertion
-        Assert.assertEquals apiqueuePendingRequestDao.countByPropagationId(userFollowersEntity.getId()), 2
+        Assert.assertEquals apiqueuePendingRequestDAOImpl.countByPropagationId(userFollowersEntity.getId()), 2
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity

@@ -48,7 +48,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Autowired
     PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
@@ -101,7 +101,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         pathParams.put("endpoint", "followers_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDao.create pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
@@ -116,7 +116,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 0
-        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        Assert.assertNull apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
     }
 
     @Test
@@ -125,7 +125,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         pathParams.put("endpoint", "following_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDao.create pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
@@ -140,7 +140,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         verify(githubProvider).getFollowing(userEntitylogin, limit, 1)
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 0
-        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        Assert.assertNull apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
     }
 
     @Test
@@ -149,7 +149,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         pathParams.put("endpoint", "followers_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDao.create pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
@@ -166,7 +166,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 1
-        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        Assert.assertNull apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
 
         // teardown
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
@@ -178,7 +178,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         pathParams.put("endpoint", "following_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDao.create pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
@@ -195,7 +195,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         verify(githubProvider).getFollowing(userEntitylogin, limit, 1)
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 1
-        Assert.assertNull apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        Assert.assertNull apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
 
         // teardown
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
@@ -208,7 +208,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity.setPathParams pathParams
         queryParams.put("page", 1)
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDao.create pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
 
         String userEntitylogin = userEntity.getLogin()
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
@@ -226,7 +226,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         verify(githubProvider).getFollowers(userEntitylogin, limit, 1)
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
         Assert.assertEquals pendingRequestList.size(), 1
-        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDao.findById(pendingRequestEntity.getId())
+        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
         Assert.assertNotNull pendingRequestEntityFound
         Assert.assertEquals pendingRequestEntityFound.getQueryParams().get("page"), 2
 

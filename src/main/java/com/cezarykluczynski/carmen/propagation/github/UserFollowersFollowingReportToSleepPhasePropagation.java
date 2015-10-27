@@ -25,13 +25,13 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
     UserDAOImpl githubUserDAOImpl;
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao;
+    UserFollowersDAOImpl propagationsUserFollowersDAOImpl;
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDao;
+    UserFollowingDAOImpl propagationsUserFollowingDAOImpl;
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     @Autowired
     FollowersAndFolloweesRepository followersAndFolloweesRepository;
@@ -78,14 +78,14 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
     }
 
     private void moveFollowersFollowingPropagationToSleepPhase() {
-        UserFollowers userFollowers = propagationsUserFollowersDao.findByUser(userEntity).get(0);
-        UserFollowing userFollowing = propagationsUserFollowingDao.findByUser(userEntity).get(0);
+        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findByUser(userEntity).get(0);
+        UserFollowing userFollowing = propagationsUserFollowingDAOImpl.findByUser(userEntity).get(0);
 
         userFollowers.setPhase("sleep");
         userFollowing.setPhase("sleep");
 
-        propagationsUserFollowersDao.update(userFollowers);
-        propagationsUserFollowingDao.update(userFollowing);
+        propagationsUserFollowersDAOImpl.update(userFollowers);
+        propagationsUserFollowingDAOImpl.update(userFollowing);
     }
 
 }

@@ -29,7 +29,7 @@ import org.testng.annotations.Test
 class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Mock
     UserGhostExecutor userGhostExecutor
@@ -45,7 +45,7 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
         MockitoAnnotations.initMocks this
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor "UserGhost"
-        when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenReturn pendingRequestEntity
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn pendingRequestEntity
         when(userGhostExecutor.execute()).thenThrow RuntimeException
     }
 
@@ -60,7 +60,7 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset apiqueuePendingRequestDao
+        Mockito.reset apiqueuePendingRequestDAOImpl
         Mockito.reset userGhostExecutor
     }
 

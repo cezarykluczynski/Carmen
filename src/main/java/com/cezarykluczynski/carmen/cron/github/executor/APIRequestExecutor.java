@@ -16,7 +16,7 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 public class APIRequestExecutor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     @Autowired
     RepositoriesExecutor repositoriesExecutor;
@@ -29,7 +29,7 @@ public class APIRequestExecutor {
 
     public void run() {
         try {
-            PendingRequest pendingRequest = apiqueuePendingRequestDao.findMostImportantPendingRequest();
+            PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest();
             runExecutor(pendingRequest);
         } catch (EmptyPendingRequestListException e) {
             return;

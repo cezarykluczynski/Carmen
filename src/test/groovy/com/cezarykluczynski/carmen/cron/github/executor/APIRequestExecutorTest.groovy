@@ -37,7 +37,7 @@ import java.io.IOException
 class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Mock
     UserGhostExecutor userGhostExecutor
@@ -61,7 +61,7 @@ class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
     void runNonExistingExecutor() {
         // setup
         PendingRequest pendingRequestEntityMock = mock PendingRequest.class
-        when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenReturn pendingRequestEntityMock
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn pendingRequestEntityMock
         doNothing().when(userGhostExecutor).execute()
         doNothing().when(userGhostPaginatorExecutor).execute()
         when pendingRequestEntityMock.getExecutor() thenReturn "NotExistingExecutor"
@@ -70,7 +70,7 @@ class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
         apiRequestExecutor.run()
 
         // assertion
-        verify(apiqueuePendingRequestDao).findMostImportantPendingRequest()
+        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
         verify(userGhostExecutor, never()).execute()
         verify(userGhostPaginatorExecutor, never()).execute()
         verify(pendingRequestEntityMock).getExecutor()
@@ -79,30 +79,30 @@ class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
     @Test
     void runEmptyPendingRequestListException() {
         // setup
-        when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenThrow EmptyPendingRequestListException
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenThrow EmptyPendingRequestListException
 
         // exercise
         apiRequestExecutor.run()
 
         // assertion
-        verify(apiqueuePendingRequestDao).findMostImportantPendingRequest()
+        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
     }
 
     @Test
     void runIOException() {
         // setup
-        when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenThrow IOException
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenThrow IOException
 
         // exercise
         apiRequestExecutor.run()
 
         // assertion
-        verify(apiqueuePendingRequestDao).findMostImportantPendingRequest()
+        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
     }
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset apiqueuePendingRequestDao
+        Mockito.reset apiqueuePendingRequestDAOImpl
         Mockito.reset userGhostExecutor
         Mockito.reset userGhostPaginatorExecutor
     }

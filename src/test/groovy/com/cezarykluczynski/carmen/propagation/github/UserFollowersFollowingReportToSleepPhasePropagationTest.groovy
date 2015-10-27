@@ -50,13 +50,13 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
     FollowersAndFolloweesRepository followersAndFolloweesRepository
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao
+    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
 
     @Autowired
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDao
+    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
 
     @Autowired
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
@@ -83,8 +83,8 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
         propagationUserFollowersFollowingReportToSleepPhase.propagate()
 
         // assertion
-        Assert.assertEquals propagationsUserFollowersDao.findById(userFollowersEntity.getId()).getPhase(), "sleep"
-        Assert.assertEquals propagationsUserFollowingDao.findById(userFollowingEntity.getId()).getPhase(), "sleep"
+        Assert.assertEquals propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase(), "sleep"
+        Assert.assertEquals propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase(), "sleep"
         Assert.assertTrue followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
     }
 
@@ -100,8 +100,8 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
         propagationUserFollowersFollowingReportToSleepPhase.propagate()
 
         // assertion
-        Assert.assertEquals propagationsUserFollowersDao.findById(userFollowersEntity.getId()).getPhase(), "sleep"
-        Assert.assertEquals propagationsUserFollowingDao.findById(userFollowingEntity.getId()).getPhase(), "sleep"
+        Assert.assertEquals propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase(), "sleep"
+        Assert.assertEquals propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase(), "sleep"
         Assert.assertTrue followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
     }
 

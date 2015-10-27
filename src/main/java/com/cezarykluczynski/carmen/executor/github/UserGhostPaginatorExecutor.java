@@ -17,7 +17,7 @@ import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 public class UserGhostPaginatorExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     @Autowired
     GithubProvider githubProvider;
@@ -33,7 +33,7 @@ public class UserGhostPaginatorExecutor implements Executor {
         }
 
         if (users.isLastPage()) {
-            apiqueuePendingRequestDao.delete(pendingRequest);
+            apiqueuePendingRequestDAOImpl.delete(pendingRequest);
         } else {
             continuePagination(pendingRequest, users);
         }
@@ -67,7 +67,7 @@ public class UserGhostPaginatorExecutor implements Executor {
 
         for (User user : users) {
             pathParams.put("login", user.getLogin());
-            apiqueuePendingRequestDao.create(
+            apiqueuePendingRequestDAOImpl.create(
                 "UserGhost",
                 null,
                 pathParams,
@@ -83,7 +83,7 @@ public class UserGhostPaginatorExecutor implements Executor {
         HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
         queryParams.put("page", users.getNextPage());
         pendingRequest.setQueryParams(queryParams);
-        apiqueuePendingRequestDao.update(pendingRequest);
+        apiqueuePendingRequestDAOImpl.update(pendingRequest);
     }
 
     private String linkAsRole(PendingRequest pendingRequest) {

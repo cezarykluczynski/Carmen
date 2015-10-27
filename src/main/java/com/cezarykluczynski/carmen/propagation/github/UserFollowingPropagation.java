@@ -20,10 +20,10 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
     UserDAOImpl githubUserDAOImpl;
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDao;
+    UserFollowingDAOImpl propagationsUserFollowingDAOImpl;
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     private User userEntity;
 
@@ -39,7 +39,7 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
         }
 
         List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations =
-            propagationsUserFollowingDao.findByUser(userEntity);
+            propagationsUserFollowingDAOImpl.findByUser(userEntity);
 
         tryCreateDiscoverPhase(userFollowingPropagations);
     }
@@ -50,21 +50,21 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     public void tryToMoveToReportPhase(Long propagationId) {
-        Long count = apiqueuePendingRequestDao.countByPropagationId(propagationId);
+        Long count = apiqueuePendingRequestDAOImpl.countByPropagationId(propagationId);
 
         if (count > 0) {
             return;
         }
 
         com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
-            propagationsUserFollowingDao.findById(propagationId);
+            propagationsUserFollowingDAOImpl.findById(propagationId);
 
         if (!userFollowing.getPhase().equals("discover")) {
             return;
         }
 
         userFollowing.setPhase("report");
-        propagationsUserFollowingDao.update(userFollowing);
+        propagationsUserFollowingDAOImpl.update(userFollowing);
     }
 
     private void tryCreateDiscoverPhase(
@@ -76,11 +76,11 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     private void createDiscoverPhase(User userEntity) {
-        Propagation propagation = propagationsUserFollowingDao.create(userEntity, "discover");
+        Propagation propagation = propagationsUserFollowingDAOImpl.create(userEntity, "discover");
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         pathParams.put("endpoint", "following_url");
         pathParams.put("login", userEntity.getLogin());
-        apiqueuePendingRequestDao.create(
+        apiqueuePendingRequestDAOImpl.create(
             "UsersGhostPaginator",
             userEntity,
             pathParams,

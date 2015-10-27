@@ -15,11 +15,11 @@ import java.util.HashMap
 class PendingRequestDAOImplFixtures {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndPriority(User userEntity, Integer priority) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
-        apiqueuePendingRequestDao.create(
+        apiqueuePendingRequestDAOImpl.create(
             "RandomExecutor",
             userEntity,
             emptyParams,
@@ -35,7 +35,7 @@ class PendingRequestDAOImplFixtures {
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(User userEntity, UserFollowers userFollowersEntity) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
-        PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
+        PendingRequest pendingRequestEntity = apiqueuePendingRequestDAOImpl.create(
             "RandomExecutor",
             userEntity,
             emptyParams,
@@ -50,7 +50,7 @@ class PendingRequestDAOImplFixtures {
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndUserFollowingEntity(User userEntity, UserFollowing userFollowingEntity) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()
-        PendingRequest pendingRequestEntity = apiqueuePendingRequestDao.create(
+        PendingRequest pendingRequestEntity = apiqueuePendingRequestDAOImpl.create(
             "RandomExecutor",
             userEntity,
             emptyParams,
@@ -64,11 +64,11 @@ class PendingRequestDAOImplFixtures {
     }
 
     public void deletePendingRequestEntity(PendingRequest pendingRequestEntity) {
-        apiqueuePendingRequestDao.delete pendingRequestEntity
+        apiqueuePendingRequestDAOImpl.delete pendingRequestEntity
     }
 
     public void deletePendingRequestEntityByUserEntity(User userEntity) {
-        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser userEntity
+        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser userEntity
         Iterator<PendingRequest> pendingRequestEntitiesListIterator = pendingRequestEntitiesList.iterator()
 
         while (pendingRequestEntitiesListIterator.hasNext()) {

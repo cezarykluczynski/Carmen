@@ -31,7 +31,7 @@ import org.testng.annotations.Test
 class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    UserFollowingDAOImpl propagationsUserFollowingDao
+    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
 
     @Mock
     UserFollowingPropagation userFollowingPropagation
@@ -56,7 +56,7 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
     void userFollowingDiscoverToReportPhasePropagationExecutorExistingEntity() {
         // setup
         doNothing().when(userFollowingPropagation).tryToMoveToReportPhase(userFollowingEntityId)
-        when propagationsUserFollowingDao.findOldestPropagationInDiscoverPhase() thenReturn userFollowingEntity
+        when propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase() thenReturn userFollowingEntity
 
         // exercise
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
@@ -69,7 +69,7 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
     void userFollowingDiscoverToReportPhasePropagationExecutorNonExistingEntity() {
         // setup
         doNothing().when(userFollowingPropagation).tryToMoveToReportPhase(userFollowingEntityId)
-        when propagationsUserFollowingDao.findOldestPropagationInDiscoverPhase() thenReturn null
+        when propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase() thenReturn null
 
         // exercise
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
@@ -80,7 +80,7 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset propagationsUserFollowingDao
+        Mockito.reset propagationsUserFollowingDAOImpl
     }
 
 }

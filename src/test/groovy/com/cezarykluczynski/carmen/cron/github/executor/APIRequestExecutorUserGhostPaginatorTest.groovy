@@ -28,7 +28,7 @@ import org.testng.annotations.Test
 class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Mock
     UserGhostPaginatorExecutor userGhostPaginatorExecutor
@@ -44,7 +44,7 @@ class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringConte
         MockitoAnnotations.initMocks this
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor "UsersGhostPaginator"
-        when apiqueuePendingRequestDao.findMostImportantPendingRequest() thenReturn pendingRequestEntity
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn pendingRequestEntity
         when(userGhostPaginatorExecutor.execute()).thenThrow(RuntimeException)
     }
 
@@ -59,7 +59,7 @@ class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringConte
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset apiqueuePendingRequestDao
+        Mockito.reset apiqueuePendingRequestDAOImpl
         Mockito.reset userGhostPaginatorExecutor
     }
 

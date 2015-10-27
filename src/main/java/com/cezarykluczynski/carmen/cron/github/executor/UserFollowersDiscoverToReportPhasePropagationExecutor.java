@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserFollowersDiscoverToReportPhasePropagationExecutor {
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDao;
+    UserFollowersDAOImpl propagationsUserFollowersDAOImpl;
 
     @Autowired
     UserFollowersPropagation userFollowersPropagation;
 
     public void run() {
-        UserFollowers userFollowers = propagationsUserFollowersDao.findOldestPropagationInDiscoverPhase();
+        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findOldestPropagationInDiscoverPhase();
 
         if (userFollowers != null) {
             userFollowersPropagation.tryToMoveToReportPhase(userFollowers.getId());

@@ -15,7 +15,7 @@ import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
 public class UserGhostExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao;
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
 
     @Autowired
     UserDAOImpl githubUserDAOImpl;
@@ -27,7 +27,7 @@ public class UserGhostExecutor implements Executor {
         String login = (String) pendingRequest.getPathParams().get("login");
         User user = githubUserDAOImpl.createOrUpdateGhostEntity(login);
         linkUsers(pendingRequest, user);
-        apiqueuePendingRequestDao.delete(pendingRequest);
+        apiqueuePendingRequestDAOImpl.delete(pendingRequest);
     }
 
     private void linkUsers(PendingRequest pendingRequest, User user) {

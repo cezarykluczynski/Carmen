@@ -11,14 +11,14 @@ import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl
 class RepositoriesDAOImplFixtures {
 
     @Autowired
-    RepositoriesDAOImpl propagationsUserFollowersDao
+    RepositoriesDAOImpl propagationsUserFollowersDAOImpl
 
     public Repositories createRepositoriesEntityUsingUserEntityAndPhase(User userEntity) {
-        return propagationsUserFollowersDao.create(userEntity)
+        return propagationsUserFollowersDAOImpl.create(userEntity)
     }
 
     public void deleteRepositoriesEntity(Repositories repositoriesEntity) {
-        propagationsUserFollowersDao.delete repositoriesEntity
+        propagationsUserFollowersDAOImpl.delete repositoriesEntity
     }
 
 }

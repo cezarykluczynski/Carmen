@@ -36,7 +36,7 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
     RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDao
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     User userEntity
 
@@ -73,7 +73,7 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals repositoriesEntity.getUser().getId(), userEntity.getId()
 
         PendingRequest pendingRequestEntityFound = null
-        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDao.findByUser(userEntity)
+        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser(userEntity)
         for(PendingRequest pendingRequestEntity in pendingRequestEntitiesList) {
             if (pendingRequestEntity.getExecutor() == "Repositories") {
                 if (pendingRequestEntityFound == null) {

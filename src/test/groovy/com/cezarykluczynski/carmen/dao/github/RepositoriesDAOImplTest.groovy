@@ -13,6 +13,7 @@ import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 
+import org.testng.annotations.AfterMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
@@ -39,6 +40,8 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private SessionFactory sessionFactory
 
+    User userEntity
+
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -46,7 +49,7 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void findById() {
         // setup
-        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repository repositoryEntity1 =
             githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
         Repository repositoryEntity2 =
@@ -57,15 +60,12 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         Assert.assertEquals repositoriesEntitiesList.size(), 2
-
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
     void refresh() {
         // setup
-        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repository repositoryEntity1 =
             githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
         Repository repositoryEntity2 =
@@ -74,12 +74,12 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         List<RepositorySet> repositoriesSetList = new ArrayList<RepositorySet>()
 
         RepositorySet repositorySet2 = new RepositorySet(
-            repositoryEntity1.getId(),
+            repositoryEntity2.getId(),
             null, null, null, null, null, false, null, null, null, null, null
         )
 
         RepositorySet repositorySet3 = new RepositorySet(
-            repositoryEntity1.getId() + 1,
+            repositoryEntity2.getId() + 1,
             null, null, null, null, null, false, null, null, null, null, null
         )
 
@@ -97,11 +97,14 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         def okCreate = false
 
         for (Repository repositoryEntity in repositoriesEntitiesList) {
-            if (repositoryEntity.getId() == repositoryEntity1.getId()) {
+            if (repositoryEntity.getId().equals(repositoryEntity1.getId())) {
+                Assert.fail "Repository should be deleted, but wasn't."
+            }
+            if (repositoryEntity.getId().equals(repositorySet2.getId())) {
                 okPreserve = true
                 Assert.assertTrue okPreserve
             }
-            if (repositoryEntity.getId() == repositorySet3.getId()) {
+            if (repositoryEntity.getId().equals(repositorySet3.getId())) {
                 okCreate = true
                 Assert.assertTrue okCreate
             }
@@ -114,15 +117,12 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         if (!okCreate) {
             Assert.fail "Repository was not created."
         }
-
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
     @Test
     void delete() {
          // setup
-        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repository repositoryEntity =
             githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
 
@@ -136,7 +136,10 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         // assertion
         List<Repository> repositoriesEntitiesListAfter = githubRepositoriesDAOImpl.findByUser userEntity
         Assert.assertEquals repositoriesEntitiesListAfter.size(), 0
+    }
 
+    @AfterMethod
+    void tearDown() {
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }

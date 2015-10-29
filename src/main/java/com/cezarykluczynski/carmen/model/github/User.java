@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.model.github;
 
 import javax.persistence.*;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 
@@ -13,7 +14,7 @@ import org.joda.time.MutableDateTime;
 
 @Entity(name = "github.User")
 @Table(schema = "github", name = "users")
-public class User {
+public class User extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

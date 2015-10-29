@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import org.json.JSONObject;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.util.HashMapJsonConverter;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 
 @Entity(name = "api_queue.PendingRequests")
 @Table(schema = "api_queue", name = "pending_requests")
-public class PendingRequest {
+public class PendingRequest extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

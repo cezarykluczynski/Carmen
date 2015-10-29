@@ -1,10 +1,12 @@
 package com.cezarykluczynski.carmen.model.users;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
+
 import javax.persistence.*;
 
 @Entity(name = "users.User")
 @Table(schema = "users", name = "users")
-public class User {
+public class User extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue

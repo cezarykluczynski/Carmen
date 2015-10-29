@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.model.github;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
 
@@ -13,7 +14,7 @@ import org.joda.time.MutableDateTime;
 
 @Entity(name = "github.Repository")
 @Table(schema = "github", name = "repositories")
-public class Repository implements GitHubResource {
+public class Repository extends CarmenRelationalEntity implements GitHubResource {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

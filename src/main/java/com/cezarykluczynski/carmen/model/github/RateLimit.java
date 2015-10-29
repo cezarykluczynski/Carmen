@@ -1,12 +1,14 @@
 package com.cezarykluczynski.carmen.model.github;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
+
 import javax.persistence.*;
 
 import java.util.Date;
 
 @Entity(name = "github.RateLimit")
 @Table(schema = "github", name = "rate_limits")
-public class RateLimit {
+public class RateLimit extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

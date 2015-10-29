@@ -76,7 +76,7 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     private void createDiscoverPhase(User userEntity) {
-        Propagation propagation = propagationsUserFollowingDAOImpl.create(userEntity, "discover");
+        Propagation propagation = (Propagation) propagationsUserFollowingDAOImpl.create(userEntity, "discover");
         HashMap<String, Object> pathParams = new HashMap<String, Object>();
         pathParams.put("endpoint", "following_url");
         pathParams.put("login", userEntity.getLogin());

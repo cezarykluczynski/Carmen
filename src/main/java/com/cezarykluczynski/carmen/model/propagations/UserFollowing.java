@@ -4,11 +4,12 @@ import javax.persistence.*;
 
 import java.util.Date;
 
+import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.github.User;
 
 @Entity(name = "propagations.UserFollowing")
 @Table(schema = "propagations", name = "user_following")
-public class UserFollowing implements Propagation {
+public class UserFollowing extends CarmenRelationalEntity implements Propagation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

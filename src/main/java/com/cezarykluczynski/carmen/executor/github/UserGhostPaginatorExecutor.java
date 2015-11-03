@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
@@ -17,7 +17,7 @@ import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 public class UserGhostPaginatorExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
     GithubProvider githubProvider;

@@ -9,7 +9,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl
+import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 
@@ -29,7 +29,7 @@ import java.util.ArrayList
 class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    RepositoriesDAOImpl githubRepositoriesDAOImpl
+    RepositoriesDAO githubRepositoriesDAOImpl
 
     @Autowired
     RepositoriesDAOImplFixtures githubRepositoriesDAOImplFixtures

@@ -8,13 +8,13 @@ import org.hibernate.SessionFactory
 
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl
+import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 
 @Component
 class RepositoriesDAOImplFixtures {
 
     @Autowired
-    RepositoriesDAOImpl githubRepositoriesDAOImpl
+    RepositoriesDAO githubRepositoriesDAOImpl
 
     @Autowired
     private SessionFactory sessionFactory

@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures
 import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.model.github.User
@@ -28,7 +28,7 @@ import org.joda.time.DateTimeConstants
 class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    RepositoriesDAOImpl propagationsRepositoriesDAOImpl
+    RepositoriesDAO propagationsRepositoriesDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures

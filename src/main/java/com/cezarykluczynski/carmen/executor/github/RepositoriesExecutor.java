@@ -8,9 +8,9 @@ import java.util.List;
 
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
+import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
 import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 
@@ -18,13 +18,13 @@ import com.cezarykluczynski.carmen.provider.github.GithubProvider;
 public class RepositoriesExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl;
+    UserDAO githubUserDAOImpl;
 
     @Autowired
-    RepositoriesDAOImpl propagationsRepositoriesDAOImpl;
+    RepositoriesDAO propagationsRepositoriesDAOImpl;
 
     @Autowired
     GithubProvider githubProvider;

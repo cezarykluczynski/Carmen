@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor;
@@ -16,7 +16,7 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 public class APIRequestExecutor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
     RepositoriesExecutor repositoriesExecutor;

@@ -9,7 +9,7 @@ import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.provider.github.GithubProvider
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImpl
+import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
@@ -39,7 +39,7 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RepositoriesDAOImpl propagationsRepositoriesDAOImpl
+    RepositoriesDAO propagationsRepositoriesDAOImpl
 
     @Autowired
     @InjectMocks

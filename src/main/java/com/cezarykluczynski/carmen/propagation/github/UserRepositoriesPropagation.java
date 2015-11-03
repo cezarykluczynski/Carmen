@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.propagation.github;
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
@@ -14,13 +14,13 @@ import java.util.HashMap;
 public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
-    private UserDAOImpl githubUserDAOImpl;
+    private UserDAO githubUserDAOImpl;
 
     @Autowired
-    private RepositoriesDAOImpl propagationsRepositoriesDAOImpl;
+    private RepositoriesDAO propagationsRepositoriesDAOImpl;
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     private User userEntity;
 

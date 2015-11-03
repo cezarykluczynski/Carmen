@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 
@@ -15,7 +15,7 @@ import java.util.HashMap
 class PendingRequestDAOImplFixtures {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndPriority(User userEntity, Integer priority) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()

@@ -22,7 +22,7 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
 
 @ContextConfiguration([
@@ -44,7 +44,7 @@ class UserControllerTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     private MockMvc mockMvc
 

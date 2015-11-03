@@ -7,18 +7,18 @@ import java.io.IOException;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.provider.github.GithubProvider;
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
 
 @Component
 public class UserGhostExecutor implements Executor {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl;
+    UserDAO githubUserDAOImpl;
 
     @Autowired
     GithubProvider githubProvider;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation
 import com.cezarykluczynski.carmen.model.github.User
@@ -30,7 +31,7 @@ import org.testng.annotations.Test
 class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     @Mock
     UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase

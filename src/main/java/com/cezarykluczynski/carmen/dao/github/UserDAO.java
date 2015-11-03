@@ -18,7 +18,7 @@ public interface UserDAO {
 
     public void linkFollowerWithFollowee(User follower, User followee);
 
-    public Object findByLogin(String login);
+    public User findByLogin(String login);
 
     public User createOrUpdateRequestedEntity(String username) throws IOException;
 

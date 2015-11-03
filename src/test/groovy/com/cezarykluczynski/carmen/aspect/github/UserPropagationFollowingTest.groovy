@@ -8,7 +8,7 @@ import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation
@@ -30,7 +30,7 @@ import org.mockito.MockitoAnnotations
 class UserPropagationFollowingTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures

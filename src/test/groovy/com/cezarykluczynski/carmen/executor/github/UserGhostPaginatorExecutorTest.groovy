@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
@@ -48,7 +48,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     @Autowired
     PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures

@@ -16,6 +16,7 @@ import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.set.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.Repository
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 
@@ -42,7 +43,7 @@ class GithubProviderTest extends AbstractTestNGSpringContextTests {
 
     GithubKohsukeProvider githubKohsukeProviderMock
 
-    RateLimitDAOImpl rateLimitDAOImplMock
+    RateLimitDAO rateLimitDAOImplMock
 
     RateLimit rateLimitSetCore
 

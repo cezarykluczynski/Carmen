@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.propagation.github
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures
@@ -36,7 +36,7 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
     RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     User userEntity
 

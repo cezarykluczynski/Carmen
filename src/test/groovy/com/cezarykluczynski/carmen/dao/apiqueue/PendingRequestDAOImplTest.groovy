@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
@@ -39,7 +39,7 @@ import java.util.List
 class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures

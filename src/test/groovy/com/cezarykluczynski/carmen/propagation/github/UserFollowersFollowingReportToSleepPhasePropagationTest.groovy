@@ -9,9 +9,9 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees
@@ -50,13 +50,13 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
     FollowersAndFolloweesRepository followersAndFolloweesRepository
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
+    UserFollowersDAO propagationsUserFollowersDAOImpl
 
     @Autowired
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
+    UserFollowingDAO propagationsUserFollowingDAOImpl
 
     @Autowired
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures

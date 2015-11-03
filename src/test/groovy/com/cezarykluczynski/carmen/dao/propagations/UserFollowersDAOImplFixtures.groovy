@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 
 import java.util.List
 import java.util.Iterator
@@ -14,7 +14,7 @@ import java.util.Iterator
 class UserFollowersDAOImplFixtures {
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
+    UserFollowersDAO propagationsUserFollowersDAOImpl
 
     public UserFollowers createUserFollowersEntityUsingUserEntity(User userEntity) {
         return createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")

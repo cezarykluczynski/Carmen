@@ -6,7 +6,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation
 
 import static org.mockito.Mockito.mock
@@ -31,7 +31,7 @@ import org.testng.annotations.Test
 class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    UserFollowersDAOImpl propagationsUserFollowersDAOImpl
+    UserFollowersDAO propagationsUserFollowersDAOImpl
 
     @Mock
     UserFollowersPropagation userFollowersPropagation

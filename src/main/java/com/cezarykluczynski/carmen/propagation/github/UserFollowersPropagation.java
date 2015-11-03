@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.HashMap;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
@@ -17,10 +17,10 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 public class UserFollowersPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl;
+    UserDAO githubUserDAOImpl;
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDAOImpl;
+    UserFollowersDAO propagationsUserFollowersDAOImpl;
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;

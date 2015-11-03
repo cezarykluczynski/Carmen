@@ -12,6 +12,7 @@ import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
@@ -57,7 +58,7 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
     PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
 
     @Mock
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     @Autowired
     @InjectMocks

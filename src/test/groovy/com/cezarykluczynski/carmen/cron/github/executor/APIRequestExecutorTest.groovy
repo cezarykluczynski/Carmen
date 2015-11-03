@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
@@ -37,7 +37,7 @@ import java.io.IOException
 class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     @Mock
     UserGhostExecutor userGhostExecutor

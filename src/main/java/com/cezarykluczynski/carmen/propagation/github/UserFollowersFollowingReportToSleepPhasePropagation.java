@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.HashMap;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImpl;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository;
@@ -22,16 +22,16 @@ import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 public class UserFollowersFollowingReportToSleepPhasePropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl;
+    UserDAO githubUserDAOImpl;
 
     @Autowired
-    UserFollowersDAOImpl propagationsUserFollowersDAOImpl;
+    UserFollowersDAO propagationsUserFollowersDAOImpl;
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDAOImpl;
+    UserFollowingDAO propagationsUserFollowingDAOImpl;
 
     @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+    PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
     FollowersAndFolloweesRepository followersAndFolloweesRepository;

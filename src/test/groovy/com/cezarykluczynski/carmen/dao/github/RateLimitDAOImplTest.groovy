@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
+import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
@@ -27,7 +27,7 @@ import java.util.Date
 class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private RateLimitDAOImpl rateLimitDAOImpl
+    private RateLimitDAO rateLimitDAOImpl
 
     @Autowired
     RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures

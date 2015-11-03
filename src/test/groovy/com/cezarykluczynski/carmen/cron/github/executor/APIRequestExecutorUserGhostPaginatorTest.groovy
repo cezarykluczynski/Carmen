@@ -5,7 +5,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 
 import static org.mockito.Mockito.when
@@ -28,7 +28,7 @@ import org.testng.annotations.Test
 class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    PendingRequestDAO apiqueuePendingRequestDAOImpl
 
     @Mock
     UserGhostPaginatorExecutor userGhostPaginatorExecutor

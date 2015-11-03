@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.Repositories
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
 
 @Component
 class RepositoriesDAOImplFixtures {
 
     @Autowired
-    RepositoriesDAOImpl propagationsUserFollowersDAOImpl
+    RepositoriesDAO propagationsUserFollowersDAOImpl
 
     public Repositories createRepositoriesEntityUsingUserEntityAndPhase(User userEntity) {
         return propagationsUserFollowersDAOImpl.create(userEntity)

@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
@@ -59,7 +59,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     @Autowired
     GithubProvider githubProvider

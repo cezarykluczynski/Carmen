@@ -10,7 +10,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
@@ -36,7 +36,7 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
     UserFollowingPropagation userFollowingPropagation
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
+    UserFollowingDAO propagationsUserFollowingDAOImpl
 
     @Autowired
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures

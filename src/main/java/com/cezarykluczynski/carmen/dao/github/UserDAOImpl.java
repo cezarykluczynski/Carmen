@@ -110,6 +110,7 @@ public class UserDAOImpl implements UserDAO {
         return createOrUpdate(login, flags);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public User findByLogin(String login) {
         Session session = sessionFactory.openSession();

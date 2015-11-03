@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
+import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
@@ -41,7 +41,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl
+    UserDAO githubUserDAOImpl
 
     @Test
     void create() {

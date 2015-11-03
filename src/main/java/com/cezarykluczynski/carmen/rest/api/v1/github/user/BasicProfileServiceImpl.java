@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl;
+import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.pojo.rest.api.v1.github.error.Error404ResponsePOJO;
 import com.cezarykluczynski.carmen.pojo.rest.api.v1.github.user.BasicProfilePOJO;
 import com.cezarykluczynski.carmen.model.github.User;
@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 public class BasicProfileServiceImpl implements BasicProfileService {
 
     @Autowired
-    UserDAOImpl githubUserDAOImpl;
+    UserDAO githubUserDAOImpl;
 
     @Override
     public Response get(String login) {

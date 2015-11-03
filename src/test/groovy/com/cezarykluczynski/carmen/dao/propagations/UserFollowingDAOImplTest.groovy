@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.model.github.User
@@ -28,7 +28,7 @@ import org.joda.time.DateTimeConstants
 class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
+    UserFollowingDAO propagationsUserFollowingDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures

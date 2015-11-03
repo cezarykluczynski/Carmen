@@ -20,4 +20,5 @@ public class User extends CarmenRelationalEntity {
     private void setId(Long id) {
         this.id = id;
     }
+
 }

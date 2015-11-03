@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,9 +10,9 @@ import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import org.kohsuke.github.GitHub;
 
-public class GithubKohsukeProvider implements GithubProviderInterface {
+public class GithubKohsukeClient implements GithubClientInterface {
 
-    public GithubKohsukeProvider(GitHub github) {
+    public GithubKohsukeClient(GitHub github) {
         this.github = github;
     }
 

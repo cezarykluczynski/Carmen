@@ -17,8 +17,8 @@ import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
-import com.cezarykluczynski.carmen.provider.github.GithubProvider
-import com.cezarykluczynski.carmen.provider.github.GithubRateLimitExceededException
+import com.cezarykluczynski.carmen.client.github.GithubClient
+import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededException
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock

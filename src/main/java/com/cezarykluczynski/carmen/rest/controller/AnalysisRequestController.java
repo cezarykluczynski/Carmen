@@ -14,7 +14,7 @@ import com.cezarykluczynski.carmen.rest.pojo.Analysis;
 
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.provider.github.GithubRateLimitExceededException;
+import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededException;
 
 @RestController
 @RequestMapping("/rest/analyze")

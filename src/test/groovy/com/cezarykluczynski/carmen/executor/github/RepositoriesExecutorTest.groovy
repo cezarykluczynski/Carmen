@@ -7,7 +7,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.provider.github.GithubProvider
+import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 
@@ -46,7 +46,7 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
     RepositoriesExecutor repositoriesExecutor
 
     @Mock
-    GithubProvider githubProvider
+    GithubClient githubClient
 
     User userEntity
 
@@ -62,7 +62,7 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod
     void setUp() {
-        githubProvider = mock GithubProvider.class
+        githubClient = mock GithubClient.class
         MockitoAnnotations.initMocks this
 
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
@@ -78,7 +78,7 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
         repositoriesSetList = new ArrayList<RepositorySet>()
         RepositorySet repositorySet = mock RepositorySet.class
         when repositorySet.getFullName() thenReturn mockRepositoryFullName
-        when(githubProvider.getRepositories(userEntityLogin)).thenReturn repositoriesSetList
+        when(githubClient.getRepositories(userEntityLogin)).thenReturn repositoriesSetList
         repositoriesSetList.add repositorySet
     }
 
@@ -89,7 +89,7 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         Assert.assertEquals propagationsRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName(), mockRepositoryFullName
-        verify(githubProvider).getRepositories(userEntityLogin)
+        verify(githubClient).getRepositories(userEntityLogin)
     }
 
 

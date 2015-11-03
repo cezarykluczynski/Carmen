@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import java.io.IOException;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
-public interface GithubProviderInterface {
+public interface GithubClientInterface {
 
     public RateLimit getCoreLimit() throws IOException;
 

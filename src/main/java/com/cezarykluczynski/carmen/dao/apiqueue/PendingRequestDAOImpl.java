@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
@@ -28,7 +28,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
     private SessionFactory sessionFactory;
 
     @Autowired
-    GithubProvider githubProvider;
+    GithubClient githubClient;
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

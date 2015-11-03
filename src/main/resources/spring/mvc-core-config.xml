@@ -46,22 +46,22 @@
         <property name="suffix" value=".jsp" />
     </bean>
 
-    <bean name="githubProvider" class="com.cezarykluczynski.carmen.provider.github.GithubProvider">
-        <constructor-arg index="0" ref="githubJcabiProvider" />
-        <constructor-arg index="1" ref="githubKohsukeProvider" />
-        <constructor-arg index="2" ref="githubEgitProvider" />
+    <bean name="githubClient" class="com.cezarykluczynski.carmen.client.github.GithubClient">
+        <constructor-arg index="0" ref="githubJcabiClient" />
+        <constructor-arg index="1" ref="githubKohsukeClient" />
+        <constructor-arg index="2" ref="githubEgitClient" />
         <constructor-arg index="3" ref="rateLimitDAOImpl" />
     </bean>
 
-    <bean name="githubJcabiProvider" class="com.cezarykluczynski.carmen.provider.github.GithubJcabiProvider">
+    <bean name="githubJcabiClient" class="com.cezarykluczynski.carmen.client.github.GithubJcabiClient">
         <constructor-arg index="0" ref="rtGithub" />
     </bean>
 
-    <bean name="githubKohsukeProvider" class="com.cezarykluczynski.carmen.provider.github.GithubKohsukeProvider">
+    <bean name="githubKohsukeClient" class="com.cezarykluczynski.carmen.client.github.GithubKohsukeClient">
         <constructor-arg index="0" ref="kohsukeGithubApi" />
     </bean>
 
-    <bean name="githubEgitProvider" class="com.cezarykluczynski.carmen.provider.github.GithubEgitProvider">
+    <bean name="githubEgitClient" class="com.cezarykluczynski.carmen.client.github.GithubEgitClient">
         <constructor-arg index="0" ref="egitGithubClient" />
     </bean>
 

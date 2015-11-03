@@ -25,7 +25,7 @@ class RateLimitDAOImplFixtures {
         calendar.setTime new Date()
         /**
          * Create limit that will expire in one second,
-         * so we're fairly sure it will be picked by GithubProvider.
+         * so we're fairly sure it will be picked by GithubClient.
          */
         Date reset = new Date(calendar.getTimeInMillis() + 1000 * 60 * 60 - 1000)
 

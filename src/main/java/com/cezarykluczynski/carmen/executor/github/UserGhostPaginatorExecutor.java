@@ -10,7 +10,7 @@ import java.util.HashMap;
 import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 @Component
@@ -20,7 +20,7 @@ public class UserGhostPaginatorExecutor implements Executor {
     PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
-    GithubProvider githubProvider;
+    GithubClient githubClient;
 
     @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}")
     private Integer limit;
@@ -50,8 +50,8 @@ public class UserGhostPaginatorExecutor implements Executor {
         Integer page = (Integer) (queryParams.containsKey("page") ? queryParams.get("page") : 1);
 
         return endpoint.equals("followers_url") ?
-            githubProvider.getFollowers(login, limit, page) :
-            githubProvider.getFollowing(login, limit, page);
+            githubClient.getFollowers(login, limit, page) :
+            githubClient.getFollowing(login, limit, page);
     }
 
     private void createUserGhostPendingRequests(

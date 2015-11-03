@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import java.io.IOException;
 
@@ -17,9 +17,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
-public class GithubEgitProvider implements GithubProviderInterface {
+public class GithubEgitClient implements GithubClientInterface {
 
-    public GithubEgitProvider(GitHubClient github) {
+    public GithubEgitClient(GitHubClient github) {
         this.github = github;
     }
 

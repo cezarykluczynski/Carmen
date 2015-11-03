@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github
+package com.cezarykluczynski.carmen.client.github
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -19,29 +19,29 @@ import java.util.Iterator
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubEgitProviderIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubEgitClientIntegrationTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    GithubEgitProvider githubEgitProvider
+    GithubEgitClient githubEgitClient
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getCoreLimit() {
-        githubEgitProvider.getCoreLimit()
+        githubEgitClient.getCoreLimit()
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getSearchLimit() {
-        githubEgitProvider.getSearchLimit()
+        githubEgitClient.getSearchLimit()
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getUser() {
-        githubEgitProvider.getUser()
+        githubEgitClient.getUser()
     }
 
     @Test
     void getRepositories() {
-        List<Repository> repositoriesList = githubEgitProvider.getRepositories "cezarykluczynski"
+        List<Repository> repositoriesList = githubEgitClient.getRepositories "cezarykluczynski"
         for(Repository repository in repositoriesList) {
             if (repository.getName() == "Carmen") {
                 Assert.assertTrue true
@@ -55,7 +55,7 @@ class GithubEgitProviderIntegrationTest extends AbstractTestNGSpringContextTests
     @Test
     void getFollowers() {
         // exercise
-        PaginationAwareArrayList<User> followersList = githubEgitProvider.getFollowers "octocat", 10, 0
+        PaginationAwareArrayList<User> followersList = githubEgitClient.getFollowers "octocat", 10, 0
 
         // assertion
         Assert.assertEquals followersList.size(), 10
@@ -67,7 +67,7 @@ class GithubEgitProviderIntegrationTest extends AbstractTestNGSpringContextTests
     @Test
     void getFollowing() {
         // exercise
-        PaginationAwareArrayList<User> followingList = githubEgitProvider.getFollowing "octocat", 10, 0
+        PaginationAwareArrayList<User> followingList = githubEgitClient.getFollowing "octocat", 10, 0
 
         // assertion: last time checked, Octocat was following 6 GitHub employees
         Assert.assertTrue followingList.size() > 5

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.User.Smart;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.json.JsonObject;
-import javax.json.JsonValue;
 
 import java.lang.ClassCastException;
 import java.lang.IllegalStateException;
@@ -23,9 +22,9 @@ import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 
-public class GithubJcabiProvider implements GithubProviderInterface {
+public class GithubJcabiClient implements GithubClientInterface {
 
-    public GithubJcabiProvider(RtGithub github) {
+    public GithubJcabiClient(RtGithub github) {
         this.github = github;
     }
 

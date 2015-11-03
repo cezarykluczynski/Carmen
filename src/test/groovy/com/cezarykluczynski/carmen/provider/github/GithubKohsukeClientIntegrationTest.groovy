@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github
+package com.cezarykluczynski.carmen.client.github
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -13,39 +13,39 @@ import java.io.IOException
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubKohsukeProviderIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubKohsukeClientIntegrationTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    GithubKohsukeProvider githubKohsukeProvider
+    GithubKohsukeClient githubKohsukeClient
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getCoreLimit() {
-        githubKohsukeProvider.getCoreLimit()
+        githubKohsukeClient.getCoreLimit()
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getSearchLimit() {
-        githubKohsukeProvider.getSearchLimit()
+        githubKohsukeClient.getSearchLimit()
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getUser() {
-        githubKohsukeProvider.getUser "name"
+        githubKohsukeClient.getUser "name"
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getRepositories() {
-        githubKohsukeProvider.getRepositories "name"
+        githubKohsukeClient.getRepositories "name"
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getFollowers() {
-        githubKohsukeProvider.getFollowers "name", 1, 0
+        githubKohsukeClient.getFollowers "name", 1, 0
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getFollowing() {
-        githubKohsukeProvider.getFollowing "name", 1, 0
+        githubKohsukeClient.getFollowing "name", 1, 0
     }
 
 }

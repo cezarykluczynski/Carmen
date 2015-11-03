@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import java.io.IOException;
 

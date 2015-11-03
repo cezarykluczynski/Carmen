@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.client.github.GithubClient;
 
 import java.util.List;
 import java.lang.Boolean;
@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
     private SessionFactory sessionFactory;
 
     @Autowired
-    GithubProvider githubProvider;
+    GithubClient githubClient;
 
     @Autowired
     UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate;
@@ -39,8 +39,8 @@ public class UserDAOImpl implements UserDAO {
         this.sessionFactory = sessionFactory;
     }
 
-    public void setGithubProvider(GithubProvider githubProvider) {
-        this.githubProvider = githubProvider;
+    public void setGithubClient(GithubClient githubClient) {
+        this.githubClient = githubClient;
     }
 
     @Override
@@ -216,14 +216,14 @@ public class UserDAOImpl implements UserDAO {
             Boolean requested = flags.get("requested");
 
             if (userEntity.canBeUpdated() || requested && !userEntity.getRequested()) {
-                com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
+                com.cezarykluczynski.carmen.set.github.User userSet = githubClient.getUser(login);
                 applyFlagsToSet(userSet, flags);
                 return update(userEntity, userSet);
             }
 
             return userEntity;
         } catch (NullPointerException e) {
-            com.cezarykluczynski.carmen.set.github.User userSet = githubProvider.getUser(login);
+            com.cezarykluczynski.carmen.set.github.User userSet = githubClient.getUser(login);
             applyFlagsToSet(userSet, flags);
             return create(userSet);
         }

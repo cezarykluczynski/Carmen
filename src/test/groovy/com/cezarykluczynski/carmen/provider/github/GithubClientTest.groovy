@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github
+package com.cezarykluczynski.carmen.client.github
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -30,18 +30,18 @@ import java.util.List
     "classpath:spring/cron-config.xml",
     "classpath:spring/fixtures/fixtures.xml"
 ])
-class GithubProviderTest extends AbstractTestNGSpringContextTests {
+class GithubClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
 
-    GithubProvider githubProvider
+    GithubClient githubClient
 
-    GithubJcabiProvider githubJcabiProviderMock
+    GithubJcabiClient githubJcabiClientMock
 
-    GithubEgitProvider githubEgitProviderMock
+    GithubEgitClient githubEgitClientMock
 
-    GithubKohsukeProvider githubKohsukeProviderMock
+    GithubKohsukeClient githubKohsukeClientMock
 
     RateLimitDAO rateLimitDAOImplMock
 
@@ -61,9 +61,9 @@ class GithubProviderTest extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod
     void setUp() {
-        githubJcabiProviderMock = mock GithubJcabiProvider.class
-        githubEgitProviderMock = mock GithubEgitProvider.class
-        githubKohsukeProviderMock = mock GithubKohsukeProvider.class
+        githubJcabiClientMock = mock GithubJcabiClient.class
+        githubEgitClientMock = mock GithubEgitClient.class
+        githubKohsukeClientMock = mock GithubKohsukeClient.class
         rateLimitDAOImplMock = mock RateLimitDAOImpl.class
         rateLimitSetCore = mock RateLimit.class
         rateLimitSetSearch = mock RateLimit.class
@@ -74,17 +74,17 @@ class GithubProviderTest extends AbstractTestNGSpringContextTests {
 
         login = githubUserDAOImplFixtures.generateRandomLogin()
 
-        when githubJcabiProviderMock.getCoreLimit() thenReturn rateLimitSetCore
-        when githubJcabiProviderMock.getSearchLimit() thenReturn rateLimitSetSearch
-        when githubJcabiProviderMock.getUser(login) thenReturn userSet
-        when githubEgitProviderMock.getRepositories(login) thenReturn repositoriesList
-        when githubEgitProviderMock.getFollowers(login, 1, 0) thenReturn followersList
-        when githubEgitProviderMock.getFollowing(login, 1, 0) thenReturn followingList
+        when githubJcabiClientMock.getCoreLimit() thenReturn rateLimitSetCore
+        when githubJcabiClientMock.getSearchLimit() thenReturn rateLimitSetSearch
+        when githubJcabiClientMock.getUser(login) thenReturn userSet
+        when githubEgitClientMock.getRepositories(login) thenReturn repositoriesList
+        when githubEgitClientMock.getFollowers(login, 1, 0) thenReturn followersList
+        when githubEgitClientMock.getFollowing(login, 1, 0) thenReturn followingList
 
-        githubProvider = new GithubProvider(
-            githubJcabiProviderMock,
-            githubKohsukeProviderMock,
-            githubEgitProviderMock,
+        githubClient = new GithubClient(
+            githubJcabiClientMock,
+            githubKohsukeClientMock,
+            githubEgitClientMock,
             rateLimitDAOImplMock
         )
     }
@@ -92,60 +92,60 @@ class GithubProviderTest extends AbstractTestNGSpringContextTests {
     @Test
     void getCoreLimit() {
         // exercise
-        RateLimit rateLimitSetCoreReturned = githubProvider.getCoreLimit()
+        RateLimit rateLimitSetCoreReturned = githubClient.getCoreLimit()
 
         // assertion
-        verify(githubJcabiProviderMock).getCoreLimit()
+        verify(githubJcabiClientMock).getCoreLimit()
         Assert.assertEquals rateLimitSetCoreReturned, rateLimitSetCore
     }
 
     @Test
     void getSearchLimit() {
         // exercise
-        RateLimit rateLimitSetSearchReturned = githubProvider.getSearchLimit()
+        RateLimit rateLimitSetSearchReturned = githubClient.getSearchLimit()
 
         // assertion
-        verify(githubJcabiProviderMock).getSearchLimit()
+        verify(githubJcabiClientMock).getSearchLimit()
         Assert.assertEquals rateLimitSetSearchReturned, rateLimitSetSearch
     }
 
     @Test
     void getUser() {
         // exercise
-        UserSet userSetReturned = githubProvider.getUser(login)
+        UserSet userSetReturned = githubClient.getUser(login)
 
         // assertion
-        verify(githubJcabiProviderMock).getUser(login)
+        verify(githubJcabiClientMock).getUser(login)
         Assert.assertEquals userSetReturned, userSet
     }
 
     @Test
     void getRepositories() {
         // exercise
-        List<Repository> repositoriesListReturned = githubProvider.getRepositories(login)
+        List<Repository> repositoriesListReturned = githubClient.getRepositories(login)
 
         // assertion
-        verify(githubEgitProviderMock).getRepositories(login)
+        verify(githubEgitClientMock).getRepositories(login)
         Assert.assertEquals repositoriesListReturned, repositoriesList
     }
 
     @Test
     void getFollowers() {
         // exercise
-        PaginationAwareArrayList<UserSet> followersListReturned = githubProvider.getFollowers(login, 1, 0)
+        PaginationAwareArrayList<UserSet> followersListReturned = githubClient.getFollowers(login, 1, 0)
 
         // assertion
-        verify(githubEgitProviderMock).getFollowers(login, 1, 0)
+        verify(githubEgitClientMock).getFollowers(login, 1, 0)
         Assert.assertEquals followersListReturned, followersList
     }
 
     @Test
     void getFollowing() {
         // exercise
-        PaginationAwareArrayList<UserSet> followingListReturned = githubProvider.getFollowing(login, 1, 0)
+        PaginationAwareArrayList<UserSet> followingListReturned = githubClient.getFollowing(login, 1, 0)
 
         // assertion
-        verify(githubEgitProviderMock).getFollowing(login, 1, 0)
+        verify(githubEgitClientMock).getFollowing(login, 1, 0)
         Assert.assertEquals followingListReturned, followingList
     }
 

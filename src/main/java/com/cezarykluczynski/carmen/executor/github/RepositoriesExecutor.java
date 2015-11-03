@@ -12,7 +12,7 @@ import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
 import com.cezarykluczynski.carmen.set.github.Repository;
-import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.client.github.GithubClient;
 
 @Component
 public class RepositoriesExecutor implements Executor {
@@ -27,12 +27,12 @@ public class RepositoriesExecutor implements Executor {
     RepositoriesDAO propagationsRepositoriesDAOImpl;
 
     @Autowired
-    GithubProvider githubProvider;
+    GithubClient githubClient;
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         String login = (String) pendingRequest.getPathParams().get("login");
         User userEntity = githubUserDAOImpl.findByLogin(login);
-        List<Repository> repositoriesSetList = githubProvider.getRepositories(login);
+        List<Repository> repositoriesSetList = githubClient.getRepositories(login);
         propagationsRepositoriesDAOImpl.refresh(userEntity, repositoriesSetList);
         apiqueuePendingRequestDAOImpl.delete(pendingRequest);
     }

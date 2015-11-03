@@ -14,7 +14,7 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
-import com.cezarykluczynski.carmen.provider.github.GithubProvider
+import com.cezarykluczynski.carmen.client.github.GithubClient
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -62,7 +62,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
     UserDAO githubUserDAOImpl
 
     @Autowired
-    GithubProvider githubProvider
+    GithubClient githubClient
 
     @Test
     void createOrUpdateExistingRequestedEntityThatCannotBeUpdated() {
@@ -70,23 +70,23 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         String currentLogin = userEntity.getLogin()
         UserSet userSet = new UserSet(null, currentLogin)
-        GithubProvider githubProviderMock = getGithubProviderMock()
-        when githubProviderMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubProvider githubProviderMock
+        GithubClient githubClientMock = getGithubClientMock()
+        when githubClientMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.setGithubClient githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
 
         // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin currentLogin
-        verify(githubProviderMock, never()).getUser currentLogin
+        verify(githubClientMock, never()).getUser currentLogin
         Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubProvider githubProvider
+        githubUserDAOImpl.setGithubClient githubClient
     }
 
     @Test
@@ -97,9 +97,9 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSetMock = new UserSet(null, newLogin)
-        GithubProvider githubProviderMock = getGithubProviderMock()
-        when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
-        githubUserDAOImpl.setGithubProvider githubProviderMock
+        GithubClient githubClientMock = getGithubClientMock()
+        when githubClientMock.getUser(currentLogin) thenReturn userSetMock
+        githubUserDAOImpl.setGithubClient githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -108,11 +108,11 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
         Assert.assertTrue userEntityUpdated instanceof User
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
-        verify(githubProviderMock).getUser currentLogin
+        verify(githubClientMock).getUser currentLogin
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubProvider githubProvider
+        githubUserDAOImpl.setGithubClient githubClient
     }
 
     @Test
@@ -123,9 +123,9 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = new UserSet(null, newLogin)
-        GithubProvider githubProviderMock = getGithubProviderMock()
-        when githubProviderMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubProvider githubProviderMock
+        GithubClient githubClientMock = getGithubClientMock()
+        when githubClientMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.setGithubClient githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateGhostEntity currentLogin
@@ -137,7 +137,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubProvider githubProvider
+        githubUserDAOImpl.setGithubClient githubClient
     }
 
     @Test
@@ -147,9 +147,9 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = new UserSet(null, newLogin)
-        GithubProvider githubProviderMock = getGithubProviderMock()
-        when githubProviderMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubProvider githubProviderMock
+        GithubClient githubClientMock = getGithubClientMock()
+        when githubClientMock.getUser(currentLogin) thenReturn userSet
+        githubUserDAOImpl.setGithubClient githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -161,17 +161,17 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubProvider githubProvider
+        githubUserDAOImpl.setGithubClient githubClient
     }
 
     @Test
     void createOrUpdateNonExistingEntity() {
         // setup
         String currentLogin = githubUserDAOImplFixtures.generateRandomLogin()
-        GithubProvider githubProviderMock = getGithubProviderMock()
+        GithubClient githubClientMock = getGithubClientMock()
         UserSet userSetMock = new UserSet(null, currentLogin)
-        when githubProviderMock.getUser(currentLogin) thenReturn userSetMock
-        githubUserDAOImpl.setGithubProvider githubProviderMock
+        when githubClientMock.getUser(currentLogin) thenReturn userSetMock
+        githubUserDAOImpl.setGithubClient githubClientMock
 
         // exercise
         User userEntityUpdated = githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -181,14 +181,14 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntityUpdated
-        githubUserDAOImpl.setGithubProvider githubProvider
+        githubUserDAOImpl.setGithubClient githubClient
     }
 
-    private GithubProvider getGithubProviderMock() {
-        GithubProvider githubProviderMock = mock GithubProvider.class
-        doNothing().when(githubProviderMock).checkApiLimit "getUser"
-        doNothing().when(githubProviderMock).decrementRateLimitRemainingCounter "getUser"
-        return githubProviderMock
+    private GithubClient getGithubClientMock() {
+        GithubClient githubClientMock = mock GithubClient.class
+        doNothing().when(githubClientMock).checkApiLimit "getUser"
+        doNothing().when(githubClientMock).decrementRateLimitRemainingCounter "getUser"
+        return githubClientMock
     }
 
     private void setUserEntityUpdatedDateToTwoDaysAgo(User userEntity) {

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github
+package com.cezarykluczynski.carmen.client.github
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -20,14 +20,14 @@ import java.util.Date
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    GithubJcabiProvider githubJcabiProvider
+    GithubJcabiClient githubJcabiClient
 
     @Test
     void getCoreLimit() {
-        RateLimit rateLimitSet = githubJcabiProvider.getCoreLimit()
+        RateLimit rateLimitSet = githubJcabiClient.getCoreLimit()
 
         Assert.assertEquals rateLimitSet.getResource(), "core"
         Assert.assertTrue rateLimitSet.getLimit() instanceof Integer
@@ -37,7 +37,7 @@ class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTest
 
     @Test
     void getSearchLimit() {
-        RateLimit rateLimitSet = githubJcabiProvider.getSearchLimit()
+        RateLimit rateLimitSet = githubJcabiClient.getSearchLimit()
 
         Assert.assertEquals rateLimitSet.getResource(), "search"
         Assert.assertTrue rateLimitSet.getLimit() instanceof Integer
@@ -47,7 +47,7 @@ class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTest
 
     @Test
     void getExistingUser() {
-        User userSet = githubJcabiProvider.getUser "octocat"
+        User userSet = githubJcabiClient.getUser "octocat"
 
         Assert.assertNotNull userSet.getId()
         Assert.assertEquals userSet.getLogin(), "octocat"
@@ -56,12 +56,12 @@ class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTest
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getRepositories() {
-        githubJcabiProvider.getRepositories "name"
+        githubJcabiClient.getRepositories "name"
     }
 
     @Test
     void getNonExistingUser() {
-        User userSet = githubJcabiProvider.getUser "carmen-user-404-integration-test"
+        User userSet = githubJcabiClient.getUser "carmen-user-404-integration-test"
 
         Assert.assertNull userSet.getId()
         Assert.assertEquals userSet.getLogin(), "carmen-user-404-integration-test"
@@ -69,12 +69,12 @@ class GithubJcabiProviderIntegrationTest extends AbstractTestNGSpringContextTest
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getFollowers() {
-        githubJcabiProvider.getFollowers "name", 1, 0
+        githubJcabiClient.getFollowers "name", 1, 0
     }
 
     @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
     void getFollowing() {
-        githubJcabiProvider.getFollowing "name", 1, 0
+        githubJcabiClient.getFollowing "name", 1, 0
     }
 
 }

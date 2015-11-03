@@ -8,7 +8,7 @@ import java.io.IOException;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.provider.github.GithubProvider;
+import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 
 @Component
@@ -21,7 +21,7 @@ public class UserGhostExecutor implements Executor {
     UserDAO githubUserDAOImpl;
 
     @Autowired
-    GithubProvider githubProvider;
+    GithubClient githubClient;
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         String login = (String) pendingRequest.getPathParams().get("login");

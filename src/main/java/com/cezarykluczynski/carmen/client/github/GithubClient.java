@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.provider.github;
+package com.cezarykluczynski.carmen.client.github;
 
 import java.io.IOException;
 
@@ -14,56 +14,56 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class GithubProvider implements GithubProviderInterface {
+public class GithubClient implements GithubClientInterface {
 
-    public GithubProvider(
-        GithubProviderInterface githubJcabiProvider,
-        GithubProviderInterface githubKohsukeProvider,
-        GithubProviderInterface githubEgitProvider,
+    public GithubClient(
+        GithubClientInterface githubJcabiClient,
+        GithubClientInterface githubKohsukeClient,
+        GithubClientInterface githubEgitClient,
         RateLimitDAO rateLimitDAOImpl
     ) {
-        this.githubJcabiProvider = githubJcabiProvider;
-        this.githubKohsukeProvider = githubKohsukeProvider;
-        this.githubEgitProvider = githubEgitProvider;
+        this.githubJcabiClient = githubJcabiClient;
+        this.githubKohsukeClient = githubKohsukeClient;
+        this.githubEgitClient = githubEgitClient;
         this.rateLimitDAOImpl = rateLimitDAOImpl;
     }
 
-    private GithubProviderInterface githubJcabiProvider;
+    private GithubClientInterface githubJcabiClient;
 
-    private GithubProviderInterface githubKohsukeProvider;
+    private GithubClientInterface githubKohsukeClient;
 
-    private GithubProviderInterface githubEgitProvider;
+    private GithubClientInterface githubEgitClient;
 
     private RateLimitDAO rateLimitDAOImpl;
 
     public RateLimit getCoreLimit() throws IOException {
-        return githubJcabiProvider.getCoreLimit();
+        return githubJcabiClient.getCoreLimit();
     }
 
     public RateLimit getSearchLimit() throws IOException {
-        return githubJcabiProvider.getSearchLimit();
+        return githubJcabiClient.getSearchLimit();
     }
 
     public User getUser(String name) throws IOException {
         checkApiLimit("getUser");
-        User user = githubJcabiProvider.getUser(name);
+        User user = githubJcabiClient.getUser(name);
         decrementRateLimitRemainingCounter("getUser");
         return user;
     }
 
     public List<Repository> getRepositories(String name) throws IOException {
         checkApiLimit("getRepositories");
-        List<Repository> repositoriesList = githubEgitProvider.getRepositories(name);
+        List<Repository> repositoriesList = githubEgitClient.getRepositories(name);
         decrementRateLimitRemainingCounter("getRepositories");
         return repositoriesList;
     }
 
     public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
-        return githubEgitProvider.getFollowers(name, limit, offset);
+        return githubEgitClient.getFollowers(name, limit, offset);
     }
 
     public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
-        return githubEgitProvider.getFollowing(name, limit, offset);
+        return githubEgitClient.getFollowing(name, limit, offset);
     }
 
     public void checkApiLimit(String methodName) throws GithubRateLimitExceededException, IOException {
@@ -114,4 +114,5 @@ public class GithubProvider implements GithubProviderInterface {
         com.cezarykluczynski.carmen.set.github.RateLimit coreRateLimitSet = getCoreLimit();
         rateLimitDAOImpl.create(coreRateLimitSet);
     }
+
 }

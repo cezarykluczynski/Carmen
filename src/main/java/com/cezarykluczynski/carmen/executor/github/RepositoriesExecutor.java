@@ -24,7 +24,10 @@ public class RepositoriesExecutor implements Executor {
     UserDAO githubUserDAOImpl;
 
     @Autowired
-    RepositoriesDAO propagationsRepositoriesDAOImpl;
+    RepositoriesDAO githubRepositoriesDAOImpl;
+
+    @Autowired
+    com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl;
 
     @Autowired
     GithubClient githubClient;
@@ -33,7 +36,8 @@ public class RepositoriesExecutor implements Executor {
         String login = (String) pendingRequest.getPathParams().get("login");
         User userEntity = githubUserDAOImpl.findByLogin(login);
         List<Repository> repositoriesSetList = githubClient.getRepositories(login);
-        propagationsRepositoriesDAOImpl.refresh(userEntity, repositoriesSetList);
+        githubRepositoriesDAOImpl.refresh(userEntity, repositoriesSetList);
+        propagationsRepositoriesDAOImpl.moveToSleepPhaseUsingUserEntity(userEntity);
         apiqueuePendingRequestDAOImpl.delete(pendingRequest);
     }
 

@@ -17,4 +17,5 @@ public interface RepositoriesDAO {
 
     public Repositories findById(Long id);
 
+    public void moveToSleepPhaseUsingUserEntity(User userEntity);
 }

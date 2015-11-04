@@ -46,7 +46,7 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
         Repositories repositoriesEntity = new Repositories();
 
         repositoriesEntity.setUser(userEntity);
-        repositoriesEntity.setPhase("discover");
+        repositoriesEntity.setPhase("refresh");
         repositoriesEntity.setUpdated();
 
         session.save(repositoriesEntity);
@@ -58,9 +58,9 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
 
     @Override
     @Transactional
-    public void update(Repositories userFollowers) {
+    public void update(Repositories repositories) {
         Session session = sessionFactory.openSession();
-        session.update(userFollowers);
+        session.update(repositories);
         session.flush();
         session.close();
     }
@@ -81,6 +81,13 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
         Repositories user = (Repositories) session.get(Repositories.class, userId);
         session.close();
         return user;
+    }
+
+    @Override
+    public void moveToSleepPhaseUsingUserEntity(User userEntity) {
+        Repositories repositoriesEntity = findByUser(userEntity);
+        repositoriesEntity.setPhase("sleep");
+        update(repositoriesEntity);
     }
 
 }

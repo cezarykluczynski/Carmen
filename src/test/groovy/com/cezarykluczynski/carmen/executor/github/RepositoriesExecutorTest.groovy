@@ -5,11 +5,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
+import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO as PropagationsRepositoriesDAO
+import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
@@ -39,7 +42,13 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
     UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RepositoriesDAO propagationsRepositoriesDAOImpl
+    RepositoriesDAO githubRepositoriesDAOImpl
+
+    @Autowired
+    PropagationsRepositoriesDAO propagationsRepositoriesDAOImpl
+
+    @Autowired
+    UserRepositoriesPropagation userRepositoriesPropagation
 
     @Autowired
     @InjectMocks
@@ -66,6 +75,9 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
         MockitoAnnotations.initMocks this
 
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userRepositoriesPropagation.setUserEntity userEntity
+        userRepositoriesPropagation.propagate()
+
         userEntityLogin = userEntity.getLogin()
         mockRepositoryFullName = "${userEntityLogin}/mockRepository"
 
@@ -78,17 +90,18 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
         repositoriesSetList = new ArrayList<RepositorySet>()
         RepositorySet repositorySet = mock RepositorySet.class
         when repositorySet.getFullName() thenReturn mockRepositoryFullName
-        when(githubClient.getRepositories(userEntityLogin)).thenReturn repositoriesSetList
+        when githubClient.getRepositories(userEntityLogin) thenReturn repositoriesSetList
         repositoriesSetList.add repositorySet
     }
 
     @Test
     void execute() {
         // exercuse
-        repositoriesExecutor.execute(pendingRequestEntity)
+        repositoriesExecutor.execute pendingRequestEntity
 
         // assertion
-        Assert.assertEquals propagationsRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName(), mockRepositoryFullName
+        Assert.assertEquals githubRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName(), mockRepositoryFullName
+        Assert.assertEquals propagationsRepositoriesDAOImpl.findByUser(userEntity).getPhase(), "sleep"
         verify(githubClient).getRepositories(userEntityLogin)
     }
 

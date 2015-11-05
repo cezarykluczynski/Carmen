@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import com.cezarykluczynski.carmen.dao.users.propagations.CarmenPropagationsDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
 import com.cezarykluczynski.carmen.model.github.User;
 
 @Repository
-public class RepositoriesDAOImpl implements RepositoriesDAO {
+public class RepositoriesDAOImpl extends CarmenPropagationsDAOImpl implements RepositoriesDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -36,6 +37,12 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
         List<Repositories> list = criteria.list();
         session.close();
         return list.size() > 0 ? list.get(0) : null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Repositories findOldestPropagationInSleepPhase() {
+        return (Repositories) findOldestPropagationInPhase(sessionFactory, Repositories.class, "sleep");
     }
 
     @Override

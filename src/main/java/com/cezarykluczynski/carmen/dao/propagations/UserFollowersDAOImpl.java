@@ -14,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import com.cezarykluczynski.carmen.dao.users.propagations.CarmenPropagationsDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.github.User;
 
 @Repository
-public class UserFollowersDAOImpl implements UserFollowersDAO {
+public class UserFollowersDAOImpl extends CarmenPropagationsDAOImpl implements UserFollowersDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -40,20 +41,7 @@ public class UserFollowersDAOImpl implements UserFollowersDAO {
 
     @Transactional(readOnly = true)
     public UserFollowers findOldestPropagationInDiscoverPhase() {
-        Session session = sessionFactory.openSession();
-        Criteria criteria = session.createCriteria(UserFollowers.class)
-            .add(Restrictions.eq("phase", "discover"))
-            .addOrder(Order.asc("updated"))
-            .setMaxResults(1);
-
-        UserFollowers entity = null;
-        List<UserFollowers> list = criteria.list();
-        if (list.size() > 0) {
-            entity = list.get(0);
-        }
-        session.close();
-
-        return entity;
+        return (UserFollowers) findOldestPropagationInPhase(sessionFactory, UserFollowers.class, "discover");
     }
 
     @Override

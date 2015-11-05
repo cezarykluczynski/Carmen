@@ -9,6 +9,8 @@ public interface RepositoriesDAO {
 
     public Repositories findByUser(User userEntity);
 
+    public Repositories findOldestPropagationInSleepPhase();
+
     public Repositories create(User userEntity);
 
     public void update(Repositories repositories);

@@ -10,6 +10,7 @@ import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 
@@ -24,6 +25,9 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
 
     @Autowired
     PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
+
+    @Autowired
+    PendingRequestFactory pendingRequestFactory;
 
     private User userEntity;
 
@@ -76,19 +80,8 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     private void createDiscoverPhase(User userEntity) {
-        Propagation propagation = (Propagation) propagationsUserFollowersDAOImpl.create(userEntity, "discover");
-        HashMap<String, Object> pathParams = new HashMap<String, Object>();
-        pathParams.put("endpoint", "followers_url");
-        pathParams.put("login", userEntity.getLogin());
-        apiqueuePendingRequestDAOImpl.create(
-            "UsersGhostPaginator",
-            userEntity,
-            pathParams,
-            new HashMap<String, Object>(),
-            new HashMap<String, Object>(),
-            propagation,
-            1
-        );
+        Propagation propagationEntity = (Propagation) propagationsUserFollowersDAOImpl.create(userEntity, "discover");
+        pendingRequestFactory.createPendingRequestForUserFollowersPropagation(propagationEntity);
     }
 
 }

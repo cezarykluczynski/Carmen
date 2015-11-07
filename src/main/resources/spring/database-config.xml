@@ -69,5 +69,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="apiqueuePendingRequestFactory" class="com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory" />
+
   <bean id="followersAndFolloweesRepository" class="com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository" />
 </beans>

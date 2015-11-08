@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
+import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -24,14 +24,14 @@ import org.testng.annotations.Test
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTestNGSpringContextTests {
+class ScheduledRepositoriesWakeUpExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    APIRequestExecutor apiRequestExecutor
+    RepositoriesWakeUpExecutor repositoriesWakeUpExecutor
 
     @Autowired
     @InjectMocks
-    ScheduledAPIRequestExecutor scheduledAPIRequestExecutor
+    ScheduledRepositoriesWakeUpExecutor scheduledRepositoriesWakeUpExecutor
 
     def noTasks
 
@@ -40,13 +40,13 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
         MockitoAnnotations.initMocks this
-        doNothing().when(apiRequestExecutor).run()
+        doNothing().when(repositoriesWakeUpExecutor).run()
     }
 
     @Test
     void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
         // exercise
-        scheduledAPIRequestExecutor.executePropagation()
+        scheduledRepositoriesWakeUpExecutor.executePropagation()
         /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
            for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
            verification of apiRequestExecutor.run() would fail if we wouldn't wait a tiny bit.
@@ -54,13 +54,13 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
         Thread.sleep 10
 
         // assertion
-        verify(apiRequestExecutor).run()
+        verify(repositoriesWakeUpExecutor).run()
     }
 
     @AfterMethod
     void tearDown() {
         System.setProperty "noScheduledTasks", noTasks
-        Mockito.reset apiRequestExecutor
+        Mockito.reset repositoriesWakeUpExecutor
     }
 
 }

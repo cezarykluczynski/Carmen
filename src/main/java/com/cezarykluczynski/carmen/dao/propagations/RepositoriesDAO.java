@@ -19,5 +19,7 @@ public interface RepositoriesDAO {
 
     public Repositories findById(Long id);
 
+    public void moveToRefreshPhase(Repositories repositoriesEntity);
+
     public void moveToSleepPhaseUsingUserEntity(User userEntity);
 }

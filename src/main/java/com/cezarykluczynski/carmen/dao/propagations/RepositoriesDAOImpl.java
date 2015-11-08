@@ -91,6 +91,13 @@ public class RepositoriesDAOImpl extends CarmenPropagationsDAOImpl implements Re
     }
 
     @Override
+    public void moveToRefreshPhase(Repositories repositoriesEntity) {
+        repositoriesEntity.setUpdated();
+        repositoriesEntity.setPhase("refresh");
+        update(repositoriesEntity);
+    }
+
+    @Override
     public void moveToSleepPhaseUsingUserEntity(User userEntity) {
         Repositories repositoriesEntity = findByUser(userEntity);
         repositoriesEntity.setPhase("sleep");

@@ -48,24 +48,6 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
         tryCreateDiscoverPhase(userFollowingPropagations);
     }
 
-    public void tryToMoveToReportPhase(Long propagationId) {
-        Long count = apiqueuePendingRequestDAOImpl.countByPropagationId(propagationId);
-
-        if (count > 0) {
-            return;
-        }
-
-        com.cezarykluczynski.carmen.model.propagations.UserFollowing userFollowing =
-            propagationsUserFollowingDAOImpl.findById(propagationId);
-
-        if (!userFollowing.getPhase().equals("discover")) {
-            return;
-        }
-
-        userFollowing.setPhase("report");
-        propagationsUserFollowingDAOImpl.update(userFollowing);
-    }
-
     private void tryCreateDiscoverPhase(
         List<com.cezarykluczynski.carmen.model.propagations.UserFollowing> userFollowingPropagations
     ) {

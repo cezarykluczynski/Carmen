@@ -41,9 +41,6 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
     @Autowired
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
-    @Autowired
-    PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
-
     User userEntity
 
     @Test
@@ -94,69 +91,6 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
         List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
         Assert.assertEquals propagationsUserFollowingDAOImplList.size(), 1
         Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "discover"
-    }
-
-    @Test
-    void tryToMoveToReportPhaseNoPendingRequestDiscoverPhase() {
-        // setup
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
-        userFollowingPropagation.setUserEntity userEntity
-
-        // exercise
-        userFollowingPropagation.tryToMoveToReportPhase userFollowingEntity.getId()
-
-        // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "report"
-
-        // teardown
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
-    }
-
-    @Test
-    void tryToMoveToReportPhaseNoPendingRequestSleepPhase() {
-        // setup
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "sleep")
-        userFollowingPropagation.setUserEntity userEntity
-
-        // exercise
-        userFollowingPropagation.tryToMoveToReportPhase userFollowingEntity.getId()
-
-        // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "sleep"
-
-        // teardown
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
-    }
-
-    @Test
-    void tryToMoveToReportPhasePendingRequestDiscoverPhase() {
-        // setup
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
-        userFollowingPropagation.setUserEntity userEntity
-        PendingRequest pendingRequestEntity =
-            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowingEntity(
-                userEntity, userFollowingEntity
-            )
-        pendingRequestEntity.setPropagationId userFollowingEntity.getId()
-
-        // exercise
-        userFollowingPropagation.tryToMoveToReportPhase pendingRequestEntity.getPropagationId()
-
-        // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "discover"
-
-        // teardown
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
-        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
     }
 
     @AfterMethod

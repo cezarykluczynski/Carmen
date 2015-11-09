@@ -1,86 +1,132 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
-import com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.never
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
 
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
+import org.testng.Assert
+
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
+import org.mockito.Mock
+import org.mockito.InjectMocks
+import org.mockito.MockitoAnnotations
 
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
 class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
-    @Mock
+    @Autowired
+    UserDAOImplFixtures githubUserDAOImplFixtures
+
+    @Autowired
     UserFollowingDAO propagationsUserFollowingDAOImpl
 
-    @Mock
-    UserFollowingPropagation userFollowingPropagation
+    @Autowired
+    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+
+    @Autowired
+    PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
+
+    @Autowired
+    //@InjectMocks
+    UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor
+
+    User userEntity
 
     UserFollowing userFollowingEntity
 
-    @Autowired
-    @InjectMocks
-    UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor
-
-    // No special meaning, just a number to be shared between mocks
-    Long userFollowingEntityId = 1
-
     @BeforeMethod
-    void setUp() {
-        MockitoAnnotations.initMocks this
-        userFollowingEntity = mock UserFollowing.class
-        when userFollowingEntity.getId() thenReturn userFollowingEntityId
+    public void setUp() {
+        //MockitoAnnotations.initMocks this
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
     }
 
     @Test
-    void userFollowingDiscoverToReportPhasePropagationExecutorExistingEntity() {
+    void tryToMoveToReportPhaseNoPendingRequestDiscoverPhase() {
         // setup
-        doNothing().when(userFollowingPropagation).tryToMoveToReportPhase(userFollowingEntityId)
-        when propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase() thenReturn userFollowingEntity
+        userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
+        userFollowingEntity.setUpdated(new Date(0L))
+        propagationsUserFollowingDAOImpl.update userFollowingEntity
 
         // exercise
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
 
+        // assertion
+        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser userEntity
+        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "report"
+
         // teardown
-        verify userFollowingPropagation tryToMoveToReportPhase(userFollowingEntityId)
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
     @Test
-    void userFollowingDiscoverToReportPhasePropagationExecutorNonExistingEntity() {
+    void tryToMoveToReportPhaseNoPendingRequestSleepPhase() {
         // setup
-        doNothing().when(userFollowingPropagation).tryToMoveToReportPhase(userFollowingEntityId)
-        when propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase() thenReturn null
+        userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "sleep")
+        userFollowingEntity.setUpdated(new Date(0L))
+        propagationsUserFollowingDAOImpl.update userFollowingEntity
 
         // exercise
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
 
+        // assertion
+        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "sleep"
+
         // teardown
-        verify(userFollowingPropagation, never()).tryToMoveToReportPhase userFollowingEntityId
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
+    }
+
+    @Test
+    void tryToMoveToReportPhasePendingRequestDiscoverPhase() {
+        // setup
+        userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
+        userFollowingEntity.setUpdated(new Date(0L))
+        propagationsUserFollowingDAOImpl.update userFollowingEntity
+        PendingRequest pendingRequestEntity =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowingEntity(
+                userEntity, userFollowingEntity
+            )
+        pendingRequestEntity.setPropagationId userFollowingEntity.getId()
+
+        // exercise
+        userFollowingDiscoverToReportPhasePropagationExecutor.run()
+
+        // assertion
+        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "discover"
+
+        // teardown
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
     }
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset propagationsUserFollowingDAOImpl
+        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
 }

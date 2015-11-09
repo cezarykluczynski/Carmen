@@ -51,6 +51,7 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
                 .setParameter("followeeId", followeeId)
                 .executeUpdate();
         } catch (ConstraintViolationException e) {
+            // Constraint already exists, so it's OK.
         } finally {
             session.close();
         }

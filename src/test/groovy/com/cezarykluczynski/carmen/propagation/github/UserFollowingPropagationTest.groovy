@@ -148,7 +148,7 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity.setPropagationId userFollowingEntity.getId()
 
         // exercise
-        userFollowingPropagation.tryToMoveToReportPhase pendingRequestEntity
+        userFollowingPropagation.tryToMoveToReportPhase pendingRequestEntity.getPropagationId()
 
         // assertion
         List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)

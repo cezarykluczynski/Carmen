@@ -48,11 +48,6 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
         tryCreateDiscoverPhase(userFollowersPropagations);
     }
 
-    public void tryToMoveToReportPhase(PendingRequest pendingRequest) {
-        Long propagationId = pendingRequest.getPropagationId();
-        tryToMoveToReportPhase(propagationId);
-    }
-
     public void tryToMoveToReportPhase(Long propagationId) {
         Long count = apiqueuePendingRequestDAOImpl.countByPropagationId(propagationId);
 

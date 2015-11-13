@@ -16,6 +16,7 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
+import com.cezarykluczynski.carmen.util.DateTimeConstants
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
@@ -229,6 +230,28 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity1
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity2
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
+    @Test
+    void postponeRequest() {
+        // setup
+        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        PendingRequest pendingRequestEntity =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
+        pendingRequestEntity.setUpdated()
+        apiqueuePendingRequestDAOImpl.update pendingRequestEntity
+
+        // exercise
+        apiqueuePendingRequestDAOImpl.postponeRequest(pendingRequestEntity, DateTimeConstants.MILLISECONDS_IN_MINUTE)
+
+        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
+
+        // assertion
+        Assert.assertEquals pendingRequestEntityFound.getUpdated().getTime(), pendingRequestEntity.getUpdated().getTime()
+
+        // teardown
+        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 

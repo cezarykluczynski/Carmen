@@ -17,7 +17,9 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
+import com.cezarykluczynski.carmen.util.DateTimeConstants;
 
+import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
 
@@ -148,6 +150,17 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         Session session = sessionFactory.openSession();
         PendingRequest pendingRequest = (PendingRequest) session.get(PendingRequest.class, pendingRequestId);
         session.close();
+        return pendingRequest;
+    }
+
+    @Override
+    @Transactional
+    public PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds) {
+        Date updated = pendingRequest.getUpdated();
+        Date updatedDate = new Date();
+        updatedDate.setTime(updated.getTime() + milliseconds.getValue());
+        pendingRequest.setUpdated(updatedDate);
+        update(pendingRequest);
         return pendingRequest;
     }
 

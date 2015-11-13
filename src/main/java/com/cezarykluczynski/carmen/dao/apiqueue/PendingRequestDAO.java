@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.dao.apiqueue;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
+import com.cezarykluczynski.carmen.util.DateTimeConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,5 +42,7 @@ public interface PendingRequestDAO {
     public Long countByPropagationId(Long propagationId);
 
     public PendingRequest findById(Long pendingRequestId);
+
+    public PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds);
 
 }

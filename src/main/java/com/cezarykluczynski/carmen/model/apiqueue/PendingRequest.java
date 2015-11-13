@@ -113,6 +113,10 @@ public class PendingRequest extends CarmenRelationalEntity {
         updated = new Date();
     }
 
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
     public Date getUpdated() {
         return updated;
     }

@@ -13,13 +13,14 @@ public enum DateTimeConstants {
     SECONDS_IN_DAY(86400),
     SECONDS_IN_WEEK(604800),
 
-
     MINUTES_IN_HOUR(60),
     MINUTES_IN_DAY(1440),
     MINUTES_IN_WEEK(10080),
 
     HOURS_IN_DAY(24),
-    HOURS_IN_WEEK(168);
+    HOURS_IN_WEEK(168),
+
+    DAYS_IN_WEEK(7);
 
     private final int value;
 

@@ -19,6 +19,7 @@ import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.util.DateTimeConstants;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.HashMap;
@@ -157,11 +158,28 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
     @Transactional
     public PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds) {
         Date updated = pendingRequest.getUpdated();
-        Date updatedDate = new Date();
-        updatedDate.setTime(updated.getTime() + milliseconds.getValue());
-        pendingRequest.setUpdated(updatedDate);
+        Date updatedPostponed = new Date();
+        updatedPostponed.setTime(updated.getTime() + milliseconds.getValue());
+        pendingRequest.setUpdated(updatedPostponed);
         update(pendingRequest);
         return pendingRequest;
+    }
+
+    @Override
+    @Transactional
+    public boolean userEntityFollowersRequestIsBlocked(User userEntity) {
+        Session session = sessionFactory.openSession();
+
+        boolean blocked = ((BigInteger) session.createSQLQuery(
+            "SELECT COUNT(*) FROM api_queue.pending_requests pr " +
+            "LEFT JOIN github.user_followers uf ON uf.follower_id = pr.github_user_id " +
+            "WHERE uf.followee_id = :userId AND pr.executor = :executor"
+        )
+            .setParameter("userId", userEntity.getId())
+            .setParameter("executor", "UsersGhostPaginator")
+            .uniqueResult()).intValue() > 0;
+        session.close();
+        return blocked;
     }
 
 }

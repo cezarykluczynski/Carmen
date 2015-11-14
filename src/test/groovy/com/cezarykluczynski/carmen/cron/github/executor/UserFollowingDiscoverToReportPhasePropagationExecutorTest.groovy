@@ -47,7 +47,6 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
     PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
 
     @Autowired
-    //@InjectMocks
     UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor
 
     User userEntity
@@ -56,7 +55,6 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
 
     @BeforeMethod
     public void setUp() {
-        //MockitoAnnotations.initMocks this
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
     }
 

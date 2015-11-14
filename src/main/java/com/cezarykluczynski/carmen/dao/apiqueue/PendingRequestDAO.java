@@ -45,4 +45,6 @@ public interface PendingRequestDAO {
 
     public PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds);
 
+    public boolean userEntityFollowersRequestIsBlocked(User userEntity);
+
 }

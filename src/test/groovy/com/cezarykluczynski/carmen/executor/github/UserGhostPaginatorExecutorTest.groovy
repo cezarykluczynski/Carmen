@@ -73,6 +73,8 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
 
     HashMap<String, Object> queryParams
 
+    String executor = "UsersGhostPaginator"
+
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -85,7 +87,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         pendingRequestEntity = new PendingRequest()
-        pendingRequestEntity.setExecutor "UsersGhostPaginator"
+        pendingRequestEntity.setExecutor executor
         pendingRequestEntity.setUser userEntity
         pendingRequestEntity.setPriority 0
 
@@ -234,6 +236,41 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
     }
 
+    @Test
+    void executePendingRequestCanBeBlocked() {
+        // setup
+        User userEntityBlocking = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        Session session = sessionFactory.openSession()
+        session.createSQLQuery('''\
+            INSERT INTO github.user_followers (followee_id, follower_id) VALUES (:userEntityId, :userEntityBlockingId)
+        ''')
+        .setParameter("userEntityId", userEntity.getId())
+        .setParameter("userEntityBlockingId", userEntityBlocking.getId())
+        .executeUpdate()
+        session.close()
+
+        PendingRequest pendingRequestEntityBlocking =
+            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntityBlocking
+        pendingRequestEntityBlocking.setExecutor executor
+        apiqueuePendingRequestDAOImpl.update pendingRequestEntityBlocking
+
+        queryParams.put "page", 1
+        pendingRequestEntity.setQueryParams queryParams
+        pendingRequestEntity.setPathParams pathParams
+        pendingRequestEntity.setUpdated()
+        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        Date updatedBefore = pendingRequestEntity.getUpdated()
+
+        // exercise
+        userGhostPaginatorExecutor.execute pendingRequestEntity
+
+        // assertion
+        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById pendingRequestEntity.getId()
+        Assert.assertTrue updatedBefore.getTime() < pendingRequestEntityFound.getUpdated().getTime()
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntityBlocking
+    }
 
     @AfterMethod
     void tearDown() {
@@ -255,10 +292,6 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         session.close()
 
         return list
-    }
-
-    private PendingRequest findById(Long pendingRequestId) {
-        //
     }
 
     private PaginationAwareArrayList<UserSet> createPaginationAwareArrayListWithUserSets(limit, offset, lastPage) {

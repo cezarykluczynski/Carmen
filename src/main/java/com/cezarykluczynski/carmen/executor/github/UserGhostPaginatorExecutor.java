@@ -12,6 +12,7 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
+import com.cezarykluczynski.carmen.util.DateTimeConstants;
 
 @Component
 public class UserGhostPaginatorExecutor implements Executor {
@@ -23,9 +24,17 @@ public class UserGhostPaginatorExecutor implements Executor {
     GithubClient githubClient;
 
     @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}")
-    private Integer limit;
+    private Integer paginationLimit;
 
     public void execute(PendingRequest pendingRequest) throws IOException {
+        if (isPendingRequestOnFirstPage(pendingRequest) && isPendingRequestBlocked(pendingRequest)) {
+            apiqueuePendingRequestDAOImpl.postponeRequest(pendingRequest, DateTimeConstants.MILLISECONDS_IN_HOUR);
+        } else {
+            doExecutePendingRequest(pendingRequest);
+        }
+    }
+
+    private void doExecutePendingRequest(PendingRequest pendingRequest) throws IOException {
         PaginationAwareArrayList<User> users = getUserListFromPendingRequest(pendingRequest);
 
         if (users.size() > 0) {
@@ -43,15 +52,14 @@ public class UserGhostPaginatorExecutor implements Executor {
         PendingRequest pendingRequest
     ) throws IOException {
         HashMap<String, Object> pathParams = pendingRequest.getPathParams();
-        HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
 
         String login = (String) pathParams.get("login");
         String endpoint = (String) pathParams.get("endpoint");
-        Integer page = (Integer) (queryParams.containsKey("page") ? queryParams.get("page") : 1);
+        Integer page = getPageFromPendingRequest(pendingRequest);
 
         return endpoint.equals("followers_url") ?
-            githubClient.getFollowers(login, limit, page) :
-            githubClient.getFollowing(login, limit, page);
+            githubClient.getFollowers(login, paginationLimit, page) :
+            githubClient.getFollowing(login, paginationLimit, page);
     }
 
     private void createUserGhostPendingRequests(
@@ -63,7 +71,7 @@ public class UserGhostPaginatorExecutor implements Executor {
         HashMap<String, Object> params = new HashMap<String, Object>();
 
         params.put("link_with", pendingRequest.getUser().getId());
-        params.put("link_as", linkAsRole(pendingRequest));
+        params.put("link_as", convertPendingRequestToRole(pendingRequest));
 
         for (User user : users) {
             pathParams.put("login", user.getLogin());
@@ -86,7 +94,21 @@ public class UserGhostPaginatorExecutor implements Executor {
         apiqueuePendingRequestDAOImpl.update(pendingRequest);
     }
 
-    private String linkAsRole(PendingRequest pendingRequest) {
+    private Integer getPageFromPendingRequest(PendingRequest pendingRequest) {
+        HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
+        return (Integer)(queryParams.containsKey("page") ? queryParams.get("page") : 1);
+    }
+
+    private boolean isPendingRequestOnFirstPage(PendingRequest pendingRequest) {
+        return getPageFromPendingRequest(pendingRequest).equals(1);
+    }
+
+    private boolean isPendingRequestBlocked(PendingRequest pendingRequest) {
+        com.cezarykluczynski.carmen.model.github.User userEntity = pendingRequest.getUser();
+        return apiqueuePendingRequestDAOImpl.userEntityFollowersRequestIsBlocked(userEntity);
+    }
+
+    private String convertPendingRequestToRole(PendingRequest pendingRequest) {
         String endpoint = (String) pendingRequest.getPathParams().get("endpoint");
         return endpoint.equals("followers_url") ? "follower" : "followee";
     }

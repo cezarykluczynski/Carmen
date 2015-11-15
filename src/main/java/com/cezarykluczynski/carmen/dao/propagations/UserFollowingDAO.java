@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserFollowingDAO {
 
-    public List<UserFollowing> findByUser(User userEntity);
+    public UserFollowing findByUser(User userEntity);
 
     public UserFollowing findOldestPropagationInDiscoverPhase();
 

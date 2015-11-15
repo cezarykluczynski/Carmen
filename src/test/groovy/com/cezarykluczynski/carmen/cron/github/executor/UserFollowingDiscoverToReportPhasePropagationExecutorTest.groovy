@@ -70,8 +70,8 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser userEntity
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "report"
+        UserFollowing userFollowingEntityFound = propagationsUserFollowingDAOImpl.findByUser userEntity
+        Assert.assertEquals userFollowingEntityFound.getPhase(), "report"
 
         // teardown
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
@@ -89,8 +89,8 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "sleep"
+        UserFollowing userFollowingEntityFound = propagationsUserFollowingDAOImpl.findByUser userEntity
+        Assert.assertEquals userFollowingEntityFound.getPhase(), "sleep"
 
         // teardown
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
@@ -113,8 +113,8 @@ class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowingDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "discover"
+        UserFollowing userFollowingEntityFound = propagationsUserFollowingDAOImpl.findByUser userEntity
+        Assert.assertEquals userFollowingEntityFound.getPhase(), "discover"
 
         // teardown
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity

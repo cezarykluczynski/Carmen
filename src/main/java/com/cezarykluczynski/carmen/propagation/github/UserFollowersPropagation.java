@@ -6,12 +6,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.HashMap;
 
-import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
+import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 
 @Component
@@ -42,23 +43,18 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
             return;
         }
 
-        List<com.cezarykluczynski.carmen.model.propagations.UserFollowers> userFollowersPropagations =
-            propagationsUserFollowersDAOImpl.findByUser(userEntity);
-
-        tryCreateDiscoverPhase(userFollowersPropagations);
+        tryCreateDiscoverPhase(propagationsUserFollowersDAOImpl.findByUser(userEntity));
     }
 
-    private void tryCreateDiscoverPhase(
-        List<com.cezarykluczynski.carmen.model.propagations.UserFollowers> userFollowersPropagations
-    ) {
-        if (userFollowersPropagations.isEmpty()) {
+    private void tryCreateDiscoverPhase(UserFollowers propagationUserFollowersEntity) {
+        if (propagationUserFollowersEntity == null) {
             createDiscoverPhase(userEntity);
         }
     }
 
     private void createDiscoverPhase(User userEntity) {
-        Propagation propagationEntity = (Propagation) propagationsUserFollowersDAOImpl.create(userEntity, "discover");
-        pendingRequestFactory.createPendingRequestForUserFollowersPropagation(propagationEntity);
+        Propagation propagationUserFollowersEntity = (Propagation) propagationsUserFollowersDAOImpl.create(userEntity, "discover");
+        pendingRequestFactory.createPendingRequestForUserFollowersPropagation(propagationUserFollowersEntity);
     }
 
 }

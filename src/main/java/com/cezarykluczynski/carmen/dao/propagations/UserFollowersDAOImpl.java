@@ -30,13 +30,13 @@ public class UserFollowersDAOImpl extends CarmenPropagationsDAOImpl implements U
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserFollowers> findByUser(User userEntity) {
+    public UserFollowers findByUser(User userEntity) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(UserFollowers.class);
         criteria.add(Expression.eq("user", userEntity));
         List<UserFollowers> list = criteria.list();
         session.close();
-        return list;
+        return list.size() > 0 ? list.get(0) : null;
     }
 
     @Transactional(readOnly = true)

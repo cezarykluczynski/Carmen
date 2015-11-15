@@ -34,11 +34,9 @@ class UserFollowersDAOImplFixtures {
     }
 
     public void deleteUserFollowersEntityByUserEntity(User userEntity) {
-        List<UserFollowers> userFollowersEntitiesList = propagationsUserFollowersDAOImpl.findByUser userEntity
-        Iterator<UserFollowers> userFollowersEntitiesListIterator = userFollowersEntitiesList.iterator()
-
-        while (userFollowersEntitiesListIterator.hasNext()) {
-            deleteUserFollowersEntity userFollowersEntitiesListIterator.next()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
+        if (userFollowersEntity != null) {
+            deleteUserFollowersEntity userFollowersEntity
         }
     }
 

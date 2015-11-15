@@ -34,11 +34,9 @@ class UserFollowingDAOImplFixtures {
     }
 
     public void deleteUserFollowingEntityByUserEntity(User userEntity) {
-        List<UserFollowing> userFollowingEntitiesList = propagationsUserFollowingDAOImpl.findByUser userEntity
-        Iterator<UserFollowing> userFollowingEntitiesListIterator = userFollowingEntitiesList.iterator()
-
-        while (userFollowingEntitiesListIterator.hasNext()) {
-            deleteUserFollowingEntity userFollowingEntitiesListIterator.next()
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.findByUser userEntity
+        if (userFollowingEntity != null) {
+            deleteUserFollowingEntity userFollowingEntity
         }
     }
 

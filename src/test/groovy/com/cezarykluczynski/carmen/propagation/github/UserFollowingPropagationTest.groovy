@@ -53,7 +53,7 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowingPropagation.propagate()
 
         // assertion
-        Assert.assertEquals propagationsUserFollowingDAOImpl.findByUser(userEntity).size(), 0
+        Assert.assertNull propagationsUserFollowingDAOImpl.findByUser(userEntity)
     }
 
     @Test
@@ -69,10 +69,10 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowingPropagation.propagate()
 
         // assertion: another propagation should not be created
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.size(), 1
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getId(), userFollowingEntity.getId()
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), userFollowingEntity.getPhase()
+        UserFollowing propagationsUserFollowingEntity = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        Assert.assertTrue propagationsUserFollowingEntity instanceof UserFollowing
+        Assert.assertEquals propagationsUserFollowingEntity.getId(), userFollowingEntity.getId()
+        Assert.assertEquals propagationsUserFollowingEntity.getPhase(), userFollowingEntity.getPhase()
 
         // teardown
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
@@ -88,9 +88,9 @@ class UserFollowingPropagationTest extends AbstractTestNGSpringContextTests {
         userFollowingPropagation.propagate()
 
         // assertion
-        List<UserFollowing> propagationsUserFollowingDAOImplList = propagationsUserFollowingDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowingDAOImplList.size(), 1
-        Assert.assertEquals propagationsUserFollowingDAOImplList.get(0).getPhase(), "discover"
+        UserFollowing propagationsUserFollowingEntity = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        Assert.assertTrue propagationsUserFollowingEntity instanceof UserFollowing
+        Assert.assertEquals propagationsUserFollowingEntity.getPhase(), "discover"
     }
 
     @AfterMethod

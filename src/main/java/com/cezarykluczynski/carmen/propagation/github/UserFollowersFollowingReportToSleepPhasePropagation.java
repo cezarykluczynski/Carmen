@@ -78,8 +78,8 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements com.
     }
 
     private void moveFollowersFollowingPropagationToSleepPhase() {
-        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findByUser(userEntity).get(0);
-        UserFollowing userFollowing = propagationsUserFollowingDAOImpl.findByUser(userEntity).get(0);
+        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findByUser(userEntity);
+        UserFollowing userFollowing = propagationsUserFollowingDAOImpl.findByUser(userEntity);
 
         userFollowers.setPhase("sleep");
         userFollowing.setPhase("sleep");

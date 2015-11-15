@@ -72,8 +72,8 @@ class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDAOImpl.findByUser userEntity
-        Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "report"
+        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
+        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "report"
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
@@ -91,8 +91,8 @@ class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "sleep"
+        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity)
+        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "sleep"
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
@@ -115,8 +115,8 @@ class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends Abstract
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
         // assertion
-        List<UserFollowers> propagationsUserFollowersDAOImplList = propagationsUserFollowersDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowersDAOImplList.get(0).getPhase(), "discover"
+        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity)
+        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "discover"
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity

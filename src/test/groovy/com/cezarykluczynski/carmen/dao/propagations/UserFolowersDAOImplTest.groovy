@@ -50,10 +50,10 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
             .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
 
         // exercise
-        List<UserFollowers> list = propagationsUserFollowersDAOImpl.findByUser userEntity
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
 
         // assertion
-        Assert.assertEquals list.size(), 1
+        Assert.assertTrue userFollowersFoundEntity instanceof UserFollowers
 
         // teardown
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
@@ -108,7 +108,7 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, "sleep")
 
         // assertion
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity).get 0
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
         Assert.assertEquals userFollowersFoundEntity.getId(), userFollowersEntity.getId()
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "sleep"
 
@@ -128,7 +128,7 @@ class UserFollowersDAOImplTest extends AbstractTestNGSpringContextTests {
         propagationsUserFollowersDAOImpl.update userFollowersEntity
 
         // assertion
-        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity).get 0
+        UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
         Assert.assertEquals userFollowersFoundEntity.getPhase(), "discover"
 
         // teardown

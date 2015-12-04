@@ -40,13 +40,9 @@ public class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecuto
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        Object noTasks = System.getProperty("noScheduledTasks");
-
-        if (noTasks == null) {
-            taskExecutor.execute(new ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutorRunnable(
-                userFollowersFollowingReportToSleepPhasePropagationExecutor
-            ));
-        }
+        taskExecutor.execute(new ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutorRunnable(
+            userFollowersFollowingReportToSleepPhasePropagationExecutor
+        ));
     }
 
 }

@@ -38,13 +38,9 @@ public class ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor {
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        Object noTasks = System.getProperty("noScheduledTasks");
-
-        if (noTasks == null) {
-            taskExecutor.execute(new ScheduledUserFollowersDiscoverToReportPhasePropagationExecutorRunnable(
-                userFollowersDiscoverToReportPhasePropagationExecutor
-            ));
-        }
+        taskExecutor.execute(new ScheduledUserFollowersDiscoverToReportPhasePropagationExecutorRunnable(
+            userFollowersDiscoverToReportPhasePropagationExecutor
+        ));
     }
 
 }

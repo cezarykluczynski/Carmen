@@ -7,14 +7,19 @@ class ExecutorTest {
 
     @Test
     void gitIsAvailableToJava() {
+        // setup, exercise
         Result result = Executor.execute(new GitCommand("help"))
 
+        // assertion
         Assert.assertTrue result.isSuccessFull()
     }
 
     @Test
     void gitVersionIsSufficient() {
+        // setup, exercise
         Result result = Executor.execute(new GitCommand("--version"))
+
+        // assertion
         String output = result.getOutput()
         Assert.assertTrue result.isSuccessFull()
         Assert.assertTrue output.contains("git version")

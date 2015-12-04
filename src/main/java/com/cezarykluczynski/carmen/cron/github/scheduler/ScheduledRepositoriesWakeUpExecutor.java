@@ -33,11 +33,7 @@ public class ScheduledRepositoriesWakeUpExecutor {
 
     @Scheduled(fixedDelay = 15000)
     public void executePropagation() {
-        Object noTasks = System.getProperty("noScheduledTasks");
-
-        if (noTasks == null) {
-            taskExecutor.execute(new ScheduledRepositoriesWakeUpExecutorRunnable(repositoriesWakeUpExecutor));
-        }
+        taskExecutor.execute(new ScheduledRepositoriesWakeUpExecutorRunnable(repositoriesWakeUpExecutor));
     }
 
 }

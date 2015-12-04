@@ -14,10 +14,9 @@
 
     <task:annotation-driven />
 
-    <bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+    <bean id="taskExecutor" class="com.cezarykluczynski.carmen.cron.github.GitHubSimpleAsyncTaskExecutor">
         <property name="concurrencyLimit" value="1" />
     </bean>
-
     <!-- Cron executors -->
     <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor">
         <constructor-arg ref="taskExecutor" />
@@ -34,14 +33,12 @@
     <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
         <constructor-arg ref="taskExecutor" />
     </bean>
-
     <!-- Cron jobs -->
     <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />
     <bean id="repositoriesWakeUpExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor" />
     <bean id="userFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowingDiscoverToReportPhasePropagationExecutor" />
     <bean id="userFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor" />
-
     <bean id="repositoriesExecutor" class="com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor" />
     <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor" />
     <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostExecutor" />

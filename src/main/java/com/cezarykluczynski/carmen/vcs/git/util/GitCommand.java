@@ -1,4 +1,6 @@
-package com.cezarykluczynski.carmen.git.utils.command;
+package com.cezarykluczynski.carmen.vcs.git.util;
+
+import com.cezarykluczynski.carmen.util.exec.Command;
 
 public class GitCommand extends Command {
 

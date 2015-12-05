@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.git.utils.command;
+package com.cezarykluczynski.carmen.util.exec;
 
 public class Command {
 

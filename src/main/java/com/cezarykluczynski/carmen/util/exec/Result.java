@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.git.utils.command;
+package com.cezarykluczynski.carmen.util.exec;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;

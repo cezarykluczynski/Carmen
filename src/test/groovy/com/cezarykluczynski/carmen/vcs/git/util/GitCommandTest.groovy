@@ -1,9 +1,12 @@
-package com.cezarykluczynski.carmen.git.utils.command
+package com.cezarykluczynski.carmen.vcs.git.util
 
+import com.cezarykluczynski.carmen.util.exec.Executor
+import com.cezarykluczynski.carmen.vcs.git.util.GitCommand
+import com.cezarykluczynski.carmen.util.exec.Result
 import org.testng.annotations.Test
 import org.testng.Assert
 
-class ExecutorTest {
+class GitCommandTest {
 
     @Test
     void gitIsAvailableToJava() {

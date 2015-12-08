@@ -2,7 +2,7 @@ package com.cezarykluczynski.carmen.util.exec;
 
 public class Command {
 
-    private final String commandPrefix = "cmd /c";
+    private final String commandPrefix = "cmd /c ";
 
     private String command;
 

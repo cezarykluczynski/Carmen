@@ -17,7 +17,8 @@ public class V15__Create_github_repositories_clones implements JdbcMigration {
             "    location_directory varchar(8)," +
             "    location_subdirectory varchar(255)," +
             "    server_id varchar(16)," +
-            "    CONSTRAINT github_repositories_clones_pkey PRIMARY KEY(id)" +
+            "    CONSTRAINT github_repositories_clones_pkey PRIMARY KEY(id)," +
+            "    CONSTRAINT github_repositories_clones_github_repository_id_unique UNIQUE (github_repository_id)" +
             ");"
         );
 

@@ -1,7 +1,6 @@
 package com.cezarykluczynski.carmen.model.github;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
-import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
 
 import javax.persistence.*;
@@ -27,7 +26,7 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
 
     @OneToOne(optional=true)
     @JoinColumn(name="parent_id", nullable=true)
-    private Repository repository;
+    private Repository parent;
 
     @Column(name = "github_id")
     private Long githubId;
@@ -76,6 +75,14 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Repository getParent() {
+        return parent;
+    }
+
+    public void setParent(Repository parent) {
+        this.parent = parent;
     }
 
     public Long getGithubId() {

@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.dao.github;
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.User;
 
+import com.jcabi.github.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,16 @@ public class RepositoriesDAOImpl implements RepositoriesDAO {
 
         repositoriesDAOImplListRefresher.setSessionFactory(sessionFactory);
         repositoriesDAOImplListRefresher.refresh();
+    }
+
+    @Override
+    @Transactional
+    public Repository create(Repository repositoryEntity) {
+        Session session = sessionFactory.openSession();
+        session.save(repositoryEntity);
+        session.flush();
+        session.close();
+        return repositoryEntity;
     }
 
     @Override

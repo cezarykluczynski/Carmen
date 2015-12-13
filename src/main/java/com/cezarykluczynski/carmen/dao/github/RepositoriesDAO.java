@@ -11,6 +11,8 @@ public interface RepositoriesDAO {
 
     public void refresh(User userEntity, List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesList);
 
+    public Repository findNotForkedRepositoryWithoutClone();
+
     public Repository create(Repository repositoryEntity);
 
     public void delete(Repository repositoryEntity);

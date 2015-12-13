@@ -13,11 +13,15 @@ public class Directory {
     }
 
     public static Result delete(String directory) {
-        return Executor.execute(new RmDirCommand(sanitizeForOs(directory)));
+        return Executor.execute(new RmDirCommand(sanitizePathForOs(directory)));
     }
 
-    public static String sanitizeForOs(String path) {
-        return path.replaceAll("/", "\\" + File.separator);
+    public static String sanitizePathForOs(String path) {
+        return path.replace("/", "\\" + File.separator);
+    }
+
+    public static String convertPathToUnixStyleSlashes(String path) {
+        return path.replace("\\", "/");
     }
 
     protected static String joinRelativeDirectories(List<String> pathElements) {
@@ -25,13 +29,13 @@ public class Directory {
         Iterator<String> pathElementsIterator = pathElements.iterator();
 
         while (pathElementsIterator.hasNext()) {
-            dirNameStringBuilder.append(sanitizeForOs(pathElementsIterator.next()));
+            dirNameStringBuilder.append(pathElementsIterator.next());
             if (pathElementsIterator.hasNext()) {
                 dirNameStringBuilder.append(File.separator);
             }
         }
 
-        return dirNameStringBuilder.toString();
+        return sanitizePathForOs(dirNameStringBuilder.toString());
     }
 
 }

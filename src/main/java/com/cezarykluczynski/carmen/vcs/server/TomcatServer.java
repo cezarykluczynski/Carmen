@@ -5,17 +5,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TomcatServer extends AbstractServer {
+public class TomcatServer extends AbstractServer implements Server {
 
-    @Value("${githubCloneTomcatServer.serverId}")
     private String serverId;
 
-    @Value("${githubCloneTomcatServer.cloneRoot}")
     private String cloneRoot;
 
-    public TomcatServer() {
+    public TomcatServer(
+        @Value("${githubCloneTomcatServer.serverId}") String serverId,
+        @Value("${githubCloneTomcatServer.cloneRoot}") String cloneRoot
+    ) {
         Preconditions.checkNotNull(serverId);
         Preconditions.checkNotNull(cloneRoot);
+        this.serverId = serverId;
+        this.cloneRoot = cloneRoot;
     }
 
     public String getServerId() {

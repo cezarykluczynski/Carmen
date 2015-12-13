@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Result {
 
-    private boolean successfull;
+    private boolean successful;
 
     private Command command;
 
@@ -37,20 +37,20 @@ public class Result {
     }
 
     protected void doExecuteCommandLine(CommandLine commandLine) {
-        int exitCode = 0;
+        int exitCode;
         try {
             exitCode = executor.execute(commandLine);
-            setSuccessfull(exitCode == 0);
+            setSuccessful(exitCode == 0);
             setOutput(outputStream.toString());
         } catch(IOException e) {
-            setSuccessfull(false);
+            setSuccessful(false);
             setErrorMessage(e.getMessage());
             setErrorReason(ErrorReason.RUNTIME);
         }
     }
 
     public boolean isSuccessFull() {
-        return successfull;
+        return successful;
     }
 
     public ErrorReason getErrorReason() {
@@ -65,8 +65,8 @@ public class Result {
         return output;
     }
 
-    protected void setSuccessfull(boolean successfull) {
-        this.successfull = successfull;
+    protected void setSuccessful(boolean successful) {
+        this.successful = successful;
     }
 
     protected void setErrorReason(ErrorReason errorReason) {

@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
+import com.cezarykluczynski.carmen.vcs.server.ServerTest
 import com.cezarykluczynski.carmen.vcs.server.TomcatServer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -33,22 +34,22 @@ class RepositoriesClonesDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Test
     void entityCanBeCreated() {
-        Server tomcatServer = mock TomcatServer.class
-        when tomcatServer.getServerId() thenReturn "tomcat-test"
-        when tomcatServer.getCloneRoot() thenReturn "target/test-storage"
+        Server server = mock Server.class
+        when server.getServerId() thenReturn ServerTest.SERVER_ID
+        when server.getCloneRoot() thenReturn ServerTest.CLONE_ROOT
 
         Repository repositoryEntity = new Repository()
         repositoryEntity.setFullName "username/repository"
         githubRepositoriesDAO.create repositoryEntity
 
-        RepositoryClone repositoryCloneEntity = repositoriesClonesDAO.createStubEntity(tomcatServer, repositoryEntity)
+        RepositoryClone repositoryCloneEntity = repositoriesClonesDAO.createStubEntity(server, repositoryEntity)
 
         Assert.assertTrue repositoryCloneEntity instanceof RepositoryClone
         Assert.assertNotNull repositoryCloneEntity.getId()
 
         // teardown
         githubRepositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
-        Directory.delete tomcatServer.getCloneRoot()
+        Directory.delete server.getCloneRoot()
     }
 
 }

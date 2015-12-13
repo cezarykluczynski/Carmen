@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.dao.propagations
 
-import org.hibernate.Session
 import org.hibernate.SessionFactory
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,16 +7,12 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures
 import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 
 import org.testng.annotations.Test
 import org.testng.Assert
-
-import org.joda.time.DateTimeConstants
 
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
@@ -47,7 +42,7 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repositories repositoriesEntity = propagationsRepositoriesDAOImplFixtures
-            .createRepositoriesEntityUsingUserEntityAndPhase(userEntity)
+            .createRepositoriesEntityUsingUserEntity(userEntity)
 
         // exercise
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser userEntity

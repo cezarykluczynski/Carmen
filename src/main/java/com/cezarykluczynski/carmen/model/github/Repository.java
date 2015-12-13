@@ -28,6 +28,10 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
     @JoinColumn(name="parent_id", nullable=true)
     private Repository parent;
 
+    @OneToOne(optional=true, mappedBy = "repository")
+    @JoinColumn
+    private RepositoryClone repositoryClone;
+
     @Column(name = "github_id")
     private Long githubId;
 

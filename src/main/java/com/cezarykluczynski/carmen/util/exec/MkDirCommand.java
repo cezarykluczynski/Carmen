@@ -1,11 +1,12 @@
 package com.cezarykluczynski.carmen.util.exec;
 
 import com.cezarykluczynski.carmen.util.OS;
+import com.cezarykluczynski.carmen.util.filesystem.Directory;
 
 public class MkDirCommand extends Command {
 
     public MkDirCommand(String command) {
-        super(wrapCommand(command));
+        super(wrapCommand(Directory.sanitizePathForOs(command)));
     }
 
     protected static String wrapCommand(String command) {

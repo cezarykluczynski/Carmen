@@ -33,7 +33,7 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         String cloneDirectory = buildCloneDirectory(repositoryCloneEntity);
         Result cloneResult = clone(repositoryEntity, cloneDirectory);
 
-        if (cloneResult.isSuccessFull()) {
+        if (cloneResult.isSuccessFull() && GitRemote.renameOrigin(cloneDirectory, repositoryEntity.getFullName()).isSuccessFull()) {
             repositoriesClonesDAO.setStatusToCloned(repositoryCloneEntity);
         } else {
             repositoriesClonesDAO.truncateEntity(server, repositoryCloneEntity);

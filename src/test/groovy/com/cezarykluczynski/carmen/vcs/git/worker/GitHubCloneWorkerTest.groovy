@@ -10,6 +10,7 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.exec.Command
 import com.cezarykluczynski.carmen.util.exec.Executor
+import com.cezarykluczynski.carmen.util.exec.Result
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
 import com.cezarykluczynski.carmen.vcs.server.ServerTest
@@ -86,9 +87,15 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
         Assert.assertTrue repositoryCloneEntityResult.getCloned().after(now)
 
-        Command command = new Command("cd ${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
-            "${repositoryCloneEntityResult.getLocationSubdirectory()}")
-        Assert.assertTrue Executor.execute(command).isSuccessFull()
+        String cdCommandBody = "cd ${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
+        "${repositoryCloneEntityResult.getLocationSubdirectory()} "
+
+        Command gitStatusCommand = new Command(cdCommandBody + "&& git status")
+        Assert.assertTrue Executor.execute(gitStatusCommand).isSuccessFull()
+        Command gitRemoteCommand = new Command(cdCommandBody + "&& git remote")
+        Result gitRemoteResult = Executor.execute(gitRemoteCommand)
+        Assert.assertTrue gitRemoteResult.isSuccessFull()
+        Assert.assertTrue gitRemoteResult.getOutput().contains(repositoryEntity.getFullName())
     }
 
     @Test

@@ -7,19 +7,20 @@ import java.util.List;
 
 public interface RepositoriesDAO {
 
-    public Repositories findByUser(User userEntity);
+    Repositories findByUser(User userEntity);
 
-    public Repositories findOldestPropagationInSleepPhase();
+    Repositories findOldestPropagationInSleepPhase();
 
-    public Repositories create(User userEntity);
+    Repositories create(User userEntity);
 
-    public void update(Repositories repositories);
+    void update(Repositories repositories);
 
-    public void delete(Repositories repositories);
+    void delete(Repositories repositories);
 
-    public Repositories findById(Long id);
+    Repositories findById(Long id);
 
-    public void moveToRefreshPhase(Repositories repositoriesEntity);
+    void moveToRefreshPhase(Repositories repositoriesEntity);
 
-    public void moveToSleepPhaseUsingUserEntity(User userEntity);
+    void moveToSleepPhaseUsingUserEntity(User userEntity);
+
 }

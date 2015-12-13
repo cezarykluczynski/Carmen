@@ -17,4 +17,5 @@ public interface RepositoriesClonesDAO {
     RepositoryClone create(RepositoryClone repositoryCloneEntity);
 
     RepositoryClone update(RepositoryClone repositoryCloneEntity);
+
 }

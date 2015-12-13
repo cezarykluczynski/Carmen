@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface RepositoriesDAO {
 
-    public List<Repository> findByUser(User userEntity);
+    List<Repository> findByUser(User userEntity);
 
-    public void refresh(User userEntity, List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesList);
+    void refresh(User userEntity, List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesList);
 
-    public Repository findNotForkedRepositoryWithoutClone();
+    Repository findNotForkedRepositoryWithoutClone();
 
-    public Repository create(Repository repositoryEntity);
+    Repository create(Repository repositoryEntity);
 
-    public void delete(Repository repositoryEntity);
+    void delete(Repository repositoryEntity);
 
 }

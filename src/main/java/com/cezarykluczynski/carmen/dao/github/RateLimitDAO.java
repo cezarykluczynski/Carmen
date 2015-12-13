@@ -4,16 +4,16 @@ import com.cezarykluczynski.carmen.model.github.RateLimit;
 
 public interface RateLimitDAO {
 
-    public RateLimit create(com.cezarykluczynski.carmen.set.github.RateLimit rateLimit);
+    RateLimit create(com.cezarykluczynski.carmen.set.github.RateLimit rateLimit);
 
-    public RateLimit getCoreLimit();
+    RateLimit getCoreLimit();
 
-    public RateLimit getSearchLimit();
+    RateLimit getSearchLimit();
 
-    public void decrementRateLimitRemainingCounter();
+    void decrementRateLimitRemainingCounter();
 
-    public void deleteOldLimits(String resource);
+    void deleteOldLimits(String resource);
 
-    public void delete(RateLimit rateLimitEntity);
+    void delete(RateLimit rateLimitEntity);
 
 }

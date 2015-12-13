@@ -10,16 +10,16 @@ import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 public interface GithubClientInterface {
 
-    public RateLimit getCoreLimit() throws IOException;
+    RateLimit getCoreLimit() throws IOException;
 
-    public RateLimit getSearchLimit() throws IOException;
+    RateLimit getSearchLimit() throws IOException;
 
-    public User getUser(String name) throws IOException;
+    User getUser(String name) throws IOException;
 
-    public List<Repository> getRepositories(String login) throws IOException;
+    List<Repository> getRepositories(String login) throws IOException;
 
-    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException;
+    PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException;
 
-    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException;
+    PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException;
 
 }

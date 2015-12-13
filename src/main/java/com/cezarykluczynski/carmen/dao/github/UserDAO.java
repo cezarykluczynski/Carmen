@@ -6,36 +6,36 @@ import java.io.IOException;
 
 public interface UserDAO {
 
-    public User create(com.cezarykluczynski.carmen.set.github.User user);
+    User create(com.cezarykluczynski.carmen.set.github.User user);
 
-    public User create(User userEntity);
+    User create(User userEntity);
 
-    public User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet);
+    User update(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet);
 
-    public User update(User userEntity);
+    User update(User userEntity);
 
-    public void delete(User userEntity);
+    void delete(User userEntity);
 
-    public void linkFollowerWithFollowee(User follower, User followee);
+    void linkFollowerWithFollowee(User follower, User followee);
 
-    public User findByLogin(String login);
+    User findByLogin(String login);
 
-    public User createOrUpdateRequestedEntity(String username) throws IOException;
+    User createOrUpdateRequestedEntity(String username) throws IOException;
 
-    public User createOrUpdateGhostEntity(String username) throws IOException;
+    User createOrUpdateGhostEntity(String username) throws IOException;
 
-    public User findById(Integer userId);
+    User findById(Integer userId);
 
-    public User findById(Long userId);
+    User findById(Long userId);
 
-    public Object countFound();
+    Object countFound();
 
-    public User findUserInReportFollowersFolloweesPhase() throws IOException;
+    User findUserInReportFollowersFolloweesPhase() throws IOException;
 
-    public Integer countFollowers(User user);
+    Integer countFollowers(User user);
 
-    public Integer countFollowees(User user);
+    Integer countFollowees(User user);
 
-    public Integer countFollowersFollowing(User user);
+    Integer countFollowersFollowing(User user);
 
 }

@@ -13,6 +13,6 @@ public interface BasicProfileService {
 
     @GET
     @Path("/{login}/basicProfile")
-    public Response get(@PathParam("login") String login);
+    Response get(@PathParam("login") String login);
 
 }

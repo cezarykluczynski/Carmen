@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface PendingRequestDAO {
 
-    public List<PendingRequest> findByUser(User userEntity);
+    List<PendingRequest> findByUser(User userEntity);
 
-    public PendingRequest create(
+    PendingRequest create(
         String executor,
         User userEntity,
         HashMap<String, Object> pathParams,
@@ -22,7 +22,7 @@ public interface PendingRequestDAO {
         Integer priotity
     );
 
-    public PendingRequest create(
+    PendingRequest create(
         String executor,
         User userEntity,
         HashMap<String, Object> pathParams,
@@ -31,20 +31,20 @@ public interface PendingRequestDAO {
         Integer priotity
     );
 
-    public PendingRequest create(PendingRequest pendingRequest);
+    PendingRequest create(PendingRequest pendingRequest);
 
-    public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException;
+    PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException;
 
-    public void update(PendingRequest pendingRequest);
+    void update(PendingRequest pendingRequest);
 
-    public void delete(PendingRequest pendingRequest);
+    void delete(PendingRequest pendingRequest);
 
-    public Long countByPropagationId(Long propagationId);
+    Long countByPropagationId(Long propagationId);
 
-    public PendingRequest findById(Long pendingRequestId);
+    PendingRequest findById(Long pendingRequestId);
 
-    public PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds);
+    PendingRequest postponeRequest(PendingRequest pendingRequest, DateTimeConstants milliseconds);
 
-    public boolean userEntityFollowersRequestIsBlocked(User userEntity);
+    boolean userEntityFollowersRequestIsBlocked(User userEntity);
 
 }

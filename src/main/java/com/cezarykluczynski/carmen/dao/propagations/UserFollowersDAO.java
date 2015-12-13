@@ -7,16 +7,16 @@ import java.util.List;
 
 public interface UserFollowersDAO {
 
-    public UserFollowers findByUser(User userEntity);
+    UserFollowers findByUser(User userEntity);
 
-    public UserFollowers findOldestPropagationInDiscoverPhase();
+    UserFollowers findOldestPropagationInDiscoverPhase();
 
-    public UserFollowers create(User userEntity, String phase);
+    UserFollowers create(User userEntity, String phase);
 
-    public void update(UserFollowers userFollowers);
+    void update(UserFollowers userFollowers);
 
-    public void delete(UserFollowers userFollowers);
+    void delete(UserFollowers userFollowers);
 
-    public UserFollowers findById(Long id);
+    UserFollowers findById(Long id);
 
 }

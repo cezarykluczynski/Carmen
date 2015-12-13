@@ -6,6 +6,6 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 
 public interface Executor {
 
-    public void execute(PendingRequest pendingRequest) throws IOException;
+    void execute(PendingRequest pendingRequest) throws IOException;
 
 }

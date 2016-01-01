@@ -18,6 +18,7 @@ before_install:
   - gpg --keyserver pgp.mit.edu --recv-keys 0353B12C && gpg --export --armor 0353B12C | sudo apt-key add -
   - sudo apt-get update
   - sudo apt-get --assume-yes install cassandra
+  - sudo service cassandra start
   - sudo service cassandra status
   - nodetool enablethrift
   - nvm install 0.12

@@ -12,6 +12,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get --assume-yes install git=1:2.6.4-0ppa1~ubuntu14.04.1
   - git --version
+  - sudo service cassandra status
+  - nodetool enablethrift
   - nvm install 0.12
   - nvm use 0.12
   - psql -c 'create database carmen;' -U postgres

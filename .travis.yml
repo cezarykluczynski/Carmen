@@ -9,6 +9,7 @@ services:
   - cassandra
 before_install:
   - echo | sudo add-apt-repository ppa:git-core/ppa
+  - sudo apt-get update
   - sudo apt-get install git=1:2.5.0-1ubuntu0.1
   - git --version
   - nvm install 0.12

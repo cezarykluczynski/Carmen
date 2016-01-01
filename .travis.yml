@@ -6,6 +6,7 @@ addons:
 services:
   - cassandra
 before_install:
+  - git --version
   - nvm install 0.12
   - nvm use 0.12
   - psql -c 'create database carmen;' -U postgres

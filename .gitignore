@@ -11,3 +11,4 @@ src/main/webapp/resources/css/*
 node_modules/
 .env
 src/main/resources/config.properties
+Gemfile.lock

@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require_relative '../app/lang_stats/detector'
+require_relative '../app/lang_stats/supported_languages'
+
+if ARGV.length == 1 and ARGV[0] == 'supported_languages'
+  supported_languges = LangStats::SupportedLanguages.new
+  print supported_languges.get_supported_languages.to_json
+  exit
+end
+
+if ARGV.length != 3 or not ['describe_repository', 'describe_commit'].include?(ARGV[0])
+  print "Usage: lang_stats describe_repository relative_directory commit_hash\n"
+  print "       lang_stats describe_commit relative_directory commit_hash\n"
+  print "       lang_stats supported_languages\n"
+  exit -1
+end
+
+detector = LangStats::Detector.new
+print detector.send(ARGV[0].to_sym, ARGV[1], ARGV[2]).to_json

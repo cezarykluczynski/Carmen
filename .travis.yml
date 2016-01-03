@@ -10,6 +10,8 @@ before_install:
   - nvm use 0.12
   - psql -c 'create database carmen;' -U postgres
   - cp src/main/resources/travis/config.properties src/main/resources/config.properties
+  - git fetch --unshallow
+  - bundle install
   - mvn compile
 install:
   - mvn flyway:migrate
@@ -18,6 +20,7 @@ install:
   - npm install
   - gulp
 script:
+  - rake spec
   - mvn cobertura:cobertura-integration-test -Dcobertura.report.format=xml
 after_success:
   - bash <(curl -s https://codecov.io/bash)

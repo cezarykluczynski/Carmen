@@ -6,10 +6,10 @@ require_relative 'lang_stats/detector'
 require_relative 'lang_stats/supported_languages'
 
 properties = JavaProperties.load("src/main/resources/config.properties")
-detector_ip = (properties["detector.ip".to_sym] or 8081).to_i
+detector_port = (properties["detector.port".to_sym] or 8081).to_i
 
 set :bind, '0.0.0.0'
-set :port, detector_ip
+set :port, detector_port
 set :environment, :production
 
 post '/detector/describe_repository' do

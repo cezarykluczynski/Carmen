@@ -25,8 +25,12 @@ class GitCommandTest {
         String output = result.getOutput()
         Assert.assertTrue result.isSuccessFull()
         Assert.assertTrue output.contains("git version")
-        Assert.assertTrue(Integer.parseInt(String.valueOf(output.charAt(12))) >= 2)
-        Assert.assertTrue(Integer.parseInt(String.valueOf(output.charAt(14))) >= 5)
+        Integer major = Integer.parseInt(String.valueOf(output.charAt(12)))
+        Integer minor = Integer.parseInt(String.valueOf(output.charAt(14)))
+        Assert.assertTrue(major >= 1)
+        if (major == 1) {
+            Assert.assertTrue(minor >= 7)
+        }
     }
 
 }

@@ -18,4 +18,13 @@ if ARGV.length != 3 or not ['describe_repository', 'describe_commit'].include?(A
 end
 
 detector = LangStats::Detector.new
-print detector.send(ARGV[0].to_sym, ARGV[1], ARGV[2]).to_json
+
+begin
+  print detector.send(ARGV[0].to_sym, ARGV[1], ARGV[2]).to_json
+rescue LangStats::CommitHashNotFoundError => e
+  print "Fatal: commit hash not found."
+  exit 1
+rescue LangStats::CommitHashMalformedException
+  print "Fatal: commit hash is malformed."
+  exit 1
+end

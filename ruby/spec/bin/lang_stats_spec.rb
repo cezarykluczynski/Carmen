@@ -33,4 +33,28 @@ describe 'CLI interface' do
     expect(response['Groovy']['added']).to be_within(1).of(101)
     expect(response['Groovy']['removed']).to be_within(1).of(0)
   end
+
+  it 'should report not found commit when describing repository' do
+    response = `./ruby/bin/lang_stats describe_repository . aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`
+    expect(response).to include('hash not found')
+    expect($?.exitstatus).to eq(1)
+  end
+
+  it 'should report malformed commit hash when describing repository' do
+    response = `./ruby/bin/lang_stats describe_repository . not_a_hash`
+    expect(response).to include('hash is malformed')
+    expect($?.exitstatus).to eq(1)
+  end
+
+  it 'should report not found commit when describing commit' do
+    response = `./ruby/bin/lang_stats describe_commit . aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`
+    expect(response).to include('hash not found')
+    expect($?.exitstatus).to eq(1)
+  end
+
+  it 'should report malformed commit hash when describing commit' do
+    response = `./ruby/bin/lang_stats describe_commit . not_a_hash`
+    expect(response).to include('hash is malformed')
+    expect($?.exitstatus).to eq(1)
+  end
 end

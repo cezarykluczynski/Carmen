@@ -1,5 +1,6 @@
 require 'rugged'
 require 'linguist'
+require_relative 'exceptions'
 
 module LangStats
   class Detector
@@ -9,13 +10,14 @@ module LangStats
 
     def describe_repository(path_to_repository, commit_hash)
       project = get_repository(path_to_repository, commit_hash)
-      project.languages
+      return get_statistics_or_translate_vendor_exceptions project, "languages"
     end
 
     def describe_commit(path_to_repository, commit_hash)
       project = get_repository(path_to_repository, commit_hash)
+      cache = get_statistics_or_translate_vendor_exceptions(project, "cache")
       affected_files = get_files_affected_by_commit path_to_repository, commit_hash
-      get_commit_stats project.cache, affected_files
+      return get_commit_stats cache, affected_files
     end
 
     private
@@ -31,6 +33,16 @@ module LangStats
       raise RuntimeError unless numstat.is_a?(String)
 
       parse_files_affected_by_commit_into_stats numstat
+    end
+
+    def get_statistics_or_translate_vendor_exceptions(project, accessor_method_name)
+      begin
+        return project.send(accessor_method_name)
+      rescue Rugged::OdbError => e
+        raise CommitHashNotFoundError
+      rescue Rugged::InvalidError => e
+        raise CommitHashMalformedException
+      end
     end
 
     def get_raw_files_affected_by_commit(path_to_repository, commit_hash)

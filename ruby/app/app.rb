@@ -15,7 +15,19 @@ set :environment, :production
 post '/detector/describe_repository' do
   if params['path_to_directory'] and params['commit_hash']
     detector = LangStats::Detector.new
-    return detector.describe_repository(params['path_to_directory'], params['commit_hash']).to_json
+    begin
+      return detector.describe_repository(params['path_to_directory'], params['commit_hash']).to_json
+    rescue LangStats::CommitHashNotFoundError => e
+      status 404
+      {
+        :error => 'Commit hash not found.'
+      }.to_json
+    rescue LangStats::CommitHashMalformedException => e
+      status 400
+      {
+        :error => 'Commit hash is malformed.'
+      }.to_json
+    end
   else
     status 400
     {
@@ -27,7 +39,19 @@ end
 post '/detector/describe_commit' do
   if params['path_to_directory'] and params['commit_hash']
     detector = LangStats::Detector.new
-    return detector.describe_commit(params['path_to_directory'], params['commit_hash']).to_json
+    begin
+      return detector.describe_commit(params['path_to_directory'], params['commit_hash']).to_json
+    rescue LangStats::CommitHashNotFoundError => e
+      status 404
+      {
+        :error => 'Commit hash not found.'
+      }.to_json
+    rescue LangStats::CommitHashMalformedException => e
+      status 400
+      {
+        :error => 'Commit hash is malformed.'
+      }.to_json
+    end
   else
     status 400
     {

@@ -53,6 +53,46 @@ describe 'HTTP interface' do
     expect(response['Groovy']['removed']).to be_within(1).of(0)
   end
 
+  it 'should report not found commit when describing repository' do
+    post '/detector/describe_repository', {
+      :path_to_directory => '.',
+      :commit_hash => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    }
+
+    expect(last_response.status).to eq(404)
+    expect(last_response.body).to include('hash not found')
+  end
+
+  it 'should report malformed commit hash when describing repository' do
+    post '/detector/describe_repository', {
+      :path_to_directory => '.',
+      :commit_hash => 'not_a_hash'
+    }
+
+    expect(last_response.status).to eq(400)
+    expect(last_response.body).to include('hash is malformed')
+  end
+
+  it 'should report not found commit when describing commit' do
+    post '/detector/describe_commit', {
+      :path_to_directory => '.',
+      :commit_hash => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    }
+
+    expect(last_response.status).to eq(404)
+    expect(last_response.body).to include('hash not found')
+  end
+
+  it 'should report malformed commit hash when describing commit' do
+    post '/detector/describe_commit', {
+      :path_to_directory => '.',
+      :commit_hash => 'not_a_hash'
+    }
+
+    expect(last_response.status).to eq(400)
+    expect(last_response.body).to include('hash is malformed')
+  end
+
   it 'should report errors when parameters are missing' do
     request_without_path_to_directory = {
       :commit_hash => '',

@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+
+require 'pathname.rb'
+require 'fileutils'
+
+is_stop = (ARGV.length == 1 and ARGV[0] == 'stop')
+is_force_start = (ARGV.length == 2 and ARGV[0] == 'start' and ARGV[1] == '--force')
+is_start = (ARGV.length == 1 and ARGV[0] == 'start' or is_force_start)
+
+if not (is_stop or is_start or is_force_start)
+  print "Usage: server start [--force]\n"
+  print "       server stop\n"
+  exit 1
+end
+
+current_dir = File.expand_path(File.dirname(__FILE__))
+app_path = Pathname.new(current_dir << "/../app/app.rb").cleanpath.to_path
+pid_path = Pathname.new(current_dir << "/../../bin/.server_pid").cleanpath.to_path
+log_path = Pathname.new(current_dir << "/../../bin/.server_log").cleanpath.to_path
+
+if is_stop or is_force_start
+  if File.exists?(pid_path)
+    old_pid = File.read pid_path
+    File.delete pid_path
+    begin
+      Process.kill 'SIGINT', old_pid.to_i
+      print "Server stopped.\n"
+    rescue
+      print "Server already stopped: process #{old_pid} is not running.\n" if is_stop
+      if is_stop then exit 1 end
+    end
+  elsif is_stop
+    print "Server already stopped: .server_pid not found.\n"
+    if is_stop then exit 1 end
+  end
+
+  if is_stop then exit end
+end
+
+if is_start
+  if File.exists?(pid_path)
+    old_pid = File.read pid_path
+    begin
+      Process.getpgid old_pid.to_i
+      print "Server is already running.\n"
+      exit 1
+    rescue Errno::ESRCH
+    end
+  end
+  pid = spawn 'ruby ' << app_path, :out => log_path, :err => log_path, :in => log_path
+  Process.detach pid
+  pid_file = File.new(pid_path, 'w')
+  pid_file.write pid
+  pid_file.close()
+  print "Server started.\n"
+  print "Logging to: #{log_path}\n"
+end

@@ -5,12 +5,12 @@ require 'java-properties'
 require_relative 'lang_stats/detector'
 require_relative 'lang_stats/supported_languages'
 
-properties = JavaProperties.load("src/main/resources/config.properties")
+properties = JavaProperties.load(File.expand_path(File.dirname(__FILE__)) << "/../../src/main/resources/config.properties")
 detector_port = (properties["detector.port".to_sym] or 8081).to_i
 
 set :bind, '0.0.0.0'
 set :port, detector_port
-set :environment, :production
+set :environment, :development
 
 post '/detector/describe_repository' do
   if params['path_to_directory'] and params['commit_hash']

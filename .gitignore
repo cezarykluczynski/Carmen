@@ -12,3 +12,5 @@ node_modules/
 .env
 src/main/resources/config.properties
 Gemfile.lock
+ruby/bin/.server_log
+ruby/bin/.server_pid

@@ -14,7 +14,7 @@ if ARGV.length != 3 or not ['describe_repository', 'describe_commit'].include?(A
   print "Usage: lang_stats describe_repository relative_directory commit_hash\n"
   print "       lang_stats describe_commit relative_directory commit_hash\n"
   print "       lang_stats supported_languages\n"
-  exit -1
+  exit 1
 end
 
 detector = LangStats::Detector.new

@@ -87,15 +87,14 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
         Assert.assertTrue repositoryCloneEntityResult.getCloned().after(now)
 
-        String cdCommandBody = "cd ${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
-        "${repositoryCloneEntityResult.getLocationSubdirectory()} "
+        String cloneDirectory = "${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
+        "${repositoryCloneEntityResult.getLocationSubdirectory()}"
+        String revParseCommandBody = "git rev-parse --resolve-git-dir ${cloneDirectory}/.git"
 
-        Command gitStatusCommand = new Command(cdCommandBody + "&& git status")
-        Assert.assertTrue Executor.execute(gitStatusCommand).isSuccessFull()
-        Command gitRemoteCommand = new Command(cdCommandBody + "&& git remote")
-        Result gitRemoteResult = Executor.execute(gitRemoteCommand)
-        Assert.assertTrue gitRemoteResult.isSuccessFull()
-        Assert.assertTrue gitRemoteResult.getOutput().contains(repositoryEntity.getFullName())
+        Command revParseCommand = new Command(revParseCommandBody)
+        Result revParseCommandResult = Executor.execute(revParseCommand)
+        Assert.assertTrue revParseCommandResult.isSuccessFull()
+        Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
     }
 
     @Test

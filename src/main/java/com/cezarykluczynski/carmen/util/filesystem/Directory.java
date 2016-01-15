@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.util.filesystem;
 
+import com.cezarykluczynski.carmen.util.OS;
 import com.cezarykluczynski.carmen.util.exec.*;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class Directory {
     }
 
     public static String sanitizePathForOs(String path) {
-        return path.replace("/", "\\" + File.separator);
+        return OS.isLinux() ? path : path.replace("/", "\\" + File.separator);
     }
 
     public static String convertPathToUnixStyleSlashes(String path) {

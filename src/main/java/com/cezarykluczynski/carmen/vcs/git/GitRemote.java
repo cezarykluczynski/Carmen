@@ -8,12 +8,8 @@ import com.cezarykluczynski.carmen.vcs.git.util.GitCommand;
 
 public class GitRemote {
 
-    public static Result clone(String cloneUrl, String cloneDirectory) {
-        return Executor.execute(new GitCloneCommand(cloneUrl, cloneDirectory));
-    }
-
-    public static Result renameOrigin(String repositoryDirectory, String originTargetName) {
-        return Executor.execute(new Command("cd " + repositoryDirectory + " && git remote rename origin " + originTargetName));
+    public static Result clone(String cloneUrl, String cloneDirectory, String originTargetName) {
+        return Executor.execute(new GitCloneCommand(cloneUrl, cloneDirectory, originTargetName));
     }
 
 }

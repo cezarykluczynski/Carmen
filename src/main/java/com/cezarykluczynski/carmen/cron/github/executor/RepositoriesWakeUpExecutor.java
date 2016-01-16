@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
 @Component
-public class RepositoriesWakeUpExecutor {
+public class RepositoriesWakeUpExecutor implements Runnable {
 
     @Value("${executor.RepositoriesWakeUpExecutor.refreshIntervalDays}")
     private Integer refreshIntervalDays;

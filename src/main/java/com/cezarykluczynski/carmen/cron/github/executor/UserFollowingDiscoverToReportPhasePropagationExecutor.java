@@ -6,7 +6,7 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserFollowingDiscoverToReportPhasePropagationExecutor {
+public class UserFollowingDiscoverToReportPhasePropagationExecutor implements Runnable {
 
     @Autowired
     UserFollowingDAO propagationsUserFollowingDAOImpl;

@@ -10,25 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutor {
 
     @Autowired
-    UserFollowingDiscoverToReportPhasePropagationExecutor
-        userFollowingDiscoverToReportPhasePropagationExecutor;
+    UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor;
 
-    private class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorRunnable implements Runnable {
-
-        private UserFollowingDiscoverToReportPhasePropagationExecutor
-            userFollowingDiscoverToReportPhasePropagationExecutor;
-
-        public ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorRunnable(
-            UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor
-        ) {
-            this.userFollowingDiscoverToReportPhasePropagationExecutor =
-                userFollowingDiscoverToReportPhasePropagationExecutor;
-        }
-
-        public void run() {
-            userFollowingDiscoverToReportPhasePropagationExecutor.run();
-        }
-    }
 
     private TaskExecutor taskExecutor;
 
@@ -38,9 +21,7 @@ public class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutor {
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        taskExecutor.execute(new ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorRunnable(
-            userFollowingDiscoverToReportPhasePropagationExecutor
-        ));
+        taskExecutor.execute(userFollowingDiscoverToReportPhasePropagationExecutor);
     }
 
 }

@@ -6,7 +6,7 @@ import com.cezarykluczynski.carmen.model.github.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class UserFollowersFollowingReportToSleepPhasePropagationExecutor {
+public class UserFollowersFollowingReportToSleepPhasePropagationExecutor implements Runnable {
 
     @Autowired
     UserDAO githubUserDAOImpl;

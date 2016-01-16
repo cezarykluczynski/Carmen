@@ -15,23 +15,6 @@ public class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecuto
     UserFollowersFollowingReportToSleepPhasePropagationExecutor
         userFollowersFollowingReportToSleepPhasePropagationExecutor;
 
-    private class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutorRunnable implements Runnable {
-
-        private UserFollowersFollowingReportToSleepPhasePropagationExecutor
-            userFollowersFollowingReportToSleepPhasePropagationExecutor;
-
-        public ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutorRunnable(
-            UserFollowersFollowingReportToSleepPhasePropagationExecutor userFollowersFollowingReportToSleepPhasePropagationExecutor
-        ) {
-            this.userFollowersFollowingReportToSleepPhasePropagationExecutor =
-                userFollowersFollowingReportToSleepPhasePropagationExecutor;
-        }
-
-        public void run() {
-            userFollowersFollowingReportToSleepPhasePropagationExecutor.run();
-        }
-    }
-
     private TaskExecutor taskExecutor;
 
     public ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor(TaskExecutor taskExecutor) {
@@ -40,9 +23,7 @@ public class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecuto
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        taskExecutor.execute(new ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutorRunnable(
-            userFollowersFollowingReportToSleepPhasePropagationExecutor
-        ));
+        taskExecutor.execute(userFollowersFollowingReportToSleepPhasePropagationExecutor);
     }
 
 }

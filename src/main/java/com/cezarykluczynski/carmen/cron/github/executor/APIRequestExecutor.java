@@ -13,7 +13,7 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 
 @Component
-public class APIRequestExecutor {
+public class APIRequestExecutor implements Runnable {
 
     @Autowired
     PendingRequestDAO apiqueuePendingRequestDAOImpl;

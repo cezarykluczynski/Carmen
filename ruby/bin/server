@@ -54,4 +54,5 @@ if is_start
   pid_file.close()
   print "Server started.\n"
   print "Logging to: #{log_path}\n"
+  print "PID is #{pid}.\n"
 end

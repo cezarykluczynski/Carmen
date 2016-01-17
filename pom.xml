@@ -557,6 +557,39 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>ruby-server-start</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+             <mainClass>com.cezarykluczynski.carmen.lang.stats.util.LanguageDetectorServerSwitcher</mainClass>
+             <arguments>
+              <argument>start</argument>
+             </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>ruby-server-stop</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+             <mainClass>com.cezarykluczynski.carmen.lang.stats.util.LanguageDetectorServerSwitcher</mainClass>
+             <arguments>
+              <argument>stop</argument>
+             </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 </project>

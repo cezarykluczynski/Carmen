@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.configuration;
 
+import com.cezarykluczynski.carmen.lang.stats.adapter.CLILangsStatsAdapter;
+import com.cezarykluczynski.carmen.lang.stats.adapter.HTTPLangsStatsAdapter;
+import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -26,7 +29,7 @@ public class CarmenBeanConfiguration {
     private String githubAccessToken;
 
     @Value("${github.httpClientUserAgentString}")
-    private String userAgentString;
+    private String githubHttpClientUserAgentString;
 
     public CarmenBeanConfiguration() {
         /**
@@ -51,7 +54,7 @@ public class CarmenBeanConfiguration {
         rtGithub = new RtGithub(
             rtGithub.entry()
                 .reset("User-Agent")
-                .header("User-Agent", userAgentString)
+                .header("User-Agent", githubHttpClientUserAgentString)
         );
 
         return rtGithub;
@@ -77,7 +80,7 @@ public class CarmenBeanConfiguration {
             System.out.println("Carmen: initializing org.eclipse.egit.github.core.client.GitHubClient without access token.");
         }
 
-        githubClient.setUserAgent(userAgentString);
+        githubClient.setUserAgent(githubHttpClientUserAgentString);
 
         return githubClient;
     }

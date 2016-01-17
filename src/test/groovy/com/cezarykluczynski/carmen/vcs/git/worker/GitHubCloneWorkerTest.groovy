@@ -29,10 +29,10 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
 @ContextConfiguration([
-        "classpath:spring/database-config.xml",
-        "classpath:spring/mvc-core-config.xml",
-        "classpath:spring/cron-config.xml",
-        "classpath:spring/fixtures/fixtures.xml"
+    "classpath:spring/database-config.xml",
+    "classpath:spring/mvc-core-config.xml",
+    "classpath:spring/cron-config.xml",
+    "classpath:spring/fixtures/fixtures.xml"
 ])
 class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 

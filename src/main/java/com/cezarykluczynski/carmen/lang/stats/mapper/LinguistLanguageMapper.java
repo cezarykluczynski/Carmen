@@ -43,6 +43,7 @@ public class LinguistLanguageMapper implements LanguageMapper {
 
     private void sortListAlphabetically(List<Language> languageList) {
         languageList.sort(new Comparator<Language>() {
+
             public int compare(Language base, Language compare) {
                 String baseName = base.getName();
                 String compareName = compare.getName();

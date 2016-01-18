@@ -50,5 +50,4 @@ public class BeanConfiguration {
         return new HTTPJSONClientImpl(ip, port);
     }
 
-
 }

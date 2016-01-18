@@ -45,7 +45,7 @@ class LinguistLanguageMapperTest {
             }
          '''
 
-        List<Language> languageList = languageMapper.mapList(new JSONObject(response))
+        List<Language> languageList = languageMapper.mapLanguageList(new JSONObject(response))
 
         Assert.assertEquals languageList.size(), 3
 

@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.lang.stats.mapper;
 
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
 import com.cezarykluczynski.carmen.lang.stats.domain.LanguageType;
+import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,25 @@ import java.util.*;
 @Component
 public class LinguistLanguageMapper implements LanguageMapper {
 
-    public List<Language> mapList(JSONObject jsonObject) {
+    public List<Language> mapLanguageList(JSONObject jsonObject) {
         List<Language> languageList = buildListFromJSONObject(jsonObject);
-        sortListAlphabetically(languageList);
+        sortLanguageListAlphabetically(languageList);
         return languageList;
+    }
+
+    public Map<Language, LineStat> mapRepositoryDescription(JSONObject jsonObject) {
+        Map<Language, LineStat> repositoryDescription = new HashMap<>();
+
+        Iterator keys = jsonObject.keys();
+
+        while(keys.hasNext()) {
+            String languageName = (String) keys.next();
+            Language language = mapNameAndLanguageDetailsToEntity(languageName, null);
+            LineStat lineStat = new LineStat((Integer) jsonObject.get(languageName));
+            repositoryDescription.put(language, lineStat);
+        }
+
+        return repositoryDescription;
     }
 
     private List<Language> buildListFromJSONObject(JSONObject jsonObject) {
@@ -41,7 +57,7 @@ public class LinguistLanguageMapper implements LanguageMapper {
         return languageList;
     }
 
-    private void sortListAlphabetically(List<Language> languageList) {
+    private void sortLanguageListAlphabetically(List<Language> languageList) {
         languageList.sort(new Comparator<Language>() {
 
             public int compare(Language base, Language compare) {
@@ -74,6 +90,11 @@ public class LinguistLanguageMapper implements LanguageMapper {
 
     private Language mapNameAndLanguageDetailsToEntity(String languageName, JSONObject languageDetails) {
         Language language = new Language(languageName);
+
+        if (languageDetails == null) {
+            return language;
+        }
+
         try {
             language.setColor((String) languageDetails.get("color"));
         } catch (JSONException e) {

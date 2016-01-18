@@ -1,5 +1,7 @@
 package com.cezarykluczynski.carmen.lang.stats.domain;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Language {
 
     private String name;
@@ -54,6 +56,11 @@ public class Language {
         }
 
         return true;
+    }
+
+    @Override
+    public int hashCode(){
+        return new HashCodeBuilder().append(name).toHashCode();
     }
 
 }

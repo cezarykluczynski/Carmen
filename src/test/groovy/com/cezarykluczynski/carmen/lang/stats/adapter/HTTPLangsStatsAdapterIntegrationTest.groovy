@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter
 
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
+import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
 import com.cezarykluczynski.carmen.util.network.HTTPClient
@@ -59,10 +60,31 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
         List<Language> languageList = httpLangsStatsAdapter.getSupportedLanguages()
 
         Assert.assertEquals languageList.size(), 385
-        println '================================='
-        println 'languageList.size()'
-        println languageList.size()
-        println '================================='
+    }
+
+    @Test
+    void describeRepository() {
+        Map<Language, LineStat> repositoryDescription =
+                httpLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153")
+
+        Language java = new Language("Java")
+        Language javaScript = new Language("JavaScript")
+        Language css = new Language("CSS")
+        Language groovy = new Language("Groovy")
+
+        Assert.assertEquals repositoryDescription.size(), 4
+
+        Assert.assertTrue repositoryDescription.get(java).getLines() > 194928 - 10
+        Assert.assertTrue repositoryDescription.get(java).getLines() < 194928 + 10
+
+        Assert.assertTrue repositoryDescription.get(javaScript).getLines() > 1854 - 10
+        Assert.assertTrue repositoryDescription.get(javaScript).getLines() < 1854 + 10
+
+        Assert.assertTrue repositoryDescription.get(css).getLines() > 318 - 10
+        Assert.assertTrue repositoryDescription.get(css).getLines() < 318 + 10
+
+        Assert.assertTrue repositoryDescription.get(groovy).getLines() > 193544 - 10
+        Assert.assertTrue repositoryDescription.get(groovy).getLines() < 193544 + 10
     }
 
 }

@@ -1,7 +1,8 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter;
 
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineAction;
+import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper;
 
 import java.util.List;
@@ -23,12 +24,12 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
-    public Map<Language, Integer> describeRepository(String relativeDirectory, String commitHash) {
+    public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
         return null;
     }
 
     @Override
-    public Map<Language, Map<LineAction, Integer>> describeCommit(String relativeDirectory, String commitHash) {
+    public Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash) {
         return null;
     }
 }

@@ -25,7 +25,7 @@ describe 'HTTP interface' do
 
   it 'should read repository statistics' do
     post '/detector/describe_repository', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => '3fe8afa350b369c6c697290f64da6aa996ede153'
     }
 
@@ -40,7 +40,7 @@ describe 'HTTP interface' do
 
   it 'should read commit statistics' do
     post '/detector/describe_commit', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => '21628ec99e149f6509bfb3b3ce8faf8eb2f391c1'
     }
 
@@ -55,7 +55,7 @@ describe 'HTTP interface' do
 
   it 'should report not found commit when describing repository' do
     post '/detector/describe_repository', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     }
 
@@ -65,7 +65,7 @@ describe 'HTTP interface' do
 
   it 'should report malformed commit hash when describing repository' do
     post '/detector/describe_repository', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => 'not_a_hash'
     }
 
@@ -75,7 +75,7 @@ describe 'HTTP interface' do
 
   it 'should report not found commit when describing commit' do
     post '/detector/describe_commit', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     }
 
@@ -85,7 +85,7 @@ describe 'HTTP interface' do
 
   it 'should report malformed commit hash when describing commit' do
     post '/detector/describe_commit', {
-      :path_to_directory => '.',
+      :relative_directory => '.',
       :commit_hash => 'not_a_hash'
     }
 
@@ -94,14 +94,14 @@ describe 'HTTP interface' do
   end
 
   it 'should report errors when parameters are missing' do
-    request_without_path_to_directory = {
+    request_without_relative_directory = {
       :commit_hash => '',
     }
     request_without_commit_hash = {
-      :path_to_directory => '',
+      :relative_directory => '',
     }
 
-    post '/detector/describe_repository', request_without_path_to_directory
+    post '/detector/describe_repository', request_without_relative_directory
     expect(last_response.status).to eq(400)
     expect(last_response.body).to include('parameter not found')
 
@@ -109,7 +109,7 @@ describe 'HTTP interface' do
     expect(last_response.status).to eq(400)
     expect(last_response.body).to include('parameter not found')
 
-    post '/detector/describe_commit', request_without_path_to_directory
+    post '/detector/describe_commit', request_without_relative_directory
     expect(last_response.status).to eq(400)
     expect(last_response.body).to include('parameter not found')
 

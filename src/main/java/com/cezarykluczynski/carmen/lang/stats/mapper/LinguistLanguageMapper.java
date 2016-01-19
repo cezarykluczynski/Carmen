@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.lang.stats.mapper;
 
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
 import com.cezarykluczynski.carmen.lang.stats.domain.LanguageType;
+import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +27,26 @@ public class LinguistLanguageMapper implements LanguageMapper {
         while(keys.hasNext()) {
             String languageName = (String) keys.next();
             Language language = mapNameAndLanguageDetailsToEntity(languageName, null);
-            LineStat lineStat = new LineStat((Integer) jsonObject.get(languageName));
-            repositoryDescription.put(language, lineStat);
+            repositoryDescription.put(language, new LineStat(jsonObject.getInt(languageName)));
         }
 
         return repositoryDescription;
+    }
+
+    public Map<Language, LineDiffStat> mapCommitDescription(JSONObject jsonObject) {
+        System.out.println(jsonObject.toString());
+        Map<Language, LineDiffStat> commitDescription = new HashMap<>();
+
+        Iterator keys = jsonObject.keys();
+
+        while(keys.hasNext()) {
+            String languageName = (String) keys.next();
+            Language language = mapNameAndLanguageDetailsToEntity(languageName, null);
+            JSONObject lineDiff = (JSONObject) jsonObject.get(languageName);
+            commitDescription.put(language, new LineDiffStat(lineDiff.getInt("added"), lineDiff.getInt("removed")));
+        }
+
+        return commitDescription;
     }
 
     private List<Language> buildListFromJSONObject(JSONObject jsonObject) {

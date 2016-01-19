@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter
 
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
+import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
@@ -13,7 +14,6 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
 import org.testng.SkipException
 import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @ContextConfiguration([
@@ -40,18 +40,13 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
 
     private HTTPLangsStatsAdapter httpLangsStatsAdapter
 
-    private HTTPClient httpClient
-
     @BeforeClass
     void setUpClass() {
-        httpClient = new HTTPJSONClientImpl(detectorIp, detectorPort)
         if (!detectorClient.equals("cli") && detectorTestAssumeRunningServer != true) {
             throw new SkipException("Local Ruby server cannot be started, and it's not expected to be running.")
         }
-    }
 
-    @BeforeMethod
-    void setUp() {
+        HTTPClient httpClient = new HTTPJSONClientImpl(detectorIp, detectorPort)
         httpLangsStatsAdapter = new HTTPLangsStatsAdapter(httpClient, languageMapper)
     }
 
@@ -85,6 +80,30 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
 
         Assert.assertTrue repositoryDescription.get(groovy).getLines() > 193544 - 10
         Assert.assertTrue repositoryDescription.get(groovy).getLines() < 193544 + 10
+    }
+
+    @Test
+    void describeCommit() {
+        Map<Language, LineDiffStat> commitDescription =
+                httpLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1")
+
+        Language java = new Language("Java")
+        Language groovy = new Language("Groovy")
+
+        Assert.assertEquals commitDescription.size(), 2
+
+        LineDiffStat javaLineDiffStat = commitDescription.get java
+        LineDiffStat groovyLineDiffStat = commitDescription.get groovy
+
+        Assert.assertTrue javaLineDiffStat.getAddedLines() > 56 - 1
+        Assert.assertTrue javaLineDiffStat.getAddedLines() < 56 + 1
+        Assert.assertTrue javaLineDiffStat.getRemovedLines() > 4 - 1
+        Assert.assertTrue javaLineDiffStat.getRemovedLines() < 4 + 1
+
+        Assert.assertTrue groovyLineDiffStat.getAddedLines() > 101 - 1
+        Assert.assertTrue groovyLineDiffStat.getAddedLines() < 101 + 1
+        Assert.assertTrue groovyLineDiffStat.getRemovedLines() > 0 - 1
+        Assert.assertTrue groovyLineDiffStat.getRemovedLines() < 0 + 1
     }
 
 }

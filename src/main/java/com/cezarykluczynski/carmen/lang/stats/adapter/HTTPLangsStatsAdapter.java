@@ -36,11 +36,8 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
     @Override
     public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
         try {
-            Map<String, String> params = new HashMap<>();
-            params.put("relative_directory", relativeDirectory);
-            params.put("commit_hash", commitHash);
-            JSONObject lineStats = httpClient.post("detector/describe_repository", params);
-            return languageMapper.mapRepositoryDescription(lineStats);
+            return languageMapper.mapRepositoryDescription(httpClient.post("detector/describe_repository",
+                    buildParams(relativeDirectory, commitHash)));
         } catch(HTTPRequestException e) {
             return null;
         }
@@ -48,7 +45,20 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
 
     @Override
     public Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash) {
-        return null;
+        try {
+            Map<String, String> params = buildParams(relativeDirectory, commitHash);
+            JSONObject lineDiffStats = httpClient.post("detector/describe_commit", params);
+            return languageMapper.mapCommitDescription(lineDiffStats);
+        } catch(HTTPRequestException e) {
+            return null;
+        }
+    }
+
+    private Map<String, String> buildParams(String relativeDirectory, String commitHash) {
+        Map<String, String> params = new HashMap<>();
+        params.put("relative_directory", relativeDirectory);
+        params.put("commit_hash", commitHash);
+        return params;
     }
 
 }

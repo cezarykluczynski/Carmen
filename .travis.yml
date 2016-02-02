@@ -11,6 +11,7 @@ before_install:
   - psql -c 'create database carmen;' -U postgres
   - cp src/main/resources/travis/config.properties src/main/resources/config.properties
   - git fetch --unshallow
+  - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && rm -rf cassandra-migration/src/test/java && cd cassandra-migration && mvn clean install
   - rvm install ruby-2.1.5
   - rvm use 2.1.5
   - bundle install

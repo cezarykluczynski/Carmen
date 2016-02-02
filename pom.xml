@@ -350,6 +350,12 @@
       <version>5.1.3.Final</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.contrastsecurity</groupId>
+      <artifactId>cassandra-migration</artifactId>
+      <version>0.7-SNAPSHOT</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -506,6 +512,7 @@
           </systemPropertyVariables>
           <excludes>
             <exclude>**/*IntegrationTest.java</exclude>
+            <exclude>**/experiment/**/*.groovy</exclude>
           </excludes>
         </configuration>
       </plugin>

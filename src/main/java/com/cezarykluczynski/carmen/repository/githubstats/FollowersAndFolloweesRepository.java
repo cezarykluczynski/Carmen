@@ -10,7 +10,7 @@ import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees;
 @EnableJpaRepositories
 public interface FollowersAndFolloweesRepository extends CrudRepository<FollowersAndFollowees, Long> {
 
-    @Query("select * from github_stats.followers_and_followees where user_id = ?0")
+    @Query("select * from github_social_stats.followers_and_followees where user_id = ?0")
     FollowersAndFollowees findByUserId(Long userId);
 
 }

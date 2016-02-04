@@ -29,7 +29,7 @@ public class CassandraConfiguration extends AbstractCassandraConfiguration {
 
     @Override
     public String getKeyspaceName() {
-        return env.getProperty("cassandra.keyspace");
+        return "github_social_stats";
     }
 
     @Bean

@@ -18,19 +18,19 @@
         <property name="concurrencyLimit" value="1" />
     </bean>
     <!-- API cron schedulers -->
-    <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor">
+    <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.APIRequestScheduler">
         <constructor-arg ref="apiTaskExecutor" />
     </bean>
-    <bean id="scheduledRepositoriesWakeUpExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledRepositoriesWakeUpExecutor">
+    <bean id="scheduledRepositoriesWakeUpExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.RepositoriesWakeUpScheduler">
         <constructor-arg ref="apiTaskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor">
+    <bean id="scheduledUserFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowersDiscoverToReportPhasePropagationScheduler">
         <constructor-arg ref="apiTaskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowingDiscoverToReportPhasePropagationExecutor">
+    <bean id="scheduledUserFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowingDiscoverToReportPhasePropagationScheduler">
         <constructor-arg ref="apiTaskExecutor" />
     </bean>
-    <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor">
+    <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowersFollowingReportToSleepPhasePropagationScheduler">
         <constructor-arg ref="apiTaskExecutor" />
     </bean>
     <!-- API cron jobs -->
@@ -54,7 +54,7 @@
     </bean>
 
     <!-- Clone cron jobs -->
-    <bean id ="gitHubCloneWorker" class="com.cezarykluczynski.carmen.vcs.git.worker.GitHubCloneWorker"></bean>
+    <bean id ="gitHubCloneWorker" class="com.cezarykluczynski.carmen.vcs.git.worker.GitHubCloneWorker"/>
 
     <!-- Clone server -->
     <bean id="tomcatServer" class="com.cezarykluczynski.carmen.vcs.server.TomcatServer">

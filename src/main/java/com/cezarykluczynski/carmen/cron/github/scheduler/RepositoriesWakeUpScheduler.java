@@ -3,24 +3,24 @@ package com.cezarykluczynski.carmen.cron.github.scheduler;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor;
+import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ScheduledAPIRequestExecutor {
+public class RepositoriesWakeUpScheduler {
 
     @Autowired
-    APIRequestExecutor apiRequestExecutor;
+    RepositoriesWakeUpExecutor repositoriesWakeUpExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public ScheduledAPIRequestExecutor(TaskExecutor taskExecutor) {
+    public RepositoriesWakeUpScheduler(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 15000)
     public void executePropagation() {
-        taskExecutor.execute(apiRequestExecutor);
+        taskExecutor.execute(repositoriesWakeUpExecutor);
     }
 
 }

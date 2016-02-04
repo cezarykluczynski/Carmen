@@ -7,9 +7,8 @@ import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingRe
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 
-public class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor {
+public class UserFollowersFollowingReportToSleepPhasePropagationScheduler {
 
     @Autowired
     UserFollowersFollowingReportToSleepPhasePropagationExecutor
@@ -17,7 +16,7 @@ public class ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecuto
 
     private TaskExecutor taskExecutor;
 
-    public ScheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor(TaskExecutor taskExecutor) {
+    public UserFollowersFollowingReportToSleepPhasePropagationScheduler(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 

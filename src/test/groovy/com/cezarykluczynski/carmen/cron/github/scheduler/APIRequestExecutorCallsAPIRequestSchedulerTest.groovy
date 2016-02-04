@@ -6,8 +6,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
@@ -24,14 +22,14 @@ import org.testng.annotations.Test
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTestNGSpringContextTests {
+class APIRequestExecutorCallsAPIRequestSchedulerTest extends AbstractTestNGSpringContextTests {
 
     @Mock
     APIRequestExecutor apiRequestExecutor
 
     @Autowired
     @InjectMocks
-    ScheduledAPIRequestExecutor scheduledAPIRequestExecutor
+    APIRequestScheduler scheduledAPIRequestExecutor
 
     def noTasks
 
@@ -48,7 +46,7 @@ class ScheduledAPIRequestExecutorCallsAPIRequestExecutorTest extends AbstractTes
         // exercise
         scheduledAPIRequestExecutor.executePropagation()
         /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
-           for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
+           for com.cezarykluczynski.carmen.cron.github.scheduler.APIRequestScheduler class runs on different thread,
            verification of apiRequestExecutor.run() would fail if we wouldn't wait a tiny bit.
            This can be tuned to a few more milliseconds if it fails for anyone. */
         Thread.sleep 10

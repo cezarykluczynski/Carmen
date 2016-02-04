@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.cron.github.executor.UserFollowingDiscoverToReportPhasePropagationExecutor
+import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToReportPhasePropagationExecutor
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
@@ -24,14 +22,14 @@ import org.testng.annotations.Test
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
+class UserFollowersDiscoverToReportPhasePropagationSchedulerTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    UserFollowingDiscoverToReportPhasePropagationExecutor userFollowingDiscoverToReportPhasePropagationExecutor
+    UserFollowersDiscoverToReportPhasePropagationExecutor userFollowersDiscoverToReportPhasePropagationExecutor
 
     @Autowired
     @InjectMocks
-    ScheduledUserFollowingDiscoverToReportPhasePropagationExecutor scheduledUserFollowingDiscoverToReportPhasePropagationExecutor
+    UserFollowersDiscoverToReportPhasePropagationScheduler scheduledUserFollowersDiscoverToReportPhasePropagationExecutor
 
     def noTasks
 
@@ -40,27 +38,27 @@ class ScheduledUserFollowingDiscoverToReportPhasePropagationExecutorTest extends
         noTasks = System.getProperty "noScheduledTasks"
         System.clearProperty "noScheduledTasks"
         MockitoAnnotations.initMocks this
-        doNothing().when(userFollowingDiscoverToReportPhasePropagationExecutor).run()
+        doNothing().when(userFollowersDiscoverToReportPhasePropagationExecutor).run()
     }
 
     @Test
     void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
         // exercise
-        scheduledUserFollowingDiscoverToReportPhasePropagationExecutor.executePropagation()
+        scheduledUserFollowersDiscoverToReportPhasePropagationExecutor.executePropagation()
         /* Probably because the org.springframework.core.task.TaskExecutor, that is a dependency
-           for com.cezarykluczynski.carmen.cron.github.scheduler.ScheduledAPIRequestExecutor class runs on different thread,
-           verification of scheduledUserFollowingDiscoverToReportPhasePropagationExecutor.run() would fail if we wouldn't wait a tiny bit.
+           for com.cezarykluczynski.carmen.cron.github.scheduler.APIRequestScheduler class runs on different thread,
+           verification of scheduledUserFollowersDiscoverToReportPhasePropagationExecutor.run() would fail if we wouldn't wait a tiny bit.
            This can be tuned to a few more milliseconds if it fails for anyone. */
         Thread.sleep 10
 
         // assertion
-        verify(userFollowingDiscoverToReportPhasePropagationExecutor).run()
+        verify(userFollowersDiscoverToReportPhasePropagationExecutor).run()
     }
 
     @AfterMethod
     void tearDown() {
         System.setProperty "noScheduledTasks", noTasks
-        Mockito.reset userFollowingDiscoverToReportPhasePropagationExecutor
+        Mockito.reset userFollowersDiscoverToReportPhasePropagationExecutor
     }
 
 }

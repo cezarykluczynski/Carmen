@@ -7,14 +7,14 @@ import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToR
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor {
+public class UserFollowersDiscoverToReportPhasePropagationScheduler {
 
     @Autowired
     UserFollowersDiscoverToReportPhasePropagationExecutor userFollowersDiscoverToReportPhasePropagationExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public ScheduledUserFollowersDiscoverToReportPhasePropagationExecutor(TaskExecutor taskExecutor) {
+    public UserFollowersDiscoverToReportPhasePropagationScheduler(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 

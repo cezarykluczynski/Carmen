@@ -42,6 +42,7 @@
     <bean id="repositoriesExecutor" class="com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor" />
     <bean id="userGhostPaginatorExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor" />
     <bean id="userGhostExecutor" class="com.cezarykluczynski.carmen.executor.github.UserGhostExecutor" />
+    <bean id="languagesListUpdateExecutor" class="com.cezarykluczynski.carmen.cron.linguist.executor.LanguagesListUpdateExecutor" />
 
     <!-- Clone task executor -->
     <bean id="cloneTaskExecutor" class="com.cezarykluczynski.carmen.cron.github.GitHubSimpleAsyncTaskExecutor">

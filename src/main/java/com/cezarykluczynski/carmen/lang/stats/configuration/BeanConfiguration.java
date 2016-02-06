@@ -8,7 +8,6 @@ import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper;
 import com.cezarykluczynski.carmen.util.network.HTTPClient;
 import com.cezarykluczynski.carmen.util.network.HTTPJSONClientImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +15,6 @@ import java.io.IOException;
 
 @Configuration
 public class BeanConfiguration {
-
-    ApplicationContext applicationContext;
 
     @Value("${detector.client}")
     private String detectorClient;
@@ -30,7 +27,7 @@ public class BeanConfiguration {
 
     @Bean
     public LangsStatsAdapter langStatsAdapter() throws IOException {
-        LanguageMapper languageMapper = applicationContext.getBean(LanguageMapper.class);
+        LanguageMapper languageMapper = new LinguistLanguageMapper();
 
         if (detectorClient.equals("http")) {
             return new HTTPLangsStatsAdapter(getConfiguredHTTPClient(detectorIp, detectorPort), languageMapper);

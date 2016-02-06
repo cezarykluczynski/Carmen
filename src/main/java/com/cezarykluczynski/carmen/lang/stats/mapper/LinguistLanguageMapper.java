@@ -6,11 +6,9 @@ import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Component
 public class LinguistLanguageMapper implements LanguageMapper {
 
     public List<Language> mapLanguageList(JSONObject jsonObject) {

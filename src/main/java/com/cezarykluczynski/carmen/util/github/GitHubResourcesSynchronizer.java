@@ -9,11 +9,11 @@ public class GitHubResourcesSynchronizer {
 
     List<GitHubResource> currentResources;
 
-    List<GitHubResource> resourcesToDelete = new ArrayList<GitHubResource>();
+    List<GitHubResource> resourcesToDelete = new ArrayList<>();
 
-    List<GitHubResource> resourcesToCreate = new ArrayList<GitHubResource>();
+    List<GitHubResource> resourcesToCreate = new ArrayList<>();
 
-    List<GitHubResource> resourcesToPreserve = new ArrayList<GitHubResource>();
+    List<GitHubResource> resourcesToPreserve = new ArrayList<>();
 
     public GitHubResourcesSynchronizer(List<GitHubResource> storedResources, List<GitHubResource> currentResources) {
         this.storedResources = storedResources;
@@ -35,11 +35,9 @@ public class GitHubResourcesSynchronizer {
     }
 
     private void findResourcesToDelete() {
-        for (GitHubResource storedResource : storedResources) {
-            if (!listHasItem(currentResources, storedResource)) {
-                resourcesToDelete.add(storedResource);
-            }
-        }
+        storedResources.stream()
+            .filter(storedResource -> !listHasItem(currentResources, storedResource))
+            .forEach(resourcesToDelete::add);
     }
 
     private void findResourcesToCreateAndPreserve() {
@@ -54,7 +52,7 @@ public class GitHubResourcesSynchronizer {
 
     private boolean listHasItem(List<GitHubResource> githubResourcesList, GitHubResource gitHubResourceToFind) {
         GitHubResource githubResourceFound = findCorrespondingResourceInList(gitHubResourceToFind, githubResourcesList);
-        return githubResourceFound instanceof GitHubResource;
+        return githubResourceFound != null;
     }
 
     private GitHubResource findCorrespondingResourceInList(

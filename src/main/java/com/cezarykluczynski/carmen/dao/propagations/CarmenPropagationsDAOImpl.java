@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.dao.users.propagations;
+package com.cezarykluczynski.carmen.dao.propagations;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,11 +7,10 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Order;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
-import com.cezarykluczynski.carmen.dao.users.CarmenRelationalDAOImpl;
 
 import java.util.List;
 
-public class CarmenPropagationsDAOImpl extends CarmenRelationalDAOImpl {
+public class CarmenPropagationsDAOImpl {
 
     protected CarmenRelationalEntity findOldestPropagationInPhase(SessionFactory sessionFactory, Class clazz, String phase) {
         Session session = sessionFactory.openSession();

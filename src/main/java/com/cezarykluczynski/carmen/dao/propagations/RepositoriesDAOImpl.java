@@ -4,9 +4,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Order;
-import org.hibernate.ObjectNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import com.cezarykluczynski.carmen.dao.users.propagations.CarmenPropagationsDAOImpl;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
 import com.cezarykluczynski.carmen.model.github.User;
 

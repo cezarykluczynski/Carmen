@@ -1,17 +1,11 @@
 package com.cezarykluczynski.carmen.util.github
 
-import com.cezarykluczynski.carmen.util.github.GitHubResource
-
 import org.testng.annotations.Test
 import org.testng.annotations.BeforeMethod
 import org.testng.Assert
 
-import java.util.List
-import java.util.ArrayList
-
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.thenReturn
 import static org.mockito.Mockito.withSettings
 
 import static org.hamcrest.Matchers.hasItems

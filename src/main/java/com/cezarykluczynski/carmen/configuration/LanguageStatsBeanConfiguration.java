@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.lang.stats.configuration;
+package com.cezarykluczynski.carmen.configuration;
 
 import com.cezarykluczynski.carmen.lang.stats.adapter.CLILangsStatsAdapter;
 import com.cezarykluczynski.carmen.lang.stats.adapter.HTTPLangsStatsAdapter;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 @Configuration
-public class BeanConfiguration {
+public class LanguageStatsBeanConfiguration {
 
     @Value("${detector.client}")
     private String detectorClient;

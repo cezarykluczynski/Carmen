@@ -1,8 +1,5 @@
 package com.cezarykluczynski.carmen.configuration;
 
-import com.cezarykluczynski.carmen.lang.stats.adapter.CLILangsStatsAdapter;
-import com.cezarykluczynski.carmen.lang.stats.adapter.HTTPLangsStatsAdapter;
-import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -24,14 +21,14 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 @EnableAsync
 @EnableScheduling
 @EnableTransactionManagement
-public class CarmenBeanConfiguration {
+public class GitHubClientsBeanConfiguration {
 
     private String githubAccessToken;
 
     @Value("${github.httpClientUserAgentString}")
     private String githubHttpClientUserAgentString;
 
-    public CarmenBeanConfiguration() {
+    public GitHubClientsBeanConfiguration() {
         /**
          * If enviroment variable CARMEN_GITHUB_ACCESS_TOKEN is present,
          * GitHub-related beans will be initialized using it. Otherwise, they will be initialized without

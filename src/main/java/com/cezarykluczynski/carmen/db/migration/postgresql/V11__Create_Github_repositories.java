@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
  * Create "repositories" table in "github" schema.
  */
 public class V11__Create_Github_repositories implements JdbcMigration {
+    @SuppressWarnings("checkstyle:methodlength")
     public void migrate(Connection connection) throws Exception {
         PreparedStatement statement = connection.prepareStatement(
             "CREATE table github.repositories(" +

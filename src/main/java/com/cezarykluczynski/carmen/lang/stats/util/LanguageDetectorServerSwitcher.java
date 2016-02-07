@@ -27,12 +27,7 @@ public class LanguageDetectorServerSwitcher {
             exitWithUsage();
         }
 
-        Properties prop = new Properties();
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = loader.getResourceAsStream("config.properties");
-        prop.load(stream);
-
-        String client = prop.getProperty("detector.client");
+        String client = getClient();
 
         if (!(client.equals("cli") || client.equals("http"))) {
             System.out.println("Client name misconfiguration. Allowed values are: \"cli\", \"http\".");
@@ -41,38 +36,51 @@ public class LanguageDetectorServerSwitcher {
 
         if (!client.equals("cli")) {
             System.out.println("Language detector client is not CLI. Server \"" + action + "\" action skipped.");
-            return;
-        }
-
-        if (action.equals("start")) {
-            Result result = Executor.execute(new Command("ruby ruby/bin/server start"));
-
-            if (result.isSuccessFull()) {
-                String output = result.getOutput();
-                String pidLine = output.substring(output.indexOf("PID is ") + 7);
-                String pid = pidLine.substring(0, pidLine.indexOf("."));
-                PrintWriter out = new PrintWriter(rubyPidPath);
-                out.write(pid);
-                out.close();
-            }
+        } else if (action.equals("start")) {
+            startServer();
         } else if (action.equals("stop")) {
-            String pid;
-            FileInputStream inputStream;
+            stopServer();
+        }
+    }
+
+    private static String getClient() throws IOException {
+        Properties prop = new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream stream = loader.getResourceAsStream("config.properties");
+        prop.load(stream);
+        return prop.getProperty("detector.client");
+    }
+
+    private static void startServer() throws FileNotFoundException {
+        Result result = Executor.execute(new Command("ruby ruby/bin/server start"));
+
+        if (result.isSuccessFull()) {
+            String output = result.getOutput();
+            String pidLine = output.substring(output.indexOf("PID is ") + 7);
+            String pid = pidLine.substring(0, pidLine.indexOf("."));
+            PrintWriter out = new PrintWriter(rubyPidPath);
+            out.write(pid);
+            out.close();
+        }
+    }
+
+    private static void stopServer() throws IOException {
+        String pid;
+        FileInputStream inputStream;
+        try {
+            inputStream = new FileInputStream(rubyPidPath);
+
             try {
-                inputStream = new FileInputStream(rubyPidPath);
+                pid = IOUtils.toString(inputStream);
 
-                try {
-                    pid = IOUtils.toString(inputStream);
-
-                    if (pid != null) {
-                        Executor.execute(new Command("ruby ruby/bin/server stop"));
-                    }
-                } catch (FileNotFoundException e) {
-                } finally {
-                    inputStream.close();
+                if (pid != null) {
+                    Executor.execute(new Command("ruby ruby/bin/server stop"));
                 }
+            } catch (FileNotFoundException e) {
             } finally {
+                inputStream.close();
             }
+        } finally {
         }
     }
 

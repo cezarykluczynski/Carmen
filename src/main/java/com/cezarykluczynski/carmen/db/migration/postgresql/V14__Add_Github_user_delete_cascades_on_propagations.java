@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class V14__Add_Github_user_delete_cascades_on_propagations implements JdbcMigration {
+    @SuppressWarnings("checkstyle:methodlength")
     public void migrate(Connection connection) throws Exception {
         PreparedStatement statement = connection.prepareStatement(
             "ALTER TABLE propagations.abstract_base " +

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.db.migration;
+package com.cezarykluczynski.carmen.db.migration.postgresql;
 
 import org.flywaydb.core.api.migration.jdbc.JdbcMigration;
 

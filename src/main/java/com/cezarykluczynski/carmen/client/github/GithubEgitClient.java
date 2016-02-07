@@ -57,7 +57,8 @@ public class GithubEgitClient implements GithubClientInterface {
         return userList;
     }
 
-    private List<Repository> mapToNativeRepositoriesPOJOList(List<org.eclipse.egit.github.core.Repository> repositoriesListRemote) {
+    private List<Repository> mapToNativeRepositoriesPOJOList(
+            List<org.eclipse.egit.github.core.Repository> repositoriesListRemote) {
         List<Repository> repositoryListLocal = new ArrayList<Repository>();
 
         for (org.eclipse.egit.github.core.Repository repository : repositoriesListRemote) {
@@ -80,7 +81,8 @@ public class GithubEgitClient implements GithubClientInterface {
         return repositoryListLocal;
     }
 
-    private PaginationAwareArrayList<User> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users) throws IOException {
+    private PaginationAwareArrayList<User> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users)
+            throws IOException {
         Iterator<Collection<org.eclipse.egit.github.core.User>> iterator = users.iterator();
         Collection<org.eclipse.egit.github.core.User> collection = iterator.next();
         PaginationAwareArrayList<User> userList = new PaginationAwareArrayList<User>();

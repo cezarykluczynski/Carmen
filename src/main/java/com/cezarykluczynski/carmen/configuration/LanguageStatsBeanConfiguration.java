@@ -34,7 +34,8 @@ public class LanguageStatsBeanConfiguration {
         } else if (detectorClient.equals("cli")) {
             return new CLILangsStatsAdapter(languageMapper);
         } else {
-            throw new IOException("Detector client could not be instantiated. Unknown client \"" + detectorClient + "\".");
+            throw new IOException("Detector client could not be instantiated. Unknown client \"" + detectorClient +
+                    "\".");
         }
     }
 

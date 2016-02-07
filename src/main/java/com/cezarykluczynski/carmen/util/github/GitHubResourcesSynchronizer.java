@@ -59,7 +59,8 @@ public class GitHubResourcesSynchronizer {
         GitHubResource gitHubResourceToCorrespondTo, List<GitHubResource> githubResourcesList
     ) {
         for (GitHubResource gitHubResourceToCompare : githubResourcesList) {
-            if (gitHubResourceToCorrespondTo.getGitHubResourceId().equals(gitHubResourceToCompare.getGitHubResourceId())) {
+            if (gitHubResourceToCorrespondTo.getGitHubResourceId()
+                    .equals(gitHubResourceToCompare.getGitHubResourceId())) {
                 return gitHubResourceToCompare;
             }
         }

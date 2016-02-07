@@ -23,7 +23,8 @@ class UserDAOImplUserEntityHydrator {
         return userEntity;
     }
 
-    private void hydrateUserEntityUsingExistingUserSet(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
+    private void hydrateUserEntityUsingExistingUserSet(User userEntity,
+                                                       com.cezarykluczynski.carmen.set.github.User userSet) {
         userEntity.setGithubId(userSet.getId());
         userEntity.setName(userSet.getName());
         userEntity.setAvatarUrl(userSet.getAvatarUrl());

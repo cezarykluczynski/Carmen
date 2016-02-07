@@ -1,7 +1,5 @@
 package com.cezarykluczynski.carmen.util.network;
 
-import org.json.JSONObject;
-
 import java.util.Map;
 
 public interface HTTPClient<T> {

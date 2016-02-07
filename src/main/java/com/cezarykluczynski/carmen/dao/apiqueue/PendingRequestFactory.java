@@ -1,8 +1,5 @@
 package com.cezarykluczynski.carmen.dao.apiqueue;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +33,8 @@ public class PendingRequestFactory {
         return createPendingRequestEntity(userEntity, userFollowingEntity, "UsersGhostPaginator", "following_url");
     }
 
-    private PendingRequest createPendingRequestEntity(User userEntity, Propagation propagationEntity, String executor, String endpoint) {
+    private PendingRequest createPendingRequestEntity(User userEntity, Propagation propagationEntity, String executor,
+                                                      String endpoint) {
         return apiqueuePendingRequestDAOImpl.create(
             executor,
             userEntity,

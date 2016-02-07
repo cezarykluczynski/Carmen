@@ -4,7 +4,6 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.HashMap;
-import org.json.JSONObject;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.util.HashMapJsonConverter;

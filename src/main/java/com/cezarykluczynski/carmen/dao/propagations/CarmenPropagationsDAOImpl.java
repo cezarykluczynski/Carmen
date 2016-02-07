@@ -12,7 +12,8 @@ import java.util.List;
 
 public class CarmenPropagationsDAOImpl {
 
-    protected CarmenRelationalEntity findOldestPropagationInPhase(SessionFactory sessionFactory, Class clazz, String phase) {
+    protected CarmenRelationalEntity findOldestPropagationInPhase(SessionFactory sessionFactory, Class clazz,
+                                                                  String phase) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(clazz)
             .add(Restrictions.eq("phase", phase))

@@ -3,7 +3,6 @@ package com.cezarykluczynski.carmen.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.PageIterator;
 
 public class PaginationAwareArrayList<E> extends ArrayList<E> {
@@ -27,9 +26,9 @@ public class PaginationAwareArrayList<E> extends ArrayList<E> {
         setCount(collection.size());
     }
 
-    public void addPaginationLimitAndOffset(Integer limit, Integer offset) {
-        setLimit(limit);
-        setOffset(offset);
+    public void addPaginationLimitAndOffset(Integer paginationLimit, Integer paginationOffset) {
+        setLimit(paginationLimit);
+        setOffset(paginationOffset);
     }
 
     public void setOffset(Integer offset) {

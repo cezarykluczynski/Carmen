@@ -36,7 +36,8 @@ class CassandraMigrations {
     private static void configure() throws IOException {
         try {
             Properties properties = new Properties();
-            InputStream inputStream = CassandraMigrations.class.getClassLoader().getResourceAsStream("config.properties");
+            InputStream inputStream = CassandraMigrations.class.getClassLoader()
+                    .getResourceAsStream("config.properties");
             properties.load(inputStream);
 
             contactpoints = properties.getProperty("cassandra.contactpoints");
@@ -87,7 +88,8 @@ class CassandraMigrations {
                 .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
                         .setPort(thriftPort)
                         .setMaxConnsPerHost(3)
-                        .setSeeds(contactpoints + ":" + Integer.toString(thriftPort)) // TODO: allow multiple contactpoints
+                        .setSeeds(contactpoints + ":" + Integer.toString(thriftPort))
+                        // TODO: allow multiple contactpoints
                 )
                 .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
                 .buildKeyspace(ThriftFamilyFactory.getInstance());
@@ -107,9 +109,9 @@ class CassandraMigrations {
         com.contrastsecurity.cassandra.migration.config.Keyspace keyspace =
                 new com.contrastsecurity.cassandra.migration.config.Keyspace();
         keyspace.setName(githubSocialStatsKeyspaceName);
-        com.contrastsecurity.cassandra.migration.config.Cluster cluster = keyspace.getCluster();
-        cluster.setContactpoints(contactpoints);
-        cluster.setPort(port);
+        com.contrastsecurity.cassandra.migration.config.Cluster migrationCluster = keyspace.getCluster();
+        migrationCluster.setContactpoints(contactpoints);
+        migrationCluster.setPort(port);
 
         CassandraMigration cassandraMigration = new CassandraMigration();
         cassandraMigration.getConfigs().setScriptsLocations(scriptsLocations);

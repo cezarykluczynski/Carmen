@@ -28,7 +28,8 @@ public class LanguagesListUpdateExecutor implements Runnable {
             .filter(language -> !listHasLanguage(initiallySavedLanguagesList, language))
             .collect(Collectors.toList());
 
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesListToSave = createLanguagesListToSave(missingLinguistLanguageList);
+        List<com.cezarykluczynski.carmen.model.pub.Language> languagesListToSave =
+                createLanguagesListToSave(missingLinguistLanguageList);
         languagesDAO.saveAll(languagesListToSave);
 
         List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = cc(linguistLanguageList);
@@ -36,14 +37,18 @@ public class LanguagesListUpdateExecutor implements Runnable {
     }
 
     private boolean listHasLanguage(List<com.cezarykluczynski.carmen.model.pub.Language> list, Language language) {
-        return list.stream().filter(languageEntity -> languageEntity.getName().equals(language.getName())).collect(Collectors.toList()).size() > 0;
+        return list.stream()
+                .filter(languageEntity -> languageEntity.getName().equals(language.getName()))
+                .collect(Collectors.toList()).size() > 0;
     }
 
-    private List<com.cezarykluczynski.carmen.model.pub.Language> createLanguagesListToSave(List<Language> languagesList) {
+    private List<com.cezarykluczynski.carmen.model.pub.Language> createLanguagesListToSave(
+            List<Language> languagesList) {
         List<com.cezarykluczynski.carmen.model.pub.Language> languagesListToSave = new ArrayList<>();
 
         languagesList.stream().forEach(language -> {
-            com.cezarykluczynski.carmen.model.pub.Language languageToSave = new com.cezarykluczynski.carmen.model.pub.Language();
+            com.cezarykluczynski.carmen.model.pub.Language languageToSave =
+                    new com.cezarykluczynski.carmen.model.pub.Language();
             languageToSave.setLinguistColor(language.getColor());
             languageToSave.setLinguistLanguageType(LinguistLanguageType.valueOf(language.getType().toString()));
             languageToSave.setName(language.getName());
@@ -59,9 +64,12 @@ public class LanguagesListUpdateExecutor implements Runnable {
 
         for (com.cezarykluczynski.carmen.model.pub.Language savedLanguage : savedLanguagesList) {
             for (Language linguistLanguage : linguistLanguageList) {
-                if (linguistLanguage.getName().equals(savedLanguage.getName()) && linguistLanguage.getParent() != null) {
+                if (linguistLanguage.getName().equals(savedLanguage.getName()) &&
+                        linguistLanguage.getParent() != null) {
                     for(com.cezarykluczynski.carmen.model.pub.Language savedLanguageParent : savedLanguagesList) {
                         if (savedLanguageParent.getName().equals(linguistLanguage.getParent().getName())) {
+                            if (savedLanguage.getLinguistParent() != null &&
+                                    !savedLanguage.getLinguistParent().getName().equals(savedLanguageParent.getName()))
                             savedLanguage.setLinguistParent(savedLanguageParent);
                             languagesWithParentsToSave.add(savedLanguage);
                         }

@@ -4,7 +4,6 @@ import com.cezarykluczynski.carmen.lang.stats.domain.Language;
 import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper;
-import com.cezarykluczynski.carmen.util.exec.Command;
 import com.cezarykluczynski.carmen.util.exec.Executor;
 import com.cezarykluczynski.carmen.util.exec.LanguageStatsCommand;
 import com.cezarykluczynski.carmen.util.exec.Result;

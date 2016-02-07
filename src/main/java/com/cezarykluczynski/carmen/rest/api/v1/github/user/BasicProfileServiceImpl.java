@@ -8,8 +8,6 @@ import com.cezarykluczynski.carmen.model.github.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.PathParam;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
 @Service("basicProfileService")

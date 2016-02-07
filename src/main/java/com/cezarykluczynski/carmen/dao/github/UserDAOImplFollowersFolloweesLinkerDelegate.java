@@ -71,8 +71,8 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
 
     private BasicCollectionPersister getLinkedCollectionPersister(String relationName) {
         Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
-        BasicCollectionPersister collectionPersister =
-            (BasicCollectionPersister) collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User." + relationName);
+        BasicCollectionPersister collectionPersister = (BasicCollectionPersister)
+                collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User." + relationName);
         return collectionPersister;
     }
 

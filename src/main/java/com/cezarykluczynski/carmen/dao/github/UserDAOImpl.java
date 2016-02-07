@@ -15,7 +15,6 @@ import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.client.github.GithubClient;
 
 import java.util.List;
-import java.lang.Boolean;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;

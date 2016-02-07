@@ -3,8 +3,6 @@ package com.cezarykluczynski.carmen.dao.propagations;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 import com.cezarykluczynski.carmen.model.github.User;
 
-import java.util.List;
-
 public interface UserFollowingDAO {
 
     UserFollowing findByUser(User userEntity);

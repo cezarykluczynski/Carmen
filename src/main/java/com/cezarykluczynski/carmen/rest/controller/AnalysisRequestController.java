@@ -2,8 +2,6 @@ package com.cezarykluczynski.carmen.rest.controller;
 
 import java.io.IOException;
 
-import java.lang.AssertionError;
-
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

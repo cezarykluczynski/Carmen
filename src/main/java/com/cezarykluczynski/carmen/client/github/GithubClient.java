@@ -72,7 +72,8 @@ public class GithubClient implements GithubClientInterface {
         }
     }
 
-    public void decrementRateLimitRemainingCounter(String methodName) throws GithubRateLimitExceededException, IOException {
+    public void decrementRateLimitRemainingCounter(String methodName)
+            throws GithubRateLimitExceededException, IOException {
         if (methodIsCoreMethod(methodName)) {
             decrementCoreRateLimitRemainingCounter();
         }
@@ -107,7 +108,8 @@ public class GithubClient implements GithubClientInterface {
     }
 
     private boolean methodIsCoreMethod(String methodName) {
-        return methodName == "getUser" || methodName == "getFollowers" || methodName == "getRepositories";
+        return methodName.equals("getUser") || methodName.equals("getFollowers") ||
+                methodName.equals("getRepositories");
     }
 
     private void refreshCoreLimit() throws IOException {

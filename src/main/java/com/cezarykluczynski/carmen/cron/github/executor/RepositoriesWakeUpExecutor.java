@@ -43,7 +43,8 @@ public class RepositoriesWakeUpExecutor implements Runnable {
     }
 
     private Date dateThresholdForWakeUp() {
-        return new Date(System.currentTimeMillis() - (refreshIntervalDays * DateTimeConstants.MILLISECONDS_IN_DAY.getValue()));
+        return new Date(
+                System.currentTimeMillis() - (refreshIntervalDays * DateTimeConstants.MILLISECONDS_IN_DAY.getValue()));
     }
 
 }

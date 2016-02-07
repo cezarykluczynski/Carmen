@@ -3,23 +3,19 @@ package com.cezarykluczynski.carmen.propagation.github;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.HashMap;
-
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.model.propagations.Propagation;
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository;
 import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 
 @Component
-public class UserFollowersFollowingReportToSleepPhasePropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
+public class UserFollowersFollowingReportToSleepPhasePropagation implements
+        com.cezarykluczynski.carmen.propagation.Propagation {
 
     @Autowired
     UserDAO githubUserDAOImpl;

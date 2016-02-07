@@ -67,7 +67,8 @@ public class HTTPJSONClientImpl implements HTTPClient<JSONObject> {
         }
     }
 
-    private JSONObject executeHttpRequest(CloseableHttpClient httpClient, HttpUriRequest httpPost) throws HTTPRequestException{
+    private JSONObject executeHttpRequest(CloseableHttpClient httpClient, HttpUriRequest httpPost)
+            throws HTTPRequestException {
         try {
             CloseableHttpResponse response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();

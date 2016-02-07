@@ -2,10 +2,7 @@ package com.cezarykluczynski.carmen.dao.github;
 
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.util.DateUtil;
 
-import com.jcabi.github.Repo;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +11,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @org.springframework.stereotype.Repository

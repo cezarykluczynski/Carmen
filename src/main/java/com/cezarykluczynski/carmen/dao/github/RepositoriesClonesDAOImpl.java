@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.dao.github;
 
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.DateUtil;
@@ -32,7 +31,8 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
     public RepositoryClone createStubEntity(Server server, Repository repositoryEntity) {
         RepositoryClone repositoryCloneEntity = new RepositoryClone();
         String repositoryFullName = repositoryEntity.getFullName();
-        repositoryCloneEntity.setLocationDirectory(DirectoryNameGenerator.generateLocationDirectory(repositoryFullName));
+        repositoryCloneEntity.setLocationDirectory(
+                DirectoryNameGenerator.generateLocationDirectory(repositoryFullName));
         repositoryCloneEntity.setLocationSubdirectory(repositoryFullName);
         repositoryCloneEntity.setRepository(repositoryEntity);
         repositoryCloneEntity.setServerId(server.getServerId());

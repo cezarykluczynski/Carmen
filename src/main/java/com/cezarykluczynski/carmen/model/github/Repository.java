@@ -6,10 +6,6 @@ import com.cezarykluczynski.carmen.util.github.GitHubResource;
 import javax.persistence.*;
 
 import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-
-import org.joda.time.MutableDateTime;
 
 @Entity(name = "github.Repository")
 @Table(schema = "github", name = "repositories")

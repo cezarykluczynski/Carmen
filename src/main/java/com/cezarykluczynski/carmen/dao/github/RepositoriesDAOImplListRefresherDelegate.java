@@ -62,12 +62,11 @@ class RepositoriesDAOImplListRefresherDelegate {
     }
 
     private void extractGitHubRepositoriesSynchronizerLists() {
-        repositoriesToCreate =
-            (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>) repositoriesSynchronizer.getResourcesToCreate();
-        repositoriesToDelete =
-            (List<Repository>)(List<?>) repositoriesSynchronizer.getResourcesToDelete();
-        repositoriesToPreserve =
-            (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>) repositoriesSynchronizer.getResourcesToPreserve();
+        repositoriesToCreate = (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>)
+                repositoriesSynchronizer.getResourcesToCreate();
+        repositoriesToDelete = (List<Repository>)(List<?>) repositoriesSynchronizer.getResourcesToDelete();
+        repositoriesToPreserve = (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>)
+                repositoriesSynchronizer.getResourcesToPreserve();
     }
 
     private void refreshRepositoriesList() {

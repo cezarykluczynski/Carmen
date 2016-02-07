@@ -4,6 +4,6 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
     </session-factory>
 </hibernate-configuration>

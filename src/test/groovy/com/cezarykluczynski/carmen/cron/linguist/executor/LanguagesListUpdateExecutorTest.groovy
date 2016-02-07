@@ -17,7 +17,7 @@ import org.testng.annotations.Test
      "classpath:spring/mvc-core-config.xml",
      "classpath:spring/cron-config.xml"
 ], classes = [LanguageStatsBeanConfiguration.class], loader = SpringApplicationContextLoader.class)
-class LanguagesListUpdateExecutorIntegrationTest extends AbstractTestNGSpringContextTests {
+class LanguagesListUpdateExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     LanguagesListUpdateExecutor languagesListUpdateExecutor

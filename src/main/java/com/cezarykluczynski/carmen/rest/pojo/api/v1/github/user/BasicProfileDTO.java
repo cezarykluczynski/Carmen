@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.set.github;
+package com.cezarykluczynski.carmen.rest.pojo.api.v1.github.user;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,25 +6,15 @@ import lombok.Data;
 import javax.persistence.Entity;
 
 @Entity
-@Data
 @Builder
-public class User {
-
-    private Long id;
+@Data
+public class BasicProfileDTO {
 
     private String login;
 
     private String name;
 
-    private boolean requested;
-
-    private boolean optOut;
-
     private String avatarUrl;
-
-    private String type;
-
-    private boolean siteAdmin;
 
     private String company;
 
@@ -34,11 +24,8 @@ public class User {
 
     private String  email;
 
-    private boolean hireable;
-
     private String bio;
 
-    public boolean exists() {
-        return id != null;
-    }
+    private boolean hireable;
+
 }

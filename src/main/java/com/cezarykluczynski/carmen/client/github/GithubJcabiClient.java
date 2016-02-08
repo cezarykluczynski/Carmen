@@ -17,7 +17,6 @@ import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
-
 public class GithubJcabiClient implements GithubClientInterface {
 
     public GithubJcabiClient(RtGithub github) {
@@ -57,21 +56,21 @@ public class GithubJcabiClient implements GithubClientInterface {
         try {
             JsonObject userJson = user.json();
 
-            return new User(
-                new Long(userJson.getInt("id")),
-                userJson.getString("login"),
-                getUserName(userJson),
-                userJson.getString("avatar_url"),
-                userJson.getString("type"),
-                userJson.getBoolean("site_admin"),
-                getUserCompany(userJson),
-                getUserBlog(userJson),
-                getUserLocation(userJson),
-                getUserEmail(userJson),
-                getUserHireable(userJson)
-            );
+            return User.builder()
+                    .login(userJson.getString("login"))
+                    .name(getUserName(userJson))
+                    .avatarUrl( userJson.getString("avatar_url"))
+                    .type(userJson.getString("type"))
+                    .siteAdmin(userJson.getBoolean("site_admin"))
+                    .company( getUserCompany(userJson))
+                    .blog(getUserBlog(userJson))
+                    .location(getUserLocation(userJson))
+                    .email(getUserEmail(userJson))
+                    .hireable(getUserHireable(userJson))
+                    .bio(getUserBio(userJson))
+                    .build();
         } catch (AssertionError e) {
-            return new User(null, name);
+            return User.builder().name(name).build();
         }
     }
 
@@ -92,83 +91,43 @@ public class GithubJcabiClient implements GithubClientInterface {
     }
 
     private String getUserName(JsonObject userJson) {
-        String name = null;
-
-        try {
-            name = userJson.getString("name");
-        } catch (ClassCastException e) {
-        } catch (IllegalStateException e) {
-        }
-
-        if (name == null) {
-            name = "";
-        }
-
-        return name;
+        return getFieldFromJsonObject(userJson, "name");
     }
 
     private String getUserCompany(JsonObject userJson) {
-        String company = null;
-
-        try {
-            company = userJson.getString("company");
-        } catch (ClassCastException e) {
-        } catch (IllegalStateException e) {
-        }
-
-        if (company == null) {
-            company = "";
-        }
-
-        return company;
+        return getFieldFromJsonObject(userJson, "company");
     }
 
     private String getUserLocation(JsonObject userJson) {
-        String location = null;
-
-        try {
-            location = userJson.getString("location");
-        } catch (ClassCastException e) {
-        } catch (IllegalStateException e) {
-        }
-
-        if (location == null) {
-            location = "";
-        }
-
-        return location;
+        return getFieldFromJsonObject(userJson, "location");
     }
 
     private String getUserBlog(JsonObject userJson) {
-        String blog = null;
-
-        try {
-            blog = userJson.getString("blog");
-        } catch (ClassCastException e) {
-        } catch (IllegalStateException e) {
-        }
-
-        if (blog == null) {
-            blog = "";
-        }
-
-        return blog;
+        return getFieldFromJsonObject(userJson, "blog");
     }
 
     private String getUserEmail(JsonObject userJson) {
-        String email = null;
+        return getFieldFromJsonObject(userJson, "email");
+    }
+
+    private String getUserBio(JsonObject userJson) {
+        return getFieldFromJsonObject(userJson, "bio");
+    }
+
+    private String getFieldFromJsonObject(JsonObject userJson, String field) {
+        String value = null;
 
         try {
-           email = userJson.getString("email");
+            value = userJson.getString(field);
         } catch (ClassCastException e) {
         } catch (IllegalStateException e) {
         }
 
-       if (email == null) {
-           email = "";
-       }
+        if (value == null) {
+            value = "";
+        }
 
-       return email;
+        return value;
     }
 
     private Boolean getUserHireable(JsonObject userJson) {

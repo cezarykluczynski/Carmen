@@ -6,12 +6,7 @@ import org.testng.Assert
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.thenReturn
 import static org.mockito.Mockito.verify
-
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
-
-import java.util.Collection
 
 import org.eclipse.egit.github.core.User as EgitUser
 import org.eclipse.egit.github.core.client.PageIterator

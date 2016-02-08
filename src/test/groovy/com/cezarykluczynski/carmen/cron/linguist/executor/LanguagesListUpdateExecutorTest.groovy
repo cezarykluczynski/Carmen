@@ -43,9 +43,11 @@ class LanguagesListUpdateExecutorTest extends AbstractTestNGSpringContextTests {
         List<Language> languagesList = languagesDAO.findAll()
         Language languageBison = languagesList.stream().filter({ language -> language.getName() == "Bison" }).findFirst().get()
         Language languageYacc = languagesList.stream().filter({ language -> language.getName() == "Yacc" }).findFirst().get()
+        Language languageColdFusion = languagesList.stream().filter({ language -> language.getName() == "ColdFusion" }).findFirst().get()
 
         Assert.assertEquals linguistLanguagesCount, languagesList.size()
         Assert.assertEquals languageBison.getLinguistParent(), languageYacc
+        Assert.assertNull languageColdFusion.getLinguistParent()
     }
 
 }

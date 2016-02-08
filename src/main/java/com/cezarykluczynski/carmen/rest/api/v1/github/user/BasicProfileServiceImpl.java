@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user;
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.pojo.rest.api.v1.github.error.Error404ResponsePOJO;
-import com.cezarykluczynski.carmen.pojo.rest.api.v1.github.user.BasicProfilePOJO;
+import com.cezarykluczynski.carmen.rest.pojo.api.v1.github.error.Error404ResponsePOJO;
+import com.cezarykluczynski.carmen.rest.pojo.api.v1.github.user.BasicProfileDTO;
 import com.cezarykluczynski.carmen.model.github.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +26,17 @@ public class BasicProfileServiceImpl implements BasicProfileService {
         }
 
         return Response.ok(
-            new BasicProfilePOJO(
-                userEntity.getLogin(),
-                userEntity.getName(),
-                userEntity.getAvatarUrl(),
-                userEntity.getCompany(),
-                userEntity.getBlog(),
-                userEntity.getLocation(),
-                userEntity.getEmail(),
-                userEntity.getBio(),
-                userEntity.getHireable()
-            )
+                BasicProfileDTO.builder()
+                        .login(userEntity.getLogin())
+                        .name(userEntity.getName())
+                        .avatarUrl(userEntity.getAvatarUrl())
+                        .company(userEntity.getCompany())
+                        .blog(userEntity.getBlog())
+                        .location(userEntity.getLocation())
+                        .email(userEntity.getEmail())
+                        .bio(userEntity.getBio())
+                        .hireable(userEntity.getHireable())
+                        .build()
         ).build();
     }
 

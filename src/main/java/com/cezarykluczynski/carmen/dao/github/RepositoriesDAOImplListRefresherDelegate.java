@@ -116,7 +116,7 @@ class RepositoriesDAOImplListRefresherDelegate {
         repositoryEntity.setDescription(repositorySet.getDescription());
         repositoryEntity.setHomepage(repositorySet.getHomepage());
 
-        repositoryEntity.setFork(repositorySet.getFork());
+        repositoryEntity.setFork(repositorySet.isFork());
         repositoryEntity.setDefaultBranch(repositorySet.getDefaultBranch());
         repositoryEntity.setCloneUrl(repositorySet.getCloneUrl());
 

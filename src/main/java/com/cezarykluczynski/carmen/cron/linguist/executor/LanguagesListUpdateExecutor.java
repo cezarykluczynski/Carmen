@@ -68,8 +68,9 @@ public class LanguagesListUpdateExecutor implements Runnable {
                         linguistLanguage.getParent() != null) {
                     for(com.cezarykluczynski.carmen.model.pub.Language savedLanguageParent : savedLanguagesList) {
                         if (savedLanguageParent.getName().equals(linguistLanguage.getParent().getName())) {
-                            if (savedLanguage.getLinguistParent() != null &&
-                                    !savedLanguage.getLinguistParent().getName().equals(savedLanguageParent.getName()))
+                            if (savedLanguage.getId() != savedLanguageParent.getId() &&
+                                    (savedLanguage.getLinguistParent() == null ||
+                                    !savedLanguage.getLinguistParent().getName().equals(savedLanguageParent.getName())))
                             savedLanguage.setLinguistParent(savedLanguageParent);
                             languagesWithParentsToSave.add(savedLanguage);
                         }

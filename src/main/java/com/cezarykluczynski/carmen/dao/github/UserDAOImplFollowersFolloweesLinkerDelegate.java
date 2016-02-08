@@ -24,22 +24,16 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
         this.sessionFactory = sessionFactory;
     }
 
-    public UserDAOImplFollowersFolloweesLinkerDelegate() {
-    }
-
     @Transactional
     public void linkFollowerWithFollowee(User follower, User followee) {
+        doLinkFollowerWithFollowee(follower.getId(), followee.getId());
+    }
+
+    private void doLinkFollowerWithFollowee(Long followerId, Long followeeId) {
         String tableName = getTableNameForLinkedUserEntities();
         String followersColumn = getKeyColumnNameForLinkedUserEntities("followers");
         String followeesColumn = getKeyColumnNameForLinkedUserEntities("followees");
-        Long followerId = follower.getId();
-        Long followeeId = followee.getId();
-        doLinkFollowerWithFollowee(tableName, followersColumn, followeesColumn, followerId, followeeId);
-    }
 
-    private void doLinkFollowerWithFollowee(
-        String tableName, String followersColumn, String followeesColumn, Long followerId, Long followeeId
-    ) {
         Session session = sessionFactory.openSession();
         try {
             session
@@ -51,7 +45,8 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
                 .setParameter("followeeId", followeeId)
                 .executeUpdate();
         } catch (ConstraintViolationException e) {
-            // Constraint already exists, so it's OK.
+            /* Constraint already exists, because it was created when this method was executed
+               when current users roles were reversed. */
         } finally {
             session.close();
         }

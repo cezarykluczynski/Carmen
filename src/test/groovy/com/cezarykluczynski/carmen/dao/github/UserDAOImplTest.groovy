@@ -58,19 +58,19 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         String email = login + "@example.com"
         boolean hireable = false
 
-        UserSet userSet = new UserSet(
-            id,
-            login,
-            name,
-            avatarUrl,
-            type,
-            siteAdmin,
-            company,
-            blog,
-            location,
-            email,
-            hireable
-        )
+        UserSet userSet = UserSet.builder()
+            .id(id)
+            .login(login)
+            .name(name)
+            .avatarUrl(avatarUrl)
+            .type(type)
+            .siteAdmin(siteAdmin)
+            .company(company)
+            .blog(blog)
+            .location(location)
+            .email(email)
+            .hireable(hireable)
+            .build()
 
         // exercise
         User userEntity = githubUserDAOImpl.create userSet
@@ -166,7 +166,7 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
-        UserSet userSet = new UserSet(null, newLogin)
+        UserSet userSet = UserSet.builder().login(newLogin).build()
 
         // exercise
         githubUserDAOImpl.update userEntity, userSet
@@ -221,10 +221,8 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void findUserInReportFollowersFolloweesPhaseExistingEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
-            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "report")
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
+        propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "report")
+        propagationsUserFollowingDAOImplFixtures.createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
         // exercise
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
@@ -240,10 +238,8 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     void findUserInReportFollowersFolloweesPhaseNonExistingEntity() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
-            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
+        propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
+        propagationsUserFollowingDAOImplFixtures.createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
         // exercise
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()

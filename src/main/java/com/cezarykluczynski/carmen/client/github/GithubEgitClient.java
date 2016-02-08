@@ -62,20 +62,21 @@ public class GithubEgitClient implements GithubClientInterface {
         List<Repository> repositoryListLocal = new ArrayList<Repository>();
 
         for (org.eclipse.egit.github.core.Repository repository : repositoriesListRemote) {
-            repositoryListLocal.add(new Repository(
-                repository.getId(),
-                repository.getParent() == null ? null : repository.getParent().getId(),
-                repository.getName(),
-                repository.generateId(),
-                repository.getDescription(),
-                repository.getHomepage(),
-                repository.isFork(),
-                repository.getMasterBranch(),
-                repository.getCloneUrl(),
-                repository.getCreatedAt(),
-                repository.getPushedAt(),
-                repository.getUpdatedAt()
-            ));
+            repositoryListLocal.add(Repository.builder()
+                            .id(repository.getId())
+                            .parentId(repository.getParent() == null ? null : repository.getParent().getId())
+                            .name(repository.getName())
+                            .fullName(repository.generateId())
+                            .description(repository.getDescription())
+                            .homepage(repository.getHomepage())
+                            .fork(repository.isFork())
+                            .defaultBranch(repository.getMasterBranch())
+                            .cloneUrl(repository.getCloneUrl())
+                            .created(repository.getCreatedAt())
+                            .pushed(repository.getPushedAt())
+                            .updated(repository.getUpdatedAt())
+                            .build()
+            );
         }
 
         return repositoryListLocal;
@@ -88,7 +89,7 @@ public class GithubEgitClient implements GithubClientInterface {
         PaginationAwareArrayList<User> userList = new PaginationAwareArrayList<User>();
 
         for (org.eclipse.egit.github.core.User user : collection) {
-            User userSet = new User(null, user.getLogin());
+            User userSet = User.builder().login(user.getLogin()).build();
             userList.add(userSet);
         }
 

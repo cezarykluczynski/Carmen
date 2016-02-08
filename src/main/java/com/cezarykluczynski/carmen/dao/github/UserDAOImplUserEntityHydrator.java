@@ -10,8 +10,8 @@ class UserDAOImplUserEntityHydrator {
     public User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {
         userEntity.setLogin(userSet.getLogin());
         userEntity.setFound(userSet.exists());
-        userEntity.setRequested(userSet.getRequested());
-        userEntity.setOptOut(userSet.getOptOut());
+        userEntity.setRequested(userSet.isRequested());
+        userEntity.setOptOut(userSet.isOptOut());
         userEntity.setUpdated();
 
         if (userEntity.getFound()) {
@@ -29,12 +29,12 @@ class UserDAOImplUserEntityHydrator {
         userEntity.setName(userSet.getName());
         userEntity.setAvatarUrl(userSet.getAvatarUrl());
         userEntity.setType(userSet.getType());
-        userEntity.setSiteAdmin(userSet.getSiteAdmin());
+        userEntity.setSiteAdmin(userSet.isSiteAdmin());
         userEntity.setCompany(userSet.getCompany());
         userEntity.setBlog(userSet.getBlog());
         userEntity.setLocation(userSet.getLocation());
         userEntity.setEmail(userSet.getEmail());
-        userEntity.setHireable(userSet.getHireable());
+        userEntity.setHireable(userSet.isHireable());
         userEntity.setBio(userSet.getBio());
     }
 

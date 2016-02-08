@@ -157,7 +157,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
-        UserSet userSetFollower = new UserSet(null, userSetLogin)
+        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
         userSetsList.add userSetFollower
         when githubClient.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList
 
@@ -186,7 +186,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
-        UserSet userSetFollower = new UserSet(null, userSetLogin)
+        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
         userSetsList.add userSetFollower
         when githubClient.getFollowing(userEntitylogin, limit, 1) thenReturn userSetsList
 
@@ -216,7 +216,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, false)
-        UserSet userSetFollower = new UserSet(null, userSetLogin)
+        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
         userSetsList.setNextPage 2
         userSetsList.add userSetFollower
         when githubClient.getFollowers(userEntitylogin, limit, 1) thenReturn userSetsList

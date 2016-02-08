@@ -69,7 +69,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         String currentLogin = userEntity.getLogin()
-        UserSet userSet = new UserSet(null, currentLogin)
+        UserSet userSet = UserSet.builder().login(currentLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubClient githubClientMock
@@ -96,7 +96,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
-        UserSet userSetMock = new UserSet(null, newLogin)
+        UserSet userSetMock = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSetMock
         githubUserDAOImpl.setGithubClient githubClientMock
@@ -122,7 +122,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
-        UserSet userSet = new UserSet(null, newLogin)
+        UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubClient githubClientMock
@@ -146,7 +146,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
-        UserSet userSet = new UserSet(null, newLogin)
+        UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
         githubUserDAOImpl.setGithubClient githubClientMock
@@ -169,7 +169,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         // setup
         String currentLogin = githubUserDAOImplFixtures.generateRandomLogin()
         GithubClient githubClientMock = getGithubClientMock()
-        UserSet userSetMock = new UserSet(null, currentLogin)
+        UserSet userSetMock = UserSet.builder().login(currentLogin).build()
         when githubClientMock.getUser(currentLogin) thenReturn userSetMock
         githubUserDAOImpl.setGithubClient githubClientMock
 

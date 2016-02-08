@@ -40,9 +40,8 @@ class UserDAOImplFixtures {
     }
 
     public User createNotFoundEntity() {
-        Long id = 2147483647
         String login = generateRandomLogin()
-        UserSet userSet = new UserSet(id, login)
+        UserSet userSet = UserSet.builder().login(login).build()
         User userEntity = githubUserDAOImpl.create userSet
         return userEntity
     }
@@ -56,19 +55,7 @@ class UserDAOImplFixtures {
     }
 
     private UserSet getUserSetEntityWithRandomLogin() {
-        UserSet userSetEntity = new UserSet(
-            null,
-            generateRandomLogin(),
-            "",
-            "",
-            "",
-            false,
-            "",
-            "",
-            "",
-            "",
-            false
-        )
+        UserSet userSetEntity = UserSet.builder().login(generateRandomLogin()).build()
 
         return userSetEntity
     }

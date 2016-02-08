@@ -32,7 +32,6 @@ public class LinguistLanguageMapper implements LanguageMapper {
     }
 
     public Map<Language, LineDiffStat> mapCommitDescription(JSONObject jsonObject) {
-        System.out.println(jsonObject.toString());
         Map<Language, LineDiffStat> commitDescription = new HashMap<>();
 
         Iterator keys = jsonObject.keys();

@@ -85,7 +85,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
-        Assert.assertTrue repositoryCloneEntityResult.getCloned().after(now)
+        Assert.assertTrue repositoryCloneEntityResult.getCloned().equals(now) || repositoryCloneEntityResult.getCloned().after(now)
 
         String cloneDirectory = "${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
         "${repositoryCloneEntityResult.getLocationSubdirectory()}"

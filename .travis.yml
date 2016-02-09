@@ -15,6 +15,7 @@ before_install:
   - git fetch --unshallow
   - rvm install ruby-2.1.5
   - rvm use 2.1.5
+  - pip install --user codecov
   - bundle install
   - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && rm -rf cassandra-migration/src/test/java && cd cassandra-migration && mvn clean install && cd ..
   - mvn compile
@@ -26,9 +27,9 @@ install:
   - gulp
 script:
   - rspec
-  - mvn cobertura:cobertura-integration-test -Dcobertura.report.format=xml
+  - mvn verify
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
 env:
   global:
     secure: J4OhtLGCbT3N/ZzJ86NxN45dYw6HvJ96csigQTX3HkdjLXHs+xptu1t964SXrxbttRKl6dehGBZrCix8wscJLGIe0+BPhzdMZjifhcbmEbs1s9ieABSEuxeAX64aSqtLH5ULXC544V7sVsihONyO2ftuE76msOLmP7/Wh0yXu9kfrwCe2Cnihiczrq/qHNH8fhV4ft0/rMwBRF7rd01oumJGn4gbJngP4IUqM/fbBfX7Z8rlS9fbvIl6gsul1sWpnM9mWSUyTYqb+JdjX8b+xcSBc0Huvn+ebC36uzGZuHpya+DdA8qWIUyb9f/+V0FljLNSqlZlP7DJMaE5I9r9bdDeQ8YWNXwj2Vc6sGpBKzo+3D0x+pZ5ieeZV2GOIY19ZCuq7/FAsNxwDISsAnTylrwEJVxkSw7NtaQzC4XpYn/L2mktRBNdYN2au0uK/fR3R2UsX64n5GUED/yTYHKD5XZdGZ+tLMNSvT7YYcHPtoWAd8y593vojui3KRa6pDY/JGSfXBSTO9LEYSlGiNQWFwA1+qcUXvoYKgFIW5Ee21/ehX389HzBCMAlz9mxIsgmmFcK/jxxdA7Q7wzzvaOsks+TehNg9BSpOx8gIPxJmfXd15/dsuvTPodGT5I0sW0MGczGZhbhnLoOCR+un14xSv+nixixYDuXKuUaXcvJNKk=

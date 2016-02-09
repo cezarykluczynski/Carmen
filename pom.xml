@@ -8,6 +8,8 @@
   <properties>
     <tomcat.version>7.0.37</tomcat.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
+    <jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
   </properties>
 
   <repositories>
@@ -460,6 +462,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.18.1</version>
         <configuration>
+          <argLine>${failsafeArgLine}</argLine>
           <includes>
             <include>**/*IntegrationTest*</include>
           </includes>
@@ -563,6 +566,7 @@
           </execution>
         </executions>
         <configuration>
+          <argLine>${surefireArgLine}</argLine>
           <systemPropertyVariables>
             <noScheduledTasks>1</noScheduledTasks>
           </systemPropertyVariables>
@@ -604,20 +608,71 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.7</version>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.7.5.201505241946</version>
         <configuration>
-          <formats>
-            <format>html</format>
-            <format>xml</format>
-          </formats>
-          <instrumentation>
-            <excludes>
-              <exclude>com/cezarykluczynski/carmen/db/**/*.class</exclude>
-            </excludes>
-          </instrumentation>
+          <excludes>
+            <exclude>com/cezarykluczynski/carmen/db/**/*.class</exclude>
+          </excludes>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>pre-unit-test</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${jacoco.ut.execution.data.file}</destFile>
+              <propertyName>surefireArgLine</propertyName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${jacoco.ut.execution.data.file}</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco/ut</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>pre-integration-test</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <configuration>
+              <destFile>${jacoco.it.execution.data.file}</destFile>
+              <propertyName>failsafeArgLine</propertyName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-integration-test</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>${jacoco.it.execution.data.file}</dataFile>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco/it</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>

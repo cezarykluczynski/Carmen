@@ -77,7 +77,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         when repositoriesDAO.findNotForkedRepositoryWithoutClone() thenReturn repositoryEntity
     }
 
-    @Test
+    @Test(enabled = false)
     void localRepositoryCanBeCloned() {
         // exercise
         gitHubCloneWorker.run()

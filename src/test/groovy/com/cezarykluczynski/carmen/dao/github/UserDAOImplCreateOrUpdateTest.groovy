@@ -132,7 +132,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntityUpdated.getRequested(), false
+        Assert.assertEquals userEntityUpdated.isRequested(), false
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
 
         // teardown
@@ -156,7 +156,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntityUpdated.getRequested(), true
+        Assert.assertEquals userEntityUpdated.isRequested(), true
         Assert.assertEquals userEntityUpdated.getLogin(), newLogin
 
         // teardown

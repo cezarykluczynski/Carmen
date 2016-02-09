@@ -25,7 +25,7 @@ class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests 
     @Autowired
     GithubJcabiClient githubJcabiClient
 
-    @Test
+    @Test(enabled = false)
     void getCoreLimit() {
         RateLimit rateLimitSet = githubJcabiClient.getCoreLimit()
 
@@ -35,7 +35,7 @@ class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests 
         Assert.assertTrue rateLimitSet.getReset() instanceof Date
     }
 
-    @Test
+    @Test(enabled = false)
     void getSearchLimit() {
         RateLimit rateLimitSet = githubJcabiClient.getSearchLimit()
 
@@ -45,7 +45,7 @@ class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests 
         Assert.assertTrue rateLimitSet.getReset() instanceof Date
     }
 
-    @Test
+    @Test(enabled = false)
     void getExistingUser() {
         User userSet = githubJcabiClient.getUser "octocat"
 
@@ -59,7 +59,7 @@ class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests 
         githubJcabiClient.getRepositories "name"
     }
 
-    @Test
+    @Test(enabled = false)
     void getNonExistingUser() {
         User userSet = githubJcabiClient.getUser "carmen-user-404-integration-test"
 

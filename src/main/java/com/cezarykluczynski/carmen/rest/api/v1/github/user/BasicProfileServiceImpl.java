@@ -35,7 +35,7 @@ public class BasicProfileServiceImpl implements BasicProfileService {
                         .location(userEntity.getLocation())
                         .email(userEntity.getEmail())
                         .bio(userEntity.getBio())
-                        .hireable(userEntity.getHireable())
+                        .hireable(userEntity.isHireable())
                         .build()
         ).build();
     }

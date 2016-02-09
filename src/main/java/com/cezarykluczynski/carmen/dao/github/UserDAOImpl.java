@@ -214,7 +214,7 @@ public class UserDAOImpl implements UserDAO {
             User userEntity = findByLogin(login);
             Boolean requested = flags.get("requested");
 
-            if (userEntity.canBeUpdated() || requested && !userEntity.getRequested()) {
+            if (userEntity.canBeUpdated() || requested && !userEntity.isRequested()) {
                 com.cezarykluczynski.carmen.set.github.User userSet = githubClient.getUser(login);
                 applyFlagsToSet(userSet, flags);
                 return update(userEntity, userSet);

@@ -34,7 +34,7 @@ public class UserController {
         viewVariables.put("login", login);
         viewVariables.put("user", user);
 
-        Boolean userWasFound = user instanceof User && user.getFound();
+        Boolean userWasFound = user != null && user.isFound();
         String templateName = userWasFound ? "github/user/user" : "github/user/404";
 
         if (!userWasFound) {

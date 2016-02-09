@@ -80,12 +80,12 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals userEntity.getLogin(), login
         Assert.assertEquals userEntity.getName(), name
         Assert.assertEquals userEntity.getAvatarUrl(), avatarUrl
-        Assert.assertEquals userEntity.getSiteAdmin(), siteAdmin
+        Assert.assertEquals userEntity.isSiteAdmin(), siteAdmin
         Assert.assertEquals userEntity.getCompany(), company
         Assert.assertEquals userEntity.getBlog(), blog
         Assert.assertEquals userEntity.getLocation(), location
         Assert.assertEquals userEntity.getEmail(), email
-        Assert.assertEquals userEntity.getHireable(), hireable
+        Assert.assertEquals userEntity.isHireable(), hireable
 
         // teardown
         githubUserDAOImpl.delete userEntity

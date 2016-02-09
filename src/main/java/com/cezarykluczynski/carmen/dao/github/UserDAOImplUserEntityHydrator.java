@@ -2,6 +2,8 @@ package com.cezarykluczynski.carmen.dao.github;
 
 import com.cezarykluczynski.carmen.model.github.User;
 
+import java.util.Date;
+
 class UserDAOImplUserEntityHydrator {
 
     public UserDAOImplUserEntityHydrator() {
@@ -12,9 +14,9 @@ class UserDAOImplUserEntityHydrator {
         userEntity.setFound(userSet.exists());
         userEntity.setRequested(userSet.isRequested());
         userEntity.setOptOut(userSet.isOptOut());
-        userEntity.setUpdated();
+        userEntity.setUpdated(new Date());
 
-        if (userEntity.getFound()) {
+        if (userEntity.isFound()) {
             hydrateUserEntityUsingExistingUserSet(userEntity, userSet);
         } else {
             hydrateUserEntityWithNonExistingUser(userEntity);
@@ -39,7 +41,7 @@ class UserDAOImplUserEntityHydrator {
     }
 
     private void hydrateUserEntityWithNonExistingUser(User userEntity) {
-        userEntity.setGithubId();
+        userEntity.setGithubId(null);
         userEntity.setName("");
         userEntity.setAvatarUrl("");
         userEntity.setType("");

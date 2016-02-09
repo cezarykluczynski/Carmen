@@ -35,7 +35,7 @@ public class UserFollowingPropagation implements com.cezarykluczynski.carmen.pro
 
     @Override
     public void propagate() {
-        if (!userEntity.getFound()) {
+        if (!userEntity.isFound()) {
             return;
         }
 

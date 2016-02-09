@@ -33,7 +33,7 @@ public class UserRepositoriesPropagation implements com.cezarykluczynski.carmen.
 
     @Override
     public void propagate() {
-        if (!userEntity.getFound()) {
+        if (!userEntity.isFound()) {
             return;
         }
 

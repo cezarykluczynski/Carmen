@@ -97,7 +97,7 @@ class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
         MockitoAnnotations.initMocks this
         String login = githubUserDAOImplFixtures.generateRandomLogin()
         User userEntityMock = mock User.class
-        when userEntityMock.getFound() thenReturn false
+        when userEntityMock.isFound() thenReturn false
         when githubUserDAOImpl.createOrUpdateRequestedEntity(login) thenReturn userEntityMock
 
         // exercise

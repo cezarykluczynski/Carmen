@@ -41,11 +41,15 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
             repositoriesClonesDAO.truncateEntity(server, repositoryCloneEntity);
         }
 
-        log.info(cloneResult.getErrorMessage());
-        log.info(cloneResult.getOutput());
+        log.info("successful: " + cloneResult.isSuccessFull());
+        log.info("cloned: " + repositoryCloneEntity.getCloned().toString());
+        log.info("getLocationSubdirectory: " + repositoryCloneEntity.getLocationSubdirectory());
+        log.info("id: " + repositoryCloneEntity.getId());
+        log.info("cloned: " + repositoryCloneEntity.getCloned().toString());
+        log.info("error message: " + cloneResult.getErrorMessage());
+        log.info("output: " + cloneResult.getOutput());
     }
 
-    @Override
     protected Result clone(Repository repositoryEntity, String cloneDirectory, String originTargetName) {
         return GitRemote.clone(repositoryEntity.getCloneUrl(), cloneDirectory, originTargetName);
     }

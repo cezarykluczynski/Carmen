@@ -14,6 +14,7 @@ import com.cezarykluczynski.carmen.util.exec.Result
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
 import com.cezarykluczynski.carmen.vcs.server.ServerTest
+import lombok.extern.java.Log
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -80,6 +81,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     @Test
     void localRepositoryCanBeCloned() {
         // exercise
+        println "localRepositoryCanBeCloned start"
         gitHubCloneWorker.run()
 
         // assertion
@@ -95,10 +97,12 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         Result revParseCommandResult = Executor.execute(revParseCommand)
         Assert.assertTrue revParseCommandResult.isSuccessFull()
         Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
+        println "localRepositoryCanBeCloned stop"
     }
 
     @Test
     void invalidRepositoryCannotBeCloned() {
+        println "invalidRepositoryCannotBeCloned start"
         // setup
         repositoryEntity.setCloneUrl server.getCloneRoot()
 
@@ -109,6 +113,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
         Assert.assertNull repositoryCloneEntityResult.getServerId()
         Assert.assertNull repositoryCloneEntityResult.getCloned()
+        println "invalidRepositoryCannotBeCloned stop"
     }
 
     @AfterMethod

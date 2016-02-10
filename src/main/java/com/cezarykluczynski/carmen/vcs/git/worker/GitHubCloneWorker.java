@@ -42,10 +42,14 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         }
 
         log.info("successful: " + cloneResult.isSuccessFull());
-        log.info("cloned: " + repositoryCloneEntity.getCloned().toString());
-        log.info("getLocationSubdirectory: " + repositoryCloneEntity.getLocationSubdirectory());
-        log.info("id: " + repositoryCloneEntity.getId());
-        log.info("cloned: " + repositoryCloneEntity.getCloned().toString());
+        log.info("repositoryCloneEntity: " + repositoryCloneEntity);
+        if (repositoryCloneEntity != null) {
+            if ( repositoryCloneEntity.getCloned() != null) {
+                log.info("cloned: " + repositoryCloneEntity.getCloned().toString());
+            }
+            log.info("getLocationSubdirectory: " + repositoryCloneEntity.getLocationSubdirectory());
+            log.info("id: " + repositoryCloneEntity.getId());
+        }
         log.info("error message: " + cloneResult.getErrorMessage());
         log.info("output: " + cloneResult.getOutput());
     }

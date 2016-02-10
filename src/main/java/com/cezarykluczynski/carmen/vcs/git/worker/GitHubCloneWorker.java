@@ -7,10 +7,12 @@ import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.exec.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitRemote;
 import com.cezarykluczynski.carmen.vcs.server.Server;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Log
 public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
 
     @Autowired
@@ -38,6 +40,9 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         } else {
             repositoriesClonesDAO.truncateEntity(server, repositoryCloneEntity);
         }
+
+        log.info(cloneResult.getErrorMessage());
+        log.info(cloneResult.getOutput());
     }
 
     @Override

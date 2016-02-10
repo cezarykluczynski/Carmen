@@ -1,8 +1,5 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -19,12 +16,6 @@ import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import org.mockito.Mock
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
 
 @ContextConfiguration([
     "classpath:spring/database-config.xml",

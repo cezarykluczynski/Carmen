@@ -58,10 +58,4 @@ class APIRequestExecutorUserGhostTest extends AbstractTestNGSpringContextTests {
         verify(userGhostExecutor).execute(pendingRequestEntity)
     }
 
-    @AfterMethod
-    void tearDown() {
-        Mockito.reset apiqueuePendingRequestDAOImpl
-        Mockito.reset userGhostExecutor
-    }
-
 }

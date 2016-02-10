@@ -9,14 +9,11 @@ import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 
 import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doThrow
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
 
-import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -55,12 +52,6 @@ class APIRequestExecutorUserGhostPaginatorTest extends AbstractTestNGSpringConte
 
         // assertion
         verify(userGhostPaginatorExecutor).execute(pendingRequestEntity)
-    }
-
-    @AfterMethod
-    void tearDown() {
-        Mockito.reset apiqueuePendingRequestDAOImpl
-        Mockito.reset userGhostPaginatorExecutor
     }
 
 }

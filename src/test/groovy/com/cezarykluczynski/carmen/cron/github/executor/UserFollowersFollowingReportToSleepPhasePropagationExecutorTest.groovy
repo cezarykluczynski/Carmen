@@ -76,10 +76,4 @@ class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Ab
         verify(propagationUserFollowersFollowingReportToSleepPhase, never()).propagate()
     }
 
-    @AfterMethod
-    void tearDown() {
-        Mockito.reset githubUserDAOImpl
-        Mockito.reset propagationUserFollowersFollowingReportToSleepPhase
-    }
-
 }

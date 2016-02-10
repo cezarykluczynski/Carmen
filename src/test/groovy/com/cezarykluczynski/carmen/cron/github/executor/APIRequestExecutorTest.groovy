@@ -5,7 +5,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
@@ -16,7 +15,6 @@ import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.never
-import static org.mockito.Mockito.times
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -26,8 +24,6 @@ import org.mockito.MockitoAnnotations
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
-
-import java.io.IOException
 
 @ContextConfiguration([
     "classpath:spring/database-config.xml",

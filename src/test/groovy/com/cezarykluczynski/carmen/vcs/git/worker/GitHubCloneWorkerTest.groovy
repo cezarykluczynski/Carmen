@@ -66,7 +66,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     @BeforeClass
     void setupClass() {
         now = DateUtil.now()
-        println "now: " + now
+        println "now: " + now.getTime()
     }
 
     @BeforeMethod
@@ -93,9 +93,9 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
         println "localRepositoryCanBeCloned id: " + repositoryCloneEntityResult.getId()
-        println "localRepositoryCanBeCloned cloned: " + repositoryCloneEntityResult.getCloned()
+        println "localRepositoryCanBeCloned cloned: " + repositoryCloneEntityResult.getCloned().getTime()
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
-        Assert.assertTrue repositoryCloneEntityResult.getCloned().equals(now) || repositoryCloneEntityResult.getCloned().after(now)
+        Assert.assertTrue repositoryCloneEntityResult.getCloned().getTime() >= now.getTime()
 
         String cloneDirectory = "${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
         "${repositoryCloneEntityResult.getLocationSubdirectory()}"

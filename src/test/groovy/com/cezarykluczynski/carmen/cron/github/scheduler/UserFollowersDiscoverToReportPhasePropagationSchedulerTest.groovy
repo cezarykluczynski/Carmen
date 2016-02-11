@@ -49,7 +49,7 @@ class UserFollowersDiscoverToReportPhasePropagationSchedulerTest extends Abstrac
            for com.cezarykluczynski.carmen.cron.github.scheduler.APIRequestScheduler class runs on different thread,
            verification of scheduledUserFollowersDiscoverToReportPhasePropagationExecutor.run() would fail if we wouldn't wait a tiny bit.
            This can be tuned to a few more milliseconds if it fails for anyone. */
-        Thread.sleep 10
+        Thread.sleep 50
 
         // assertion
         verify(userFollowersDiscoverToReportPhasePropagationExecutor).run()

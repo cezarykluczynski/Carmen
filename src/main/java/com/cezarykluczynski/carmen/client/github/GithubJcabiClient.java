@@ -58,6 +58,7 @@ public class GithubJcabiClient implements GithubClientInterface {
 
             return User.builder()
                     .login(userJson.getString("login"))
+                    .id((long) userJson.getInt("id"))
                     .name(getUserName(userJson))
                     .avatarUrl( userJson.getString("avatar_url"))
                     .type(userJson.getString("type"))
@@ -70,7 +71,7 @@ public class GithubJcabiClient implements GithubClientInterface {
                     .bio(getUserBio(userJson))
                     .build();
         } catch (AssertionError e) {
-            return User.builder().name(name).build();
+            return User.builder().login(name).build();
         }
     }
 

@@ -9,11 +9,6 @@ import org.testng.Assert
 
 import com.cezarykluczynski.carmen.set.github.User
 import com.cezarykluczynski.carmen.set.github.RateLimit
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
-
-import java.io.IOException
-import java.util.Iterator
-import java.util.Date
 
 @ContextConfiguration([
     "classpath:spring/database-config.xml",

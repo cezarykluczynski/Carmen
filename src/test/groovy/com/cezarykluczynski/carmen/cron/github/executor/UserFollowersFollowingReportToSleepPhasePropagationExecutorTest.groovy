@@ -15,11 +15,9 @@ import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.never
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
 
-import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 

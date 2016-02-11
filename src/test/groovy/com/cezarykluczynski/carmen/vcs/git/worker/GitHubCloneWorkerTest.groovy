@@ -66,7 +66,6 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     @BeforeClass
     void setupClass() {
         now = DateUtil.now()
-        println "now: " + now.getTime()
     }
 
     @BeforeMethod
@@ -92,8 +91,6 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
-        println "localRepositoryCanBeCloned id: " + repositoryCloneEntityResult.getId()
-        println "localRepositoryCanBeCloned cloned: " + repositoryCloneEntityResult.getCloned().getTime()
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
         Assert.assertTrue repositoryCloneEntityResult.getCloned().getTime() >= now.getTime()
 
@@ -108,12 +105,10 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
-        println "localRepositoryCanBeCloned stop"
     }
 
     @Test
     void invalidRepositoryCannotBeCloned() {
-        println "invalidRepositoryCannotBeCloned start"
         // setup
         repositoryEntity.setCloneUrl server.getCloneRoot()
 
@@ -122,13 +117,11 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
-        println "invalidRepositoryCannotBeCloned id: " + repositoryCloneEntityResult.getId()
         Assert.assertNull repositoryCloneEntityResult.getServerId()
         Assert.assertNull repositoryCloneEntityResult.getCloned()
 
         // teardown
         repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
-        println "invalidRepositoryCannotBeCloned stop"
     }
 
     @AfterMethod

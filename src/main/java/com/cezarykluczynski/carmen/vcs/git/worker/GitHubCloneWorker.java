@@ -7,7 +7,6 @@ import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.exec.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitRemote;
 import com.cezarykluczynski.carmen.vcs.server.Server;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

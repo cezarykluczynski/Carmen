@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory
 
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 
 @Component
 class RepositoriesDAOImplFixtures {

@@ -66,6 +66,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     @BeforeClass
     void setupClass() {
         now = DateUtil.now()
+        println "now: " + now
     }
 
     @BeforeMethod

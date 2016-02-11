@@ -23,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.Assert
 import org.testng.annotations.AfterMethod
+import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -62,9 +63,13 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
     Date now
 
+    @BeforeClass
+    void setupClass() {
+        now = DateUtil.now()
+    }
+
     @BeforeMethod
     void setup() {
-        now = DateUtil.now()
         repositoriesDAO = mock RepositoriesDAO.class
         server = mock Server.class
         MockitoAnnotations.initMocks this
@@ -87,6 +92,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
         println "localRepositoryCanBeCloned id: " + repositoryCloneEntityResult.getId()
+        println "localRepositoryCanBeCloned cloned: " + repositoryCloneEntityResult.getCloned()
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
         Assert.assertTrue repositoryCloneEntityResult.getCloned().equals(now) || repositoryCloneEntityResult.getCloned().after(now)
 

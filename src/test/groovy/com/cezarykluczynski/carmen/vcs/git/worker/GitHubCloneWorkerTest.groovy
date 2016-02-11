@@ -86,6 +86,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
+        println "localRepositoryCanBeCloned id: " + repositoryCloneEntityResult.getId()
         Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
         Assert.assertTrue repositoryCloneEntityResult.getCloned().equals(now) || repositoryCloneEntityResult.getCloned().after(now)
 
@@ -97,6 +98,9 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         Result revParseCommandResult = Executor.execute(revParseCommand)
         Assert.assertTrue revParseCommandResult.isSuccessFull()
         Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
+
+        // teardown
+        repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
         println "localRepositoryCanBeCloned stop"
     }
 
@@ -111,8 +115,12 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
+        println "invalidRepositoryCannotBeCloned id: " + repositoryCloneEntityResult.getId()
         Assert.assertNull repositoryCloneEntityResult.getServerId()
         Assert.assertNull repositoryCloneEntityResult.getCloned()
+
+        // teardown
+        repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
         println "invalidRepositoryCannotBeCloned stop"
     }
 

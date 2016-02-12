@@ -43,7 +43,7 @@ public class LanguageDetectorServerSwitcher {
         }
     }
 
-    private static String getClient() throws IOException {
+    public static String getClient() throws IOException {
         Properties prop = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream stream = loader.getResourceAsStream("config.properties");

@@ -36,14 +36,11 @@ mvn clean tomcat7:run
 
 ## Tests
 
-There are unit tests and integration tests. Cobertura is used for code coverage.
-Integration tests run unit tests by default.
+There are unit tests and integration tests.
 
-Following Maven phases are available, with or without code coverage:
+Test using:
 
 ```sh
 mvn clean test
 mvn clean verify
-mvn clean cobertura:cobertura
-mvn clean cobertura:cobertura-integration-test
 ```

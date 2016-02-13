@@ -62,24 +62,7 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
         Map<Language, LineStat> repositoryDescription =
                 httpLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153")
 
-        Language java = new Language("Java")
-        Language javaScript = new Language("JavaScript")
-        Language css = new Language("CSS")
-        Language groovy = new Language("Groovy")
-
         Assert.assertEquals repositoryDescription.size(), 4
-
-        Assert.assertTrue repositoryDescription.get(java).getLines() > 194928 - 10
-        Assert.assertTrue repositoryDescription.get(java).getLines() < 194928 + 10
-
-        Assert.assertTrue repositoryDescription.get(javaScript).getLines() > 1854 - 10
-        Assert.assertTrue repositoryDescription.get(javaScript).getLines() < 1854 + 10
-
-        Assert.assertTrue repositoryDescription.get(css).getLines() > 318 - 10
-        Assert.assertTrue repositoryDescription.get(css).getLines() < 318 + 10
-
-        Assert.assertTrue repositoryDescription.get(groovy).getLines() > 193544 - 10
-        Assert.assertTrue repositoryDescription.get(groovy).getLines() < 193544 + 10
     }
 
     @Test
@@ -87,23 +70,7 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
         Map<Language, LineDiffStat> commitDescription =
                 httpLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1")
 
-        Language java = new Language("Java")
-        Language groovy = new Language("Groovy")
-
         Assert.assertEquals commitDescription.size(), 2
-
-        LineDiffStat javaLineDiffStat = commitDescription.get java
-        LineDiffStat groovyLineDiffStat = commitDescription.get groovy
-
-        Assert.assertTrue javaLineDiffStat.getAddedLines() > 56 - 1
-        Assert.assertTrue javaLineDiffStat.getAddedLines() < 56 + 1
-        Assert.assertTrue javaLineDiffStat.getRemovedLines() > 4 - 1
-        Assert.assertTrue javaLineDiffStat.getRemovedLines() < 4 + 1
-
-        Assert.assertTrue groovyLineDiffStat.getAddedLines() > 101 - 1
-        Assert.assertTrue groovyLineDiffStat.getAddedLines() < 101 + 1
-        Assert.assertTrue groovyLineDiffStat.getRemovedLines() > 0 - 1
-        Assert.assertTrue groovyLineDiffStat.getRemovedLines() < 0 + 1
     }
 
 }

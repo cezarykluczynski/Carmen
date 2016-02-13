@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
-    private final String binPath = "./ruby/bin/lang_stats";
+    private String binPath = "./ruby/bin/lang_stats";
 
     private LanguageMapper languageMapper;
 

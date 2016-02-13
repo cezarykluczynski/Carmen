@@ -16,6 +16,8 @@ import org.testng.SkipException
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
 
+import java.lang.reflect.Field
+
 @ContextConfiguration([
     "classpath:spring/database-config.xml",
     "classpath:spring/mvc-core-config.xml",
@@ -42,13 +44,27 @@ public class CLILangsStatsAdapterIntegrationTest extends AbstractTestNGSpringCon
 
     @Test
     void getSupportedLanguages() {
+        // setup
+        injectValidBinPath()
+
         List<Language> languageList = cliLangsStatsAdapter.getSupportedLanguages()
 
         Assert.assertEquals languageList.size(), 385
     }
 
     @Test
+    void getSupportedLanguagesInvalid() {
+        // setup
+        injectInvalidBinPath()
+
+        Assert.assertNull cliLangsStatsAdapter.getSupportedLanguages()
+    }
+
+    @Test
     void describeRepository() {
+        // setup
+        injectValidBinPath()
+
         Map<Language, LineStat> repositoryDescription =
                 cliLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153")
 
@@ -56,11 +72,44 @@ public class CLILangsStatsAdapterIntegrationTest extends AbstractTestNGSpringCon
     }
 
     @Test
+    void describeRepositoryInvalid() {
+        // setup
+        injectInvalidBinPath()
+
+        Assert.assertNull cliLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153")
+    }
+
+    @Test
     void describeCommit() {
+        // setup
+        injectValidBinPath()
+
         Map<Language, LineDiffStat> commitDescription =
                 cliLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1")
 
         Assert.assertEquals commitDescription.size(), 2
+    }
+
+    @Test
+    void describeCommitInvalid() {
+        // setup
+        injectInvalidBinPath()
+
+        Assert.assertNull cliLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1")
+    }
+
+    private void injectInvalidBinPath() {
+        injectBinPath "./invalid/bin/path"
+    }
+
+    private void injectValidBinPath() {
+        injectBinPath "./ruby/bin/lang_stats"
+    }
+
+    private injectBinPath(String binPath) {
+        Field binPathField = cliLangsStatsAdapter.getClass().getDeclaredField "binPath"
+        binPathField.setAccessible true
+        binPathField.set cliLangsStatsAdapter, binPath
     }
 
 }

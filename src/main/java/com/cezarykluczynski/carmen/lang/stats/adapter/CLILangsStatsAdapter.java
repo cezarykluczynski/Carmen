@@ -25,7 +25,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     @Override
     public List<Language> getSupportedLanguages() {
         Result commandResult = Executor.execute(LanguageStatsCommand.createSupportedLanguagesCommand(binPath));
-        if (commandResult.isSuccessFull()) {
+        if (commandResult.isSuccessFul()) {
             return languageMapper.mapLanguageList(new JSONObject(commandResult.getOutput()));
         }
 
@@ -37,7 +37,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
         Result commandResult = Executor.execute(
                 LanguageStatsCommand.createDescribeRepositoryCommand(binPath, relativeDirectory, commitHash));
 
-        if (commandResult.isSuccessFull()) {
+        if (commandResult.isSuccessFul()) {
             return languageMapper.mapRepositoryDescription(new JSONObject(commandResult.getOutput()));
         }
 
@@ -49,7 +49,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
         Result commandResult = Executor.execute(
                 LanguageStatsCommand.createDescribeCommitCommand(binPath, relativeDirectory, commitHash));
 
-        if (commandResult.isSuccessFull()) {
+        if (commandResult.isSuccessFul()) {
             return languageMapper.mapCommitDescription(new JSONObject(commandResult.getOutput()));
         }
 

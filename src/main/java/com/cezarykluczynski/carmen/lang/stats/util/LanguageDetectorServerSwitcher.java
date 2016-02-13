@@ -54,7 +54,7 @@ public class LanguageDetectorServerSwitcher {
     private static void startServer() throws FileNotFoundException {
         Result result = Executor.execute(new Command("ruby ruby/bin/server start"));
 
-        if (result.isSuccessFull()) {
+        if (result.isSuccessFul()) {
             String output = result.getOutput();
             String pidLine = output.substring(output.indexOf("PID is ") + 7);
             String pid = pidLine.substring(0, pidLine.indexOf("."));

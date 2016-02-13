@@ -14,7 +14,6 @@ import com.cezarykluczynski.carmen.util.exec.Result
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
 import com.cezarykluczynski.carmen.vcs.server.ServerTest
-import lombok.extern.java.Log
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -99,7 +98,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         Command revParseCommand = new Command(revParseCommandBody)
         Result revParseCommandResult = Executor.execute(revParseCommand)
-        Assert.assertTrue revParseCommandResult.isSuccessFull()
+        Assert.assertTrue revParseCommandResult.isSuccessFul()
         Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
 
         // teardown

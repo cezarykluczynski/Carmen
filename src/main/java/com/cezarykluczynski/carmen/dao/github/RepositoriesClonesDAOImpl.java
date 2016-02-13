@@ -99,7 +99,7 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
         pathElements.add(repositoryCloneEntity.getLocationDirectory());
         pathElements.add(repositoryCloneEntity.getLocationSubdirectory());
         Result commandResult = Directory.create(pathElements);
-        if (!commandResult.isSuccessFull()) {
+        if (!commandResult.isSuccessFul()) {
             throw new MkDirException("Directory could not be created.");
         }
     }

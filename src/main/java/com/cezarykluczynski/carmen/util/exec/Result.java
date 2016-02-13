@@ -49,7 +49,7 @@ public class Result {
         }
     }
 
-    public boolean isSuccessFull() {
+    public boolean isSuccessFul() {
         return successful;
     }
 

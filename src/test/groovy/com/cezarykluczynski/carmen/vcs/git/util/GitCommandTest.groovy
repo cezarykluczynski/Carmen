@@ -13,7 +13,7 @@ class GitCommandTest {
         Result result = Executor.execute(new GitCommand("help"))
 
         // assertion
-        Assert.assertTrue result.isSuccessFull()
+        Assert.assertTrue result.isSuccessFul()
     }
 
     @Test
@@ -23,7 +23,7 @@ class GitCommandTest {
 
         // assertion
         String output = result.getOutput()
-        Assert.assertTrue result.isSuccessFull()
+        Assert.assertTrue result.isSuccessFul()
         Assert.assertTrue output.contains("git version")
         Integer major = Integer.parseInt(String.valueOf(output.charAt(12)))
         Integer minor = Integer.parseInt(String.valueOf(output.charAt(14)))

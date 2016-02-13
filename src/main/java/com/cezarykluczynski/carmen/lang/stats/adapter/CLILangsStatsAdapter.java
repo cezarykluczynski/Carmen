@@ -34,11 +34,25 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
     @Override
     public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
+        Result commandResult = Executor.execute(
+                LanguageStatsCommand.createDescribeRepositoryCommand(binPath, relativeDirectory, commitHash));
+
+        if (commandResult.isSuccessFull()) {
+            return languageMapper.mapRepositoryDescription(new JSONObject(commandResult.getOutput()));
+        }
+
         return null;
     }
 
     @Override
     public Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash) {
+        Result commandResult = Executor.execute(
+                LanguageStatsCommand.createDescribeCommitCommand(binPath, relativeDirectory, commitHash));
+
+        if (commandResult.isSuccessFull()) {
+            return languageMapper.mapCommitDescription(new JSONObject(commandResult.getOutput()));
+        }
+
         return null;
     }
 }

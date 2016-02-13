@@ -86,7 +86,6 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     @Test
     void localRepositoryCanBeCloned() {
         // exercise
-        println "localRepositoryCanBeCloned start"
         gitHubCloneWorker.run()
 
         // assertion

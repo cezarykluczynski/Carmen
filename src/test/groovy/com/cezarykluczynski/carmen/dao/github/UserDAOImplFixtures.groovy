@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.dao.github
 
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -47,7 +48,7 @@ class UserDAOImplFixtures {
     }
 
     public String generateRandomLogin() {
-        return "random_login" + System.currentTimeMillis()
+        return "random_login" + System.currentTimeMillis() + RandomStringUtils.randomNumeric(10)
     }
 
     public void deleteUserEntity(User userEntity) {

@@ -8,21 +8,16 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
-import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededException
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.thenReturn
 import org.mockito.Mock
 import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations

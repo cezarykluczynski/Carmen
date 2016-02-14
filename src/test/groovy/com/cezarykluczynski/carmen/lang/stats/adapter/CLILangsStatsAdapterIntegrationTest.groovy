@@ -5,8 +5,6 @@ import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
-import com.cezarykluczynski.carmen.util.network.HTTPClient
-import com.cezarykluczynski.carmen.util.network.HTTPJSONClientImpl
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests

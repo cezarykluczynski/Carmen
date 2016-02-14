@@ -15,7 +15,7 @@ import com.cezarykluczynski.carmen.set.github.RateLimit
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubJcabiClientIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubJcabiClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     GithubJcabiClient githubJcabiClient

@@ -13,7 +13,7 @@ import java.io.IOException
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubKohsukeClientIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubKohsukeClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     GithubKohsukeClient githubKohsukeClient

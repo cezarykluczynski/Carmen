@@ -19,7 +19,7 @@ import java.util.Iterator
     "classpath:spring/mvc-core-config.xml",
     "classpath:spring/cron-config.xml"
 ])
-class GithubEgitClientIntegrationTest extends AbstractTestNGSpringContextTests {
+class GithubEgitClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     GithubEgitClient githubEgitClient

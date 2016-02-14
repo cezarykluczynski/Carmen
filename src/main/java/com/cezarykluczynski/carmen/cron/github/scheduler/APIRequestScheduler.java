@@ -5,17 +5,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class APIRequestScheduler {
-
-    @Autowired
-    APIRequestExecutor apiRequestExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public APIRequestScheduler(TaskExecutor taskExecutor) {
+    private APIRequestExecutor apiRequestExecutor;
+
+    public APIRequestScheduler(TaskExecutor taskExecutor, APIRequestExecutor apiRequestExecutor) {
         this.taskExecutor = taskExecutor;
+        this.apiRequestExecutor = apiRequestExecutor;
     }
 
     @Scheduled(fixedDelay = 5000)

@@ -19,19 +19,24 @@
     </bean>
     <!-- API cron schedulers -->
     <bean id="scheduledAPIRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.APIRequestScheduler">
-        <constructor-arg ref="apiTaskExecutor" />
+        <constructor-arg index="0" ref="apiTaskExecutor" />
+        <constructor-arg index="1" ref="apiRequestExecutor" />
     </bean>
     <bean id="scheduledRepositoriesWakeUpExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.RepositoriesWakeUpScheduler">
-        <constructor-arg ref="apiTaskExecutor" />
+        <constructor-arg index="0" ref="apiTaskExecutor" />
+        <constructor-arg index="1" ref="repositoriesWakeUpExecutor" />
     </bean>
     <bean id="scheduledUserFollowersDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowersDiscoverToReportPhasePropagationScheduler">
-        <constructor-arg ref="apiTaskExecutor" />
+        <constructor-arg index="0" ref="apiTaskExecutor" />
+        <constructor-arg index="1" ref="userFollowersDiscoverToReportPhasePropagationExecutor" />
     </bean>
     <bean id="scheduledUserFollowingDiscoverToReportPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowingDiscoverToReportPhasePropagationScheduler">
-        <constructor-arg ref="apiTaskExecutor" />
+        <constructor-arg index="0" ref="apiTaskExecutor" />
+        <constructor-arg index="1" ref="userFollowingDiscoverToReportPhasePropagationExecutor" />
     </bean>
     <bean id="scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor" class="com.cezarykluczynski.carmen.cron.github.scheduler.UserFollowersFollowingReportToSleepPhasePropagationScheduler">
-        <constructor-arg ref="apiTaskExecutor" />
+        <constructor-arg index="0" ref="apiTaskExecutor" />
+        <constructor-arg index="1" ref="userFollowersFollowingReportToSleepPhasePropagationExecutor" />
     </bean>
     <!-- API cron jobs -->
     <bean id="apiRequestExecutor" class="com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor" />

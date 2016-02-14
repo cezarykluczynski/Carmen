@@ -5,24 +5,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 public class UserFollowersFollowingReportToSleepPhasePropagationScheduler {
-
-    @Autowired
-    UserFollowersFollowingReportToSleepPhasePropagationExecutor
-        userFollowersFollowingReportToSleepPhasePropagationExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public UserFollowersFollowingReportToSleepPhasePropagationScheduler(TaskExecutor taskExecutor) {
+    private UserFollowersFollowingReportToSleepPhasePropagationExecutor propagationExecutor;
+
+    public UserFollowersFollowingReportToSleepPhasePropagationScheduler(TaskExecutor taskExecutor,
+            UserFollowersFollowingReportToSleepPhasePropagationExecutor propagationExecutor) {
         this.taskExecutor = taskExecutor;
+        this.propagationExecutor = propagationExecutor;
     }
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        taskExecutor.execute(userFollowersFollowingReportToSleepPhasePropagationExecutor);
+        taskExecutor.execute(propagationExecutor);
     }
 
 }

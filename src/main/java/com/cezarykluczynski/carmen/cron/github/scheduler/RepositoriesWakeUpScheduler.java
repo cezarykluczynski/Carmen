@@ -5,17 +5,16 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class RepositoriesWakeUpScheduler {
-
-    @Autowired
-    RepositoriesWakeUpExecutor repositoriesWakeUpExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public RepositoriesWakeUpScheduler(TaskExecutor taskExecutor) {
+    private RepositoriesWakeUpExecutor repositoriesWakeUpExecutor;
+
+    public RepositoriesWakeUpScheduler(TaskExecutor taskExecutor,
+            RepositoriesWakeUpExecutor repositoriesWakeUpExecutor) {
         this.taskExecutor = taskExecutor;
+        this.repositoriesWakeUpExecutor = repositoriesWakeUpExecutor;
     }
 
     @Scheduled(fixedDelay = 15000)

@@ -5,22 +5,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersDiscoverToReportPhasePropagationExecutor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class UserFollowersDiscoverToReportPhasePropagationScheduler {
-
-    @Autowired
-    UserFollowersDiscoverToReportPhasePropagationExecutor userFollowersDiscoverToReportPhasePropagationExecutor;
 
     private TaskExecutor taskExecutor;
 
-    public UserFollowersDiscoverToReportPhasePropagationScheduler(TaskExecutor taskExecutor) {
+    private UserFollowersDiscoverToReportPhasePropagationExecutor propagationExecutor;
+
+    public UserFollowersDiscoverToReportPhasePropagationScheduler(TaskExecutor taskExecutor,
+            UserFollowersDiscoverToReportPhasePropagationExecutor propagationExecutor) {
         this.taskExecutor = taskExecutor;
+        this.propagationExecutor = propagationExecutor;
     }
 
     @Scheduled(fixedDelay = 2000)
     public void executePropagation() {
-        taskExecutor.execute(userFollowersDiscoverToReportPhasePropagationExecutor);
+        taskExecutor.execute(propagationExecutor);
     }
 
 }

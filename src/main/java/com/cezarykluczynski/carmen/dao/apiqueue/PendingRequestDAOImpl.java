@@ -65,10 +65,10 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         pendingRequest.setParams(params);
         pendingRequest.setPriority(priority);
         pendingRequest.setUser(userEntity);
-        pendingRequest.setUpdated();
+        pendingRequest.setUpdated(new Date());
 
         if (propagation instanceof Propagation) {
-            pendingRequest.setPropagation((Propagation) propagation);
+            pendingRequest.setPropagationId(((Propagation) propagation).getId());
         }
 
         return create(pendingRequest);

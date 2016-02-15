@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cezarykluczynski.carmen.model.github.RateLimit;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -32,7 +33,7 @@ public class RateLimitDAOImpl implements RateLimitDAO {
         rateLimitEntity.setLimit(rateLimitSet.getLimit());
         rateLimitEntity.setRemaining(rateLimitSet.getRemaining());
         rateLimitEntity.setReset(rateLimitSet.getReset());
-        rateLimitEntity.setUpdated();
+        rateLimitEntity.setUpdated(new Date());
 
         Session session = sessionFactory.openSession();
         session.save(rateLimitEntity);

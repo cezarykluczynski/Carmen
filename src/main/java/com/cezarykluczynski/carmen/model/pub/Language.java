@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.model.pub;
 
 import com.cezarykluczynski.carmen.dao.pub.enums.LinguistLanguageType;
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 import javax.persistence.*;
 
-
+@Data
 @Entity(name = "public.Language")
 @Table(schema = "public", name = "languages")
 public class Language extends CarmenRelationalEntity {
@@ -33,46 +34,5 @@ public class Language extends CarmenRelationalEntity {
     @OneToOne(optional=true)
     @JoinColumn(name="linguist_parent_id", nullable=true)
     private Language linguistParent;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public LinguistLanguageType getLinguistLanguageType() {
-        return linguistLanguageType;
-    }
-
-    public void setLinguistLanguageType(LinguistLanguageType linguistLanguageType) {
-        this.linguistLanguageType = linguistLanguageType;
-    }
-
-    public String getLinguistColor() {
-        return linguistColor;
-    }
-
-    public void setLinguistColor(String linguistColor) {
-        this.linguistColor = linguistColor;
-    }
-
-    public Language getLinguistParent() {
-        return linguistParent;
-    }
-
-    public void setLinguistParent(Language linguistParent) {
-        this.linguistParent = linguistParent;
-    }
 
 }

@@ -2,11 +2,13 @@ package com.cezarykluczynski.carmen.model.github;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
+import lombok.Data;
 
 import javax.persistence.*;
 
 import java.util.Date;
 
+@Data
 @Entity(name = "github.Repository")
 @Table(schema = "github", name = "repositories")
 public class Repository extends CarmenRelationalEntity implements GitHubResource {
@@ -60,119 +62,6 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
 
     @Column
     private Date pushed;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Repository getParent() {
-        return parent;
-    }
-
-    public void setParent(Repository parent) {
-        this.parent = parent;
-    }
-
-    public Long getGithubId() {
-        return githubId;
-    }
-
-    public void setGithubId(Long githubId) {
-        this.githubId = githubId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getHomepage() {
-        return homepage;
-    }
-
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
-
-    public boolean getFork() {
-        return fork;
-    }
-
-    public void setFork(boolean fork) {
-        this.fork = fork;
-    }
-
-    public String getDefaultBranch() {
-        return defaultBranch;
-    }
-
-    public void setDefaultBranch(String defaultBranch) {
-        this.defaultBranch = defaultBranch;
-    }
-
-    public String getCloneUrl() {
-        return cloneUrl;
-    }
-
-    public void setCloneUrl(String cloneUrl) {
-        this.cloneUrl = cloneUrl;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public Date getPushed() {
-        return pushed;
-    }
-
-    public void setPushed(Date pushed) {
-        this.pushed = pushed;
-    }
 
     public Long getGitHubResourceId() {
         return getId();

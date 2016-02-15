@@ -257,7 +257,7 @@ class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
         queryParams.put "page", 1
         pendingRequestEntity.setQueryParams queryParams
         pendingRequestEntity.setPathParams pathParams
-        pendingRequestEntity.setUpdated()
+        pendingRequestEntity.setUpdated new Date()
         apiqueuePendingRequestDAOImpl.create pendingRequestEntity
         Date updatedBefore = pendingRequestEntity.getUpdated()
 

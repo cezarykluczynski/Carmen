@@ -8,21 +8,28 @@ import java.util.HashMap;
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.util.HashMapJsonConverter;
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.model.propagations.Propagation;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "api_queue.PendingRequests")
 @Table(schema = "api_queue", name = "pending_requests")
 public class PendingRequest extends CarmenRelationalEntity {
 
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @Getter
+    @Setter
     @OneToOne
     @JoinColumn(name = "github_user_id", referencedColumnName = "id")
     private User user;
 
+    @Getter
+    @Setter
     @Column
     private String executor;
 
@@ -35,34 +42,21 @@ public class PendingRequest extends CarmenRelationalEntity {
     @Column(name = "query_params")
     private String queryParams;
 
+    @Getter
+    @Setter
     @Column(name = "propagation_id")
     private Long propagationId;
 
+    @Getter
+    @Setter
     @Column
     private Integer priority;
 
+    @Getter
+    @Setter
     @Column
     private Date updated;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setExecutor(String executor) {
-        this.executor = executor;
-    }
-
-    public String getExecutor() {
-        return executor;
-    }
 
     public void setParams(HashMap<String, Object> params) {
         this.params = HashMapJsonConverter.hashMapToJsonString(params);
@@ -88,35 +82,4 @@ public class PendingRequest extends CarmenRelationalEntity {
         return HashMapJsonConverter.jsonStringToHashMap(queryParams);
     }
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public Long getPropagationId() {
-        return propagationId;
-    }
-
-    public void setPropagation(Propagation propagation) {
-        propagationId = propagation.getId();
-    }
-
-    public void setPropagationId(Long propagationId) {
-        this.propagationId = propagationId;
-    }
-
-    public void setUpdated() {
-        updated = new Date();
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
 }

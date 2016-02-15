@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
@@ -50,7 +51,7 @@ public class RepositoriesDAOImpl extends CarmenPropagationsDAOImpl implements Re
 
         repositoriesEntity.setUser(userEntity);
         repositoriesEntity.setPhase("refresh");
-        repositoriesEntity.setUpdated();
+        repositoriesEntity.setUpdated(new Date());
 
         session.save(repositoriesEntity);
         session.flush();
@@ -88,7 +89,7 @@ public class RepositoriesDAOImpl extends CarmenPropagationsDAOImpl implements Re
 
     @Override
     public void moveToRefreshPhase(Repositories repositoriesEntity) {
-        repositoriesEntity.setUpdated();
+        repositoriesEntity.setUpdated(new Date());
         repositoriesEntity.setPhase("refresh");
         update(repositoriesEntity);
     }

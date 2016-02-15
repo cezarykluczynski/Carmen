@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
@@ -49,7 +50,7 @@ public class UserFollowersDAOImpl extends CarmenPropagationsDAOImpl implements U
 
         userFollowersEntity.setUser(userEntity);
         userFollowersEntity.setPhase(phase);
-        userFollowersEntity.setUpdated();
+        userFollowersEntity.setUpdated(new Date());
 
         session.save(userFollowersEntity);
         session.flush();

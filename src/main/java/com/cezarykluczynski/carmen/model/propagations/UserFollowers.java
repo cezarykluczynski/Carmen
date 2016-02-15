@@ -6,7 +6,9 @@ import java.util.Date;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.github.User;
+import lombok.Data;
 
+@Data
 @Entity(name = "propagations.UserFollowers")
 @Table(schema = "propagations", name = "user_followers")
 public class UserFollowers extends CarmenRelationalEntity implements Propagation {
@@ -28,45 +30,5 @@ public class UserFollowers extends CarmenRelationalEntity implements Propagation
 
     @Column
     private Date updated;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setUpdated() {
-        setUpdated(new Date());
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setPhase(String phase) {
-        this.phase = phase;
-    }
-
-    public String getPhase() {
-        return phase;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getPage() {
-        return page;
-    }
 
 }

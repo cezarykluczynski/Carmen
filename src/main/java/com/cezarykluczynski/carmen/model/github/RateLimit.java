@@ -1,11 +1,13 @@
 package com.cezarykluczynski.carmen.model.github;
 
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
+import lombok.Data;
 
 import javax.persistence.*;
 
 import java.util.Date;
 
+@Data
 @Entity(name = "github.RateLimit")
 @Table(schema = "github", name = "rate_limits")
 public class RateLimit extends CarmenRelationalEntity {
@@ -29,49 +31,5 @@ public class RateLimit extends CarmenRelationalEntity {
 
     @Column
     private Date updated;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    public Integer getRemaining() {
-        return remaining;
-    }
-
-    public void setRemaining(Integer remaining) {
-        this.remaining = remaining;
-    }
-
-    public Date getReset() {
-        return reset;
-    }
-
-    public void setReset(Date reset) {
-        this.reset = reset;
-    }
-
-    public void setUpdated() {
-        updated = new Date();
-    }
 
 }

@@ -239,7 +239,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
-        pendingRequestEntity.setUpdated()
+        pendingRequestEntity.setUpdated new Date()
         apiqueuePendingRequestDAOImpl.update pendingRequestEntity
 
         // exercise

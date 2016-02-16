@@ -393,6 +393,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.10</version>
+    </dependency>
+
     <!-- Test scope is required, Tomcat wouldn't start otherwise for some reason. -->
     <dependency>
       <groupId>org.apache.cxf</groupId>

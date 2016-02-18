@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.iterator.fixture.Entity1
 import com.cezarykluczynski.carmen.cron.languages.iterator.fixture.Entity2
@@ -7,13 +8,13 @@ import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-class TableIteratorTest {
+class RefreshableTableIteratorTest {
 
-    TableIterator tableIterator
+    RefreshableTableIterator tableIterator
 
     @BeforeMethod
     void setUp() {
-        tableIterator = new TableIterator()
+        tableIterator = new RefreshableTableIterator(LanguagesStatistics.class)
     }
 
     @Test
@@ -27,10 +28,7 @@ class TableIteratorTest {
 
         while(tableIterator.hasNext()) {
             RefreshableTable refreshableTable = tableIterator.next()
-            if (refreshableTable instanceof Entity1) {
-                pickedUpTestEntityCount++
-            }
-            if (refreshableTable instanceof Entity2) {
+            if (refreshableTable.getBaseClass().equals(Entity1) || refreshableTable.getBaseClass().equals(Entity2)) {
                 pickedUpTestEntityCount++
             }
         }

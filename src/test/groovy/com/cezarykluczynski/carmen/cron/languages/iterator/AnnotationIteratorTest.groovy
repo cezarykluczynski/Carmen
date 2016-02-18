@@ -17,8 +17,10 @@ class AnnotationIteratorTest {
 
     @Test
     void annotationsAreDiscovered() {
-        Assert.assertTrue annotationIterator.next() == LanguagesDiffStatistics.class
-        Assert.assertTrue annotationIterator.next() == LanguagesStatistics.class
+        Class firstAnnotation = annotationIterator.next()
+        Class secondAnnotation = annotationIterator.next()
+        Assert.assertTrue firstAnnotation == LanguagesDiffStatistics.class || firstAnnotation == LanguagesStatistics.class
+        Assert.assertTrue secondAnnotation == LanguagesDiffStatistics.class || secondAnnotation == LanguagesStatistics.class
 
         Assert.assertFalse annotationIterator.hasNext()
     }

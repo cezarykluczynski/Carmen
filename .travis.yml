@@ -26,8 +26,7 @@ install:
   - npm install
   - gulp
 script:
-  - mvn verify
-  - rspec
+  - mvn verify && rspec
 after_success:
   - codecov
 env:

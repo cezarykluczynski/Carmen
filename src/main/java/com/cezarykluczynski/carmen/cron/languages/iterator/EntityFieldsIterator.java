@@ -12,7 +12,7 @@ public class EntityFieldsIterator implements Iterator<String> {
 
     private Class clazz;
 
-    TreeSet<String> fields;
+    private SortedSet<String> fields;
 
     private Iterator<String> iterator;
 
@@ -34,7 +34,7 @@ public class EntityFieldsIterator implements Iterator<String> {
         return iterator.next();
     }
 
-    public TreeSet<String> getFields() {
+    public SortedSet<String> getFields() {
         return fields;
     }
 
@@ -43,7 +43,7 @@ public class EntityFieldsIterator implements Iterator<String> {
                 .filter(field -> !field.isSynthetic())
                 .map(Field::getName).collect(Collectors.toList());
         fieldsList.sort(naturalOrder());
-        fields = new TreeSet<>(fieldsList);
-        iterator = fieldsFilter.filterFields(fields).iterator();
+        fields = fieldsFilter.filterFields(new TreeSet<>(fieldsList));
+        iterator = fields.iterator();
     }
 }

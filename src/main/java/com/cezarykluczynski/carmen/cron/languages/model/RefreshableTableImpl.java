@@ -22,7 +22,7 @@ public class RefreshableTableImpl implements RefreshableTable {
     public RefreshableTableImpl(Class refreshableTableClass) {
         this.refreshableTableClass = refreshableTableClass;
         entityFieldsIterator = new EntityFieldsIterator(refreshableTableClass, FieldsFilter.ALL);
-        fields = entityFieldsIterator.getFields();
+        setFields(entityFieldsIterator.getFields());
         existingFieldsCount = fields.size();
     }
 

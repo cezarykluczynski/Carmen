@@ -67,4 +67,17 @@
         <constructor-arg value="${githubCloneTomcatServer.serverId}" />
         <constructor-arg value="${githubCloneTomcatServer.cloneRoot}"/>
     </bean>
+
+    <!-- Languages -->
+    <bean id="entityUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.EntityUpdaterVisitor"/>
+    <bean id="languagesDiffStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesDiffStatisticsUpdaterVisitor"/>
+    <bean id="languagesStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesStatisticsUpdaterVisitor"/>
+    <bean id="schemaUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.SchemaUpdaterVisitor"/>
+
+    <bean id="updaterVisitorComposite" class="com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite">
+        <constructor-arg index="0" ref="entityUpdaterVisitor" />
+        <constructor-arg index="1" ref="languagesDiffStatisticsUpdaterVisitor" />
+        <constructor-arg index="2" ref="languagesStatisticsUpdaterVisitor" />
+        <constructor-arg index="3" ref="schemaUpdaterVisitor" />
+    </bean>
 </beans>

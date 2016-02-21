@@ -399,6 +399,12 @@
       <version>0.9.10</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>javapoet</artifactId>
+      <version>1.5.1</version>
+    </dependency>
+
     <!-- Test scope is required, Tomcat wouldn't start otherwise for some reason. -->
     <dependency>
       <groupId>org.apache.cxf</groupId>

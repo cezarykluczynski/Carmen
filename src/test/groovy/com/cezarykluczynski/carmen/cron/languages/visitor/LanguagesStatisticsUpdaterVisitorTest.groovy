@@ -1,6 +1,8 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
+import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
 import com.cezarykluczynski.carmen.model.pub.Language
 import org.testng.Assert
@@ -27,9 +29,9 @@ class LanguagesStatisticsUpdaterVisitorTest {
 
     @Test
     void "field list is updated"() {
-        SortedSet<String> fieldsSet = new TreeSet<String>()
-        fieldsSet.add "language_1"
-        fieldsSet.add "language_2"
+        SortedSet<EntityField> fieldsSet = TreeSetEntityFieldFactory.create()
+        fieldsSet.add new EntityField("language_1")
+        fieldsSet.add new EntityField("language_2")
         when refreshableTable.getFields() thenReturn fieldsSet
         List<Language> languageList = new ArrayList<>()
         Language language3 = new Language()
@@ -45,8 +47,8 @@ class LanguagesStatisticsUpdaterVisitorTest {
         SortedSet<String> fields = refreshableTable.getFields()
 
         Assert.assertEquals fields.size(), 4
-        Assert.assertTrue fields.contains("language_3")
-        Assert.assertTrue fields.contains("language_4")
+        Assert.assertTrue fields.contains(new EntityField("language_3"))
+        Assert.assertTrue fields.contains(new EntityField("language_4"))
     }
 
 }

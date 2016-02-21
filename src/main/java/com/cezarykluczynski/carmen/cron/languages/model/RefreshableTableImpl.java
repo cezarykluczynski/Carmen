@@ -11,7 +11,7 @@ public class RefreshableTableImpl implements RefreshableTable {
 
     private Class refreshableTableClass;
 
-    private SortedSet<String> fields;
+    private SortedSet<EntityField> fields;
 
     private EntityFieldsIterator entityFieldsIterator;
 
@@ -37,12 +37,12 @@ public class RefreshableTableImpl implements RefreshableTable {
     }
 
     @Override
-    public void setFields(SortedSet<String> fields) {
+    public void setFields(SortedSet<EntityField> fields) {
         this.fields = new TreeSet<>(fields);
     }
 
     @Override
-    public SortedSet<String> getFields() {
+    public SortedSet<EntityField> getFields() {
         return new TreeSet<>(fields);
     }
 

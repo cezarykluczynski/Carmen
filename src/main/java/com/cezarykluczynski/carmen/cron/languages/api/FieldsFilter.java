@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.cron.languages.api;
 import com.cezarykluczynski.carmen.cron.languages.filter.AllFieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.filter.LanguageFieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.filter.LanguageDiffFieldsFilter;
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 
 import java.util.SortedSet;
 
@@ -14,6 +15,6 @@ public interface FieldsFilter {
 
     FieldsFilter LANGUAGE_CURRENT = new LanguageFieldsFilter();
 
-    SortedSet<String> filterFields(SortedSet<String> fields);
+    SortedSet<EntityField> filterFields(SortedSet<EntityField> fields);
 
 }

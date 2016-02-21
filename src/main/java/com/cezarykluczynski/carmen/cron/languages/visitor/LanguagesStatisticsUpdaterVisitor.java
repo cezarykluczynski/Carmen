@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.cron.languages.visitor;
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor;
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
 import com.cezarykluczynski.carmen.model.pub.Language;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,11 @@ public class LanguagesStatisticsUpdaterVisitor implements RefreshableTableVisito
 
     @Override
     public void visit(RefreshableTable refreshableTable) {
-        SortedSet<String> fields = refreshableTable.getFields();
+        SortedSet<EntityField> fields = refreshableTable.getFields();
         List<Language> languageList = languagesDAO.findAll();
 
         languageList.stream().forEach(language -> {
-            fields.add("language_" + language.getId());
+            fields.add(new EntityField("language_" + language.getId()));
         });
 
         refreshableTable.setFields(fields);

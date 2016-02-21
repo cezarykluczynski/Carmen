@@ -1,20 +1,20 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator;
 
 import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter;
+import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory;
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.naturalOrder;
-
-public class EntityFieldsIterator implements Iterator<String> {
+public class EntityFieldsIterator implements Iterator<EntityField> {
 
     private Class clazz;
 
-    private SortedSet<String> fields;
+    private SortedSet<EntityField> fields;
 
-    private Iterator<String> iterator;
+    private Iterator<EntityField> iterator;
 
     private FieldsFilter fieldsFilter;
 
@@ -30,20 +30,28 @@ public class EntityFieldsIterator implements Iterator<String> {
     }
 
     @Override
-    public String next() {
+    public EntityField next() {
         return iterator.next();
     }
 
-    public SortedSet<String> getFields() {
+    public SortedSet<EntityField> getFields() {
         return fields;
     }
 
     private void createChildIterator() {
-        List<String> fieldsList = Arrays.asList(clazz.getDeclaredFields()).stream()
+        List<Field> fieldsList = Arrays.asList(clazz.getDeclaredFields()).stream()
                 .filter(field -> !field.isSynthetic())
-                .map(Field::getName).collect(Collectors.toList());
-        fieldsList.sort(naturalOrder());
-        fields = fieldsFilter.filterFields(new TreeSet<>(fieldsList));
+                .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                .collect(Collectors.toList());
+
+        TreeSet<EntityField> entityFieldTreeSet = TreeSetEntityFieldFactory.create();
+
+        fieldsList.stream().forEach(field ->
+            entityFieldTreeSet.add(new EntityField(field.getName(), field.getType()))
+        );
+
+        fields = fieldsFilter.filterFields(entityFieldTreeSet);
         iterator = fields.iterator();
     }
+
 }

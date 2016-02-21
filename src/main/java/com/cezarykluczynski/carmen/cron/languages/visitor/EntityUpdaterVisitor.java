@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.cron.languages.visitor;
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor;
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import org.springframework.stereotype.Component;
 
 import java.util.SortedSet;
@@ -15,7 +16,7 @@ public class EntityUpdaterVisitor implements RefreshableTableVisitor {
             return;
         }
 
-        SortedSet<String> fields = refreshableTable.getFields();
+        SortedSet<EntityField> fields = refreshableTable.getFields();
 
     }
 

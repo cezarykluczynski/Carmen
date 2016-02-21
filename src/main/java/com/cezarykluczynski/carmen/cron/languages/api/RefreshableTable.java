@@ -1,5 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.api;
 
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
+
 import java.util.SortedSet;
 
 public interface RefreshableTable {
@@ -8,9 +10,9 @@ public interface RefreshableTable {
 
     void finalizeFieldsCount();
 
-    SortedSet<String> getFields();
+    SortedSet<EntityField> getFields();
 
-    void setFields(SortedSet<String> fields);
+    void setFields(SortedSet<EntityField> fields);
 
     Class getBaseClass();
 

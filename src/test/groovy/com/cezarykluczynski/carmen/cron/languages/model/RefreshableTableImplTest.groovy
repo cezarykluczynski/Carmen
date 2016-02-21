@@ -29,8 +29,8 @@ class RefreshableTableImplTest {
         refreshableTable.accept(new RefreshableTableVisitor() {
             @Override
             void visit(RefreshableTable refreshableTable) {
-                SortedSet<String> fields = refreshableTable.getFields()
-                fields.add ONE_MORE
+                SortedSet<EntityField> fields = refreshableTable.getFields()
+                fields.add new EntityField(ONE_MORE)
                 refreshableTable.setFields fields
             }
         })
@@ -46,11 +46,11 @@ class RefreshableTableImplTest {
     void gettersAndSetters() {
         Assert.assertEquals refreshableTable.getBaseClass(), Entity1.class
 
-        SortedSet<String> fields = refreshableTable.getFields()
+        SortedSet<EntityField> fields = refreshableTable.getFields()
 
         Assert.assertEquals fields.size(), 9
 
-        fields.add ONE_MORE
+        fields.add new EntityField(ONE_MORE)
 
         Assert.assertEquals refreshableTable.getFields().size(), 9
 

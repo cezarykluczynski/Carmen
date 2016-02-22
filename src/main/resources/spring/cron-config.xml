@@ -72,7 +72,9 @@
     <bean id="entityUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.EntityUpdaterVisitor"/>
     <bean id="languagesDiffStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesDiffStatisticsUpdaterVisitor"/>
     <bean id="languagesStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesStatisticsUpdaterVisitor"/>
-    <bean id="schemaUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.SchemaUpdaterVisitor"/>
+    <bean id="schemaUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.SchemaUpdaterVisitor">
+        <constructor-arg index="0" ref="updaterVisitorComposite" />
+    </bean>
 
     <bean id="updaterVisitorComposite" class="com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite">
         <constructor-arg index="0" ref="entityUpdaterVisitor" />

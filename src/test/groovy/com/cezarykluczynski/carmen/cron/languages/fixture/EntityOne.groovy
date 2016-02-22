@@ -1,11 +1,11 @@
-package com.cezarykluczynski.carmen.cron.languages.iterator.fixture
+package com.cezarykluczynski.carmen.cron.languages.fixture
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics
 
 @LanguagesStatistics
 @LanguagesDiffStatistics
-class Entity1 {
+class EntityOne {
 
     private Integer language_1
 

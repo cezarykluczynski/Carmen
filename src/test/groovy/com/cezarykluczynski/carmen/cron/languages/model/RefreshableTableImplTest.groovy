@@ -2,7 +2,7 @@ package com.cezarykluczynski.carmen.cron.languages.model
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor
-import com.cezarykluczynski.carmen.cron.languages.iterator.fixture.Entity1
+import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -15,7 +15,7 @@ class RefreshableTableImplTest {
 
     @BeforeMethod
     void setUp() {
-        refreshableTable = new RefreshableTableImpl(Entity1)
+        refreshableTable = new RefreshableTableImpl(EntityOne)
     }
 
     @Test
@@ -44,7 +44,7 @@ class RefreshableTableImplTest {
 
     @Test
     void gettersAndSetters() {
-        Assert.assertEquals refreshableTable.getBaseClass(), Entity1.class
+        Assert.assertEquals refreshableTable.getBaseClass(), EntityOne.class
 
         SortedSet<EntityField> fields = refreshableTable.getFields()
 

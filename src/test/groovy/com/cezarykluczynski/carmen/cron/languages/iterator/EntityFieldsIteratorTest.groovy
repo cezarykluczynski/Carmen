@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator
 
 import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter
-import com.cezarykluczynski.carmen.cron.languages.iterator.fixture.Entity1
+import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
@@ -13,7 +13,7 @@ class EntityFieldsIteratorTest {
 
     @BeforeMethod
     void setUp() {
-        entityFieldsIterator = new EntityFieldsIterator(Entity1.class, FieldsFilter.ALL)
+        entityFieldsIterator = new EntityFieldsIterator(EntityOne.class, FieldsFilter.ALL)
     }
 
     @Test

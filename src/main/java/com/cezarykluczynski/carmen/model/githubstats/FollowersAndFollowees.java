@@ -13,7 +13,7 @@ import org.springframework.data.cassandra.mapping.Column;
 
 import java.math.BigDecimal;
 
-@Table(value = "followers_and_followees")
+@Table("followers_and_followees")
 public class FollowersAndFollowees extends CarmenNoSQLEntity {
 
     @PrimaryKey

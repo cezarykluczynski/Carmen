@@ -17,7 +17,6 @@ public class EntityUpdaterVisitor implements RefreshableTableVisitor {
         }
 
         SortedSet<EntityField> fields = refreshableTable.getFields();
-
     }
 
 }

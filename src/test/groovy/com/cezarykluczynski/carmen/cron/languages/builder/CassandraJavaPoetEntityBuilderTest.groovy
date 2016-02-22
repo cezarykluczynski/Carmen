@@ -6,9 +6,13 @@ import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFact
 import com.cezarykluczynski.carmen.cron.languages.fixture.EntityTwo
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
+import org.apache.commons.io.FileUtils
 import org.testng.Assert
+import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
+
+import java.nio.file.Files
 
 class CassandraJavaPoetEntityBuilderTest {
 
@@ -16,19 +20,25 @@ class CassandraJavaPoetEntityBuilderTest {
 
     private RefreshableTable refreshableTable
 
+    private CassandraBuiltFile cassandraBuiltFile
+
     private String expectedContent = '''\
 package com.cezarykluczynski.carmen.cron.languages.fixture;
 
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
+import java.util.UUID;
 import javax.annotation.Generated;
 import lombok.Data;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.Table;
 
 @Data
-@Generated
+@Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @Table("entity_two")
 public class EntityTwo extends CarmenNoSQLEntity {
+    @Column
+    private UUID id;
+
     @Column
     private Integer language_1;
 
@@ -49,11 +59,14 @@ public class EntityTwo extends CarmenNoSQLEntity {
 }
 '''
 
+    private String expectedPath = "src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/EntityTwo.java"
+
     @BeforeMethod
     void setUp() {
         cassandraJavaPoetEntityBuilder = new CassandraJavaPoetEntityBuilder()
         refreshableTable = new RefreshableTableImpl(EntityTwo.class)
         TreeSet<EntityField> entityFieldTreeSet = TreeSetEntityFieldFactory.create()
+        entityFieldTreeSet.add new EntityField("id", UUID.class)
         entityFieldTreeSet.add new EntityField("language_1")
         entityFieldTreeSet.add new EntityField("language_1_added")
         entityFieldTreeSet.add new EntityField("language_1_removed")
@@ -61,13 +74,27 @@ public class EntityTwo extends CarmenNoSQLEntity {
         entityFieldTreeSet.add new EntityField("language_2_added")
         entityFieldTreeSet.add new EntityField("language_2_removed")
         refreshableTable.setFields entityFieldTreeSet
+        cassandraBuiltFile = cassandraJavaPoetEntityBuilder.build refreshableTable
     }
 
     @Test
-    void "entity is built"() {
-        CassandraBuiltFile cassandraBuiltFile = cassandraJavaPoetEntityBuilder.build refreshableTable
+    void "entity has the right content and is saved in the right place"() {
+        String content = cassandraBuiltFile.getContents()
+        String path = cassandraBuiltFile.getPath()
 
-        Assert.assertEquals cassandraBuiltFile.getContents(), expectedContent
+        Assert.assertEquals content, expectedContent
+        Assert.assertEquals path, expectedPath
+
+        cassandraBuiltFile.save()
+
+        String fileContent = FileUtils.readFileToString new File("./" + expectedPath)
+
+        Assert.assertEquals fileContent, expectedContent
+    }
+
+    @AfterMethod
+    void tearDown() {
+        FileUtils.deleteQuietly new File("./" + expectedPath)
     }
 
 }

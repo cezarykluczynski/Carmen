@@ -40,13 +40,14 @@ public class CassandraJavaPoetEntityBuilder implements CassandraBuilder {
 
     private void addAnnotations(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
         typeSpecBuilder.addAnnotation(Data.class);
-        typeSpecBuilder.addAnnotation(Generated.class);
+        typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Generated.class)
+                .addMember("value", "\"" + CassandraJavaPoetEntityBuilder.class.getCanonicalName() + "\"")
+                .build());
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
                 .addMember("value", "\"" + CaseFormat.LOWER_CAMEL.to(
                         CaseFormat.LOWER_UNDERSCORE,
                         refreshableTable.getBaseClass().getSimpleName()) + "\"")
-                .build()
-        );
+                .build());
     }
 
     private TypeSpec.Builder createBuilder(RefreshableTable refreshableTable) {

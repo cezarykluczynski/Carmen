@@ -6,4 +6,7 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistic
 @LanguagesStatistics
 @LanguagesDiffStatistics
 class EntityTwo {
+
+    private UUID id;
+
 }

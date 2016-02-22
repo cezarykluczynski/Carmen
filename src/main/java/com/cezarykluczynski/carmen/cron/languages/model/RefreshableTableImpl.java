@@ -11,29 +11,22 @@ public class RefreshableTableImpl implements RefreshableTable {
 
     private Class refreshableTableClass;
 
-    private SortedSet<EntityField> fields;
-
     private EntityFieldsIterator entityFieldsIterator;
 
-    private Integer existingFieldsCount;
+    private SortedSet<EntityField> initialFields;
 
-    private Integer totalFieldsCount;
+    private SortedSet<EntityField> fields;
 
     public RefreshableTableImpl(Class refreshableTableClass) {
         this.refreshableTableClass = refreshableTableClass;
         entityFieldsIterator = new EntityFieldsIterator(refreshableTableClass, FieldsFilter.ALL);
         setFields(entityFieldsIterator.getFields());
-        existingFieldsCount = fields.size();
+        initialFields = entityFieldsIterator.getFields();
     }
 
     @Override
     public boolean hasChanged() {
-        return totalFieldsCount != null && existingFieldsCount != totalFieldsCount;
-    }
-
-    @Override
-    public void finalizeFieldsCount() {
-        totalFieldsCount = fields.size();
+        return !initialFields.containsAll(fields);
     }
 
     @Override
@@ -44,6 +37,12 @@ public class RefreshableTableImpl implements RefreshableTable {
     @Override
     public SortedSet<EntityField> getFields() {
         return new TreeSet<>(fields);
+    }
+
+    public SortedSet<EntityField> getNewFields() {
+        SortedSet<EntityField> newFields = new TreeSet<>(fields);
+        newFields.removeAll(initialFields);
+        return newFields;
     }
 
     @Override

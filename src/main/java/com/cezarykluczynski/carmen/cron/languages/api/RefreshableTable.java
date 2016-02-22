@@ -8,9 +8,9 @@ public interface RefreshableTable {
 
     boolean hasChanged();
 
-    void finalizeFieldsCount();
-
     SortedSet<EntityField> getFields();
+
+    SortedSet<EntityField> getNewFields();
 
     void setFields(SortedSet<EntityField> fields);
 

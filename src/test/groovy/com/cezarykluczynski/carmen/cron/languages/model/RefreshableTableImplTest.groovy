@@ -22,10 +22,6 @@ class RefreshableTableImplTest {
     void hasChangedAndFinalizeFieldsCount() {
         Assert.assertFalse refreshableTable.hasChanged()
 
-        refreshableTable.finalizeFieldsCount()
-
-        Assert.assertFalse refreshableTable.hasChanged()
-
         refreshableTable.accept(new RefreshableTableVisitor() {
             @Override
             void visit(RefreshableTable refreshableTable) {
@@ -34,10 +30,6 @@ class RefreshableTableImplTest {
                 refreshableTable.setFields fields
             }
         })
-
-        Assert.assertFalse refreshableTable.hasChanged()
-
-        refreshableTable.finalizeFieldsCount()
 
         Assert.assertTrue refreshableTable.hasChanged()
     }
@@ -57,6 +49,8 @@ class RefreshableTableImplTest {
         refreshableTable.setFields fields
 
         Assert.assertEquals refreshableTable.getFields().size(), 10
+        Assert.assertEquals refreshableTable.getNewFields().size(), 1
+        Assert.assertEquals refreshableTable.getNewFields().first(), new EntityField(ONE_MORE)
     }
 
 }

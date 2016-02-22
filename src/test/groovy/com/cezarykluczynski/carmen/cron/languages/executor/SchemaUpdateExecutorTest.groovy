@@ -18,11 +18,12 @@ class SchemaUpdateExecutorTest {
     @BeforeMethod
     void setUp() {
         updaterVisitorComposite = mock UpdaterVisitorComposite.class
+
         schemaUpdateExecutor = new SchemaUpdateExecutor(updaterVisitorComposite)
     }
 
     @Test
-    void "two tables"() {
+    void "two tables are passed via two annotations"() {
         schemaUpdateExecutor.run()
 
         verify(updaterVisitorComposite, times(4)).visit(any())

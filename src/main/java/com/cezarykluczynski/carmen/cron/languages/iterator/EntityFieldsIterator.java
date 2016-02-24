@@ -35,7 +35,7 @@ public class EntityFieldsIterator implements Iterator<EntityField> {
     }
 
     public SortedSet<EntityField> getFields() {
-        return new TreeSet<>(fields);
+        return TreeSetEntityFieldFactory.copy(fields);
     }
 
     private void createChildIterator() {

@@ -18,6 +18,7 @@ class EntityFieldsIteratorTest {
 
     @Test
     void fieldsAreRead() {
+        Assert.assertEquals entityFieldsIterator.next(), new EntityField("id", UUID.class)
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_1")
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_1_added")
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_1_removed")

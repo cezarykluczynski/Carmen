@@ -1,14 +1,18 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor;
 
+import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor;
-import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import org.springframework.stereotype.Component;
-
-import java.util.SortedSet;
 
 @Component
 public class EntityUpdaterVisitor implements RefreshableTableVisitor {
+
+    private CassandraEntityBuilder cassandraEntityBuilder;
+
+    public EntityUpdaterVisitor(CassandraEntityBuilder cassandraEntityBuilder) {
+        this.cassandraEntityBuilder = cassandraEntityBuilder;
+    }
 
     @Override
     public void visit(RefreshableTable refreshableTable) {
@@ -16,7 +20,7 @@ public class EntityUpdaterVisitor implements RefreshableTableVisitor {
             return;
         }
 
-        SortedSet<EntityField> fields = refreshableTable.getFields();
+        cassandraEntityBuilder.build(refreshableTable).save();
     }
 
 }

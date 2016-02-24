@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.builder;
 
-import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
+import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.google.common.base.CaseFormat;
@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
 
 @Component
-public class CassandraJavaPoetEntityBuilder implements CassandraBuilder {
+public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
 
     @Override
     public CassandraBuiltFile build(RefreshableTable refreshableTable) {
@@ -41,13 +41,10 @@ public class CassandraJavaPoetEntityBuilder implements CassandraBuilder {
     private void addAnnotations(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
         typeSpecBuilder.addAnnotation(Data.class);
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Generated.class)
-                .addMember("value", "\"" + CassandraJavaPoetEntityBuilder.class.getCanonicalName() + "\"")
-                .build());
+                .addMember("value", "\"" + CassandraJavaPoetEntityBuilder.class.getCanonicalName() + "\"").build());
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
-                .addMember("value", "\"" + CaseFormat.LOWER_CAMEL.to(
-                        CaseFormat.LOWER_UNDERSCORE,
-                        refreshableTable.getBaseClass().getSimpleName()) + "\"")
-                .build());
+                .addMember("value", "\"" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,
+                        refreshableTable.getBaseClass().getSimpleName()) + "\"").build());
     }
 
     private TypeSpec.Builder createBuilder(RefreshableTable refreshableTable) {

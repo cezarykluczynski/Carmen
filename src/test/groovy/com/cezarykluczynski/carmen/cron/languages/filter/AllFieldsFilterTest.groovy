@@ -18,7 +18,7 @@ class AllFieldsFilterTest {
 
     @Test
     void filterFields() {
-        Assert.assertEquals entityFieldsIterator.size(), 9
+        Assert.assertEquals entityFieldsIterator.size(), 10
     }
 
 }

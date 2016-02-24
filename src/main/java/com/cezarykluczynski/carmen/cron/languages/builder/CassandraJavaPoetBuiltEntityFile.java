@@ -18,7 +18,7 @@ public class CassandraJavaPoetBuiltEntityFile implements CassandraBuiltFile {
     @Override
     public void save() {
         try {
-            FileWriter fileWriter = new FileWriter("./" + getPath(), true);
+            FileWriter fileWriter = new FileWriter("./" + getPath());
             fileWriter.write(getContents());
             fileWriter.close();
         } catch (IOException e) {

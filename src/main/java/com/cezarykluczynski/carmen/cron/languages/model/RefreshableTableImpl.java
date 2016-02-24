@@ -2,10 +2,10 @@ package com.cezarykluczynski.carmen.cron.languages.model;
 
 import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
+import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory;
 import com.cezarykluczynski.carmen.cron.languages.iterator.EntityFieldsIterator;
 
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class RefreshableTableImpl implements RefreshableTable {
 
@@ -31,16 +31,16 @@ public class RefreshableTableImpl implements RefreshableTable {
 
     @Override
     public void setFields(SortedSet<EntityField> fields) {
-        this.fields = new TreeSet<>(fields);
+        this.fields = TreeSetEntityFieldFactory.copy(fields);
     }
 
     @Override
     public SortedSet<EntityField> getFields() {
-        return new TreeSet<>(fields);
+        return TreeSetEntityFieldFactory.copy(fields);
     }
 
     public SortedSet<EntityField> getNewFields() {
-        SortedSet<EntityField> newFields = new TreeSet<>(fields);
+        SortedSet<EntityField> newFields = TreeSetEntityFieldFactory.copy(fields);
         newFields.removeAll(initialFields);
         return newFields;
     }

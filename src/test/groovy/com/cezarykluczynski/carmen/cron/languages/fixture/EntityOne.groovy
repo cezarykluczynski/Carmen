@@ -7,6 +7,8 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistic
 @LanguagesDiffStatistics
 class EntityOne {
 
+    private UUID id
+
     private Integer language_1
 
     private Integer language_2

@@ -1,6 +1,9 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
+import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
+import com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder
+import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -13,12 +16,15 @@ class EntityUpdaterVisitorTest {
 
     private EntityUpdaterVisitor entityUpdaterVisitor
 
+    private CassandraJavaPoetEntityBuilder cassandraJavaPoetEntityBuilder
+
     private RefreshableTable refreshableTable
 
     @BeforeMethod
     void setUp() {
         refreshableTable = mock RefreshableTable.class
-        entityUpdaterVisitor = new EntityUpdaterVisitor()
+        cassandraJavaPoetEntityBuilder = mock CassandraJavaPoetEntityBuilder.class
+        entityUpdaterVisitor = new EntityUpdaterVisitor(cassandraJavaPoetEntityBuilder)
     }
 
     @Test
@@ -32,11 +38,13 @@ class EntityUpdaterVisitorTest {
 
     @Test
     void "do visit changed entity"() {
-        when(refreshableTable.hasChanged()).thenReturn true
+        when refreshableTable.hasChanged()  thenReturn true
+        when refreshableTable.getBaseClass() thenReturn EntityOne.class
+        when cassandraJavaPoetEntityBuilder.build(refreshableTable) thenReturn(mock(CassandraBuiltFile.class))
 
         entityUpdaterVisitor.visit refreshableTable
 
-        verify(refreshableTable).getFields()
+        verify(cassandraJavaPoetEntityBuilder).build refreshableTable
     }
 
 }

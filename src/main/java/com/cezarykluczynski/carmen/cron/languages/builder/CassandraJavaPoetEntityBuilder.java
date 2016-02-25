@@ -1,5 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.builder;
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
+import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
@@ -13,9 +15,15 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
+
+    private static final List<Class> ownAnnotations = Arrays.asList(LanguagesStatistics.class,
+            LanguagesDiffStatistics.class);
 
     @Override
     public CassandraBuiltFile build(RefreshableTable refreshableTable) {
@@ -42,6 +50,10 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
         typeSpecBuilder.addAnnotation(Data.class);
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Generated.class)
                 .addMember("value", "\"" + CassandraJavaPoetEntityBuilder.class.getCanonicalName() + "\"").build());
+
+        Arrays.asList(refreshableTable.getBaseClass().getDeclaredAnnotations()).stream()
+                .map(Annotation::annotationType).filter(this::isOwnAnnotation).forEach(typeSpecBuilder::addAnnotation);
+
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
                 .addMember("value", "\"" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,
                         refreshableTable.getBaseClass().getSimpleName()) + "\"").build());
@@ -58,6 +70,10 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
                 .skipJavaLangImports(true)
                 .indent("    ")
                 .build();
+    }
+
+    private boolean isOwnAnnotation(Class clazz) {
+        return ownAnnotations.contains(clazz);
     }
 
 }

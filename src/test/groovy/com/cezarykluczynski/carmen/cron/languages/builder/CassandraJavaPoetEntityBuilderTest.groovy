@@ -12,8 +12,6 @@ import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-import java.nio.file.Files
-
 class CassandraJavaPoetEntityBuilderTest {
 
     private CassandraJavaPoetEntityBuilder cassandraJavaPoetEntityBuilder
@@ -25,6 +23,8 @@ class CassandraJavaPoetEntityBuilderTest {
     private String expectedContent = '''\
 package com.cezarykluczynski.carmen.cron.languages.fixture;
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
+import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import java.util.UUID;
 import javax.annotation.Generated;
@@ -34,6 +34,8 @@ import org.springframework.data.cassandra.mapping.Table;
 
 @Data
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
+@LanguagesStatistics
+@LanguagesDiffStatistics
 @Table("entity_two")
 public class EntityTwo extends CarmenNoSQLEntity {
     @Column

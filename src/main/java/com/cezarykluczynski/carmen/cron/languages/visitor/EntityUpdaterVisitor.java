@@ -16,7 +16,7 @@ public class EntityUpdaterVisitor implements RefreshableTableVisitor {
 
     @Override
     public void visit(RefreshableTable refreshableTable) {
-        if (refreshableTable == null || !refreshableTable.hasChanged()) {
+        if (!refreshableTable.hasChanged()) {
             return;
         }
 

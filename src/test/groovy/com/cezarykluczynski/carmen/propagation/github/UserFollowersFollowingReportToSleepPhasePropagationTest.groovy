@@ -1,9 +1,5 @@
 package com.cezarykluczynski.carmen.propagation.github
 
-import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -14,19 +10,10 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees
+import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository
-
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
-
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test

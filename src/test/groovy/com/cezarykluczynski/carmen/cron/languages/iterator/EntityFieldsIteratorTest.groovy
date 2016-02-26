@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator
 
 import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod

@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.cron.languages.builder
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityTwo
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityTwo
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
 import org.apache.commons.io.FileUtils
@@ -21,7 +21,7 @@ class CassandraJavaPoetEntityBuilderTest {
     private CassandraBuiltFile cassandraBuiltFile
 
     private String expectedContent = '''\
-package com.cezarykluczynski.carmen.cron.languages.fixture;
+package com.cezarykluczynski.carmen.cron.languages.fixture.entity;
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
@@ -61,7 +61,7 @@ public class EntityTwo extends CarmenNoSQLEntity {
 }
 '''
 
-    private String expectedPath = "src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/EntityTwo.java"
+    private String expectedPath = "src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityTwo.java"
 
     @BeforeMethod
     void setUp() {

@@ -9,7 +9,7 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository;
-import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees;
+import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 

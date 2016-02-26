@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.cron.languages.executor
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityTwo
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityTwo
 import com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite
 import org.apache.commons.io.FileUtils
 import org.mockito.ArgumentCaptor
@@ -65,8 +65,8 @@ class SchemaUpdateExecutorTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
-        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/EntityOne.java")
-        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/EntityTwo.java")
+        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityOne.java")
+        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityTwo.java")
     }
 
 

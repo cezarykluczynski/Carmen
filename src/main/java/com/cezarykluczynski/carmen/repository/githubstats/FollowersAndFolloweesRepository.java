@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.data.cassandra.repository.Query;
 
-import com.cezarykluczynski.carmen.model.githubstats.FollowersAndFollowees;
+import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees;
 
 @EnableJpaRepositories
 public interface FollowersAndFolloweesRepository extends CrudRepository<FollowersAndFollowees, Long> {

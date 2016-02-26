@@ -4,7 +4,6 @@ import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.squareup.javapoet.JavaFile;
 import org.apache.commons.lang3.text.StrBuilder;
 
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class CassandraJavaPoetBuiltEntityFile implements CassandraBuiltFile {
@@ -13,16 +12,6 @@ public class CassandraJavaPoetBuiltEntityFile implements CassandraBuiltFile {
 
     CassandraJavaPoetBuiltEntityFile(JavaFile javaFile) {
         this.javaFile = javaFile;
-    }
-
-    @Override
-    public void save() {
-        try {
-            FileWriter fileWriter = new FileWriter("./" + getPath());
-            fileWriter.write(getContents());
-            fileWriter.close();
-        } catch (IOException e) {
-        }
     }
 
     @Override

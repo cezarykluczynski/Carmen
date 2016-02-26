@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.model.githubstats;
+package com.cezarykluczynski.carmen.model.cassandra.github_social_stats;
 
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;

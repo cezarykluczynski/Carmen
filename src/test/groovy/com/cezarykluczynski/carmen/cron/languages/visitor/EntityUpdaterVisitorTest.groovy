@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.cron.languages.visitor
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 

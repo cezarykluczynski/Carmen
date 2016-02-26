@@ -1,11 +1,21 @@
 package com.cezarykluczynski.carmen.cron.languages.api;
 
-public interface CassandraBuiltFile {
+import java.io.FileWriter;
+import java.io.IOException;
 
-    void save();
+public interface CassandraBuiltFile {
 
     String getPath();
 
     String getContents();
+
+    default void save() {
+        try {
+            FileWriter fileWriter = new FileWriter("./" + getPath());
+            fileWriter.write(getContents());
+            fileWriter.close();
+        } catch (IOException e) {
+        }
+    }
 
 }

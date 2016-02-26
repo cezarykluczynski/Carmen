@@ -2,7 +2,7 @@ package com.cezarykluczynski.carmen.cron.languages.model
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor
-import com.cezarykluczynski.carmen.cron.languages.fixture.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test

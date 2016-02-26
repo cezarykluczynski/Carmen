@@ -80,6 +80,10 @@
 
     <bean id="cassandraJavaPoetEntityBuilder" class="com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder"/>
 
+    <bean id="cassandraMigrationBuilder" class="com.cezarykluczynski.carmen.cron.languages.builder.CassandraMigrationBuilder">
+        <constructor-arg value="#{systemProperties['cassandra.migrationDirectory']}"/>
+    </bean>
+
     <bean id="updaterVisitorComposite" class="com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite">
         <constructor-arg index="0" ref="entityUpdaterVisitor" />
         <constructor-arg index="1" ref="languagesDiffStatisticsUpdaterVisitor" />

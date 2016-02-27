@@ -10,6 +10,8 @@ public interface RefreshableTable {
 
     SortedSet<EntityField> getFields();
 
+    SortedSet<EntityField> getInitialFields();
+
     SortedSet<EntityField> getNewFields();
 
     void setFields(SortedSet<EntityField> fields);

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron.languages.builder;
+package com.cezarykluczynski.carmen.cron.languages.model;
 
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import lombok.Getter;

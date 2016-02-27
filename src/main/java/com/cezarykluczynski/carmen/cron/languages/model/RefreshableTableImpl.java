@@ -39,6 +39,11 @@ public class RefreshableTableImpl implements RefreshableTable {
         return TreeSetEntityFieldFactory.copy(fields);
     }
 
+    @Override
+    public SortedSet<EntityField> getInitialFields() {
+        return TreeSetEntityFieldFactory.copy(initialFields);
+    }
+
     public SortedSet<EntityField> getNewFields() {
         SortedSet<EntityField> newFields = TreeSetEntityFieldFactory.copy(fields);
         newFields.removeAll(initialFields);

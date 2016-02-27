@@ -5,6 +5,7 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistic
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
+import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEntityFile;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.*;

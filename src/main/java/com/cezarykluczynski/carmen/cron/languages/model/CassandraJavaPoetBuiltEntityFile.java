@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron.languages.builder;
+package com.cezarykluczynski.carmen.cron.languages.model;
 
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.squareup.javapoet.JavaFile;
@@ -10,7 +10,7 @@ public class CassandraJavaPoetBuiltEntityFile implements CassandraBuiltFile {
 
     private JavaFile javaFile;
 
-    CassandraJavaPoetBuiltEntityFile(JavaFile javaFile) {
+    public CassandraJavaPoetBuiltEntityFile(JavaFile javaFile) {
         this.javaFile = javaFile;
     }
 

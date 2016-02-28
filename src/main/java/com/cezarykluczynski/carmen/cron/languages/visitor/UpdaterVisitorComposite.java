@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class UpdaterVisitorComposite implements RefreshableTableVisitor {
 
-    private RefreshableTableVisitor entityUpdaterVisitor;
+    private EntityUpdaterVisitor entityUpdaterVisitor;
 
-    private RefreshableTableVisitor languagesDiffStatisticsUpdaterVisitor;
+    private LanguagesDiffStatisticsUpdaterVisitor languagesDiffStatisticsUpdaterVisitor;
 
-    private RefreshableTableVisitor languagesStatisticsUpdaterVisitor;
+    private LanguagesStatisticsUpdaterVisitor languagesStatisticsUpdaterVisitor;
 
-    private RefreshableTableVisitor schemaUpdaterVisitor;
+    private SchemaUpdaterVisitor schemaUpdaterVisitor;
 
     @Autowired
     public UpdaterVisitorComposite(EntityUpdaterVisitor entityUpdaterVisitor,
@@ -26,7 +26,6 @@ public class UpdaterVisitorComposite implements RefreshableTableVisitor {
         this.languagesStatisticsUpdaterVisitor = languagesStatisticsUpdaterVisitor;
         this.schemaUpdaterVisitor = schemaUpdaterVisitor;
     }
-
 
     @Override
     public void visit(RefreshableTable refreshableTable) {

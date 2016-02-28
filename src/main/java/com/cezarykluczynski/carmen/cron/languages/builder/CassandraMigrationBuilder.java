@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.builder;
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
@@ -26,11 +27,11 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private static final String EOL = "\n";
 
-    private static final Map<Class, String> classToCassandraDataTypeNameMappings = Maps.newHashMap();
+    private static final Map<Class, String> classToCassandraDataTypeMappings = Maps.newHashMap();
     static {
-        classToCassandraDataTypeNameMappings.put(String.class, "varchar");
-        classToCassandraDataTypeNameMappings.put(UUID.class, "uuid");
-        classToCassandraDataTypeNameMappings.put(Integer.class, "int");
+        classToCassandraDataTypeMappings.put(String.class, "varchar");
+        classToCassandraDataTypeMappings.put(UUID.class, "uuid");
+        classToCassandraDataTypeMappings.put(Integer.class, "int");
     }
 
     private String migrationPath;
@@ -52,8 +53,8 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private String buildFileMigrationPath(RefreshableTable refreshableTable) {
         return new StringBuilder()
-                .append(migrationPath)
-                .append(getNextVersion())
+                .append(getMigrationPath(refreshableTable))
+                .append(getNextVersion(refreshableTable))
                 .append("__")
                 .append(createActionName(refreshableTable))
                 .append("_")
@@ -94,26 +95,35 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
         return stringBuilder.toString();
     }
 
-    private String getNextVersion() {
-        return "V" + (findLatestMigrationVersion() + 1) + "_0";
+    private String getMigrationPath(RefreshableTable refreshableTable) {
+        String migrationPathWithKeyspace = migrationPath;
+        Keyspace keyspaceAnnotation = (Keyspace) refreshableTable.getBaseClass().getAnnotation(Keyspace.class);
+
+        if (keyspaceAnnotation != null && !keyspaceAnnotation.value().equals("")) {
+            migrationPathWithKeyspace += keyspaceAnnotation.value() + "/";
+        }
+
+        return migrationPathWithKeyspace;
     }
 
-    private int findLatestMigrationVersion() {
+    private String getNextVersion(RefreshableTable refreshableTable) {
+        return "V" + (findLatestMigrationVersion(refreshableTable) + 1) + "_0";
+    }
+
+    private int findLatestMigrationVersion(RefreshableTable refreshableTable) {
         List<String> migrationFilePaths = Lists.newArrayList();
 
         try {
-            Files.walk(Paths.get(migrationPath)).filter(Files::isRegularFile).forEach(filePath -> {
-                if (Files.isRegularFile(filePath)) {
-                    migrationFilePaths.add(filePath.getFileName().toString());
-                }
-            });
+            Files.walk(Paths.get(getMigrationPath(refreshableTable))).filter(Files::isRegularFile)
+                    .forEach(filePath -> migrationFilePaths.add(filePath.getFileName().toString()));
         } catch(IOException e) {
         }
 
         return migrationFilePaths.stream()
                 .map(migrationFilePath -> migrationFilePath.split("_"))
-                .filter(parts -> parts.length > 1 && parts[0].equals("V") && StringUtils.isNumeric(parts[1]))
-                .map(parts -> parts[1])
+                .filter(parts -> parts.length > 1 && String.valueOf(parts[0].charAt(0)).equals("V") &&
+                        StringUtils.isNumeric(parts[0].substring(1)))
+                .map(parts -> parts[0].substring(1))
                 .mapToInt(Integer::valueOf)
                 .max().orElse(0);
     }
@@ -123,7 +133,7 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
     }
 
     private static String getColumnTypeFromClass(Class clazz) {
-        return classToCassandraDataTypeNameMappings.get(clazz);
+        return classToCassandraDataTypeMappings.get(clazz);
     }
 
     private  static String createCreateTableStatement(RefreshableTable refreshableTable) {

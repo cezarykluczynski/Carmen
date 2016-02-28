@@ -16,11 +16,9 @@ public class EntityUpdaterVisitor implements RefreshableTableVisitor {
 
     @Override
     public void visit(RefreshableTable refreshableTable) {
-        if (!refreshableTable.hasChanged()) {
-            return;
+        if (refreshableTable.hasChanged()) {
+            cassandraEntityBuilder.build(refreshableTable).save();
         }
-
-        cassandraEntityBuilder.build(refreshableTable).save();
     }
 
 }

@@ -44,7 +44,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals testMigrationDirectory + "V2_0__Update_entity_one_table.cql", cassandraBuiltFile.getPath()
+        Assert.assertEquals testMigrationDirectory + "github_social_stats/V2_0__Update_entity_one_table.cql", cassandraBuiltFile.getPath()
     }
 
     @Test
@@ -54,7 +54,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals emptyMigrationDirectory + "V1_0__Update_entity_one_table.cql", cassandraBuiltFile.getPath()
+        Assert.assertEquals emptyMigrationDirectory + "github_social_stats/V1_0__Update_entity_one_table.cql", cassandraBuiltFile.getPath()
     }
 
     @Test
@@ -64,7 +64,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals testMigrationDirectory + "V2_0__Create_entity_empty_table.cql", cassandraBuiltFile.getPath()
+        Assert.assertEquals testMigrationDirectory + "github_social_stats/V2_0__Create_entity_empty_table.cql", cassandraBuiltFile.getPath()
     }
 
     @Test
@@ -74,7 +74,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals emptyMigrationDirectory + "V1_0__Create_entity_empty_table.cql", cassandraBuiltFile.getPath()
+        Assert.assertEquals emptyMigrationDirectory + "github_social_stats/V1_0__Create_entity_empty_table.cql", cassandraBuiltFile.getPath()
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
+import com.cezarykluczynski.carmen.cron.languages.builder.CassandraMigrationBuilder
+import com.cezarykluczynski.carmen.cron.languages.model.CassandraBuiltFileNullObject
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
@@ -13,12 +15,16 @@ class SchemaUpdaterVisitorTest {
 
     private SchemaUpdaterVisitor schemaUpdaterVisitor
 
+    private CassandraMigrationBuilder cassandraMigrationBuilder
+
     private RefreshableTable refreshableTable
 
     @BeforeMethod
     void setUp() {
         refreshableTable = mock RefreshableTable.class
-        schemaUpdaterVisitor = new SchemaUpdaterVisitor()
+        cassandraMigrationBuilder = mock CassandraMigrationBuilder.class
+        when cassandraMigrationBuilder.build(refreshableTable) thenReturn new CassandraBuiltFileNullObject()
+        schemaUpdaterVisitor = new SchemaUpdaterVisitor(cassandraMigrationBuilder)
     }
 
     @Test
@@ -36,7 +42,7 @@ class SchemaUpdaterVisitorTest {
 
         schemaUpdaterVisitor.visit refreshableTable
 
-        verify(refreshableTable).getFields()
+        verify(cassandraMigrationBuilder).build refreshableTable
     }
 
 }

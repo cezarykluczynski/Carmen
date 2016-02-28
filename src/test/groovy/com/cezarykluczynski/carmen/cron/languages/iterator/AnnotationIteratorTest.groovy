@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics
 import org.testng.Assert
@@ -17,10 +18,30 @@ class AnnotationIteratorTest {
 
     @Test
     void annotationsAreDiscovered() {
-        Class firstAnnotation = annotationIterator.next()
-        Class secondAnnotation = annotationIterator.next()
-        Assert.assertTrue firstAnnotation == LanguagesDiffStatistics.class || firstAnnotation == LanguagesStatistics.class
-        Assert.assertTrue secondAnnotation == LanguagesDiffStatistics.class || secondAnnotation == LanguagesStatistics.class
+        boolean languageDiffStatisticsDiscovered = false
+        boolean languageStatisticsDiscovered = false
+        boolean keyspaceDiscovered = false
+
+        while(annotationIterator.hasNext()) {
+            Class annotation = annotationIterator.next()
+
+            if (annotation == LanguagesDiffStatistics) {
+                languageDiffStatisticsDiscovered = true
+            }
+
+            if (annotation == LanguagesStatistics) {
+                languageStatisticsDiscovered = true
+            }
+
+            if (annotation == Keyspace) {
+                keyspaceDiscovered = true
+            }
+
+        }
+
+        Assert.assertTrue languageDiffStatisticsDiscovered
+        Assert.assertTrue languageStatisticsDiscovered
+        Assert.assertTrue keyspaceDiscovered
 
         Assert.assertFalse annotationIterator.hasNext()
     }

@@ -4,33 +4,15 @@ import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityTwo
 import com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite
-import org.apache.commons.io.FileUtils
 import org.mockito.ArgumentCaptor
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.Assert
-import org.testng.annotations.AfterMethod
 import org.testng.annotations.Test
 
 import static org.mockito.Mockito.atLeast
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 
-@ContextConfiguration([
-        "classpath:spring/database-config.xml",
-        "classpath:spring/mvc-core-config.xml",
-        "classpath:spring/cron-config.xml"
-])
-class SchemaUpdateExecutorTest extends AbstractTestNGSpringContextTests {
-
-    @Autowired
-    SchemaUpdateExecutor schemaUpdateExecutor
-
-    @Test
-    void "tables are refreshed"() {
-        schemaUpdateExecutor.run()
-    }
+class SchemaUpdateExecutorTest {
 
     @Test
     void "annotated tables are discovered"() {
@@ -59,16 +41,8 @@ class SchemaUpdateExecutorTest extends AbstractTestNGSpringContextTests {
             }
         }
 
-        Assert.assertEquals countEntityOne, 2
-        Assert.assertEquals countEntityTwo, 2
+        Assert.assertEquals countEntityOne, 3
+        Assert.assertEquals countEntityTwo, 3
     }
-
-    @AfterMethod
-    void tearDown() {
-        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityOne.java")
-        FileUtils.deleteQuietly new File("./src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityTwo.java")
-    }
-
-
 
 }

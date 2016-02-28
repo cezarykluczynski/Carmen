@@ -72,16 +72,22 @@
     <bean id="entityUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.EntityUpdaterVisitor">
         <constructor-arg index="0" ref="cassandraJavaPoetEntityBuilder"/>
     </bean>
-    <bean id="languagesDiffStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesDiffStatisticsUpdaterVisitor"/>
+    <bean id="languagesDiffStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesDiffStatisticsUpdaterVisitor">
+        <constructor-arg index="0" ref="publicLanguagesDAOImpl"/>
+    </bean>
     <bean id="languagesStatisticsUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.LanguagesStatisticsUpdaterVisitor"/>
     <bean id="schemaUpdateExecutor" class="com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor">
         <constructor-arg index="0" ref="updaterVisitorComposite" />
     </bean>
 
+    <bean id="schemaUpdaterVisitor" class="com.cezarykluczynski.carmen.cron.languages.visitor.SchemaUpdaterVisitor">
+        <constructor-arg index="0" ref="cassandraMigrationBuilder"/>
+    </bean>
+
     <bean id="cassandraJavaPoetEntityBuilder" class="com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder"/>
 
     <bean id="cassandraMigrationBuilder" class="com.cezarykluczynski.carmen.cron.languages.builder.CassandraMigrationBuilder">
-        <constructor-arg value="#{systemProperties['cassandra.migrationDirectory']}"/>
+        <constructor-arg value="${cassandra.migrationDirectory}"/>
     </bean>
 
     <bean id="updaterVisitorComposite" class="com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite">

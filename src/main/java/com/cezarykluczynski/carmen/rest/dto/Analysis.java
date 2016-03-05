@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.rest.pojo;
+package com.cezarykluczynski.carmen.rest.dto;
 
 import javax.persistence.Entity;
 

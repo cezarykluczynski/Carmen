@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user;
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.rest.pojo.api.v1.github.error.Error404ResponsePOJO;
-import com.cezarykluczynski.carmen.rest.pojo.api.v1.github.user.BasicProfileDTO;
+import com.cezarykluczynski.carmen.rest.dto.api.v1.github.error.Error404ResponseDTO;
+import com.cezarykluczynski.carmen.rest.dto.api.v1.github.user.BasicProfileDTO;
 import com.cezarykluczynski.carmen.model.github.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,12 @@ import javax.ws.rs.core.Response;
 @Service("basicProfileService")
 public class BasicProfileServiceImpl implements BasicProfileService {
 
-    @Autowired
     UserDAO githubUserDAOImpl;
+
+    @Autowired
+    public BasicProfileServiceImpl(UserDAO githubUserDAOImpl) {
+        this.githubUserDAOImpl = githubUserDAOImpl;
+    }
 
     @Override
     public Response get(String login) {
@@ -22,10 +26,10 @@ public class BasicProfileServiceImpl implements BasicProfileService {
 
         if (null == userEntity) {
             return Response.status(Response.Status.NOT_FOUND)
-                .entity(new Error404ResponsePOJO()).build();
+                .entity(new Error404ResponseDTO()).build();
         }
 
-        return Response.ok(
+        return Response.ok().entity(
                 BasicProfileDTO.builder()
                         .login(userEntity.getLogin())
                         .name(userEntity.getName())

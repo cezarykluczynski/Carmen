@@ -1,13 +1,16 @@
-package com.cezarykluczynski.carmen.rest.pojo.api.v1.github.user;
+package com.cezarykluczynski.carmen.rest.dto.api.v1.github.user;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-import javax.persistence.Entity;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@Entity
 @Builder
-@Data
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@Getter
 public class BasicProfileDTO {
 
     private String login;

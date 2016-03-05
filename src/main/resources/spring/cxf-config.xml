@@ -8,5 +8,7 @@
        ">
 
     <bean name="cxf" id="cxf" class="org.apache.cxf.bus.spring.SpringBus" />
-    <bean name="basicProfileService" class="com.cezarykluczynski.carmen.rest.api.v1.github.user.BasicProfileServiceImpl" />
+    <bean name="basicProfileService" class="com.cezarykluczynski.carmen.rest.api.v1.github.user.BasicProfileServiceImpl">
+        <constructor-arg index="0" ref="githubUserDAOImpl" />
+    </bean>
 </beans>

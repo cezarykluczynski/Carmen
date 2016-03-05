@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 @Path("/v1/github/user")
-@Produces(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+@Produces(MediaType.APPLICATION_JSON)
 public interface BasicProfileService {
 
     @GET

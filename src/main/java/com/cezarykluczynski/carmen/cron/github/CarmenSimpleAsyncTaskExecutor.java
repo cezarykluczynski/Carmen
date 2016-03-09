@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service("apiTaskExecutor")
 @Profile("github-api-cron")
-public class GitHubSimpleAsyncTaskExecutor extends SimpleAsyncTaskExecutor {
+public class CarmenSimpleAsyncTaskExecutor extends SimpleAsyncTaskExecutor {
 
     @Override
     public void execute(Runnable task) {

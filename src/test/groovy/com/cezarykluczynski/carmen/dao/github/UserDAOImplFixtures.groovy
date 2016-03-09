@@ -1,17 +1,17 @@
 package com.cezarykluczynski.carmen.dao.github
 
 import org.apache.commons.lang3.RandomStringUtils
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 
-@Component
 class UserDAOImplFixtures {
 
-    @Autowired
-    UserDAOImpl githubUserDAOImpl
+    private UserDAO githubUserDAOImpl
+
+    public UserDAOImplFixtures(UserDAO githubUserDAOImpl) {
+        this.githubUserDAOImpl = githubUserDAOImpl
+    }
 
     public User createFoundRequestedUserEntity() {
         UserSet userSetEntity = getUserSetEntityWithRandomLogin()

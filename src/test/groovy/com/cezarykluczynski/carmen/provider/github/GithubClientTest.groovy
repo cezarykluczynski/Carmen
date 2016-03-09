@@ -1,9 +1,10 @@
 package com.cezarykluczynski.carmen.client.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.Test
 import org.testng.annotations.BeforeMethod
 import org.testng.Assert
@@ -20,16 +21,8 @@ import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 
-import java.io.IOException
-import java.util.Iterator
-import java.util.List
-
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class GithubClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

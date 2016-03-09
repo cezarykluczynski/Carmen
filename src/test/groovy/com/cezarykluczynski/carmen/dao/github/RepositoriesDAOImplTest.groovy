@@ -1,41 +1,37 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import org.hibernate.Session
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.hibernate.SessionFactory
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
-import java.util.List
-import java.util.ArrayList
-
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(
+        classes = TestableApplicationConfiguration.class,
+        locations = ["classpath:applicationContext.xml"],
+        loader = SpringApplicationContextLoader.class
+)
+@WebAppConfiguration
 class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    RepositoriesDAO githubRepositoriesDAOImpl
+    private RepositoriesDAO githubRepositoriesDAOImpl
 
     @Autowired
-    RepositoriesDAOImplFixtures githubRepositoriesDAOImplFixtures
+    private RepositoriesDAOImplFixtures githubRepositoriesDAOImplFixtures
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
     private SessionFactory sessionFactory

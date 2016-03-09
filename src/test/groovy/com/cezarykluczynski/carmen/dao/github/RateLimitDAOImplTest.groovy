@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.dao.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 
@@ -7,39 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-
+import org.springframework.test.context.web.WebAppConfiguration
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 import org.testng.Assert
 
-import java.util.Date
+import java.lang.reflect.Field
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private RateLimitDAO rateLimitDAOImpl
 
     @Autowired
-    RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
-
-    @Autowired
-    SessionFactoryFixtures sessionFactoryFixtures
+    private RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
 
     @Autowired
     private SessionFactory sessionFactory
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    @BeforeMethod
+    void setUp() {
+        rateLimitDAOImpl = new RateLimitDAOImpl(sessionFactory)
     }
 
     @Test
@@ -84,8 +83,8 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void getCoreLimitNotExisting() {
         // setup
-        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
-        rateLimitDAOImpl.setSessionFactory sessionFactoryMock
+        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
         try {
             // exercise
@@ -99,7 +98,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         }
 
         // teardown
-        rateLimitDAOImpl.setSessionFactory sessionFactory
+        setSessionFactoryToDao rateLimitDAOImpl, sessionFactory
     }
 
     @Test
@@ -120,8 +119,8 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void getSearchLimitNotExisting() {
         // setup
-        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
-        rateLimitDAOImpl.setSessionFactory sessionFactoryMock
+        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
         try {
             // exercise
@@ -135,7 +134,7 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         }
 
         // teardown
-        rateLimitDAOImpl.setSessionFactory sessionFactory
+        setSessionFactoryToDao rateLimitDAOImpl, sessionFactory
     }
 
     @Test
@@ -157,9 +156,6 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
         session.close()
 
         Assert.assertEquals previousRemaining - 1, rateLimitEntityMockUpdated.getRemaining()
-
-        // teardown
-        rateLimitDAOImpl.setSessionFactory sessionFactory
     }
 
     @Test
@@ -190,6 +186,12 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         rateLimitDAOImpl.delete rateLimitEntityCurrentMock
+    }
+
+    private static void setSessionFactoryToDao(RateLimitDAO rateLimitDAOImpl, SessionFactory sessionFactory) {
+        Field field = rateLimitDAOImpl.getClass().getDeclaredField "sessionFactory"
+        field.setAccessible true
+        field.set rateLimitDAOImpl, sessionFactory
     }
 
 }

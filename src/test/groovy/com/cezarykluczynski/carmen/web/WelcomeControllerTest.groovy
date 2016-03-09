@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.web
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import org.springframework.boot.test.SpringApplicationContextLoader
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -13,11 +16,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(
+        classes = TestableApplicationConfiguration.class,
+        loader = SpringApplicationContextLoader.class,
+        locations = ["classpath:applicationContext.xml"]
+)
 @WebAppConfiguration
 class WelcomeControllerTest extends AbstractTestNGSpringContextTests {
 

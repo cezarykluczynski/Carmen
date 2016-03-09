@@ -1,26 +1,22 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
 
-import java.util.Calendar
-import java.util.Date
-
-@Component
 class RateLimitDAOImplFixtures {
 
-    @Autowired
-    RateLimitDAO rateLimitDAOImpl
+    private RateLimitDAO rateLimitDAOImpl
+
+    public RateLimitDAOImplFixtures(RateLimitDAO rateLimitDAOImpl) {
+        this.rateLimitDAOImpl = rateLimitDAOImpl
+    }
 
     RateLimit createRateLimitEntityExpiringIn1Second(String resource) {
         RateLimitSet mockRateLimitSet = createRateLimitSetExpiringIn1Second resource
         rateLimitDAOImpl.create mockRateLimitSet
     }
 
-    RateLimitSet createRateLimitSetExpiringIn1Second(String resource) {
+    private static RateLimitSet createRateLimitSetExpiringIn1Second(String resource) {
         Calendar calendar = Calendar.getInstance()
         calendar.setTime new Date()
         /**

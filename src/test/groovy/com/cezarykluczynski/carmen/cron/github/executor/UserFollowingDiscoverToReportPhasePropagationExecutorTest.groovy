@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -11,18 +12,14 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class UserFollowingDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

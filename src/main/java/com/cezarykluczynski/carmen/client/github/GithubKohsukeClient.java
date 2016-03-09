@@ -9,9 +9,13 @@ import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import org.kohsuke.github.GitHub;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GithubKohsukeClient implements GithubClientInterface {
 
+    @Autowired
     public GithubKohsukeClient(GitHub github) {
         this.github = github;
     }

@@ -1,21 +1,17 @@
 package com.cezarykluczynski.carmen.dao.apiqueue
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 
-import java.util.HashMap
-
-@Component
 class PendingRequestDAOImplFixtures {
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl
+
+    public PendingRequestDAOImplFixtures(PendingRequestDAO apiqueuePendingRequestDAOImpl) {
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl
+    }
 
     public PendingRequest createPendingRequestEntityUsingUserEntityAndPriority(User userEntity, Integer priority) {
         HashMap<String, Object> emptyParams = new HashMap<String, Object>()

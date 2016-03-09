@@ -5,14 +5,21 @@ import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingRepo
 import com.cezarykluczynski.carmen.model.github.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserFollowersFollowingReportToSleepPhasePropagationExecutor implements Runnable {
 
-    @Autowired
-    UserDAO githubUserDAOImpl;
+    private UserDAO githubUserDAOImpl;
+
+    private UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase;
 
     @Autowired
-    UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase;
+    public UserFollowersFollowingReportToSleepPhasePropagationExecutor(UserDAO githubUserDAOImpl,
+           UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase) {
+        this.githubUserDAOImpl = githubUserDAOImpl;
+        this.propagationUserFollowersFollowingReportToSleepPhase = propagationUserFollowersFollowingReportToSleepPhase;
+    }
 
     public void run() {
         try {

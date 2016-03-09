@@ -11,6 +11,6 @@ import org.springframework.data.cassandra.mapping.Table
 @Table("entity_two")
 class EntityTwo {
 
-    private UUID id;
+    private UUID id
 
 }

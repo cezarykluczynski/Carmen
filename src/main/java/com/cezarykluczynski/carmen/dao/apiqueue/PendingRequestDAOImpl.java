@@ -27,14 +27,14 @@ import java.util.HashMap;
 @Repository
 public class PendingRequestDAOImpl implements PendingRequestDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    @Autowired
-    GithubClient githubClient;
+    private GithubClient githubClient;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public PendingRequestDAOImpl(SessionFactory sessionFactory, GithubClient githubClient) {
         this.sessionFactory = sessionFactory;
+        this.githubClient = githubClient;
     }
 
     @Override

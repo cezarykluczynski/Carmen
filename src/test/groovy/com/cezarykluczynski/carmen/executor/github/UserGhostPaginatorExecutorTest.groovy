@@ -1,10 +1,11 @@
 package com.cezarykluczynski.carmen.executor.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-import org.hibernate.Criteria
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.springframework.beans.factory.annotation.Value
@@ -13,18 +14,16 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
 import com.cezarykluczynski.carmen.client.github.GithubClient
+import org.springframework.test.context.web.WebAppConfiguration
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
 
@@ -33,12 +32,12 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(
+        classes = TestableApplicationConfiguration.class,
+        loader = SpringApplicationContextLoader.class,
+        locations = ["classpath:applicationContext.xml"]
+)
+@WebAppConfiguration
 class UserGhostPaginatorExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

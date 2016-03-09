@@ -14,8 +14,12 @@ import com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation;
 @Component
 public class UserPropagationFollowing {
 
-    @Autowired
     UserFollowingPropagation userFollowingPropagation;
+
+    @Autowired
+    public UserPropagationFollowing(UserFollowingPropagation userFollowingPropagation) {
+        this.userFollowingPropagation = userFollowingPropagation;
+    }
 
     @AfterReturning(
         pointcut = "execution(* com.cezarykluczynski.carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",

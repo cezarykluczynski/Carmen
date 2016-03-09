@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class CarmenUserDAOImpl implements CarmenUserDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public CarmenUserDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

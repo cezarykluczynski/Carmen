@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.worker
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
@@ -20,6 +21,7 @@ import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeClass
@@ -29,12 +31,8 @@ import org.testng.annotations.Test
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

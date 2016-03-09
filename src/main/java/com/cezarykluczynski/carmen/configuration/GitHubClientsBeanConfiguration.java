@@ -1,11 +1,15 @@
 package com.cezarykluczynski.carmen.configuration;
 
+import com.cezarykluczynski.carmen.client.github.GithubClient;
+import com.cezarykluczynski.carmen.client.github.GithubEgitClient;
+import com.cezarykluczynski.carmen.client.github.GithubJcabiClient;
+import com.cezarykluczynski.carmen.client.github.GithubKohsukeClient;
+import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -17,11 +21,11 @@ import org.kohsuke.github.GitHub;
 import org.eclipse.egit.github.core.client.GitHubClient;
 
 @Configuration
-@ComponentScan
-@EnableAsync
-@EnableScheduling
-@EnableTransactionManagement
+@ComponentScan("com.cezarykluczynski.carmen")
 public class GitHubClientsBeanConfiguration {
+
+    @Autowired
+    private ApplicationContext ctx;
 
     private String githubAccessToken;
 
@@ -35,6 +39,16 @@ public class GitHubClientsBeanConfiguration {
          * access token, resulting in much lower GitHub rate limits.
          */
         githubAccessToken = System.getenv("CARMEN_GITHUB_ACCESS_TOKEN");
+    }
+
+    @Bean
+    public GithubClient githubClient() {
+        return new GithubClient(
+                (GithubJcabiClient) ctx.getBean("githubJcabiClient"),
+                (GithubKohsukeClient) ctx.getBean("githubKohsukeClient"),
+                (GithubEgitClient) ctx.getBean("githubEgitClient"),
+                (RateLimitDAO) ctx.getBean("rateLimitDAOImpl")
+        );
     }
 
     @Bean

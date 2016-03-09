@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@org.springframework.stereotype.Repository
+@org.springframework.stereotype.Repository("publicLanguagesDAOImpl")
 public class LanguagesDAOImpl implements LanguagesDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public LanguagesDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

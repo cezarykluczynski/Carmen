@@ -17,14 +17,19 @@ import com.cezarykluczynski.carmen.util.DateTimeConstants;
 @Component
 public class UserGhostPaginatorExecutor implements Executor {
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
-    @Autowired
-    GithubClient githubClient;
+    private GithubClient githubClient;
 
-    @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}")
     private Integer paginationLimit;
+
+    @Autowired
+    public UserGhostPaginatorExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl, GithubClient githubClient,
+                          @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}") Integer paginationLimit) {
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+        this.githubClient = githubClient;
+        this.paginationLimit = paginationLimit;
+    }
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         if (isPendingRequestOnFirstPage(pendingRequest) && isPendingRequestBlocked(pendingRequest)) {

@@ -32,9 +32,6 @@
     <init-param>
       <param-name>contextConfigLocation</param-name>
       <param-value>
-        classpath:spring/database-config.xml,
-        classpath:spring/mvc-core-config.xml,
-        classpath:spring/cron-config.xml
       </param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>

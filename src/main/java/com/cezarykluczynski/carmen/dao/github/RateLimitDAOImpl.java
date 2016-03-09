@@ -18,10 +18,10 @@ import java.util.List;
 @Repository
 public class RateLimitDAOImpl implements RateLimitDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public RateLimitDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

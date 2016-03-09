@@ -16,9 +16,13 @@ import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("githubJcabiClient")
 public class GithubJcabiClient implements GithubClientInterface {
 
+    @Autowired
     public GithubJcabiClient(RtGithub github) {
         this.github = github;
     }

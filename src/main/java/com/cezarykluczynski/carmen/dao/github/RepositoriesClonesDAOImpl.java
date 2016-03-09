@@ -20,10 +20,10 @@ import java.util.List;
 @org.springframework.stereotype.Repository
 public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public RepositoriesClonesDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

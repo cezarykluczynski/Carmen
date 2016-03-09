@@ -1,24 +1,19 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
 
-@Component
 class RepositoriesDAOImplFixtures {
 
-    @Autowired
-    RepositoriesDAO githubRepositoriesDAOImpl
+    private RepositoriesDAO githubRepositoriesDAOImpl
 
-    @Autowired
     private SessionFactory sessionFactory
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    public RepositoriesDAOImplFixtures(RepositoriesDAO githubRepositoriesDAOImpl, SessionFactory sessionFactory) {
+        this.githubRepositoriesDAOImpl = githubRepositoriesDAOImpl
         this.sessionFactory = sessionFactory
     }
 

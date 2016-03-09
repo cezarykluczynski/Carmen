@@ -7,34 +7,38 @@ import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository;
 import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 
+// TODO make thread-safe
 @Component
 public class UserFollowersFollowingReportToSleepPhasePropagation implements
         com.cezarykluczynski.carmen.propagation.Propagation {
 
-    @Autowired
-    UserDAO githubUserDAOImpl;
+    private UserDAO githubUserDAOImpl;
 
-    @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl;
+    private UserFollowersDAO propagationsUserFollowersDAOImpl;
 
-    @Autowired
-    UserFollowingDAO propagationsUserFollowingDAOImpl;
+    private UserFollowingDAO propagationsUserFollowingDAOImpl;
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
-
-    @Autowired
-    FollowersAndFolloweesRepository followersAndFolloweesRepository;
+    private FollowersAndFolloweesRepository followersAndFolloweesRepository;
 
     private User userEntity;
 
-    FollowersAndFollowees followersAndFollowees;
+    private FollowersAndFollowees followersAndFollowees;
+
+    @Autowired
+    public UserFollowersFollowingReportToSleepPhasePropagation(UserDAO githubUserDAOImpl,
+                                                   UserFollowersDAO propagationsUserFollowersDAOImpl,
+                                                   UserFollowingDAO propagationsUserFollowingDAOImpl,
+                                                   FollowersAndFolloweesRepository followersAndFolloweesRepository) {
+        this.githubUserDAOImpl = githubUserDAOImpl;
+        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
+        this.propagationsUserFollowingDAOImpl = propagationsUserFollowingDAOImpl;
+        this.followersAndFolloweesRepository = followersAndFolloweesRepository;
+    }
 
     @Override
     public void setUserEntity(User userEntity) {

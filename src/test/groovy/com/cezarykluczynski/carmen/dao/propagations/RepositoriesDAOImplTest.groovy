@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.dao.propagations
 
-import org.hibernate.SessionFactory
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -9,17 +9,12 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.Test
 import org.testng.Assert
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
@@ -31,18 +26,11 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
 
-    @Autowired
-    SessionFactoryFixtures sessionFactoryFixtures
-
-    @Autowired
-    private SessionFactory sessionFactory
-
     @Test
     void findByUser() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        Repositories repositoriesEntity = propagationsRepositoriesDAOImplFixtures
-            .createRepositoriesEntityUsingUserEntity(userEntity)
+        propagationsRepositoriesDAOImplFixtures.createRepositoriesEntityUsingUserEntity(userEntity)
 
         // exercise
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser userEntity
@@ -60,7 +48,7 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
         // exercise
-        Repositories repositoriesEntity = propagationsRepositoriesDAOImpl.create(userEntity)
+        propagationsRepositoriesDAOImpl.create(userEntity)
 
         // assertion
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser(userEntity)

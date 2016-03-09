@@ -17,20 +17,26 @@ import com.cezarykluczynski.carmen.client.github.GithubClient;
 @Component
 public class RepositoriesExecutor implements Executor {
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+
+    private UserDAO githubUserDAOImpl;
+
+    private RepositoriesDAO githubRepositoriesDAOImpl;
+
+    private com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl;
+
+    private GithubClient githubClient;
 
     @Autowired
-    UserDAO githubUserDAOImpl;
-
-    @Autowired
-    RepositoriesDAO githubRepositoriesDAOImpl;
-
-    @Autowired
-    com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl;
-
-    @Autowired
-    GithubClient githubClient;
+    public RepositoriesExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl, UserDAO githubUserDAOImpl,
+                        com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl,
+                                RepositoriesDAO githubRepositoriesDAOImpl, GithubClient githubClient) {
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+        this.githubUserDAOImpl = githubUserDAOImpl;
+        this.propagationsRepositoriesDAOImpl = propagationsRepositoriesDAOImpl;
+        this.githubRepositoriesDAOImpl = githubRepositoriesDAOImpl;
+        this. githubClient = githubClient;
+    }
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         String login = (String) pendingRequest.getPathParams().get("login");

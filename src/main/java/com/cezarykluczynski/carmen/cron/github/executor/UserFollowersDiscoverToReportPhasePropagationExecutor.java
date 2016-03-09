@@ -5,14 +5,21 @@ import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserFollowersDiscoverToReportPhasePropagationExecutor implements Runnable {
 
-    @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl;
+    private UserFollowersDAO propagationsUserFollowersDAOImpl;
+
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
     @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    public UserFollowersDiscoverToReportPhasePropagationExecutor(UserFollowersDAO propagationsUserFollowersDAOImpl,
+                                                                 PendingRequestDAO apiqueuePendingRequestDAOImpl) {
+        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+    }
 
     public void run() {
         UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findOldestPropagationInDiscoverPhase();

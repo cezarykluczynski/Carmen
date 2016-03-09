@@ -1,9 +1,11 @@
 package com.cezarykluczynski.carmen.aspect.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -14,19 +16,18 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation
 
 import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.doNothing
 import org.mockito.Mock
-import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
+import org.mockito.InjectMocks
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(
+        classes = TestableApplicationConfiguration.class,
+        loader = SpringApplicationContextLoader.class,
+        locations = ["classpath:applicationContext.xml"]
+)
+@WebAppConfiguration
 class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

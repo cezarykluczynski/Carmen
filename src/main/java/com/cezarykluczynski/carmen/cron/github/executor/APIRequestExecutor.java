@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
@@ -15,26 +14,30 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 @Component
 public class APIRequestExecutor implements Runnable {
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+
+    private RepositoriesExecutor repositoriesExecutor;
+
+    private UserGhostPaginatorExecutor userGhostPaginatorExecutor;
+
+    private UserGhostExecutor userGhostExecutor;
 
     @Autowired
-    RepositoriesExecutor repositoriesExecutor;
-
-    @Autowired
-    UserGhostPaginatorExecutor userGhostPaginatorExecutor;
-
-    @Autowired
-    UserGhostExecutor userGhostExecutor;
+    public APIRequestExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl,
+                              RepositoriesExecutor repositoriesExecutor,
+                              UserGhostPaginatorExecutor userGhostPaginatorExecutor,
+                              UserGhostExecutor userGhostExecutor) {
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+        this.repositoriesExecutor = repositoriesExecutor;
+        this.userGhostPaginatorExecutor = userGhostPaginatorExecutor;
+        this.userGhostExecutor = userGhostExecutor;
+    }
 
     public void run() {
         try {
             PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest();
             runExecutor(pendingRequest);
-        } catch (EmptyPendingRequestListException e) {
-            return;
         } catch (IOException e) {
-            return;
         }
     }
 

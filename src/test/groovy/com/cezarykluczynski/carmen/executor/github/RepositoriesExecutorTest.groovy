@@ -1,11 +1,11 @@
 package com.cezarykluczynski.carmen.executor.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.client.github.GithubClient
@@ -13,12 +13,12 @@ import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO as PropagationsRepositoriesDAO
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
+import org.springframework.test.context.web.WebAppConfiguration
 
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.verify
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.InjectMocks
 import org.mockito.MockitoAnnotations
 
@@ -27,15 +27,8 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
-import java.util.List
-import java.util.ArrayList
-
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

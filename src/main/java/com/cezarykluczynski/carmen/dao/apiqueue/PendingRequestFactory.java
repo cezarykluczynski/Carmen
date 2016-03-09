@@ -15,8 +15,12 @@ import java.util.HashMap;
 @Component
 public class PendingRequestFactory {
 
-    @Autowired
     PendingRequestDAO apiqueuePendingRequestDAOImpl;
+
+    @Autowired
+    public PendingRequestFactory(PendingRequestDAO apiqueuePendingRequestDAOImpl) {
+        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+    }
 
     public PendingRequest createPendingRequestForUserRepositoriesPropagation(Propagation repositoriesEntity) {
         User userEntity = ((Repositories) repositoriesEntity).getUser();

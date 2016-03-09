@@ -13,14 +13,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
 
-    @Autowired
-    RepositoriesDAO repositoriesDAO;
+    private RepositoriesDAO repositoriesDAO;
+
+    private RepositoriesClonesDAO repositoriesClonesDAO;
+
+    private Server server;
 
     @Autowired
-    RepositoriesClonesDAO repositoriesClonesDAO;
-
-    @Autowired
-    Server server;
+    public GitHubCloneWorker(RepositoriesDAO repositoriesDAO, RepositoriesClonesDAO repositoriesClonesDAO,
+                             Server server) {
+        this.repositoriesDAO = repositoriesDAO;
+        this.repositoriesClonesDAO = repositoriesClonesDAO;
+        this.server = server;
+    }
 
     @Override
     public void run() {

@@ -18,10 +18,10 @@ import com.cezarykluczynski.carmen.model.github.User;
 @Repository
 public class UserFollowingDAOImpl extends CarmenPropagationsDAOImpl implements UserFollowingDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public UserFollowingDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

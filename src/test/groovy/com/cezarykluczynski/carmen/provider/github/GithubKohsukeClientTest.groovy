@@ -1,18 +1,15 @@
-package com.cezarykluczynski.carmen.client.github
+package com.cezarykluczynski.carmen.provider.github
 
+import com.cezarykluczynski.carmen.client.github.GithubKohsukeClient
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.Test
 
-import java.io.IOException
-
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class GithubKohsukeClientTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

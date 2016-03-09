@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -8,6 +9,7 @@ import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation
 import com.cezarykluczynski.carmen.model.github.User
+import org.springframework.test.context.web.WebAppConfiguration
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -21,11 +23,8 @@ import org.mockito.MockitoAnnotations
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock

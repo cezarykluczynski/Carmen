@@ -1,22 +1,19 @@
 package com.cezarykluczynski.carmen.cron.linguist.executor
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter
-import com.cezarykluczynski.carmen.configuration.LanguageStatsBeanConfiguration
 import com.cezarykluczynski.carmen.model.pub.Language
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@ContextConfiguration(locations = [
-     "classpath:spring/database-config.xml",
-     "classpath:spring/mvc-core-config.xml",
-     "classpath:spring/cron-config.xml"
-], classes = [LanguageStatsBeanConfiguration.class], loader = SpringApplicationContextLoader.class)
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class LanguagesListUpdateExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Autowired

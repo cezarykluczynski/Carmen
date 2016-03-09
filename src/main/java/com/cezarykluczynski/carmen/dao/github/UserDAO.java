@@ -1,13 +1,10 @@
 package com.cezarykluczynski.carmen.dao.github;
 
-import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.model.github.User;
 
 import java.io.IOException;
 
 public interface UserDAO {
-
-    void setGithubClient(GithubClient githubClient);
 
     User create(com.cezarykluczynski.carmen.set.github.User user);
 

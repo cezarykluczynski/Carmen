@@ -11,6 +11,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import static com.google.common.base.CaseFormat.*;
 
@@ -36,7 +38,8 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private String migrationPath;
 
-    CassandraMigrationBuilder(String migrationPath) {
+    @Autowired
+    CassandraMigrationBuilder(@Value("${cassandra.migrationDirectory}") String migrationPath) {
         this.migrationPath = migrationPath;
     }
 

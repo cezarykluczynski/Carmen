@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
@@ -10,6 +11,7 @@ import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
 import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
+import org.springframework.test.context.web.WebAppConfiguration
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -25,11 +27,8 @@ import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
 
     @Mock

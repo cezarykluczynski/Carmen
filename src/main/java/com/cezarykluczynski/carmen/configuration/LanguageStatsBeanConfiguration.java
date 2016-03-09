@@ -10,10 +10,12 @@ import com.cezarykluczynski.carmen.util.network.HTTPJSONClientImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.io.IOException;
 
 @Configuration
+@PropertySource(value = { "classpath:config.properties" })
 public class LanguageStatsBeanConfiguration {
 
     @Value("${detector.client}")

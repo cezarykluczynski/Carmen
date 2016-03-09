@@ -14,8 +14,12 @@ import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagatio
 @Component
 public class UserPropagationRepositories {
 
-    @Autowired
     UserRepositoriesPropagation userRepositoriesPropagation;
+
+    @Autowired
+    public UserPropagationRepositories(UserRepositoriesPropagation userRepositoriesPropagation) {
+        this.userRepositoriesPropagation = userRepositoriesPropagation;
+    }
 
     @AfterReturning(
         pointcut = "execution(* com.cezarykluczynski.carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",

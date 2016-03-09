@@ -1,20 +1,15 @@
 package com.cezarykluczynski.carmen.dao.propagations
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 
-import java.util.List
-import java.util.Iterator
-
-@Component
 class UserFollowersDAOImplFixtures {
 
-    @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl
+    private UserFollowersDAO propagationsUserFollowersDAOImpl
+
+    public UserFollowersDAOImplFixtures(UserFollowersDAO propagationsUserFollowersDAOImpl) {
+        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl
+    }
 
     public UserFollowers createUserFollowersEntityUsingUserEntity(User userEntity) {
         return createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")

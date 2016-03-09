@@ -19,7 +19,7 @@ import org.springframework.data.cassandra.core.CassandraAdminTemplate;
 
 @Configuration
 @PropertySource(value = { "classpath:config.properties" })
-@EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository.githubstats" })
+@EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository" })
 public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
 
     @Autowired
@@ -33,6 +33,7 @@ public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
     @Bean
     public CassandraClusterFactoryBean cluster() {
         CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
+
         cluster.setContactPoints(env.getProperty("cassandra.contactpoints"));
         cluster.setPort(Integer.parseInt(env.getProperty("cassandra.port")));
 
@@ -52,6 +53,7 @@ public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
     @Bean
     public CassandraSessionFactoryBean session() throws Exception {
         CassandraSessionFactoryBean session = new CassandraSessionFactoryBean();
+
         session.setCluster(cluster().getObject());
         session.setKeyspaceName(getKeyspaceName());
         session.setConverter(converter());

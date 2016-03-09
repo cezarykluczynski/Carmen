@@ -1,7 +1,6 @@
 package com.cezarykluczynski.carmen.web.github
 
-import org.hibernate.Session
-import org.hibernate.SessionFactory
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -13,29 +12,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
-import org.testng.Assert
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
 @WebAppConfiguration
 class UserControllerTest extends AbstractTestNGSpringContextTests {
-
-    @Autowired
-    private SessionFactory sessionFactory
 
     @Autowired
     private UserController userController

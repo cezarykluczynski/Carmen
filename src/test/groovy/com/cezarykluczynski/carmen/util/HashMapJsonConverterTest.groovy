@@ -3,13 +3,6 @@ package com.cezarykluczynski.carmen.util
 import org.testng.annotations.Test
 import org.testng.Assert
 
-import java.util.Collection
-
-import java.util.HashMap
-import java.util.Iterator
-
-import org.json.JSONObject
-
 class HashMapJsonConverterTest {
 
     String jsonString = '{"key1":"value1","key2":2,"key4":false}'

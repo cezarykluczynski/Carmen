@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("apiTaskExecutor")
 @Profile("github-api-cron")
 public class GitHubSimpleAsyncTaskExecutor extends SimpleAsyncTaskExecutor {
 

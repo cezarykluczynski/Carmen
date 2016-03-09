@@ -1,5 +1,7 @@
 package com.cezarykluczynski.carmen.dao.apiqueue
 
+import com.cezarykluczynski.carmen.client.github.GithubClient
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 
@@ -7,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
@@ -17,30 +17,19 @@ import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 import com.cezarykluczynski.carmen.util.DateTimeConstants
+import org.springframework.test.context.web.WebAppConfiguration
+import org.testng.annotations.BeforeMethod
 
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
+import java.lang.reflect.Field
 
 import org.testng.annotations.Test
 import org.testng.Assert
 
-import java.util.List
-
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
 
-    @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl
+    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -52,13 +41,18 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    SessionFactoryFixtures sessionFactoryFixtures
+    private SessionFactory sessionFactory
 
     @Autowired
-    private SessionFactory sessionFactory
+    private GithubClient githubClient
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    @BeforeMethod
+    void setUp() {
+        apiqueuePendingRequestDAOImpl = new PendingRequestDAOImpl(sessionFactory, githubClient)
     }
 
     @Test
@@ -135,8 +129,8 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void findMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
         // setup
-        SessionFactory sessionFactoryMock = sessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
-        apiqueuePendingRequestDAOImpl.setSessionFactory sessionFactoryMock
+        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
+        setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactoryMock
 
         try {
             // exercise
@@ -150,7 +144,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         }
 
         // teardown
-        apiqueuePendingRequestDAOImpl.setSessionFactory sessionFactory
+        setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactory
     }
 
     @Test
@@ -253,6 +247,12 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         // teardown
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
+    private static void setSessionFactoryToDao(PendingRequestDAO apiqueuePendingRequestDAOImpl, SessionFactory sessionFactory) {
+        Field field = apiqueuePendingRequestDAOImpl.getClass().getDeclaredField "sessionFactory"
+        field.setAccessible true
+        field.set apiqueuePendingRequestDAOImpl, sessionFactory
     }
 
 }

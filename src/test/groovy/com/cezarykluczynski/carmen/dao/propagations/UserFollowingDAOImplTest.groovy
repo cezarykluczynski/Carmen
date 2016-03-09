@@ -1,34 +1,30 @@
-package com.cezarykluczynski.carmen.dao.github
+package com.cezarykluczynski.carmen.dao.propagations
 
-import org.hibernate.Session
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import org.hibernate.SessionFactory
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-
+import org.springframework.test.context.web.WebAppConfiguration
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 import org.testng.Assert
 
 import org.joda.time.DateTimeConstants
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+import java.lang.reflect.Field
+
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
 
-    @Autowired
-    UserFollowingDAO propagationsUserFollowingDAOImpl
+    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
 
     @Autowired
     UserDAOImplFixtures githubUserDAOImplFixtures
@@ -37,10 +33,13 @@ class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
     UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
-    SessionFactoryFixtures sessionFactoryFixtures
-
-    @Autowired
     private SessionFactory sessionFactory
+
+
+    @BeforeMethod
+    void setUp() {
+        propagationsUserFollowingDAOImpl = new UserFollowingDAOImpl(sessionFactory)
+    }
 
     @Test
     void findByUser() {
@@ -85,9 +84,9 @@ class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
     @Test
     void findOldestPropagationInDiscoverPhaseNonExistingEntity() {
         // setup
-        SessionFactory sessionFactoryMock = sessionFactoryFixtures
+        SessionFactory sessionFactoryMock = SessionFactoryFixtures
             .createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowing.class
-        propagationsUserFollowingDAOImpl.setSessionFactory sessionFactoryMock
+        setSessionFactoryToDao propagationsUserFollowingDAOImpl, sessionFactoryMock
 
         // exercise
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase()
@@ -96,7 +95,7 @@ class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertNull userFollowingFoundEntity
 
         // teardown
-        propagationsUserFollowingDAOImpl.setSessionFactory sessionFactory
+        setSessionFactoryToDao propagationsUserFollowingDAOImpl, sessionFactory
     }
 
     @Test
@@ -176,6 +175,12 @@ class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
 
         // assertion
         Assert.assertNull userFollowingFoundEntity
+    }
+
+    private static void setSessionFactoryToDao(UserFollowingDAO propagationsUserFollowingDAOImpl, SessionFactory sessionFactory) {
+        Field field = propagationsUserFollowingDAOImpl.getClass().getDeclaredField "sessionFactory"
+        field.setAccessible true
+        field.set propagationsUserFollowingDAOImpl, sessionFactory
     }
 
 }

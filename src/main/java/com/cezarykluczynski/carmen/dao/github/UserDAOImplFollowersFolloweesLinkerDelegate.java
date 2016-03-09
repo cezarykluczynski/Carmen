@@ -17,10 +17,10 @@ import java.util.Map;
 @Component
 public class UserDAOImplFollowersFolloweesLinkerDelegate {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public UserDAOImplFollowersFolloweesLinkerDelegate(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

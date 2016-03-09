@@ -10,20 +10,17 @@ import static org.mockito.Mockito.any
 import static org.mockito.Mockito.when
 import static org.mockito.Mockito.mock
 
-import java.lang.Class
-
-@Component
 class SessionFactoryFixtures {
 
-    SessionFactory createSessionFactoryMockWithEmptyCriteriaList(Class clazz) {
+    static SessionFactory createSessionFactoryMockWithEmptyCriteriaList(Class clazz) {
         return createSessionFactoryMock(clazz, false)
     }
 
-    SessionFactory createSessionFactoryMockWithEmptyCriteriaListAndMethods(Class clazz) {
+    static SessionFactory createSessionFactoryMockWithEmptyCriteriaListAndMethods(Class clazz) {
         return createSessionFactoryMock(clazz, true)
     }
 
-    private SessionFactory createSessionFactoryMock(Class clazz, Boolean withMethods) {
+    private static SessionFactory createSessionFactoryMock(Class clazz, Boolean withMethods) {
         SessionFactory sessionFactoryMock = mock SessionFactory.class
         Session sessionMock = mock Session.class
 

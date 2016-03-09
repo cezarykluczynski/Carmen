@@ -14,11 +14,15 @@ import java.util.stream.Collectors;
 @Component
 public class LanguagesListUpdateExecutor implements Runnable {
 
-    @Autowired
     LangsStatsAdapter langsStatsAdapter;
 
-    @Autowired
     LanguagesDAO languagesDAO;
+
+    @Autowired
+    public LanguagesListUpdateExecutor(LangsStatsAdapter langsStatsAdapter, LanguagesDAO languagesDAO) {
+        this.langsStatsAdapter = langsStatsAdapter;
+        this.languagesDAO = languagesDAO;
+    }
 
     @Override
     public void run() {

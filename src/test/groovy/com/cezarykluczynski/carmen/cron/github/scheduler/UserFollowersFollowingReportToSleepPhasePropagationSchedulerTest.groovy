@@ -2,8 +2,6 @@ package com.cezarykluczynski.carmen.cron.github.scheduler
 
 import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.core.task.TaskExecutor
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 
 import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor
 

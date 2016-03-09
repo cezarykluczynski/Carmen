@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
@@ -16,11 +17,7 @@ import org.testng.annotations.Test
 
 import java.lang.reflect.Field
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
 @WebAppConfiguration
 public class CLILangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTests {
 

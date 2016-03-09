@@ -14,16 +14,23 @@ import java.util.Date;
 @Component
 public class RepositoriesWakeUpExecutor implements Runnable {
 
-    @Value("${executor.RepositoriesWakeUpExecutor.refreshIntervalDays}")
+    private RepositoriesDAO propagationsRepositoriesDAOImpl;
+
+    private PendingRequestFactory pendingRequestFactory;
+
     private Integer refreshIntervalDays;
 
-    @Autowired
-    RepositoriesDAO propagationsRepositoriesDAOImpl;
+    private Repositories repositoriesEntity;
 
     @Autowired
-    PendingRequestFactory pendingRequestFactory;
-
-    Repositories repositoriesEntity;
+    public RepositoriesWakeUpExecutor(RepositoriesDAO propagationsRepositoriesDAOImpl,
+                                      PendingRequestFactory pendingRequestFactory,
+                      @Value("${executor.RepositoriesWakeUpExecutor.refreshIntervalDays}") Integer refreshIntervalDays
+    ) {
+        this.propagationsRepositoriesDAOImpl = propagationsRepositoriesDAOImpl;
+        this.pendingRequestFactory = pendingRequestFactory;
+        this.refreshIntervalDays = refreshIntervalDays;
+    }
 
     public void run() {
         repositoriesEntity = propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase();

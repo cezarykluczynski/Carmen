@@ -1,5 +1,7 @@
 package com.cezarykluczynski.carmen.rest.controller
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -31,12 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
 @WebAppConfiguration
 class AnalysisRequestControllerTest extends AbstractTestNGSpringContextTests {
 

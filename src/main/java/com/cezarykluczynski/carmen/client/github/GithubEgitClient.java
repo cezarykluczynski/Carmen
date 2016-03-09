@@ -11,14 +11,18 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
+@Component
 public class GithubEgitClient implements GithubClientInterface {
 
+    @Autowired
     public GithubEgitClient(GitHubClient github) {
         this.github = github;
     }

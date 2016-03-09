@@ -15,13 +15,13 @@ import java.util.List;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
 import com.cezarykluczynski.carmen.model.github.User;
 
-@Repository
+@Repository("propagationsRepositoriesDAOImpl")
 public class RepositoriesDAOImpl extends CarmenPropagationsDAOImpl implements RepositoriesDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public RepositoriesDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

@@ -1,6 +1,8 @@
 package com.cezarykluczynski.carmen.util.network
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import org.mockserver.integration.ClientAndServer
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
 import org.testng.annotations.AfterMethod
 import static org.mockserver.model.HttpRequest.request
@@ -12,11 +14,8 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
 import org.testng.annotations.Test
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class HTTPJSONClientImplTest extends AbstractTestNGSpringContextTests {
 
     ClientAndServer mockServer

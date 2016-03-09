@@ -10,7 +10,7 @@ import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 
 import java.util.List;
 
-public class CarmenPropagationsDAOImpl {
+public abstract class CarmenPropagationsDAOImpl {
 
     protected CarmenRelationalEntity findOldestPropagationInPhase(SessionFactory sessionFactory, Class clazz,
                                                                   String phase) {

@@ -3,9 +3,7 @@ package com.cezarykluczynski.carmen.propagation.github;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
@@ -14,19 +12,18 @@ import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 @Component
 public class UserFollowersPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
-    @Autowired
-    UserDAO githubUserDAOImpl;
+    private UserFollowersDAO propagationsUserFollowersDAOImpl;
 
-    @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl;
-
-    @Autowired
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl;
-
-    @Autowired
-    PendingRequestFactory pendingRequestFactory;
+    private PendingRequestFactory pendingRequestFactory;
 
     private User userEntity;
+
+    @Autowired
+    public UserFollowersPropagation(UserFollowersDAO propagationsUserFollowersDAOImpl,
+                                    PendingRequestFactory pendingRequestFactory) {
+        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
+        this.pendingRequestFactory = pendingRequestFactory;
+    }
 
     @Override
     public void setUserEntity(User userEntity) {
@@ -49,7 +46,7 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     private void createDiscoverPhase(User baseUserEntity) {
-        Propagation propagationUserFollowersEntity = (Propagation)
+        Propagation propagationUserFollowersEntity =
                 propagationsUserFollowersDAOImpl.create(baseUserEntity, "discover");
         pendingRequestFactory.createPendingRequestForUserFollowersPropagation(propagationUserFollowersEntity);
     }

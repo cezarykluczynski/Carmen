@@ -20,26 +20,23 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.math.BigInteger;
 
-@Repository
+@Repository("githubUserDAOImpl")
 public class UserDAOImpl implements UserDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    @Autowired
-    GithubClient githubClient;
+    private GithubClient githubClient;
+
+    private UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate;
+
+    private UserDAOImplUserEntityHydrator userHydrator = new UserDAOImplUserEntityHydrator();
 
     @Autowired
-    UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate;
-
-    UserDAOImplUserEntityHydrator userHydrator = new UserDAOImplUserEntityHydrator();
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    public UserDAOImpl(SessionFactory sessionFactory, GithubClient githubClient,
+                       UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate) {
         this.sessionFactory = sessionFactory;
-    }
-
-    public void setGithubClient(GithubClient githubClient) {
         this.githubClient = githubClient;
+        this.githubUserDAOImplFollowersFolloweesLinkerDelegate = githubUserDAOImplFollowersFolloweesLinkerDelegate;
     }
 
     @Override

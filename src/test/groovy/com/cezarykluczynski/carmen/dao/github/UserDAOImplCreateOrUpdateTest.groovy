@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.dao.github
 
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 import org.hibernate.SessionFactory
 
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +14,10 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
 import com.cezarykluczynski.carmen.client.github.GithubClient
+import org.springframework.test.context.web.WebAppConfiguration
+import org.testng.annotations.BeforeMethod
+
+import java.lang.reflect.Field
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
@@ -23,34 +30,34 @@ import org.testng.Assert
 
 import org.joda.time.MutableDateTime
 
-@ContextConfiguration([
-    "classpath:spring/database-config.xml",
-    "classpath:spring/mvc-core-config.xml",
-    "classpath:spring/cron-config.xml",
-    "classpath:spring/fixtures/fixtures.xml"
-])
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
 class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
+
+    private UserDAOImpl githubUserDAOImpl
 
     @Autowired
     private SessionFactory sessionFactory
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
+    private UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    UserDAOImplFollowersFolloweesLinkerDelegate githubUserDAOImplFollowersFolloweesLinkerDelegate
 
     @Autowired
-    UserDAO githubUserDAOImpl
+    private GithubClient githubClient
 
-    @Autowired
-    GithubClient githubClient
+    @BeforeMethod
+    void setUp() {
+        githubUserDAOImpl = new UserDAOImpl(sessionFactory, githubClient, githubUserDAOImplFollowersFolloweesLinkerDelegate)
+    }
 
     @Test
     void createOrUpdateExistingRequestedEntityThatCannotBeUpdated() {
@@ -60,7 +67,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         UserSet userSet = UserSet.builder().login(currentLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubClient githubClientMock
+        setGithubClientToDao githubUserDAOImpl, githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -74,7 +81,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubClient githubClient
+        setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     @Test
@@ -87,7 +94,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         UserSet userSetMock = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSetMock
-        githubUserDAOImpl.setGithubClient githubClientMock
+        setGithubClientToDao githubUserDAOImpl, githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -100,7 +107,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubClient githubClient
+        setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     @Test
@@ -113,7 +120,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubClient githubClientMock
+        setGithubClientToDao githubUserDAOImpl, githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateGhostEntity currentLogin
@@ -125,7 +132,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubClient githubClient
+        setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     @Test
@@ -137,7 +144,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
         when githubClientMock.getUser(currentLogin) thenReturn userSet
-        githubUserDAOImpl.setGithubClient githubClientMock
+        setGithubClientToDao githubUserDAOImpl, githubClientMock
 
         // exercise
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -149,7 +156,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntity
-        githubUserDAOImpl.setGithubClient githubClient
+        setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     @Test
@@ -159,7 +166,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         GithubClient githubClientMock = getGithubClientMock()
         UserSet userSetMock = UserSet.builder().login(currentLogin).build()
         when githubClientMock.getUser(currentLogin) thenReturn userSetMock
-        githubUserDAOImpl.setGithubClient githubClientMock
+        setGithubClientToDao githubUserDAOImpl, githubClient
 
         // exercise
         User userEntityUpdated = githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
@@ -169,7 +176,7 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         githubUserDAOImplFixtures.deleteUserEntity userEntityUpdated
-        githubUserDAOImpl.setGithubClient githubClient
+        setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     private GithubClient getGithubClientMock() {
@@ -185,6 +192,12 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         Date twoDaysAgoDate = twoDaysAgo.toDate()
         userEntity.setUpdated twoDaysAgoDate
         githubUserDAOImpl.update userEntity
+    }
+
+    private static void setGithubClientToDao(UserDAO githubUserDAOImpl, GithubClient githubClient) {
+        Field field = githubUserDAOImpl.getClass().getDeclaredField "githubClient"
+        field.setAccessible true
+        field.set githubUserDAOImpl, githubClient
     }
 
 }

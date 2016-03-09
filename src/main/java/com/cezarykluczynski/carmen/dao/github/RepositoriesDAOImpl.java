@@ -13,13 +13,13 @@ import org.hibernate.criterion.Expression;
 
 import java.util.List;
 
-@org.springframework.stereotype.Repository
+@org.springframework.stereotype.Repository("githubRepositoriesDAOImpl")
 public class RepositoriesDAOImpl implements RepositoriesDAO {
 
-    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    @Autowired
+    public RepositoriesDAOImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

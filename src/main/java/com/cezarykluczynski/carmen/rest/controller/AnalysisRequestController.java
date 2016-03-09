@@ -18,8 +18,12 @@ import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededExceptio
 @RequestMapping("/rest/analyze")
 public class AnalysisRequestController {
 
-    @Autowired
     UserDAO githubUserDAOImpl;
+
+    @Autowired
+    public AnalysisRequestController(UserDAO githubUserDAOImpl) {
+        this.githubUserDAOImpl = githubUserDAOImpl;
+    }
 
     @RequestMapping(value = "/github/{login}", method = RequestMethod.GET)
     public Analysis github(@PathVariable String login) throws AssertionError, IOException {

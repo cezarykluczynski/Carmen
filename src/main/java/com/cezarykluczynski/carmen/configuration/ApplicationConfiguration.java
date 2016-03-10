@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 @Import({
     CassandraBeanConfiguration.class,
+    CronBeanConfiguration.class,
     CxfApplicationConfiguration.class,
     DatabaseBeanConfiguration.class,
     GitHubClientsBeanConfiguration.class,

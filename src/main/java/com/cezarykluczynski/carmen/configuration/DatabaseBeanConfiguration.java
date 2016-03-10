@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -44,6 +45,15 @@ public class DatabaseBeanConfiguration  {
         localSessionFactoryBean.setPackagesToScan("com.cezarykluczynski.carmen.model");
 
         return localSessionFactoryBean;
+    }
+
+    @Bean
+    public HibernateTransactionManager transactionManager() {
+        HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
+
+        hibernateTransactionManager.setSessionFactory(getSessionFactoryBean());
+
+        return hibernateTransactionManager;
     }
 
     private SessionFactory getSessionFactoryBean() {

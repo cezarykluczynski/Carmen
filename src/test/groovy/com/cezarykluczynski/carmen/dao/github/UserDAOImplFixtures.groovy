@@ -22,6 +22,14 @@ class UserDAOImplFixtures {
         return userEntity
     }
 
+    public User createEntityWithGitHubUserId(Integer gitHubUserId) {
+        UserSet userSetEntity = getUserSetEntityWithRandomLogin()
+        User userEntity = githubUserDAOImpl.create userSetEntity
+        userEntity.setGithubId gitHubUserId
+        githubUserDAOImpl.update userEntity
+        return userEntity
+    }
+
     public User createNotFoundRequestedUserEntity() {
         UserSet userSetEntity = getUserSetEntityWithRandomLogin()
         User userEntity = githubUserDAOImpl.create userSetEntity

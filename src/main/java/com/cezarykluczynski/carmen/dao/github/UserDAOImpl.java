@@ -198,8 +198,23 @@ public class UserDAOImpl implements UserDAO {
         )
             .setParameter("userId", user.getId())
             .uniqueResult()).intValue();
+
         session.close();
+
         return count;
+    }
+
+    @Override
+    public Integer findHighestGitHubUserId() {
+        Session session = sessionFactory.openSession();
+
+        Integer highestGitHubUserId = (Integer) session.createSQLQuery(
+                "SELECT u.github_id FROM github.users u ORDER BY u.github_id DESC"
+        ).setMaxResults(1).uniqueResult();
+
+        session.close();
+
+        return highestGitHubUserId;
     }
 
     private User hydrate(User userEntity, com.cezarykluczynski.carmen.set.github.User userSet) {

@@ -38,4 +38,6 @@ public interface UserDAO {
 
     Integer countFollowersFollowing(User user);
 
+    Integer findHighestGitHubUserId();
+
 }

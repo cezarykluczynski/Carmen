@@ -337,4 +337,17 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite4
     }
 
+    @Test
+    void findHighestGitHubUserId() {
+        // setup
+        Integer gitHubUserId = System.currentTimeMillis()
+        User userEntity = githubUserDAOImplFixtures.createEntityWithGitHubUserId gitHubUserId
+
+        // exercise, assertion
+        Assert.assertEquals githubUserDAOImpl.findHighestGitHubUserId(), gitHubUserId
+
+        // teardown
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
 }

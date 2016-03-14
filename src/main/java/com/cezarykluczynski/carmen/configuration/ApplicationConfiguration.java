@@ -8,6 +8,7 @@ import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 @Import({
+    AdminPanelConfiguration.class,
     CassandraBeanConfiguration.class,
     CronBeanConfiguration.class,
     CxfApplicationConfiguration.class,

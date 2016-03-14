@@ -29,16 +29,16 @@ import org.testng.Assert
 @WebAppConfiguration
 class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
 
-    PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
+    private PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
+    private PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
 
     @Autowired
-    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
     private SessionFactory sessionFactory

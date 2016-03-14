@@ -14,6 +14,8 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.pub.CronsDAO
+import com.cezarykluczynski.carmen.dao.pub.CronsDAOImplFixtures
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -64,6 +66,10 @@ class TestableApplicationConfiguration {
     @Bean
     public UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures() {
         return new UserFollowingDAOImplFixtures(ctx.getBean(UserFollowingDAO.class));
+    }
+
+    @Bean CronsDAOImplFixtures cronsDAOImplFixtures() {
+        return new CronsDAOImplFixtures(ctx.getBean(CronsDAO.class));
     }
 
 }

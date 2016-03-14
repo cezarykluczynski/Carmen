@@ -25,16 +25,16 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     private SessionFactory sessionFactory
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
-    UserDAO githubUserDAOImpl
+    private UserDAO githubUserDAOImpl
 
     @Test
     void create() {

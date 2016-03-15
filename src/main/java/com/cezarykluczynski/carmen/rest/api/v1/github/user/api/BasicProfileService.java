@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.rest.api.v1.github.user;
+package com.cezarykluczynski.carmen.rest.api.v1.github.user.api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

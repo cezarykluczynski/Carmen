@@ -1,6 +1,7 @@
-package com.cezarykluczynski.carmen.rest.api.v1.github.user;
+package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl;
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.rest.api.v1.github.user.api.BasicProfileService;
 import com.cezarykluczynski.carmen.rest.dto.api.v1.github.error.Error404ResponseDTO;
 import com.cezarykluczynski.carmen.rest.dto.api.v1.github.user.BasicProfileDTO;
 import com.cezarykluczynski.carmen.model.github.User;

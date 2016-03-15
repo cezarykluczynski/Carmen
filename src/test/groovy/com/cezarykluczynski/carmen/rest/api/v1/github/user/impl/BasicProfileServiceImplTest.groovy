@@ -1,9 +1,9 @@
-package com.cezarykluczynski.carmen.rest.api.v1.github.user
+package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
 import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.test.JerseyTestNg
+import org.glassfish.jersey.test.JerseyTestNg.ContainerPerClassTest
 import org.glassfish.jersey.test.TestProperties
 import org.json.JSONObject
 import org.testng.Assert
@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class BasicProfileServiceImplTest extends JerseyTestNg.ContainerPerClassTest {
+class BasicProfileServiceImplTest extends ContainerPerClassTest {
 
     private static final String avatarUrl = "avatar_url"
     private static final String bio = "Bio"
@@ -37,11 +37,6 @@ class BasicProfileServiceImplTest extends JerseyTestNg.ContainerPerClassTest {
         when githubUserDAOImpl.findByLogin("login") thenReturn createUserEntity()
         BasicProfileServiceImpl basicProfileService = new BasicProfileServiceImpl(githubUserDAOImpl)
         return new ResourceConfig().registerInstances(basicProfileService)
-    }
-
-    @Override
-    Object getProperty(String property) {
-        return super.getProperty(property)
     }
 
     @Test

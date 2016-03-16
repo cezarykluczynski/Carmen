@@ -28,6 +28,11 @@ class BasicProfileServiceImplTest extends ContainerPerClassTest {
     private static final String name = "John Doe"
 
     @Override
+    Object getProperty(String property) {
+        return super.getProperty(property)
+    }
+
+    @Override
     protected Application configure() {
         enable TestProperties.LOG_TRAFFIC
         enable TestProperties.CONTAINER_FACTORY

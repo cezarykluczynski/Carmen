@@ -22,9 +22,8 @@ before_install:
 install:
   - mvn flyway:migrate
   - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
-  - npm install --global gulp
-  - npm install
-  - gulp
+  - npm install --global grunt
+  - cd src/main/webapp/frontend && npm install && grunt build && cd ../../../..
 script:
   - mvn verify && rspec
 after_success:

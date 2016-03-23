@@ -12,8 +12,8 @@ src/main/webapp/frontend/node_modules/*
 src/main/webapp/frontend/typings/*
 src/main/webapp/frontend/dist/*
 src/main/webapp/frontend/.sass-cache/*
-src/main/webapp/frontend/app/**/*.js
-src/main/webapp/frontend/app/**/*.js.map
+src/main/webapp/frontend/typescript/**/*.js
+src/main/webapp/frontend/typescript/**/*.js.map
 src/main/webapp/frontend/npm-debug.log
 .env
 src/main/resources/config.properties

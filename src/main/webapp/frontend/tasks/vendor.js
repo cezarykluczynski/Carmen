@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 			options: {
 				process: function (src, path) {
 					// console.log(path)
-					return path.endsWith('.js') ?  "(function () {\n" + src + "\n})();\n" : src;
+					return path.indexOf('.js') === path.length - 3 ? "(function () {\n" + src + "\n})();\n" : src;
 				}
 			},
 			vendorJs: {

@@ -19,6 +19,7 @@ before_install:
   - bundle install
   - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && rm -rf cassandra-migration/src/test/java && cd cassandra-migration && mvn clean install && cd ..
   - mvn compile
+  - gem install sass
 install:
   - mvn flyway:migrate
   - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"

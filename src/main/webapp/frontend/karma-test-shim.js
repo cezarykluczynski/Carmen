@@ -1,3 +1,4 @@
+// Source: http://twofuckingdevelopers.com/2016/01/testing-angular-2-with-karma-and-jasmine/
 Error.stackTraceLimit = Infinity;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;

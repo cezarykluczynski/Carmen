@@ -24,9 +24,11 @@ install:
   - mvn flyway:migrate
   - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
   - npm install --global grunt-cli
-  - cd src/main/webapp/frontend && npm install && grunt build && cd ../../../..
+  - cd src/main/webapp/frontend && npm install && cd ../../../..
 script:
-  - grunt test && mvn verify && rspec
+  - cd src/main/webapp/frontend && grunt test && cd ../../../..
+  - mvn verify
+  - rspec
 after_success:
   - codecov
   - codecov -f "src/main/webapp/frontend/coverage/coverage-final.json"

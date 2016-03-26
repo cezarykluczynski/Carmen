@@ -11,6 +11,7 @@ src/main/webapp/frontend/css/*
 src/main/webapp/frontend/node_modules/*
 src/main/webapp/frontend/typings/*
 src/main/webapp/frontend/dist/*
+src/main/webapp/frontend/coverage/*
 src/main/webapp/frontend/.sass-cache/*
 src/main/webapp/frontend/typescript/**/*.js
 src/main/webapp/frontend/typescript/**/*.js.map

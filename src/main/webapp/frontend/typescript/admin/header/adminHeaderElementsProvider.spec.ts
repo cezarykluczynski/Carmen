@@ -1,6 +1,6 @@
 /// <reference path="../../../typings/main/ambient/jasmine/index.d.ts" />
 
-import {it, describe, expect, beforeEach, inject, beforeEachProviders} from 'angular2/testing';
+import {it, describe, expect, beforeEach} from 'angular2/testing';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 import {provide} from 'angular2/core';
 

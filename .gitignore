@@ -5,6 +5,7 @@ target/*
 .project
 .idea
 *.iml
+*.baseDir.ts
 /target
 *.sublime*
 src/main/webapp/frontend/css/*

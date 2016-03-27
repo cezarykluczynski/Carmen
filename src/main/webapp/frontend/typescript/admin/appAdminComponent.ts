@@ -1,8 +1,6 @@
 import {Component} from 'angular2/core';
-import {RouteConfig, ROUTER_DIRECTIVES, Router, Location} from 'angular2/router';
 import {AdminHeaderComponent} from './header/adminHeaderComponent';
-import {ServersComponent} from './rootComponents/serversComponent';
-import {CronsComponent} from './rootComponents/cronsComponent';
+import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 @Component({
 		selector: 'app-admin',
@@ -14,18 +12,5 @@ import {CronsComponent} from './rootComponents/cronsComponent';
 		`,
 		directives: [AdminHeaderComponent, ROUTER_DIRECTIVES]
 })
-@RouteConfig([
-	{
-		path:'servers',
-		name: 'Servers',
-		component: ServersComponent,
-		useAsDefault: true
-	},
-	{
-		path:'crons',
-		name: 'Crons',
-		component: CronsComponent
-	}
-])
 export class AppAdminComponent {
 }

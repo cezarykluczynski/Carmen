@@ -6,8 +6,12 @@ export class AdminHeaderElementsProvider {
 
 	constructor() {
 		this.elements = [
-			{ name: 'Servers' },
-			{ name: 'Crons' }
+			{
+				name: 'Servers'
+			},
+			{
+				name: 'Crons'
+			}
 		];
 	}
 

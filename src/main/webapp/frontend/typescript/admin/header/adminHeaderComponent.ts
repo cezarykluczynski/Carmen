@@ -1,8 +1,6 @@
 import {Component} from 'angular2/core';
 import {Router, Route, ROUTER_DIRECTIVES, RouteConfig} from 'angular2/router';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
-import {ServersComponent} from '../rootComponents/serversComponent';
-import {CronsComponent} from '../rootComponents/cronsComponent';
 
 @Component({
 	directives: [ROUTER_DIRECTIVES],
@@ -18,19 +16,6 @@ import {CronsComponent} from '../rootComponents/cronsComponent';
 	</nav>
 	`
 })
-@RouteConfig([
-	new Route({
-		component: ServersComponent,
-		name: 'Servers',
-		path:'servers',
-		useAsDefault: true
-	}),
-	new Route({
-		component: CronsComponent,
-		name: 'Crons',
-		path:'crons'
-	})
-])
 export class AdminHeaderComponent {
 
 	private adminHeaderElements: Array<any>;

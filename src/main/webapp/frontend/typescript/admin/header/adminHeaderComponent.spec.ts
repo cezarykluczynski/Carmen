@@ -9,6 +9,7 @@ import {SpyLocation} from 'angular2/src/mock/location_mock';
 import {RootRouter} from 'angular2/src/router/router';
 import {RouteRegistry} from 'angular2/src/router/route_registry';
 import {TEST_BROWSER_PLATFORM_PROVIDERS, TEST_BROWSER_APPLICATION_PROVIDERS } from 'angular2/platform/testing/browser';
+import {AppAdminComponent} from '../appAdminComponent';
 import {AdminHeaderComponent} from './adminHeaderComponent';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 
@@ -24,9 +25,10 @@ beforeEachProviders(() => {
 		provide(Location, {useClass: SpyLocation}),
 		provide(APP_BASE_HREF, {useValue: '/'}),
 		provide(Router, {useClass: RootRouter}),
+		provide(AppAdminComponent, {useClass: AppAdminComponent}),
 		provide(AdminHeaderComponent, {useClass: AdminHeaderComponent}),
 		provide(AdminHeaderElementsProvider, {useClass: AdminHeaderElementsProvider}),
-		provide(ROUTER_PRIMARY_COMPONENT, {useValue: AdminHeaderComponent})
+		provide(ROUTER_PRIMARY_COMPONENT, {useValue: AppAdminComponent})
 	];
 });
 

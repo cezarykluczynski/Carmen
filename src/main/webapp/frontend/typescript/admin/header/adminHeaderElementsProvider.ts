@@ -2,7 +2,8 @@ import {Injectable} from 'angular2/core';
 
 @Injectable()
 export class AdminHeaderElementsProvider {
-	elements:Array<any>;
+
+	private elements:Array<any>;
 
 	constructor() {
 		this.elements = [
@@ -18,4 +19,5 @@ export class AdminHeaderElementsProvider {
 	public getElements() {
 		return this.elements;
 	}
+
 }

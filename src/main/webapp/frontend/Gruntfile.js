@@ -5,6 +5,7 @@ module.exports = function(grunt) {
 		grunt.task.run('sass');
 		grunt.task.run('vendor-js');
 		grunt.task.run('vendor-css');
+		grunt.task.run('tslint');
 		grunt.task.run('ts');
 	});
 

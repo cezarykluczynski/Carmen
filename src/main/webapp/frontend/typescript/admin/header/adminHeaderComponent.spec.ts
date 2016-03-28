@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/main/ambient/jasmine/index.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 
-import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders,TestComponentBuilder,
+import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders, TestComponentBuilder,
 	ComponentFixture, setBaseTestProviders} from 'angular2/testing';
 import {Router, APP_BASE_HREF, ROUTER_PRIMARY_COMPONENT, Location} from 'angular2/router';
 import {provide} from 'angular2/core';
@@ -30,10 +30,10 @@ beforeEachProviders(() => {
 	];
 });
 
-beforeEach(inject([AdminHeaderComponent], (ahc) => {
+beforeEach(inject([AdminHeaderComponent], ahc => {
 }));
 
-beforeEach(injectAsync([TestComponentBuilder], (tcb) => {
+beforeEach(injectAsync([TestComponentBuilder], tcb => {
 	return tcb
 		.createAsync(AdminHeaderComponent)
 		.then((_fixture) => {
@@ -58,10 +58,10 @@ describe('Component: AdminHeaderComponent', () => {
 	});
 
 	it('should change active when element is clicked', (done) => {
-		fixture.debugElement.componentInstance.router.subscribe(path => {
+		fixture.debugElement.componentInstance.router.subscribe(() => {
 			expect(adminHeaderComponent.isActive('Crons')).toBe(true);
 			done();
-		})
+		});
 		jQuery(element).find('a[href="/crons"]')[0].click();
 	});
 });

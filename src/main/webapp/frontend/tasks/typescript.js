@@ -1,5 +1,15 @@
 module.exports = function(grunt) {
 	grunt.config.merge({
+		tslint: {
+			options: {
+				configuration: "tslint.json"
+			},
+			files: {
+				src: [
+					"typescript/**/*.ts"
+				]
+			}
+		},
 		ts: {
 			options: {
 				experimentalDecorators: true,
@@ -23,5 +33,6 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks("grunt-tslint");
 	grunt.loadNpmTasks("grunt-ts");
 };

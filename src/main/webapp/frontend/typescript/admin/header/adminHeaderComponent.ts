@@ -1,10 +1,12 @@
-import {Component, ViewChild} from 'angular2/core';
-import {Router, Route, ROUTER_DIRECTIVES, RouteConfig, Location} from 'angular2/router';
+import {Component} from 'angular2/core';
+import {Router, Route, ROUTER_DIRECTIVES, RouteConfig} from 'angular2/router';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 import {ServersComponent} from '../rootComponents/serversComponent';
 import {CronsComponent} from '../rootComponents/cronsComponent';
 
 @Component({
+	directives: [ROUTER_DIRECTIVES],
+	providers: [AdminHeaderElementsProvider],
 	selector: 'admin-header',
 	template: `
 	<nav class="navbar navbar-light navbar-fixed-top bg-faded">
@@ -14,26 +16,24 @@ import {CronsComponent} from '../rootComponents/cronsComponent';
 			</li>
 		</ul>
 	</nav>
-	`,
-	directives: [ROUTER_DIRECTIVES],
-	providers: [AdminHeaderElementsProvider]
+	`
 })
 @RouteConfig([
 	new Route({
-		path:'servers',
-		name: 'Servers',
 		component: ServersComponent,
+		name: 'Servers',
+		path:'servers',
 		useAsDefault: true
 	}),
 	new Route({
-		path:'crons',
+		component: CronsComponent,
 		name: 'Crons',
-		component: CronsComponent
+		path:'crons'
 	})
 ])
 export class AdminHeaderComponent {
 
-	adminHeaderElements: Array<any>;
+	private adminHeaderElements: Array<any>;
 
 	constructor(private router: Router, private adminHeaderElementsProvider: AdminHeaderElementsProvider) {
 		this.router = router;

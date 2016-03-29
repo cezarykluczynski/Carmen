@@ -20,7 +20,7 @@ class BasicProfileServiceImplTest extends ContainerPerClassTest {
     private static final String avatarUrl = "avatar_url"
     private static final String bio = "Bio"
     private static final String blog = "http://blog.com/"
-    private static final String company = "Compoany"
+    private static final String company = "Company"
     private static final String email = "email@example.com"
     private static final boolean hireable = true
     private static final String location = "Place, Country"

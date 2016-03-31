@@ -9,7 +9,6 @@
 		"curly": true,
 		"eofline": true,
 		"indent": "tabs",
-		"interface-name": true,
 		"variable-name": true,
 		"max-line-length": [true, 120],
 		"member-ordering": [

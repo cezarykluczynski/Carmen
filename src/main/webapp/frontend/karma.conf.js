@@ -10,8 +10,9 @@ module.exports = function(config) {
 			{pattern: 'node_modules/systemjs/dist/system.src.js', included: true, watched: true},
 			{pattern: 'node_modules/rxjs/bundles/Rx.js', included: true, watched: true},
 			{pattern: 'node_modules/angular2/bundles/angular2.dev.js', included: true, watched: true},
-			{pattern: 'node_modules/angular2/bundles/router.js', included: true, watched: true},
 			{pattern: 'node_modules/angular2/bundles/testing.dev.js', included: true, watched: true},
+			{pattern: 'node_modules/angular2/bundles/router.js', included: true, watched: true},
+			{pattern: 'node_modules/angular2/bundles/http.dev.js', included: true, watched: true},
 			{pattern: 'node_modules/jquery/dist/jquery.js', included: true, watched: true},
 			{pattern: 'karma-test-shim.js', included: true, watched: true},
 			{pattern: 'dist/javascript/**/*.js', included: false, watched: true},
@@ -34,7 +35,7 @@ module.exports = function(config) {
 		],
 		reporters: ['progress', 'coverage'],
 		preprocessors: {
-			'dist/**/!(*spec).js': ['coverage']
+			'dist/javascript/**/!(*spec).js': ['coverage']
 		},
 		coverageReporter: {
 		  dir: 'coverage',

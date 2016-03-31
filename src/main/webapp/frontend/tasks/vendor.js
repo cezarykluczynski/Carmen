@@ -3,7 +3,6 @@ module.exports = function(grunt) {
 		concat: {
 			options: {
 				process: function (src, path) {
-					// console.log(path)
 					return path.indexOf('.js') === path.length - 3 ? "(function () {\n" + src + "\n})();\n" : src;
 				}
 			},
@@ -16,7 +15,8 @@ module.exports = function(grunt) {
 					'node_modules/systemjs/dist/system.src.js',
 					'node_modules/rxjs/bundles/Rx.js',
 					'node_modules/angular2/bundles/angular2.dev.js',
-					'node_modules/angular2/bundles/router.js'
+					'node_modules/angular2/bundles/router.dev.js',
+					'node_modules/angular2/bundles/http.dev.js'
 				],
 				dest: 'dist/javascript/vendor.js'
 			},

@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <head>
 	<meta charset="utf-8" />
+	<spring:url value="/" var="appBase"/>
 	<spring:url value="/frontend/dist/javascript" var="appBaseJavaScript"/>
 	<spring:url value="/frontend/dist/javascript/vendor.js" var="vendorJs"/>
 	<spring:url value="/frontend/dist/css/vendor.css" var="vendorCss"/>
@@ -22,6 +23,9 @@
 			}
 		});
 		System.import('app/admin/appAdminBootstrap');
+		window.__carmenConfig = {
+			appBaseUrl: "${appBase}"
+		};
 	</script>
 </head>
 <body>

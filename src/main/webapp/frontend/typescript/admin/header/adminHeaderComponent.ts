@@ -1,5 +1,5 @@
 import {Component} from 'angular2/core';
-import {Router, Route, ROUTER_DIRECTIVES, RouteConfig} from 'angular2/router';
+import {Router, ROUTER_DIRECTIVES} from 'angular2/router';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 
 @Component({

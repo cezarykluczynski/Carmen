@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 				configFile: 'karma.conf.js'
 			}
 		},
-		clean: ['coverage'],
+		clean: ['coverage/**', 'dist/**'],
 		remapIstanbul: {
 			build: {
 				src: 'coverage/coverage-js.json',

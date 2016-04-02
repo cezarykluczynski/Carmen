@@ -1,13 +1,12 @@
 import {Component} from 'angular2/core';
+import {UsersImportComponent} from './crons/usersImportComponent';
 
 @Component({
-		selector: 'servers-component',
-		template: `
-		<div class="row">
-			<div class="col-md-6">crons - todo</div>
-			<div class="col-md-6"></div>
-		</div>
-		`
+	directives: [UsersImportComponent],
+	selector: 'crons-component',
+	template: `
+		<crons-users-import></crons-users-import>
+	`
 })
 export class CronsComponent {
 }

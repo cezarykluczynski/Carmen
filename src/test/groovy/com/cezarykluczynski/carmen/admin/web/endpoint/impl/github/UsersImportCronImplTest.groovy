@@ -9,10 +9,15 @@ import org.json.JSONObject
 import org.junit.Test
 import org.testng.Assert
 
+import javax.ws.rs.client.Entity
 import javax.ws.rs.core.Application
+import javax.ws.rs.core.Form
 import javax.ws.rs.core.Response
 
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.never
+import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 class UsersImportCronImplTest extends ContainerPerClassTest {
@@ -51,6 +56,34 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
 
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals responseBody.getInt("highestGitHubUserId"), highestGitHubUserId
+    }
+
+    @Test
+    void "task can be enabled"() {
+        when(usersImportTask.isEnabled()) thenReturn false
+        doNothing().when(usersImportTask).enable()
+        doNothing().when(usersImportTask).disable()
+
+        Entity<Form> entity = Entity.form(new Form("enabled", "true"))
+        Response response = target().path("/admin/github/cron/users_import").request().post(entity)
+
+        verify(usersImportTask).enable()
+        verify(usersImportTask, never()).disable()
+        Assert.assertEquals response.getStatus(), 200
+    }
+
+    @Test
+    void "task can be disabled"() {
+        when(usersImportTask.isEnabled()) thenReturn true
+        doNothing().when(usersImportTask).disable()
+        doNothing().when(usersImportTask).enable()
+
+        Entity<Form> entity = Entity.form(new Form("enabled", "false"))
+        Response response = target().path("/admin/github/cron/users_import").request().post(entity)
+
+        verify(usersImportTask).disable()
+        verify(usersImportTask, never()).enable()
+        Assert.assertEquals response.getStatus(), 200
     }
 
 }

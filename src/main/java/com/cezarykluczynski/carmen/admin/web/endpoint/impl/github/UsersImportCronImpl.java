@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 @Service
@@ -37,7 +36,7 @@ public class UsersImportCronImpl implements UsersImportCron {
     }
 
     @Override
-    public Response update(@PathParam("enabled") boolean status) {
+    public Response updateStatus(boolean status) {
         if (status) {
             usersImportTask.enable();
         } else {

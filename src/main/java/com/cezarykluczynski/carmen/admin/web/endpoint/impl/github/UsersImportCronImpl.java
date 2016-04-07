@@ -42,6 +42,6 @@ public class UsersImportCronImpl implements UsersImportCron {
         } else {
             usersImportTask.disable();
         }
-        return Response.ok().build();
+        return Response.ok(UsersImportCronOverviewDTO.builder().enabled(status).build()).build();
     }
 }

@@ -1,6 +1,6 @@
 import {ResponseOptions} from 'angular2/http';
 import {MockConnection} from 'angular2/src/http/backends/mock_backend';
-import {Response} from 'angular2/http';
+import {Response, RequestMethod} from 'angular2/http';
 import {MockBackend} from 'angular2/http/testing';
 
 export class HttpClientTestHelper {
@@ -9,14 +9,16 @@ export class HttpClientTestHelper {
 		connectionBackend: MockBackend,
 		url: string,
 		asyncResolve?: boolean,
-		unsubscribeAfter?: boolean
+		unsubscribeAfter?: boolean,
+		method?: RequestMethod
 	}, body: any): any {
 		window.__carmenConfig = {
 			appBaseUrl: '/'
 		};
 
 		let subscription = options.connectionBackend.connections.subscribe((connection: MockConnection) => {
-			if (connection.request.url === options.url) {
+			if (connection.request.url === options.url &&
+				(options.method === undefined || options.method === connection.request.method)) {
 				this.resolve(options.asyncResolve, () => connection.mockRespond(new Response(
 					new ResponseOptions({
 						body: body

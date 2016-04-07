@@ -15,6 +15,7 @@ public interface UsersImportCron {
     Response get();
 
     @POST
+    @Path("")
     Response updateStatus(@FormParam("enabled") boolean status);
 
 }

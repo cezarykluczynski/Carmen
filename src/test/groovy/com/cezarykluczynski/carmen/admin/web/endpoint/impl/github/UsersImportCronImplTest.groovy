@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
 import com.cezarykluczynski.carmen.dao.github.UserDAO
+import org.glassfish.jersey.client.internal.HttpUrlConnector
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.test.JerseyTestNg.ContainerPerClassTest
 import org.glassfish.jersey.test.TestProperties
@@ -64,12 +65,15 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
         doNothing().when(usersImportTask).enable()
         doNothing().when(usersImportTask).disable()
 
-        Entity<Form> entity = Entity.form(new Form("enabled", "true"))
-        Response response = target().path("/admin/github/cron/users_import").request().post(entity)
+        Entity<Form> formEntity = Entity.form(new Form("enabled", "true"))
+        Response response = target().path("/admin/github/cron/users_import").request().post(formEntity)
+        BufferedInputStream entity = (BufferedInputStream) response.getEntity()
+        JSONObject responseBody = new JSONObject(entity)
 
         verify(usersImportTask).enable()
         verify(usersImportTask, never()).disable()
         Assert.assertEquals response.getStatus(), 200
+        Assert.assertEquals responseBody.getBoolean("enabled"), true
     }
 
     @Test
@@ -78,12 +82,15 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
         doNothing().when(usersImportTask).disable()
         doNothing().when(usersImportTask).enable()
 
-        Entity<Form> entity = Entity.form(new Form("enabled", "false"))
-        Response response = target().path("/admin/github/cron/users_import").request().post(entity)
+        Entity<Form> formEntity = Entity.form(new Form("enabled", "false"))
+        Response response = target().path("/admin/github/cron/users_import").request().post(formEntity)
+        HttpUrlConnector entity = (HttpUrlConnector) response.getEntity()
+        JSONObject responseBody = new JSONObject(entity.getText())
 
         verify(usersImportTask).disable()
         verify(usersImportTask, never()).enable()
         Assert.assertEquals response.getStatus(), 200
+        Assert.assertEquals responseBody.getBoolean("enabled"), false
     }
 
 }

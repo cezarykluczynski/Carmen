@@ -7,8 +7,8 @@ import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 	providers: [AdminHeaderElementsProvider],
 	selector: 'admin-header',
 	template: `
-	<nav class="navbar navbar-light navbar-fixed-top bg-faded">
-		<ul class="nav navbar-nav container">
+	<nav class="navbar navbar-light navbar-fixed-top bg-faded container">
+		<ul class="nav navbar-nav">
 			<li class="nav-item" *ngFor="#element of adminHeaderElements" [class.active]="isActive(element.name)">
 				<a class="nav-link" [routerLink]="[element.name]" [innerHtml]="[element.name]">{{element.name}}</a>
 			</li>

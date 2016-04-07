@@ -5,7 +5,9 @@ import {UsersImportComponent} from './crons/usersImportComponent';
 	directives: [UsersImportComponent],
 	selector: 'crons-component',
 	template: `
-		<crons-users-import></crons-users-import>
+		<div class="row">
+			<crons-users-import></crons-users-import>
+		</div>
 	`
 })
 export class CronsComponent {

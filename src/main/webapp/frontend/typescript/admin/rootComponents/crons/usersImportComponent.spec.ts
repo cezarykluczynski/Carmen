@@ -64,7 +64,7 @@ describe('Component: UsersImportComponent', () => {
 		expect(usersImportComponent).not.toBe(undefined);
 	});
 
-	it('sets loading flag', (done) => {
+	it('sets loading flag', done => {
 		expect(usersImportComponent.loading).toBe(false);
 		createResponse(true, connectionBackend);
 		usersImportComponent.refreshStatus();
@@ -76,7 +76,7 @@ describe('Component: UsersImportComponent', () => {
 		});
 	});
 
-	it('allows reload', (done) => {
+	it('allows reload', done => {
 		let $button = jQuery(element).find('button:contains(\'Refresh\')');
 		expect(usersImportComponent.loading).toBe(false);
 		expect($button.length).toBe(1);
@@ -90,5 +90,32 @@ describe('Component: UsersImportComponent', () => {
 			expect(usersImportComponent.loading).toBe(false);
 			done();
 		});
+	});
+
+	it('enables cron', () => {
+		let $button = jQuery(element).find('button:contains(\'Enable\')');
+		expect($button.length).toBe(1);
+
+		spyOn(usersImportComponent['usersImportApi'], 'setStatus').and.callThrough();
+
+		$button[0].click();
+		fixture.detectChanges();
+
+		expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(true);
+	});
+
+	it('disables cron', () => {
+		usersImportComponent['enabled'] = true;
+		fixture.detectChanges();
+
+		let $button = jQuery(element).find('button:contains(\'Disable\')');
+		expect($button.length).toBe(1);
+
+		spyOn(usersImportComponent['usersImportApi'], 'setStatus').and.callThrough();
+
+		$button[0].click();
+		fixture.detectChanges();
+
+		expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(false);
 	});
 });

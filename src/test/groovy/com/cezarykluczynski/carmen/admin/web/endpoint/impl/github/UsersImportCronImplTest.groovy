@@ -2,7 +2,6 @@ package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
 import com.cezarykluczynski.carmen.dao.github.UserDAO
-import org.glassfish.jersey.client.internal.HttpUrlConnector
 import org.glassfish.jersey.server.ResourceConfig
 import org.glassfish.jersey.test.JerseyTestNg.ContainerPerClassTest
 import org.glassfish.jersey.test.TestProperties
@@ -68,7 +67,7 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
         Entity<Form> formEntity = Entity.form(new Form("enabled", "true"))
         Response response = target().path("/admin/github/cron/users_import").request().post(formEntity)
         BufferedInputStream entity = (BufferedInputStream) response.getEntity()
-        JSONObject responseBody = new JSONObject(entity)
+        JSONObject responseBody = new JSONObject(entity.getText())
 
         verify(usersImportTask).enable()
         verify(usersImportTask, never()).disable()
@@ -84,7 +83,7 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
 
         Entity<Form> formEntity = Entity.form(new Form("enabled", "false"))
         Response response = target().path("/admin/github/cron/users_import").request().post(formEntity)
-        HttpUrlConnector entity = (HttpUrlConnector) response.getEntity()
+        BufferedInputStream entity = (BufferedInputStream) response.getEntity()
         JSONObject responseBody = new JSONObject(entity.getText())
 
         verify(usersImportTask).disable()

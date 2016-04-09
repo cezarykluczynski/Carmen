@@ -2,9 +2,8 @@ package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
 import com.cezarykluczynski.carmen.dao.github.UserDAO
+import com.cezarykluczynski.carmen.test.AbstractContainerPerClassTest
 import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.test.JerseyTestNg.ContainerPerClassTest
-import org.glassfish.jersey.test.TestProperties
 import org.json.JSONObject
 import org.junit.Test
 import org.testng.Assert
@@ -20,7 +19,7 @@ import static org.mockito.Mockito.never
 import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
-class UsersImportCronImplTest extends ContainerPerClassTest {
+class UsersImportCronImplTest extends AbstractContainerPerClassTest {
 
     private static final Integer highestGitHubUserId = 150
 
@@ -29,15 +28,8 @@ class UsersImportCronImplTest extends ContainerPerClassTest {
     private DatabaseManageableTask usersImportTask
 
     @Override
-    Object getProperty(String property) {
-        return super.getProperty(property)
-    }
-
-    @Override
     protected Application configure() {
-        enable TestProperties.LOG_TRAFFIC
-        enable TestProperties.CONTAINER_FACTORY
-        enable TestProperties.DUMP_ENTITY
+        super.configure()
 
         userDAO = mock UserDAO.class
         usersImportTask = mock DatabaseManageableTask.class

@@ -2,9 +2,8 @@ package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.test.AbstractContainerPerClassTest
 import org.glassfish.jersey.server.ResourceConfig
-import org.glassfish.jersey.test.JerseyTestNg.ContainerPerClassTest
-import org.glassfish.jersey.test.TestProperties
 import org.json.JSONObject
 import org.testng.Assert
 import org.testng.annotations.Test
@@ -15,7 +14,7 @@ import javax.ws.rs.core.Response
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class BasicProfileServiceImplTest extends ContainerPerClassTest {
+class BasicProfileServiceImplTest extends AbstractContainerPerClassTest {
 
     private static final String avatarUrl = "avatar_url"
     private static final String bio = "Bio"
@@ -28,15 +27,8 @@ class BasicProfileServiceImplTest extends ContainerPerClassTest {
     private static final String name = "John Doe"
 
     @Override
-    Object getProperty(String property) {
-        return super.getProperty(property)
-    }
-
-    @Override
     protected Application configure() {
-        enable TestProperties.LOG_TRAFFIC
-        enable TestProperties.CONTAINER_FACTORY
-        enable TestProperties.DUMP_ENTITY
+        super.configure()
 
         UserDAO githubUserDAOImpl = mock UserDAO.class
         when githubUserDAOImpl.findByLogin("login") thenReturn createUserEntity()

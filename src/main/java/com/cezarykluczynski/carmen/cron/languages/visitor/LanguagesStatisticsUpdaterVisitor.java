@@ -26,9 +26,7 @@ public class LanguagesStatisticsUpdaterVisitor implements RefreshableTableVisito
         SortedSet<EntityField> fields = refreshableTable.getFields();
         List<Language> languageList = languagesDAO.findAll();
 
-        languageList.stream().forEach(language -> {
-            fields.add(new EntityField("language_" + language.getId()));
-        });
+        languageList.stream().forEach(language -> fields.add(new EntityField("language_" + language.getId())));
 
         refreshableTable.setFields(fields);
     }

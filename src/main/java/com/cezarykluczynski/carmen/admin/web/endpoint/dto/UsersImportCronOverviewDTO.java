@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Builder
+@Getter
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Getter
 public class UsersImportCronOverviewDTO {
 
     private Integer highestGitHubUserId;

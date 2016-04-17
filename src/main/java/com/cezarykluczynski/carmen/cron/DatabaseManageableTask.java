@@ -4,6 +4,8 @@ import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
 import com.cezarykluczynski.carmen.model.pub.Cron;
 import com.google.common.base.Preconditions;
 
+import java.time.LocalDateTime;
+
 public class DatabaseManageableTask {
 
     private CronsDAO cronsDAO;
@@ -50,6 +52,9 @@ public class DatabaseManageableTask {
         return findEntity().isRunning();
     }
 
+    public LocalDateTime getUpdated() {
+        return findEntity().getUpdated();
+    }
 
     private Cron findEntity() {
         return server != null ? cronsDAO.findByNameAndServer(name, server) : cronsDAO.findByName(name).get(0);

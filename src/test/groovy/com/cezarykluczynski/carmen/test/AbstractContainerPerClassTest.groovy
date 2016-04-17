@@ -14,9 +14,4 @@ public abstract class AbstractContainerPerClassTest extends JerseyTestNg.Contain
         enable TestProperties.DUMP_ENTITY
     }
 
-    @Override
-    public Object getProperty(String property) {
-        return super.getProperty(property)
-    }
-
 }

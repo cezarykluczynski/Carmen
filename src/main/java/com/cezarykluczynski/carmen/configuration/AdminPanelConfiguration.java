@@ -25,6 +25,11 @@ public class AdminPanelConfiguration {
         return new DatabaseManageableTask(getCronsDAOBean(), "RepositoriesImport");
     }
 
+    @Bean(name = "languagesSchemaUpdateTask")
+    DatabaseManageableTask languagesSchemaUpdateTask() {
+        return new DatabaseManageableTask(getCronsDAOBean(), "LanguagesSchemaUpdate");
+    }
+
     private CronsDAO getCronsDAOBean() {
         return ctx.getBean(CronsDAO.class);
     }

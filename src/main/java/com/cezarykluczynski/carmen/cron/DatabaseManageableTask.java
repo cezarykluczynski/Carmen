@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.cron;
 
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
 import com.cezarykluczynski.carmen.model.pub.Cron;
+import com.cezarykluczynski.carmen.util.DateUtil;
 import com.google.common.base.Preconditions;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,7 @@ public class DatabaseManageableTask {
     }
 
     public LocalDateTime getUpdated() {
-        return findEntity().getUpdated();
+        return DateUtil.convert(findEntity().getUpdated());
     }
 
     private Cron findEntity() {

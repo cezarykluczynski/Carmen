@@ -4,7 +4,7 @@ import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity(name = "public.Cron")
@@ -29,6 +29,6 @@ public class Cron extends CarmenRelationalEntity {
     private boolean running;
 
     @Column
-    private LocalDateTime updated;
+    private Date updated;
 
 }

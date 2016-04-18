@@ -1,20 +1,32 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
+import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.SchemaUpdateJob
+import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
+import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.test.AbstractContainerPerClassTest
-import org.glassfish.jersey.server.ResourceConfig
+import com.cezarykluczynski.carmen.rest.api.v1.github.user.api.BasicProfileService
 import org.json.JSONObject
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
+import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
+import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-import javax.ws.rs.core.Application
 import javax.ws.rs.core.Response
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class BasicProfileServiceImplTest extends AbstractContainerPerClassTest {
+@ContextConfiguration(classes = TestableApplicationConfiguration.class)
+@WebAppConfiguration
+public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTests {
 
     private static final String avatarUrl = "avatar_url"
     private static final String bio = "Bio"
@@ -26,22 +38,26 @@ class BasicProfileServiceImplTest extends AbstractContainerPerClassTest {
     private static final String login = "username"
     private static final String name = "John Doe"
 
-    @Override
-    protected Application configure() {
-        super.configure()
+    @Autowired
+    @InjectMocks
+    private BasicProfileService basicProfileService
 
-        UserDAO githubUserDAOImpl = mock UserDAO.class
-        when githubUserDAOImpl.findByLogin("login") thenReturn createUserEntity()
-        BasicProfileServiceImpl basicProfileService = new BasicProfileServiceImpl(githubUserDAOImpl)
-        return new ResourceConfig().registerInstances(basicProfileService)
+    @Mock
+    private UserDAO userDAO
+
+    @BeforeMethod
+    void setup() {
+        userDAO = mock UserDAO.class
+        MockitoAnnotations.initMocks this
     }
 
     @Test
     public void "existing user is shown"() {
-        Response response = target().path("/v1/github/user/login/basicProfile").request().get()
-        BufferedInputStream entity = (BufferedInputStream) response.getEntity()
+        when userDAO.findByLogin("login") thenReturn createUserEntity()
+
+        Response response = basicProfileService.get("login")
         int responseStatus = response.getStatus()
-        JSONObject responseBody = new JSONObject(entity.getText())
+        JSONObject responseBody = new JSONObject(response.getEntity())
 
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals responseBody.getString("avatarUrl"), avatarUrl
@@ -58,10 +74,9 @@ class BasicProfileServiceImplTest extends AbstractContainerPerClassTest {
 
     @Test
     public void "non existing user is not shown"() {
-        Response response = target().path("/v1/github/user/notALogin/basicProfile").request().get()
-        BufferedInputStream entity = (BufferedInputStream) response.getEntity()
+        Response response = basicProfileService.get("notALogin")
         int responseStatus = response.getStatus()
-        JSONObject responseBody = new JSONObject(entity.getText())
+        JSONObject responseBody = new JSONObject(response.getEntity())
 
         Assert.assertEquals responseStatus, 404
         Assert.assertEquals responseBody.getString("message"), "404 Not Found"

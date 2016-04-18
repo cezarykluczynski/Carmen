@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.SchemaUpdateJob
+import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.UsersImportCron
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
 import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor
@@ -37,6 +38,10 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
     @InjectMocks
     private SchemaUpdateJob schemaUpdateJob
 
+    @Autowired
+    @InjectMocks
+    private UsersImportCron usersImportCron
+
     @Mock
     private SchemaUpdateExecutor schemaUpdateExecutor
 
@@ -48,6 +53,8 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         schemaUpdateExecutor = mock SchemaUpdateExecutor.class
         schemaUpdateTask = mock DatabaseManageableTask.class
         MockitoAnnotations.initMocks this
+
+        println usersImportCron
     }
 
     @Test
@@ -67,11 +74,14 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(responseBody.length(), 3)
     }
 
+    @Test
     void run() {
-        when schemaUpdateTask.getUpdated() thenReturn UPDATED
-        doNothing().when schemaUpdateExecutor.run()
+        when schemaUpdateTask.isEnabled() thenReturn ENABLED
+        when schemaUpdateTask.isRunning() thenReturn RUNNING
+        when(schemaUpdateTask.getUpdated()).thenReturn UPDATED
+        doNothing().when(schemaUpdateExecutor).run()
 
-        Response response = schemaUpdateJob.getStatus()
+        Response response = schemaUpdateJob.run()
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 

@@ -4,7 +4,7 @@ import com.cezarykluczynski.carmen.util.OS;
 
 public class Command {
 
-    private static final String windowsCommandPrefix = "cmd /c ";
+    private static final String WINDOWS_COMMAND_PREFIX = "cmd /c ";
 
     private String command;
 
@@ -14,7 +14,7 @@ public class Command {
 
     private static String getCommandPrefix() {
         if (OS.isWindows()) {
-            return windowsCommandPrefix;
+            return WINDOWS_COMMAND_PREFIX;
         }
 
         return "";

@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
 
-    private static final List<Class> ownAnnotations = Arrays.asList(LanguagesStatistics.class,
+    private static final List<Class> OWN_ANNOTATIONS = Arrays.asList(LanguagesStatistics.class,
             LanguagesDiffStatistics.class);
 
     @Override
@@ -74,7 +74,7 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
     }
 
     private boolean isOwnAnnotation(Class clazz) {
-        return ownAnnotations.contains(clazz);
+        return OWN_ANNOTATIONS.contains(clazz);
     }
 
 }

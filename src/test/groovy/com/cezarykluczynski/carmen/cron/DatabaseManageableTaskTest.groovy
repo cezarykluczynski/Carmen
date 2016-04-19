@@ -12,14 +12,14 @@ import static org.mockito.Mockito.when
 
 class DatabaseManageableTaskTest {
 
+    private static final String NAME = "TestableCron"
+    private static final String SERVER = "testable-server"
+
     private DatabaseManageableTask databaseManageableTask
 
     private CronsDAO cronsDAOMock
 
     private Cron cron
-
-    private static final String name = "TestableCron"
-    private static final String server = "testable-server"
 
     @Test
     void enable() {
@@ -116,18 +116,18 @@ class DatabaseManageableTaskTest {
         cronsDAOMock = mock CronsDAO.class
 
         cron = new Cron()
-        cron.setName name
-        cron.setServer server
+        cron.setName NAME
+        cron.setServer SERVER
         cron.setEnabled enabled
         cron.setRunning running
 
-        when cronsDAOMock.findByName(name) thenReturn Lists.newArrayList(cron)
-        when cronsDAOMock.findByNameAndServer(name, server) thenReturn cron
+        when cronsDAOMock.findByName(NAME) thenReturn Lists.newArrayList(cron)
+        when cronsDAOMock.findByNameAndServer(NAME, SERVER) thenReturn cron
 
         if (withServer) {
-            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, name, server)
+            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, NAME, SERVER)
         } else {
-            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, name)
+            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, NAME)
         }
     }
 }

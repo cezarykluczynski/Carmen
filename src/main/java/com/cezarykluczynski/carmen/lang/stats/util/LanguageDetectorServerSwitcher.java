@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class LanguageDetectorServerSwitcher {
 
-    private static final String rubyPidPath = "./target/.ruby_server_pid";
+    private static final String RUBY_PID_PATH = "./target/.ruby_server_pid";
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -58,7 +58,7 @@ public class LanguageDetectorServerSwitcher {
             String output = result.getOutput();
             String pidLine = output.substring(output.indexOf("PID is ") + 7);
             String pid = pidLine.substring(0, pidLine.indexOf("."));
-            PrintWriter out = new PrintWriter(rubyPidPath);
+            PrintWriter out = new PrintWriter(RUBY_PID_PATH);
             out.write(pid);
             out.close();
         }
@@ -68,7 +68,7 @@ public class LanguageDetectorServerSwitcher {
         String pid;
         FileInputStream inputStream;
         try {
-            inputStream = new FileInputStream(rubyPidPath);
+            inputStream = new FileInputStream(RUBY_PID_PATH);
 
             try {
                 pid = IOUtils.toString(inputStream);

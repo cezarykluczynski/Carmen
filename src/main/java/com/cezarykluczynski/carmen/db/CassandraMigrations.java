@@ -17,11 +17,12 @@ import java.util.Properties;
 
 class CassandraMigrations {
 
+    private static final String GITHUB_SOCIAL_STATS_KEYSPACE_NAME = "github_social_stats";
+
     private static String contactpoints;
     private static Integer thriftPort;
     private static Integer port;
     private static String cluster;
-    private static final String githubSocialStatsKeyspaceName = "github_social_stats";
     private static String version;
 
     public static void main(String[] args) throws ConnectionException, IOException {
@@ -79,7 +80,7 @@ class CassandraMigrations {
     private static void createGithubSocialStatsKeyspace() throws ConnectionException {
         AstyanaxContext<Keyspace> context = new AstyanaxContext.Builder()
                 .forCluster(cluster)
-                .forKeyspace(githubSocialStatsKeyspaceName)
+                .forKeyspace(GITHUB_SOCIAL_STATS_KEYSPACE_NAME)
                 .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
                                 .setTargetCassandraVersion(version)
                                 .setCqlVersion("3.1.1")
@@ -108,7 +109,7 @@ class CassandraMigrations {
 
         com.contrastsecurity.cassandra.migration.config.Keyspace keyspace =
                 new com.contrastsecurity.cassandra.migration.config.Keyspace();
-        keyspace.setName(githubSocialStatsKeyspaceName);
+        keyspace.setName(GITHUB_SOCIAL_STATS_KEYSPACE_NAME);
         com.contrastsecurity.cassandra.migration.config.Cluster migrationCluster = keyspace.getCluster();
         migrationCluster.setContactpoints(contactpoints);
         migrationCluster.setPort(port);

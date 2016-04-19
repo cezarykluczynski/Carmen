@@ -29,11 +29,11 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private static final String EOL = "\n";
 
-    private static final Map<Class, String> classToCassandraDataTypeMappings = Maps.newHashMap();
+    private static final Map<Class, String> CLASS_TO_CASSANDRA_DATA_TYPE_MAPPINGS = Maps.newHashMap();
     static {
-        classToCassandraDataTypeMappings.put(String.class, "varchar");
-        classToCassandraDataTypeMappings.put(UUID.class, "uuid");
-        classToCassandraDataTypeMappings.put(Integer.class, "int");
+        CLASS_TO_CASSANDRA_DATA_TYPE_MAPPINGS.put(String.class, "varchar");
+        CLASS_TO_CASSANDRA_DATA_TYPE_MAPPINGS.put(UUID.class, "uuid");
+        CLASS_TO_CASSANDRA_DATA_TYPE_MAPPINGS.put(Integer.class, "int");
     }
 
     private String migrationPath;
@@ -136,7 +136,7 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
     }
 
     private static String getColumnTypeFromClass(Class clazz) {
-        return classToCassandraDataTypeMappings.get(clazz);
+        return CLASS_TO_CASSANDRA_DATA_TYPE_MAPPINGS.get(clazz);
     }
 
     private  static String createCreateTableStatement(RefreshableTable refreshableTable) {

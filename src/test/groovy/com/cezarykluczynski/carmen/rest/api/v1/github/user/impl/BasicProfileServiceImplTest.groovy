@@ -1,9 +1,6 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
-import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.SchemaUpdateJob
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
-import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.rest.api.v1.github.user.api.BasicProfileService
@@ -28,15 +25,15 @@ import static org.mockito.Mockito.when
 @WebAppConfiguration
 public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTests {
 
-    private static final String avatarUrl = "avatar_url"
-    private static final String bio = "Bio"
-    private static final String blog = "http://blog.com/"
-    private static final String company = "Company"
-    private static final String email = "email@example.com"
-    private static final boolean hireable = true
-    private static final String location = "Place, Country"
-    private static final String login = "username"
-    private static final String name = "John Doe"
+    private static final String AVATAR_URL = "avatar_url"
+    private static final String BIO = "Bio"
+    private static final String BLOG = "http://blog.com/"
+    private static final String COMPANY = "Company"
+    private static final String EMAIL = "email@example.com"
+    private static final boolean HIREABLE = true
+    private static final String LOCATION = "Place, Country"
+    private static final String LOGIN = "username"
+    private static final String NAME = "John Doe"
 
     @Autowired
     @InjectMocks
@@ -60,16 +57,16 @@ public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTest
         JSONObject responseBody = new JSONObject(response.getEntity())
 
         Assert.assertEquals responseStatus, 200
-        Assert.assertEquals responseBody.getString("avatarUrl"), avatarUrl
-        Assert.assertEquals responseBody.getString("bio"), bio
-        Assert.assertEquals responseBody.getString("blog"), blog
-        Assert.assertEquals responseBody.getString("company"), company
-        Assert.assertEquals responseBody.getBoolean("hireable"), hireable
-        Assert.assertEquals responseBody.getString("email"), email
-        Assert.assertEquals responseBody.getBoolean("hireable"), hireable
-        Assert.assertEquals responseBody.getString("location"), location
-        Assert.assertEquals responseBody.getString("login"), login
-        Assert.assertEquals responseBody.getString("name"), name
+        Assert.assertEquals responseBody.getString("avatarUrl"), AVATAR_URL
+        Assert.assertEquals responseBody.getString("bio"), BIO
+        Assert.assertEquals responseBody.getString("blog"), BLOG
+        Assert.assertEquals responseBody.getString("company"), COMPANY
+        Assert.assertEquals responseBody.getBoolean("hireable"), HIREABLE
+        Assert.assertEquals responseBody.getString("email"), EMAIL
+        Assert.assertEquals responseBody.getBoolean("hireable"), HIREABLE
+        Assert.assertEquals responseBody.getString("location"), LOCATION
+        Assert.assertEquals responseBody.getString("login"), LOGIN
+        Assert.assertEquals responseBody.getString("name"), NAME
     }
 
     @Test
@@ -85,16 +82,16 @@ public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTest
     private static User createUserEntity() {
         User userEntity = new User()
 
-        userEntity.setAvatarUrl avatarUrl
-        userEntity.setBio bio
-        userEntity.setBlog blog
-        userEntity.setCompany company
-        userEntity.setHireable hireable
-        userEntity.setEmail email
-        userEntity.setHireable hireable
-        userEntity.setLocation location
-        userEntity.setLogin login
-        userEntity.setName name
+        userEntity.setAvatarUrl AVATAR_URL
+        userEntity.setBio BIO
+        userEntity.setBlog BLOG
+        userEntity.setCompany COMPANY
+        userEntity.setHireable HIREABLE
+        userEntity.setEmail EMAIL
+        userEntity.setHireable HIREABLE
+        userEntity.setLocation LOCATION
+        userEntity.setLogin LOGIN
+        userEntity.setName NAME
 
         return userEntity
     }

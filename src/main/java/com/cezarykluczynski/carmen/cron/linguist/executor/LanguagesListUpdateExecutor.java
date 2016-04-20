@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Component
 public class LanguagesListUpdateExecutor implements Runnable {
 
-    LangsStatsAdapter langsStatsAdapter;
+    private LangsStatsAdapter langsStatsAdapter;
 
-    LanguagesDAO languagesDAO;
+    private LanguagesDAO languagesDAO;
 
     @Autowired
     public LanguagesListUpdateExecutor(LangsStatsAdapter langsStatsAdapter, LanguagesDAO languagesDAO) {

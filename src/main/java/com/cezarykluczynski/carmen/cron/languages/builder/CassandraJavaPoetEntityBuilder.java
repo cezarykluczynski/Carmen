@@ -9,7 +9,6 @@ import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEn
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.*;
-import lombok.Data;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.Table;
 import org.springframework.stereotype.Component;
@@ -19,6 +18,7 @@ import javax.lang.model.element.Modifier;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
@@ -42,13 +42,18 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
     private void addFields(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
         refreshableTable.getFields().stream().forEach(entityField ->
             typeSpecBuilder.addField(FieldSpec.builder(entityField.getType(), entityField.getName())
-                    .addModifiers(Modifier.PRIVATE)
+                    .addModifiers(Modifier.PUBLIC)
                     .addAnnotation(Column.class).build())
         );
+
+        typeSpecBuilder.addMethod(MethodSpec.methodBuilder("getId")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(UUID.class)
+                .addCode("return id;\n")
+                .build());
     }
 
     private void addAnnotations(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
-        typeSpecBuilder.addAnnotation(Data.class);
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Generated.class)
                 .addMember("value", "\"" + CassandraJavaPoetEntityBuilder.class.getCanonicalName() + "\"").build());
 

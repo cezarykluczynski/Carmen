@@ -28,36 +28,38 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistic
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import java.util.UUID;
 import javax.annotation.Generated;
-import lombok.Data;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.Table;
 
-@Data
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @LanguagesStatistics
 @LanguagesDiffStatistics
 @Table("entity_two")
 public class EntityTwo extends CarmenNoSQLEntity {
     @Column
-    private UUID id;
+    public UUID id;
 
     @Column
-    private Integer language_1;
+    public Integer language_1;
 
     @Column
-    private Integer language_1_added;
+    public Integer language_1_added;
 
     @Column
-    private Integer language_1_removed;
+    public Integer language_1_removed;
 
     @Column
-    private Integer language_2;
+    public Integer language_2;
 
     @Column
-    private Integer language_2_added;
+    public Integer language_2_added;
 
     @Column
-    private Integer language_2_removed;
+    public Integer language_2_removed;
+
+    public UUID getId() {
+        return id;
+    }
 }
 '''
 

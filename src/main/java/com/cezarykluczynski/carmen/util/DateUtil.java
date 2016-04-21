@@ -11,6 +11,9 @@ public class DateUtil {
     }
 
     public static LocalDateTime convert(Date date) {
+        if (date == null) {
+            return null;
+        }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 

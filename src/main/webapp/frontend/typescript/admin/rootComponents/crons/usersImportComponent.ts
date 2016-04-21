@@ -1,5 +1,6 @@
 import {Component} from 'angular2/core';
 import {UsersImportApi} from './usersImportApi';
+import {AbstractStatefulComponent} from '../abstract/abstractStatefulComponent';
 
 @Component({
 	providers: [UsersImportApi],
@@ -22,14 +23,14 @@ import {UsersImportApi} from './usersImportApi';
 		</div>
 	`
 })
-export class UsersImportComponent {
+export class UsersImportComponent extends AbstractStatefulComponent {
 
 	public highestGitHubUserId: Number;
 	public enabled: boolean;
 	public running: boolean;
-	public loading: boolean;
 
 	constructor(private usersImportApi: UsersImportApi) {
+		super();
 		this.refreshStatus();
 	}
 
@@ -70,10 +71,6 @@ export class UsersImportComponent {
 
 	private updateStatus(status: boolean): Promise<any> {
 		return this.usersImportApi.setStatus(status);
-	}
-
-	private setLoading(loading: boolean) {
-		this.loading = loading;
 	}
 
 }

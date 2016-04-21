@@ -18,19 +18,6 @@ describe('Component: UsersImportComponent', () => {
 	let element: any;
 	let fixture: ComponentFixture;
 
-	beforeEachProviders(() => {
-		return [
-			HTTP_PROVIDERS,
-			provide(Router, { useClass: RootRouter }),
-			provide(XHRBackend, { useClass: MockBackend }),
-			provide(HttpClient, { useClass: HttpClient }),
-			provide(UsersImportComponent, { useClass: UsersImportComponent }),
-			provide(UsersImportApi, { useClass: UsersImportApi }),
-			provide(ConnectionBackend, { useClass: MockBackend }),
-			provide(Http, { useClass: Http })
-		];
-	});
-
 	let createResponse = (asyncResolve: boolean, _connectionBackend) => {
 		HttpClientTestHelper.createResponse({
 			asyncResolve: asyncResolve,
@@ -43,6 +30,19 @@ describe('Component: UsersImportComponent', () => {
 			'running': false
 		});
 	};
+
+	beforeEachProviders(() => {
+		return [
+			HTTP_PROVIDERS,
+			provide(Router, { useClass: RootRouter }),
+			provide(XHRBackend, { useClass: MockBackend }),
+			provide(HttpClient, { useClass: HttpClient }),
+			provide(UsersImportComponent, { useClass: UsersImportComponent }),
+			provide(UsersImportApi, { useClass: UsersImportApi }),
+			provide(ConnectionBackend, { useClass: MockBackend }),
+			provide(Http, { useClass: Http })
+		];
+	});
 
 	beforeEach(inject([ConnectionBackend], (_connectionBackend) => {
 		connectionBackend = _connectionBackend;
@@ -92,19 +92,26 @@ describe('Component: UsersImportComponent', () => {
 		});
 	});
 
-	it('enables cron', () => {
+	it('enables cron', (done) => {
 		let $button = jQuery(element).find('button:contains(\'Enable\')');
 		expect($button.length).toBe(1);
 
 		spyOn(usersImportComponent['usersImportApi'], 'setStatus').and.callThrough();
 
+		createResponse(true, connectionBackend);
 		$button[0].click();
 		fixture.detectChanges();
 
-		expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(true);
+		expect(usersImportComponent.isLoading()).toBe(true);
+
+		setTimeout(() => {
+			expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(true);
+			expect(usersImportComponent.isLoading()).toBe(false);
+			done();
+		});
 	});
 
-	it('disables cron', () => {
+	it('disables cron', (done) => {
 		usersImportComponent['enabled'] = true;
 		fixture.detectChanges();
 
@@ -113,9 +120,15 @@ describe('Component: UsersImportComponent', () => {
 
 		spyOn(usersImportComponent['usersImportApi'], 'setStatus').and.callThrough();
 
+		createResponse(true, connectionBackend);
 		$button[0].click();
 		fixture.detectChanges();
+		expect(usersImportComponent.isLoading()).toBe(true);
 
-		expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(false);
+		setTimeout(() => {
+			expect(usersImportComponent['usersImportApi'].setStatus).toHaveBeenCalledWith(false);
+			expect(usersImportComponent.isLoading()).toBe(false);
+			done();
+		});
 	});
 });

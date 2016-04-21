@@ -43,7 +43,7 @@ export class HttpClient {
 	}
 
 	private getAppBaseUrl(): string {
-		return window.__carmenConfig.appBaseUrl || '';
+		return window.__carmenConfig.appBaseUrl;
 	}
 
 }

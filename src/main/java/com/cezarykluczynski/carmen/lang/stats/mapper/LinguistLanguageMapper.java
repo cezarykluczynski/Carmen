@@ -17,6 +17,10 @@ public class LinguistLanguageMapper implements LanguageMapper {
         return languageList;
     }
 
+    public String mapLinguistVersion(JSONObject jsonObject) {
+        return jsonObject.getString("linguist_version");
+    }
+
     public Map<Language, LineStat> mapRepositoryDescription(JSONObject jsonObject) {
         Map<Language, LineStat> repositoryDescription = new HashMap<>();
 

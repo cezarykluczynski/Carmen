@@ -11,6 +11,8 @@ public interface LangsStatsAdapter {
 
     List<Language> getSupportedLanguages();
 
+    String getLinguistVersion();
+
     Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash);
 
     Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash);

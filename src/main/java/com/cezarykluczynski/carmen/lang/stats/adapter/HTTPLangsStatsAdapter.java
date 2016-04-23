@@ -34,6 +34,17 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
+    public String getLinguistVersion() {
+        try {
+            JSONObject linguistVersion = httpClient.get("linguist/version");
+            System.out.println(linguistVersion);
+            return languageMapper.mapLinguistVersion(linguistVersion);
+        } catch(HTTPRequestException e) {
+            return null;
+        }
+    }
+
+    @Override
     public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
         try {
             return languageMapper.mapRepositoryDescription(httpClient.post("detector/describe_repository",

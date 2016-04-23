@@ -12,6 +12,8 @@ public interface LanguageMapper {
 
     List<Language> mapLanguageList(JSONObject jsonObject);
 
+    String mapLinguistVersion(JSONObject jsonObject);
+
     Map<Language, LineStat> mapRepositoryDescription(JSONObject jsonObject);
 
     Map<Language, LineDiffStat> mapCommitDescription(JSONObject jsonObject);

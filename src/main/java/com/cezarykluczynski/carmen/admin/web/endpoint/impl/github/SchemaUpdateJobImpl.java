@@ -5,6 +5,7 @@ import com.cezarykluczynski.carmen.admin.web.endpoint.dto.SchemaUpdateStatusDTO;
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask;
 import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor;
 import com.cezarykluczynski.carmen.cron.languages.util.SchemaUpdateFilesStateHelper;
+import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -22,19 +23,24 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
 
     private SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper;
 
+    private LangsStatsAdapter langsStatsAdapter;
+
     @Autowired
     public SchemaUpdateJobImpl(SchemaUpdateExecutor schemaUpdateExecutor,
                                @Qualifier("languagesSchemaUpdateTask") DatabaseManageableTask schemaUpdateTask,
-                               SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper) {
+                               SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper,
+                               LangsStatsAdapter langsStatsAdapter) {
         this.schemaUpdateExecutor = schemaUpdateExecutor;
         this.schemaUpdateTask = schemaUpdateTask;
         this.schemaUpdateFilesStateHelper = schemaUpdateFilesStateHelper;
+        this.langsStatsAdapter = langsStatsAdapter;
     }
 
     @Override
     public Response getStatus() {
         return Response.ok(SchemaUpdateStatusDTO.builder()
                 .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
+                .linguistVersion(langsStatsAdapter.getLinguistVersion())
                 .updated(schemaUpdateTask.getUpdated())
                 .enabled(schemaUpdateTask.isEnabled())
                 .running(schemaUpdateTask.isRunning())
@@ -46,6 +52,7 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
         schemaUpdateExecutor.run();
         return Response.ok(SchemaUpdateStatusDTO.builder()
                 .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
+                .linguistVersion(langsStatsAdapter.getLinguistVersion())
                 .updated(schemaUpdateTask.getUpdated())
                 .build()).build();
     }

@@ -79,7 +79,8 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(responseBody.getBoolean("enabled"), ENABLED)
         Assert.assertEquals(responseBody.getBoolean("running"), RUNNING)
         Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
-        Assert.assertEquals(responseBody.length(), 4)
+        Assert.assertTrue responseBody.getString("linguistVersion").matches("\\d\\.\\d\\.\\d")
+        Assert.assertEquals(responseBody.length(), 5)
     }
 
     @Test
@@ -98,7 +99,8 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
         Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
-        Assert.assertEquals(responseBody.length(), 2)
+        Assert.assertTrue responseBody.getString("linguistVersion").matches("\\d\\.\\d\\.\\d")
+        Assert.assertEquals(responseBody.length(), 3)
         verify(schemaUpdateExecutor).run()
     }
 

@@ -1,8 +1,10 @@
 import {Component} from 'angular2/core';
 import {AbstractStatefulComponent} from '../abstract/abstractStatefulComponent';
 import {SchemaUpdateApi} from './schemaUpdateApi';
+import {NgClass} from 'angular2/common';
 
 @Component({
+	directives: [NgClass],
 	providers: [SchemaUpdateApi],
 	selector: 'jobs-schema-update',
 	template: `
@@ -17,7 +19,10 @@ import {SchemaUpdateApi} from './schemaUpdateApi';
 					<hr>
 					<ul class="list-group">
 						<li class="list-group-item list-group-item-info">
-							Linguist version: <span [innerHtml]="linguistVersion"></span>
+							Linguist version: <span [innerHtml]="getLinguistVersion()"></span>
+						</li>
+						<li class="list-group-item list-group-item-info" [ngClass]="{'list-group-item-warning': isNotSaved()}">
+							Changes saved: <span [innerHtml]="isSaved()"></span>
 						</li>
 					</ul>
 				</div>
@@ -30,6 +35,7 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 	public enabled: boolean;
 	public linguistVersion: String;
 	public running: boolean;
+	public saved: boolean;
 	public updated: any;
 
 	constructor(private schemaUpdateApi: SchemaUpdateApi) {
@@ -44,6 +50,7 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 			this.enabled = response.enabled;
 			this.linguistVersion = response.linguistVersion;
 			this.running = response.running;
+			this.saved = response.saved;
 			this.updated = response.updated;
 			self.setLoading(false);
 		}).catch(() => {
@@ -58,11 +65,25 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 			this.enabled = false;
 			this.linguistVersion = response.linguistVersion;
 			this.running = false;
+			this.saved = response.saved;
 			this.updated = response.updated;
 			self.setLoading(false);
 		}).catch(() => {
 			self.setLoading(false);
 		});
+	}
+
+	/* tslint:disable:no-unused-variable */
+	private getLinguistVersion(): String {
+		return typeof this.linguistVersion === 'string' ? this.linguistVersion : 'unknown';
+	}
+
+	private isSaved(): String {
+		return typeof this.saved === 'boolean' ? (this.saved ? 'yes' : 'no') : 'unknown';
+	}
+
+	private isNotSaved(): boolean {
+		return typeof this.saved === 'boolean' && !this.saved;
 	}
 
 }

@@ -23,6 +23,15 @@ describe 'HTTP interface' do
     expect(response['Java']['extensions'][0]).to eq('.java')
   end
 
+  it 'should show linguist version' do
+    get '/linguist/version'
+
+    expect(last_response).to be_ok
+    response = JSON.parse last_response.body
+
+    expect(response['linguist_version']).to match(/\d\.\d\.\d/)
+  end
+
   it 'should read repository statistics' do
     post '/detector/describe_repository', {
       :relative_directory => '.',

@@ -55,6 +55,25 @@ public class CLILangsStatsAdapterIntegrationTest extends AbstractTestNGSpringCon
         Assert.assertNull cliLangsStatsAdapter.getSupportedLanguages()
     }
 
+
+    @Test
+    void getLinguistVersion() {
+        // setup
+        injectValidBinPath()
+
+        String linguistVersion = cliLangsStatsAdapter.getLinguistVersion()
+
+        Assert.assertTrue linguistVersion.matches("\\d\\.\\d\\.\\d")
+    }
+
+    @Test
+    void getLinguistVersionInvalid() {
+        // setup
+        injectInvalidBinPath()
+
+        Assert.assertNull cliLangsStatsAdapter.getLinguistVersion()
+    }
+
     @Test
     void describeRepository() {
         // setup

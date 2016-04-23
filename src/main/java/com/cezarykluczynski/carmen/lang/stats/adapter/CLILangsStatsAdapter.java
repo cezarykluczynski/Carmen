@@ -33,6 +33,16 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
+    public String getLinguistVersion() {
+        Result commandResult = Executor.execute(LanguageStatsCommand.createLinguistVersionCommand(binPath));
+        if (commandResult.isSuccessFul()) {
+            return languageMapper.mapLinguistVersion(new JSONObject(commandResult.getOutput()));
+        }
+
+        return null;
+    }
+
+    @Override
     public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
         Result commandResult = Executor.execute(
                 LanguageStatsCommand.createDescribeRepositoryCommand(binPath, relativeDirectory, commitHash));

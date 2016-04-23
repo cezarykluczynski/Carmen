@@ -4,6 +4,7 @@ require 'java-properties'
 
 require_relative 'lang_stats/detector'
 require_relative 'lang_stats/supported_languages'
+require_relative 'lang_stats/linguist_version'
 
 properties = JavaProperties.load(File.expand_path(File.dirname(__FILE__)) << "/../../src/main/resources/config.properties")
 detector_port = (properties["detector.port".to_sym] or 8081).to_i
@@ -63,4 +64,9 @@ end
 get '/supported_languages' do
   supported_languages = LangStats::SupportedLanguages.new
   supported_languages.get_supported_languages.to_json
+end
+
+get '/linguist/version' do
+  linguist_version = LangStats::LinguistVersion.new
+  linguist_version.get_linguist_version.to_json
 end

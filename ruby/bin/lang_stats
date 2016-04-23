@@ -3,10 +3,17 @@
 require 'json'
 require_relative '../app/lang_stats/detector'
 require_relative '../app/lang_stats/supported_languages'
+require_relative '../app/lang_stats/linguist_version'
 
 if ARGV.length == 1 and ARGV[0] == 'supported_languages'
   supported_languges = LangStats::SupportedLanguages.new
   print supported_languges.get_supported_languages.to_json
+  exit
+end
+
+if ARGV.length == 1 and ARGV[0] == 'linguist_version'
+  linguist_version = LangStats::LinguistVersion.new
+  print linguist_version.get_linguist_version.to_json
   exit
 end
 

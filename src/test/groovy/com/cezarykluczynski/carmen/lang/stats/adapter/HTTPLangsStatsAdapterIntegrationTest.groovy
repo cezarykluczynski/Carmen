@@ -82,6 +82,25 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
         Assert.assertNull httpLangsStatsAdapter.getSupportedLanguages()
     }
 
+
+    @Test
+    void getLinguistVersion() {
+        // setup
+        injectValidHttpClient()
+
+        String linguistVersion = httpLangsStatsAdapter.getLinguistVersion()
+
+        Assert.assertTrue linguistVersion.matches("\\d\\.\\d\\.\\d")
+    }
+
+    @Test
+    void getLinguistVersionInvalid() {
+        // setup
+        injectInvalidHttpClient()
+
+        Assert.assertNull httpLangsStatsAdapter.getLinguistVersion()
+    }
+
     @Test
     void describeRepository() {
         // setup

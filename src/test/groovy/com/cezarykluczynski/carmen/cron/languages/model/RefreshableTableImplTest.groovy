@@ -1,8 +1,10 @@
 package com.cezarykluczynski.carmen.cron.languages.model
 
+import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -13,9 +15,12 @@ class RefreshableTableImplTest {
 
     private final String ONE_MORE = "one_more"
 
+    private static final LanguagesIteratorsFactory languagesIteratorFactory = new LanguagesIteratorsFactory()
+
     @BeforeMethod
     void setUp() {
-        refreshableTable = new RefreshableTableImpl(EntityOne)
+        refreshableTable = new RefreshableTableImpl(EntityOne,
+                languagesIteratorFactory.createEntityFieldsIterator(EntityOne, FieldsFilter.ALL))
     }
 
     @Test

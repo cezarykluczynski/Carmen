@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator;
 
+import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl;
 import org.reflections.Reflections;
@@ -13,10 +14,11 @@ public class RefreshableTableIterator implements Iterator<RefreshableTable> {
 
     private final Iterator<RefreshableTable> iterator;
 
-    public RefreshableTableIterator(Class clazz) {
+    RefreshableTableIterator(Class clazz, LanguagesIteratorsFactory languagesIteratorsFactory) {
         Set<Class<?>> classes = new Reflections("com.cezarykluczynski.carmen").getTypesAnnotatedWith(clazz);
         List<RefreshableTable> refreshableTableList = new ArrayList<>();
-        classes.forEach(refreshableClass -> refreshableTableList.add(new RefreshableTableImpl(refreshableClass)));
+        classes.forEach(refreshableClass -> refreshableTableList.add(new RefreshableTableImpl(refreshableClass,
+                languagesIteratorsFactory.createEntityFieldsIterator(refreshableClass, FieldsFilter.ALL))));
         iterator = refreshableTableList.iterator();
     }
 

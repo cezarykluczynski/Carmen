@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SchemaUpdaterVisitor implements RefreshableTableVisitor {
 
-    CassandraMigrationBuilder cassandraMigrationBuilder;
+    private CassandraMigrationBuilder cassandraMigrationBuilder;
 
     @Autowired
     public SchemaUpdaterVisitor(CassandraMigrationBuilder cassandraMigrationBuilder) {

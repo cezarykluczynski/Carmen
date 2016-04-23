@@ -9,7 +9,7 @@ public class AnnotationIterator implements Iterator<Class> {
 
     private Iterator<Class> iterator;
 
-    public AnnotationIterator() {
+    AnnotationIterator() {
         ClassPath classPath;
 
         try {

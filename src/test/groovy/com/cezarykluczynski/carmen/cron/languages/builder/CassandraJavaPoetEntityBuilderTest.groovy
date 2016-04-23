@@ -1,9 +1,11 @@
 package com.cezarykluczynski.carmen.cron.languages.builder
 
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
+import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityTwo
+import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
 import org.apache.commons.io.FileUtils
@@ -68,7 +70,8 @@ public class EntityTwo extends CarmenNoSQLEntity {
     @BeforeMethod
     void setUp() {
         cassandraJavaPoetEntityBuilder = new CassandraJavaPoetEntityBuilder()
-        refreshableTable = new RefreshableTableImpl(EntityTwo.class)
+        refreshableTable = new RefreshableTableImpl(EntityTwo.class,
+                new LanguagesIteratorsFactory().createEntityFieldsIterator(EntityTwo.class, FieldsFilter.ALL))
         TreeSet<EntityField> entityFieldTreeSet = TreeSetEntityFieldFactory.create()
         entityFieldTreeSet.add new EntityField("id", UUID.class)
         entityFieldTreeSet.add new EntityField("language_1")

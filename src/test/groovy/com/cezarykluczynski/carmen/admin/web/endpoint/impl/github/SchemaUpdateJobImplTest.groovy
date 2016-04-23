@@ -71,7 +71,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
         Assert.assertEquals(responseBody.getBoolean("enabled"), ENABLED)
         Assert.assertEquals(responseBody.getBoolean("running"), RUNNING)
-        Assert.assertEquals(responseBody.length(), 3)
+        Assert.assertEquals(responseBody.length(), 4)
     }
 
     @Test
@@ -87,7 +87,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
 
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
-        Assert.assertEquals(responseBody.length(), 1)
+        Assert.assertEquals(responseBody.length(), 2)
         verify(schemaUpdateExecutor).run()
     }
 

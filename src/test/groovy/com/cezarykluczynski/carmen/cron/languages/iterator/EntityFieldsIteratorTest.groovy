@@ -13,7 +13,8 @@ class EntityFieldsIteratorTest {
 
     @BeforeMethod
     void setUp() {
-        entityFieldsIterator = new EntityFieldsIterator(EntityOne.class, FieldsFilter.ALL)
+        entityFieldsIterator = new LanguagesIteratorsFactory().createEntityFieldsIterator(
+                EntityOne.class, FieldsFilter.ALL)
     }
 
     @Test

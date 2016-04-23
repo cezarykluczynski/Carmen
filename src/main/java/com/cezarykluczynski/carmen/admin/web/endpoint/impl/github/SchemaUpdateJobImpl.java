@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.SchemaUpdateJob
 import com.cezarykluczynski.carmen.admin.web.endpoint.dto.SchemaUpdateStatusDTO;
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask;
 import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor;
+import com.cezarykluczynski.carmen.cron.languages.util.SchemaUpdateFilesStateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -17,21 +18,26 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
 
     private SchemaUpdateExecutor schemaUpdateExecutor;
 
-    private DatabaseManageableTask usersImportTask;
+    private DatabaseManageableTask schemaUpdateTask;
+
+    private SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper;
 
     @Autowired
     public SchemaUpdateJobImpl(SchemaUpdateExecutor schemaUpdateExecutor,
-                               @Qualifier("languagesSchemaUpdateTask") DatabaseManageableTask usersImportTask) {
+                               @Qualifier("languagesSchemaUpdateTask") DatabaseManageableTask schemaUpdateTask,
+                               SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper) {
         this.schemaUpdateExecutor = schemaUpdateExecutor;
-        this.usersImportTask = usersImportTask;
+        this.schemaUpdateTask = schemaUpdateTask;
+        this.schemaUpdateFilesStateHelper = schemaUpdateFilesStateHelper;
     }
 
     @Override
     public Response getStatus() {
         return Response.ok(SchemaUpdateStatusDTO.builder()
-                .updated(usersImportTask.getUpdated())
-                .enabled(usersImportTask.isEnabled())
-                .running(usersImportTask.isRunning())
+                .saved(schemaUpdateFilesStateHelper.hasFilesChanged())
+                .updated(schemaUpdateTask.getUpdated())
+                .enabled(schemaUpdateTask.isEnabled())
+                .running(schemaUpdateTask.isRunning())
                 .build()).build();
     }
 
@@ -39,7 +45,8 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
     public Response run() {
         schemaUpdateExecutor.run();
         return Response.ok(SchemaUpdateStatusDTO.builder()
-                .updated(usersImportTask.getUpdated())
+                .saved(schemaUpdateFilesStateHelper.hasFilesChanged())
+                .updated(schemaUpdateTask.getUpdated())
                 .build()).build();
     }
 }

@@ -13,7 +13,7 @@ class AnnotationIteratorTest {
 
     @BeforeMethod
     void setUp() {
-        annotationIterator = new AnnotationIterator()
+        annotationIterator = new LanguagesIteratorsFactory().createAnnotationIterator()
     }
 
     @Test

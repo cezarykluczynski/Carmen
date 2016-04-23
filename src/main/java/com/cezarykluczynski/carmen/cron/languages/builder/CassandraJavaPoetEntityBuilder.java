@@ -1,7 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.builder;
 
-import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
-import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
+import com.cezarykluczynski.carmen.cron.languages.annotations.Annotations;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
@@ -17,14 +16,10 @@ import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @Component
 public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
-
-    private static final List<Class> OWN_ANNOTATIONS = Arrays.asList(LanguagesStatistics.class,
-            LanguagesDiffStatistics.class);
 
     @Override
     public CassandraBuiltFile build(RefreshableTable refreshableTable) {
@@ -79,7 +74,7 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
     }
 
     private boolean isOwnAnnotation(Class clazz) {
-        return OWN_ANNOTATIONS.contains(clazz);
+        return Annotations.OWN_ANNOTATIONS.contains(clazz);
     }
 
 }

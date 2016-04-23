@@ -10,11 +10,11 @@ import org.testng.annotations.Test
 
 class RefreshableTableIteratorTest {
 
-    RefreshableTableIterator tableIterator
+    private RefreshableTableIterator tableIterator
 
     @BeforeMethod
     void setUp() {
-        tableIterator = new RefreshableTableIterator(LanguagesStatistics.class)
+        tableIterator = new RefreshableTableIterator(LanguagesStatistics.class, new LanguagesIteratorsFactory())
     }
 
     @Test

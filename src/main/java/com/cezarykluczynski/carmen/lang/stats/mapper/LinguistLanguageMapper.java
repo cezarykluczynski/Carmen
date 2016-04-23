@@ -87,7 +87,7 @@ public class LinguistLanguageMapper implements LanguageMapper {
         Iterator iterator = languagesRequiringParents.entrySet().iterator();
 
         while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry)iterator.next();
+            Map.Entry entry = (Map.Entry) iterator.next();
             String parentLanguageName = (String) entry.getValue();
             Language languageRequiringParent = languageList.get((Integer) entry.getKey());
 

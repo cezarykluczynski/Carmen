@@ -1,10 +1,12 @@
 package com.cezarykluczynski.carmen.cron.languages.builder
 
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
+import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityEmpty
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
+import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
 import com.cezarykluczynski.carmen.cron.languages.model.CassandraBuiltFileNullObject
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
@@ -33,12 +35,14 @@ ALTER TABLE entity_one ADD some_string varchar;
 ALTER TABLE entity_one ADD some_uuid uuid;
 '''
 
-    CassandraMigrationBuilder cassandraMigrationBuilder
+    private static final LanguagesIteratorsFactory languagesIteratorFactory = new LanguagesIteratorsFactory()
+
+    private CassandraMigrationBuilder cassandraMigrationBuilder
 
     @Test
     void "path is built for existing entity in non-empty folder"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityOne.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -49,7 +53,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "path is build for existing entity in empty folder"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(EMPTY_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityOne.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -60,7 +64,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "path is built for empty entity in non-empty folder"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityEmpty.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -71,7 +75,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "path is built for empty entity in empty folder"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(EMPTY_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityEmpty.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -82,7 +86,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "CQL is built for new entity with new fields"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityEmpty.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -92,7 +96,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "CQL is built for new entity without new fields"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityEmpty.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
         Assert.assertEquals NEW_ENTITY_CONTENTS_WITHOUT_NEW_FIELDS, cassandraBuiltFile.getContents()
@@ -101,7 +105,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "CQL is built for existing entity"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityOne.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
@@ -111,7 +115,7 @@ ALTER TABLE entity_one ADD some_uuid uuid;
     @Test
     void "null object is returned when no changes has been made to non-empty entity"() {
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
-        RefreshableTable refreshableTable = new RefreshableTableImpl(EntityOne.class)
+        RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
         Assert.assertTrue cassandraBuiltFile instanceof CassandraBuiltFileNullObject
@@ -125,6 +129,11 @@ ALTER TABLE entity_one ADD some_uuid uuid;
         entityFieldTreeMap.add new EntityField("some_string", String.class)
 
         return entityFieldTreeMap
+    }
+
+    private static RefreshableTableImpl createEntityFieldsIterator(Class clazz) {
+        return new RefreshableTableImpl(clazz, languagesIteratorFactory
+                .createEntityFieldsIterator(clazz, FieldsFilter.ALL))
     }
 
 }

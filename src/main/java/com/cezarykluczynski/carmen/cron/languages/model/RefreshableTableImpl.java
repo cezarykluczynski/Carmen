@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.cron.languages.model;
 
-import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory;
 import com.cezarykluczynski.carmen.cron.languages.iterator.EntityFieldsIterator;
@@ -11,15 +10,12 @@ public class RefreshableTableImpl implements RefreshableTable {
 
     private Class refreshableTableClass;
 
-    private EntityFieldsIterator entityFieldsIterator;
-
     private SortedSet<EntityField> initialFields;
 
     private SortedSet<EntityField> fields;
 
-    public RefreshableTableImpl(Class refreshableTableClass) {
+    public RefreshableTableImpl(Class refreshableTableClass, EntityFieldsIterator entityFieldsIterator) {
         this.refreshableTableClass = refreshableTableClass;
-        entityFieldsIterator = new EntityFieldsIterator(refreshableTableClass, FieldsFilter.ALL);
         setFields(entityFieldsIterator.getFields());
         initialFields = entityFieldsIterator.getFields();
     }

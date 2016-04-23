@@ -18,7 +18,7 @@ public class EntityFieldsIterator implements Iterator<EntityField> {
 
     private FieldsFilter fieldsFilter;
 
-    public EntityFieldsIterator(Class clazz, FieldsFilter fieldsFilter) {
+    EntityFieldsIterator(Class clazz, FieldsFilter fieldsFilter) {
         this.clazz = clazz;
         this.fieldsFilter = fieldsFilter;
         createChildIterator();

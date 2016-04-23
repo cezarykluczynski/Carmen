@@ -41,10 +41,10 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 		let self = this;
 		this.setLoading(true);
 		this.schemaUpdateApi.getStatus().then((response) => {
-			this.updated = response.updated;
 			this.enabled = response.enabled;
-			this.running = response.running;
 			this.linguistVersion = response.linguistVersion;
+			this.running = response.running;
+			this.updated = response.updated;
 			self.setLoading(false);
 		}).catch(() => {
 			self.setLoading(false);
@@ -55,10 +55,10 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 		let self = this;
 		this.setLoading(true);
 		this.schemaUpdateApi.run().then((response) => {
-			this.updated = response.updated;
-			this.linguistVersion = response.linguistVersion;
 			this.enabled = false;
+			this.linguistVersion = response.linguistVersion;
 			this.running = false;
+			this.updated = response.updated;
 			self.setLoading(false);
 		}).catch(() => {
 			self.setLoading(false);

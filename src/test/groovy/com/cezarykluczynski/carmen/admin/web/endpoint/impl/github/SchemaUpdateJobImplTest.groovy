@@ -5,6 +5,7 @@ import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.UsersImportCron
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
 import com.cezarykluczynski.carmen.cron.languages.executor.SchemaUpdateExecutor
+import com.cezarykluczynski.carmen.cron.languages.util.SchemaUpdateFilesStateHelper
 import org.apache.commons.lang.math.RandomUtils
 import org.json.JSONObject
 import org.mockito.InjectMocks
@@ -33,6 +34,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
     private static final LocalDateTime UPDATED = LocalDateTime.of(2016, 1, 1, 0, 0)
     private static final boolean ENABLED = RandomUtils.nextBoolean()
     private static final boolean RUNNING = RandomUtils.nextBoolean()
+    private static final boolean HAS_FILES_CHANGED = RandomUtils.nextBoolean()
 
     @Autowired
     @InjectMocks
@@ -48,10 +50,14 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
     @Mock
     private DatabaseManageableTask schemaUpdateTask
 
+    @Mock
+    private SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper
+
     @BeforeMethod
     void setup() {
-        schemaUpdateExecutor = mock SchemaUpdateExecutor.class
-        schemaUpdateTask = mock DatabaseManageableTask.class
+        schemaUpdateExecutor = mock SchemaUpdateExecutor
+        schemaUpdateTask = mock DatabaseManageableTask
+        schemaUpdateFilesStateHelper = mock SchemaUpdateFilesStateHelper
         MockitoAnnotations.initMocks this
 
         println usersImportCron
@@ -62,6 +68,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         when schemaUpdateTask.isEnabled() thenReturn ENABLED
         when schemaUpdateTask.isRunning() thenReturn RUNNING
         when schemaUpdateTask.getUpdated() thenReturn UPDATED
+        when schemaUpdateFilesStateHelper.hasFilesChanged() thenReturn HAS_FILES_CHANGED
 
         Response response = schemaUpdateJob.getStatus()
         int responseStatus = response.getStatus()
@@ -71,6 +78,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
         Assert.assertEquals(responseBody.getBoolean("enabled"), ENABLED)
         Assert.assertEquals(responseBody.getBoolean("running"), RUNNING)
+        Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
         Assert.assertEquals(responseBody.length(), 4)
     }
 
@@ -79,6 +87,8 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         when schemaUpdateTask.isEnabled() thenReturn ENABLED
         when schemaUpdateTask.isRunning() thenReturn RUNNING
         when(schemaUpdateTask.getUpdated()).thenReturn UPDATED
+        when schemaUpdateFilesStateHelper.hasFilesChanged() thenReturn HAS_FILES_CHANGED
+
         doNothing().when(schemaUpdateExecutor).run()
 
         Response response = schemaUpdateJob.run()
@@ -87,6 +97,7 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
 
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
+        Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
         Assert.assertEquals(responseBody.length(), 2)
         verify(schemaUpdateExecutor).run()
     }

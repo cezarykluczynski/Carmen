@@ -34,7 +34,7 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
     @Override
     public Response getStatus() {
         return Response.ok(SchemaUpdateStatusDTO.builder()
-                .saved(schemaUpdateFilesStateHelper.hasFilesChanged())
+                .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
                 .updated(schemaUpdateTask.getUpdated())
                 .enabled(schemaUpdateTask.isEnabled())
                 .running(schemaUpdateTask.isRunning())
@@ -45,7 +45,7 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
     public Response run() {
         schemaUpdateExecutor.run();
         return Response.ok(SchemaUpdateStatusDTO.builder()
-                .saved(schemaUpdateFilesStateHelper.hasFilesChanged())
+                .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
                 .updated(schemaUpdateTask.getUpdated())
                 .build()).build();
     }

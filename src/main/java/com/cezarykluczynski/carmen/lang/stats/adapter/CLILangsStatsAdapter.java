@@ -1,8 +1,6 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter;
 
-import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper;
 import com.cezarykluczynski.carmen.util.exec.Executor;
 import com.cezarykluczynski.carmen.util.exec.LanguageStatsCommand;
@@ -10,7 +8,6 @@ import com.cezarykluczynski.carmen.util.exec.Result;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Map;
 
 public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
@@ -43,24 +40,24 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
-    public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
+    public RepositoryDescription describeRepository(String relativeDirectory, String commitHash) {
         Result commandResult = Executor.execute(
                 LanguageStatsCommand.createDescribeRepositoryCommand(binPath, relativeDirectory, commitHash));
 
         if (commandResult.isSuccessFul()) {
-            return languageMapper.mapRepositoryDescription(new JSONObject(commandResult.getOutput()));
+            return languageMapper.toRepositoryDescription(commitHash, new JSONObject(commandResult.getOutput()));
         }
 
         return null;
     }
 
     @Override
-    public Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash) {
+    public CommitDescription describeCommit(String relativeDirectory, String commitHash) {
         Result commandResult = Executor.execute(
                 LanguageStatsCommand.createDescribeCommitCommand(binPath, relativeDirectory, commitHash));
 
         if (commandResult.isSuccessFul()) {
-            return languageMapper.mapCommitDescription(new JSONObject(commandResult.getOutput()));
+            return languageMapper.toCommitDescription(commitHash, new JSONObject(commandResult.getOutput()));
         }
 
         return null;

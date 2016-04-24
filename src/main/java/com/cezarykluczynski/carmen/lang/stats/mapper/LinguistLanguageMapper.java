@@ -1,9 +1,6 @@
 package com.cezarykluczynski.carmen.lang.stats.mapper;
 
-import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LanguageType;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +18,7 @@ public class LinguistLanguageMapper implements LanguageMapper {
         return jsonObject.getString("linguist_version");
     }
 
-    public Map<Language, LineStat> mapRepositoryDescription(JSONObject jsonObject) {
+    public RepositoryDescription toRepositoryDescription(String commitHash, JSONObject jsonObject) {
         Map<Language, LineStat> repositoryDescription = new HashMap<>();
 
         Iterator keys = jsonObject.keys();
@@ -32,11 +29,11 @@ public class LinguistLanguageMapper implements LanguageMapper {
             repositoryDescription.put(language, new LineStat(jsonObject.getInt(languageName)));
         }
 
-        return repositoryDescription;
+        return new RepositoryDescription(commitHash, repositoryDescription);
     }
 
-    public Map<Language, LineDiffStat> mapCommitDescription(JSONObject jsonObject) {
-        Map<Language, LineDiffStat> commitDescription = new HashMap<>();
+    public CommitDescription toCommitDescription(String commitHash, JSONObject jsonObject) {
+        Map<Language, LineDiffStat> lines = new HashMap<>();
 
         Iterator keys = jsonObject.keys();
 
@@ -44,10 +41,10 @@ public class LinguistLanguageMapper implements LanguageMapper {
             String languageName = (String) keys.next();
             Language language = mapNameAndLanguageDetailsToEntity(languageName, null);
             JSONObject lineDiff = (JSONObject) jsonObject.get(languageName);
-            commitDescription.put(language, new LineDiffStat(lineDiff.getInt("added"), lineDiff.getInt("removed")));
+            lines.put(language, new LineDiffStat(lineDiff.getInt("added"), lineDiff.getInt("removed")));
         }
 
-        return commitDescription;
+        return new CommitDescription(commitHash, lines);
     }
 
     private List<Language> buildListFromJSONObject(JSONObject jsonObject) {

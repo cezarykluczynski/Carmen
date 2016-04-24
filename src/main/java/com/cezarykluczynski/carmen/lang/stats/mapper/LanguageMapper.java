@@ -1,12 +1,9 @@
 package com.cezarykluczynski.carmen.lang.stats.mapper;
 
-import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Map;
 
 public interface LanguageMapper {
 
@@ -14,8 +11,8 @@ public interface LanguageMapper {
 
     String mapLinguistVersion(JSONObject jsonObject);
 
-    Map<Language, LineStat> mapRepositoryDescription(JSONObject jsonObject);
+    RepositoryDescription toRepositoryDescription(String commitHash, JSONObject jsonObject);
 
-    Map<Language, LineDiffStat> mapCommitDescription(JSONObject jsonObject);
+    CommitDescription toCommitDescription(String commitHash, JSONObject jsonObject);
 
 }

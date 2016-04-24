@@ -1,11 +1,10 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter;
 
+import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription;
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription;
 
 import java.util.List;
-import java.util.Map;
 
 public interface LangsStatsAdapter {
 
@@ -13,8 +12,8 @@ public interface LangsStatsAdapter {
 
     String getLinguistVersion();
 
-    Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash);
+    RepositoryDescription describeRepository(String relativeDirectory, String commitHash);
 
-    Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash);
+    CommitDescription describeCommit(String relativeDirectory, String commitHash);
 
 }

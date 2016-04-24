@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter;
 
+import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription;
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription;
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper;
 import com.cezarykluczynski.carmen.util.network.HTTPClient;
 import com.cezarykluczynski.carmen.util.network.HTTPRequestException;
@@ -44,9 +44,9 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
-    public Map<Language, LineStat> describeRepository(String relativeDirectory, String commitHash) {
+    public RepositoryDescription describeRepository(String relativeDirectory, String commitHash) {
         try {
-            return languageMapper.mapRepositoryDescription(httpClient.post("detector/describe_repository",
+            return languageMapper.toRepositoryDescription(commitHash, httpClient.post("detector/describe_repository",
                     buildParams(relativeDirectory, commitHash)));
         } catch(HTTPRequestException e) {
             return null;
@@ -54,11 +54,11 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
     }
 
     @Override
-    public Map<Language, LineDiffStat> describeCommit(String relativeDirectory, String commitHash) {
+    public CommitDescription describeCommit(String relativeDirectory, String commitHash) {
         try {
             Map<String, String> params = buildParams(relativeDirectory, commitHash);
             JSONObject lineDiffStats = httpClient.post("detector/describe_commit", params);
-            return languageMapper.mapCommitDescription(lineDiffStats);
+            return languageMapper.toCommitDescription(commitHash, lineDiffStats);
         } catch(HTTPRequestException e) {
             return null;
         }

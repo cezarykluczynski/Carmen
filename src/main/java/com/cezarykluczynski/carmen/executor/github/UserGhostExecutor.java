@@ -13,9 +13,9 @@ import com.cezarykluczynski.carmen.dao.github.UserDAO;
 @Component
 public class UserGhostExecutor implements Executor {
 
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
 
-    UserDAO githubUserDAOImpl;
+    private UserDAO githubUserDAOImpl;
 
     @Autowired
     public UserGhostExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl, UserDAO githubUserDAOImpl) {

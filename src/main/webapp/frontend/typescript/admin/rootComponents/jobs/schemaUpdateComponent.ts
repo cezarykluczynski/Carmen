@@ -2,6 +2,7 @@ import {Component} from 'angular2/core';
 import {AbstractStatefulComponent} from '../abstract/abstractStatefulComponent';
 import {SchemaUpdateApi} from './schemaUpdateApi';
 import {NgClass} from 'angular2/common';
+import {FormatterService} from '../../util/formatterService';
 
 @Component({
 	directives: [NgClass],
@@ -75,11 +76,11 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 
 	/* tslint:disable:no-unused-variable */
 	private getLinguistVersion(): String {
-		return typeof this.linguistVersion === 'string' ? this.linguistVersion : 'unknown';
+		return FormatterService.formatGenericOptional(this.linguistVersion);
 	}
 
 	private isSaved(): String {
-		return typeof this.saved === 'boolean' ? (this.saved ? 'yes' : 'no') : 'unknown';
+		return FormatterService.booleanToWord(this.saved);
 	}
 
 	private isNotSaved(): boolean {

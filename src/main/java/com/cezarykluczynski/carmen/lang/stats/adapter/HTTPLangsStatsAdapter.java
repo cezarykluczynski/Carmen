@@ -37,7 +37,6 @@ public class HTTPLangsStatsAdapter implements LangsStatsAdapter {
     public String getLinguistVersion() {
         try {
             JSONObject linguistVersion = httpClient.get("linguist/version");
-            System.out.println(linguistVersion);
             return languageMapper.mapLinguistVersion(linguistVersion);
         } catch(HTTPRequestException e) {
             return null;

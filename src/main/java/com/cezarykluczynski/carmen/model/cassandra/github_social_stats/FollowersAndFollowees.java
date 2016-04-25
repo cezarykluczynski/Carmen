@@ -19,16 +19,16 @@ public class FollowersAndFollowees extends CarmenNoSQLEntity {
     @PrimaryKey
     private UUID id;
 
-    @Column(value = "user_id")
+    @Column("user_id")
     private int userId;
 
-    @Column(value = "followers_count")
+    @Column("followers_count")
     private int followersCount;
 
-    @Column(value = "followees_count")
+    @Column("followees_count")
     private int followeesCount;
 
-    @Column(value = "shared_count")
+    @Column("shared_count")
     private int sharedCount;
 
     public void setId(UUID id) {

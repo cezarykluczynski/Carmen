@@ -16,10 +16,12 @@ import org.springframework.data.cassandra.repository.config.EnableCassandraRepos
 import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.core.CassandraAdminOperations;
 import org.springframework.data.cassandra.core.CassandraAdminTemplate;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @PropertySource(value = { "classpath:config.properties" })
 @EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository" })
+@EnableJpaRepositories
 public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
 
     @Autowired

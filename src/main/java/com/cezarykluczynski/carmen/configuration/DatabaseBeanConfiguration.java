@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @PropertySource(value = { "classpath:config.properties" })
-@ComponentScan("com.cezarykluczynski.carmen.model")
+@ComponentScan("com.cezarykluczynski.carmen")
 @EnableTransactionManagement
 public class DatabaseBeanConfiguration  {
 

@@ -22,7 +22,7 @@ class HTTPJSONClientImplTest extends AbstractTestNGSpringContextTests {
 
     HTTPJSONClientImpl httpjsonClient
 
-    private final Integer port = 8080
+    private final Integer port = 8085
 
     @BeforeMethod
     void setUp() {

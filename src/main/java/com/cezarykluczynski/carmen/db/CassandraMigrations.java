@@ -1,5 +1,8 @@
 package com.cezarykluczynski.carmen.db;
 
+import com.cezarykluczynski.carmen.db.migration.cassandra.KeyspaceDefinition;
+import com.cezarykluczynski.carmen.db.migration.cassandra.github_social_stats.GitHubSocialStatsKeyspaceDefinition;
+import com.cezarykluczynski.carmen.db.migration.cassandra.repositories.RepositoriesKeyspaceDefinition;
 import com.contrastsecurity.cassandra.migration.CassandraMigration;
 import com.netflix.astyanax.*;
 import com.netflix.astyanax.Keyspace;
@@ -10,14 +13,14 @@ import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Slf4j
 class CassandraMigrations {
-
-    private static final String GITHUB_SOCIAL_STATS_KEYSPACE_NAME = "github_social_stats";
 
     private static String contactpoints;
     private static Integer thriftPort;
@@ -26,12 +29,17 @@ class CassandraMigrations {
     private static String version;
 
     public static void main(String[] args) throws ConnectionException, IOException {
-        System.out.println("Carmen: Cassandra migrations started.");
+        log.info("Carmen: Cassandra migrations started.");
 
         configure();
-        createGithubSocialStatsKeyspace();
-        migrateGithubSocialStatsKeyspace();
+        createAndMigrateKeyspace(new GitHubSocialStatsKeyspaceDefinition());
+        createAndMigrateKeyspace(new RepositoriesKeyspaceDefinition());
         System.exit(0);
+    }
+
+    private static void createAndMigrateKeyspace(KeyspaceDefinition keyspaceDefinition) throws ConnectionException {
+        createKeyspace(keyspaceDefinition);
+        migrateKeyspace(keyspaceDefinition);
     }
 
     private static void configure() throws IOException {
@@ -47,69 +55,70 @@ class CassandraMigrations {
             cluster = properties.getProperty("cassandra.cluster");
             version = properties.getProperty("cassandra.version");
         } catch (IOException ioe) {
-            System.out.println("Carmen: config.properties for Cassandra not found or incomplete.");
+            log.error("Carmen: config.properties for Cassandra not found or incomplete.");
 
             throw ioe;
         }
     }
 
-    private static void createKeyspace(Keyspace keyspace) throws ConnectionException {
+    private static void createKeyspaceIfNotExists(Keyspace keyspace, KeyspaceDefinition keyspaceDefinition)
+            throws ConnectionException {
         String keyspaceName = keyspace.getKeyspaceName();
 
         try {
             keyspace.describeKeyspace();
 
-            System.out.println("Carmen: Keyspace \"" + keyspaceName + "\" already exists.");
+            log.info("Carmen: Keyspace \"" + keyspaceName + "\" already exists.");
         } catch(Exception e) {
             try {
                  keyspace.createKeyspace(ImmutableMap.<String, Object>builder()
                     .put("strategy_options", ImmutableMap.<String, Object>builder()
-                            .put("replication_factor", "2")
+                            .put("replication_factor", keyspaceDefinition.getReplicationFactor())
                             .build())
                     .put("strategy_class", "SimpleStrategy")
                     .build()
                 );
-                System.out.println("Carmen: Keyspace \"" + keyspaceName + "\" created.");
+                log.debug("Carmen: Keyspace \"" + keyspaceName + "\" created.");
             } catch (ConnectionException ce) {
-                System.err.println("Carmen: Could not create keyspace \"" + keyspaceName + "\".");
+                log.error("Carmen: Could not create keyspace \"" + keyspaceName + "\".");
                 throw ce;
             }
         }
     }
 
-    private static void createGithubSocialStatsKeyspace() throws ConnectionException {
-        AstyanaxContext<Keyspace> context = new AstyanaxContext.Builder()
+    private static void createKeyspace(KeyspaceDefinition keyspaceDefinition) throws ConnectionException {
+        AstyanaxContext<Keyspace> context = createKeyspaceContext(keyspaceDefinition);
+        context.start();
+        createKeyspaceIfNotExists(context.getClient(), keyspaceDefinition);
+        context.shutdown();
+    }
+
+    private static AstyanaxContext<Keyspace> createKeyspaceContext(KeyspaceDefinition keyspaceDefinition) {
+        return new AstyanaxContext.Builder()
                 .forCluster(cluster)
-                .forKeyspace(GITHUB_SOCIAL_STATS_KEYSPACE_NAME)
+                .forKeyspace(keyspaceDefinition.getName())
                 .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
-                                .setTargetCassandraVersion(version)
-                                .setCqlVersion("3.1.1")
-                                .setDiscoveryType(NodeDiscoveryType.NONE)
+                        .setTargetCassandraVersion(version)
+                        .setCqlVersion("3.1.1")
+                        .setDiscoveryType(NodeDiscoveryType.NONE)
                 )
                 .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
-                        .setPort(thriftPort)
-                        .setMaxConnsPerHost(3)
-                        .setSeeds(contactpoints + ":" + Integer.toString(thriftPort))
+                                .setPort(thriftPort)
+                                .setMaxConnsPerHost(3)
+                                .setSeeds(contactpoints + ":" + Integer.toString(thriftPort))
                         // TODO: allow multiple contactpoints
                 )
                 .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
                 .buildKeyspace(ThriftFamilyFactory.getInstance());
-
-        context.start();
-        Keyspace keyspace = context.getClient();
-
-        createKeyspace(keyspace);
-        context.shutdown();
     }
 
-    private static void migrateGithubSocialStatsKeyspace() {
-        String[] scriptsLocations = {
-                "filesystem:src/main/java/com/cezarykluczynski/carmen/db/migration/cassandra/github_social_stats/"
-        };
+    private static void migrateKeyspace(KeyspaceDefinition keyspaceDefinition) {
+        String[] scriptsLocations = new String[keyspaceDefinition.getScriptsLocations().size()];
+        keyspaceDefinition.getScriptsLocations().toArray(scriptsLocations);
 
         com.contrastsecurity.cassandra.migration.config.Keyspace keyspace =
                 new com.contrastsecurity.cassandra.migration.config.Keyspace();
-        keyspace.setName(GITHUB_SOCIAL_STATS_KEYSPACE_NAME);
+        keyspace.setName(keyspaceDefinition.getName());
         com.contrastsecurity.cassandra.migration.config.Cluster migrationCluster = keyspace.getCluster();
         migrationCluster.setContactpoints(contactpoints);
         migrationCluster.setPort(port);
@@ -117,7 +126,9 @@ class CassandraMigrations {
         CassandraMigration cassandraMigration = new CassandraMigration();
         cassandraMigration.getConfigs().setScriptsLocations(scriptsLocations);
         cassandraMigration.setKeyspace(keyspace);
+        log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration started.");
         cassandraMigration.migrate();
+        log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration finished.");
     }
 
 }

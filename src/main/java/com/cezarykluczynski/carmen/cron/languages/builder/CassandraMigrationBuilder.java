@@ -61,7 +61,7 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
                 .append("__")
                 .append(createActionName(refreshableTable))
                 .append("_")
-                .append(normalizeTableName(refreshableTable))
+                .append(getNormalizedTableName(refreshableTable))
                 .append("_table.cql")
                 .toString();
     }
@@ -82,7 +82,7 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
             return stringBuilder.toString();
         }
 
-        String refreshableTableNormalizedName = normalizeTableName(refreshableTable);
+        String refreshableTableNormalizedName = getFullNormalizedTableName(refreshableTable);
 
         if (isNewEntity) {
             stringBuilder.append(EOL);
@@ -100,10 +100,10 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private String getMigrationPath(RefreshableTable refreshableTable) {
         String migrationPathWithKeyspace = migrationPath;
-        Keyspace keyspaceAnnotation = (Keyspace) refreshableTable.getBaseClass().getAnnotation(Keyspace.class);
+        String keyspaceName = getKeyspaceName(refreshableTable);
 
-        if (keyspaceAnnotation != null && !keyspaceAnnotation.value().equals("")) {
-            migrationPathWithKeyspace += keyspaceAnnotation.value() + "/";
+        if (keyspaceName != null && !keyspaceName.equals("")) {
+            migrationPathWithKeyspace += keyspaceName + "/";
         }
 
         return migrationPathWithKeyspace;
@@ -140,7 +140,7 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
     }
 
     private  static String createCreateTableStatement(RefreshableTable refreshableTable) {
-        return "CREATE TABLE " + normalizeTableName(refreshableTable) + ";";
+        return "CREATE TABLE " + getFullNormalizedTableName(refreshableTable) + ";";
     }
 
     private static String createActionName(RefreshableTable refreshableTable) {
@@ -151,8 +151,17 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
         return refreshableTable.getInitialFields().size() == 0;
     }
 
-    private static String normalizeTableName(RefreshableTable refreshableTable) {
+    private static String getNormalizedTableName(RefreshableTable refreshableTable) {
         return UPPER_CAMEL.to(LOWER_UNDERSCORE, refreshableTable.getBaseClass().getSimpleName());
+    }
+
+    private static String getFullNormalizedTableName(RefreshableTable refreshableTable) {
+        return getKeyspaceName(refreshableTable) + "." + getNormalizedTableName(refreshableTable);
+    }
+
+    private static String getKeyspaceName(RefreshableTable refreshableTable) {
+        Keyspace keyspaceAnnotation = (Keyspace) refreshableTable.getBaseClass().getAnnotation(Keyspace.class);
+        return keyspaceAnnotation == null ? null : keyspaceAnnotation.value();
     }
 
 }

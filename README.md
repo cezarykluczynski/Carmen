@@ -3,7 +3,7 @@ Work in progress.
 ## Status
 
 [![Build Status](https://travis-ci.org/cezarykluczynski/Carmen.svg?branch=master)](https://travis-ci.org/cezarykluczynski/Carmen)
-[![codecov.io](http://codecov.io/github/cezarykluczynski/Carmen/coverage.svg?branch=master)](http://codecov.io/github/cezarykluczynski/Carmen?branch=master)
+[![codecov](https://codecov.io/gh/cezarykluczynski/Carmen/branch/master/graph/badge.svg)](https://codecov.io/gh/cezarykluczynski/Carmen)
 
 ## Development
 

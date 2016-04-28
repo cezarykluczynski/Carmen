@@ -20,19 +20,19 @@ class CassandraMigrationBuilderTest {
     private static final String EMPTY_MIGRATION_DIRECTORY =
             "src/test/groovy/com/cezarykluczynski/carmen/cron/languages/fixture/migration/empty/"
     private static final String NEW_ENTITY_CONTENTS_WITHOUT_NEW_FIELDS = '''\
-CREATE TABLE entity_empty;
+CREATE TABLE github_social_stats.entity_empty;
 '''
     private static final String NEW_ENTITY_CONTENTS_WITH_NEW_FIELDS = '''\
-CREATE TABLE entity_empty;
+CREATE TABLE github_social_stats.entity_empty;
 
-ALTER TABLE entity_empty ADD language_100 int;
-ALTER TABLE entity_empty ADD some_string varchar;
-ALTER TABLE entity_empty ADD some_uuid uuid;
+ALTER TABLE github_social_stats.entity_empty ADD language_100 int;
+ALTER TABLE github_social_stats.entity_empty ADD some_string varchar;
+ALTER TABLE github_social_stats.entity_empty ADD some_uuid uuid;
 '''
     private static final String EXISTING_ENTITY_CONTENTS = '''\
-ALTER TABLE entity_one ADD language_100 int;
-ALTER TABLE entity_one ADD some_string varchar;
-ALTER TABLE entity_one ADD some_uuid uuid;
+ALTER TABLE github_social_stats.entity_one ADD language_100 int;
+ALTER TABLE github_social_stats.entity_one ADD some_string varchar;
+ALTER TABLE github_social_stats.entity_one ADD some_uuid uuid;
 '''
 
     private static final LanguagesIteratorsFactory languagesIteratorFactory = new LanguagesIteratorsFactory()

@@ -12,15 +12,15 @@ import java.util.UUID;
 
 @LanguagesDiffStatistics
 @LanguagesStatistics
-@Keyspace("github_repositories")
-@Table("github_commits")
+@Keyspace("repositories")
+@Table("commits")
 public class Commit extends CarmenNoSQLEntity {
 
     @PrimaryKey
     private UUID id;
 
-    @Column("commit_hash")
-    public String commitHash;
+    @Column("hash")
+    public String hash;
 
     public UUID getId() {
         return id;

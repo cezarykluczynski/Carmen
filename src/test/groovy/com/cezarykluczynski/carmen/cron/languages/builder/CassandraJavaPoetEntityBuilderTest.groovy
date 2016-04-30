@@ -31,6 +31,7 @@ import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import java.util.UUID;
 import javax.annotation.Generated;
 import org.springframework.data.cassandra.mapping.Column;
+import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
@@ -38,7 +39,7 @@ import org.springframework.data.cassandra.mapping.Table;
 @LanguagesDiffStatistics
 @Table("entity_two")
 public class EntityTwo extends CarmenNoSQLEntity {
-    @Column
+    @PrimaryKey
     public UUID id;
 
     @Column

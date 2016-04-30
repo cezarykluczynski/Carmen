@@ -5,10 +5,11 @@ import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEntityFile;
+import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
-import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.*;
 import org.springframework.data.cassandra.mapping.Column;
+import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @Component
-public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
+public class CassandraJavaPoetEntityBuilder extends AbstractCassandraMigrationBuilder
+        implements CassandraEntityBuilder {
 
     @Override
     public CassandraBuiltFile build(RefreshableTable refreshableTable) {
@@ -35,17 +37,26 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
     }
 
     private void addFields(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
-        refreshableTable.getFields().stream().forEach(entityField ->
-            typeSpecBuilder.addField(FieldSpec.builder(entityField.getType(), entityField.getName())
-                    .addModifiers(Modifier.PUBLIC)
-                    .addAnnotation(Column.class).build())
-        );
+        refreshableTable.getFields().stream().forEach(entityField -> addField(typeSpecBuilder, entityField));
 
         typeSpecBuilder.addMethod(MethodSpec.methodBuilder("getId")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(UUID.class)
                 .addCode("return id;\n")
                 .build());
+    }
+
+    private static void addField(TypeSpec.Builder typeSpecBuilder, EntityField entityField) {
+        FieldSpec.Builder fieldSpecBuilder = FieldSpec.builder(entityField.getType(), entityField.getName())
+                .addModifiers(Modifier.PUBLIC);
+
+        if (entityField.getType() == UUID.class) {
+            fieldSpecBuilder.addAnnotation(PrimaryKey.class);
+        } else {
+            fieldSpecBuilder.addAnnotation(Column.class);
+        }
+
+        typeSpecBuilder.addField(fieldSpecBuilder.build());
     }
 
     private void addAnnotations(TypeSpec.Builder typeSpecBuilder, RefreshableTable refreshableTable) {
@@ -56,8 +67,7 @@ public class CassandraJavaPoetEntityBuilder implements CassandraEntityBuilder {
                 .map(Annotation::annotationType).filter(this::isOwnAnnotation).forEach(typeSpecBuilder::addAnnotation);
 
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
-                .addMember("value", "\"" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,
-                        refreshableTable.getBaseClass().getSimpleName()) + "\"").build());
+                .addMember("value", "\"" + getNormalizedTableName(refreshableTable) + "\"").build());
     }
 
     private TypeSpec.Builder createBuilder(RefreshableTable refreshableTable) {

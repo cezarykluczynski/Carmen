@@ -44,8 +44,8 @@ class SchemaUpdateExecutorTest {
             }
         }
 
-        Assert.assertEquals countEntityOne, 3
-        Assert.assertEquals countEntityTwo, 3
+        Assert.assertEquals countEntityOne, 1
+        Assert.assertEquals countEntityTwo, 1
     }
 
 }

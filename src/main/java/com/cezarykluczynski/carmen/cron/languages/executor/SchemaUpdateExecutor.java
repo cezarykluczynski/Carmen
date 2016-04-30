@@ -1,11 +1,15 @@
 package com.cezarykluczynski.carmen.cron.languages.executor;
 
+import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.iterator.AnnotationIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory;
 import com.cezarykluczynski.carmen.cron.languages.visitor.UpdaterVisitorComposite;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Component
 public class SchemaUpdateExecutor implements Runnable {
@@ -24,13 +28,22 @@ public class SchemaUpdateExecutor implements Runnable {
     @Override
     public void run() {
         AnnotationIterator annotationIterator = languagesIteratorsFactory.createAnnotationIterator();
+        Set<Class> visitedClasses = Sets.newHashSet();
 
         while(annotationIterator.hasNext()) {
             RefreshableTableIterator refreshableTableIterator = languagesIteratorsFactory
                     .createRefreshableTableIterator(annotationIterator.next());
 
             while(refreshableTableIterator.hasNext()) {
-                updaterVisitorComposite.visit(refreshableTableIterator.next());
+                RefreshableTable refreshableTable = refreshableTableIterator.next();
+                Class refreshableTableBassClass = refreshableTable.getBaseClass();
+
+                if (visitedClasses.contains(refreshableTableBassClass)) {
+                    continue;
+                }
+                visitedClasses.add(refreshableTableBassClass);
+
+                updaterVisitorComposite.visit(refreshableTable);
             }
         }
     }

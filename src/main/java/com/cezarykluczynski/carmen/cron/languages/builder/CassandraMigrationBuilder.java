@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import static com.google.common.base.CaseFormat.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,7 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
-public class CassandraMigrationBuilder implements CassandraBuilder {
+public class CassandraMigrationBuilder extends AbstractCassandraMigrationBuilder implements CassandraBuilder {
 
     private static final String EOL = "\n";
 
@@ -149,10 +148,6 @@ public class CassandraMigrationBuilder implements CassandraBuilder {
 
     private static boolean isNewEntity(RefreshableTable refreshableTable) {
         return refreshableTable.getInitialFields().size() == 0;
-    }
-
-    private static String getNormalizedTableName(RefreshableTable refreshableTable) {
-        return UPPER_CAMEL.to(LOWER_UNDERSCORE, refreshableTable.getBaseClass().getSimpleName());
     }
 
     private static String getFullNormalizedTableName(RefreshableTable refreshableTable) {

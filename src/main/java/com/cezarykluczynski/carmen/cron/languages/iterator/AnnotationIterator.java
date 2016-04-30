@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.iterator;
 
+import com.google.common.collect.Sets;
 import com.google.common.reflect.ClassPath;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class AnnotationIterator implements Iterator<Class> {
             return;
         }
 
-        List<Class> classes = new ArrayList<>();
+        Set<Class> classes = Sets.newHashSet();
 
         classPath.getTopLevelClasses("com.cezarykluczynski.carmen.cron.languages.annotations").stream()
                 .forEach(className -> {

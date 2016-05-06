@@ -1,7 +1,6 @@
-
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 import {AdminHeaderComponent} from './header/adminHeaderComponent';
-import {Route, ROUTER_DIRECTIVES, RouteConfig} from 'angular2/router';
+import {Route, ROUTER_DIRECTIVES, RouteConfig} from '@angular/router-deprecated';
 import {ServersComponent} from './rootComponents/serversComponent';
 import {CronsComponent} from './rootComponents/cronsComponent';
 

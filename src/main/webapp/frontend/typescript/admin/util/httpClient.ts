@@ -1,8 +1,7 @@
 /// <reference path="../admin.d.ts" />
 
-import {Injectable} from 'angular2/core';
-import {Http, Headers, RequestOptionsArgs} from 'angular2/http';
-import {RequestOptions} from 'angular2/http';
+import {Injectable} from '@angular/core';
+import {Http, Headers, RequestOptionsArgs, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 
 @Injectable()
@@ -43,7 +42,7 @@ export class HttpClient {
 	}
 
 	private getAppBaseUrl(): string {
-		return window.__carmenConfig.appBaseUrl;
+		return window.__carmenConfig ? window.__carmenConfig.appBaseUrl : '';
 	}
 
 }

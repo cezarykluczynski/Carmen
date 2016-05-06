@@ -1,5 +1,5 @@
-import {Component} from 'angular2/core';
-import {Router, ROUTER_DIRECTIVES} from 'angular2/router';
+import {Component} from '@angular/core';
+import {Router, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 
 @Component({
@@ -9,7 +9,7 @@ import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 	template: `
 	<nav class="navbar navbar-light navbar-fixed-top bg-faded container">
 		<ul class="nav navbar-nav">
-			<li class="nav-item" *ngFor="#element of adminHeaderElements" [class.active]="isActive(element.name)">
+			<li class="nav-item" *ngFor="let element of adminHeaderElements" [class.active]="isActive(element.name)">
 				<a class="nav-link" [routerLink]="[element.name]" [innerHtml]="[element.name]">{{element.name}}</a>
 			</li>
 		</ul>

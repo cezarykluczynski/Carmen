@@ -1,22 +1,25 @@
 /// <reference path="../../../../typings/jquery/jquery.d.ts" />
 
-import {it, describe, expect, beforeEach, inject, injectAsync, beforeEachProviders, TestComponentBuilder,
-	ComponentFixture} from 'angular2/testing';
-import {MockBackend} from 'angular2/http/testing';
-import {Router} from 'angular2/router';
-import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend} from 'angular2/http';
-import {provide} from 'angular2/core';
-import {RootRouter} from 'angular2/src/router/router';
+import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders} from '@angular/core/testing';
+import {TestComponentBuilder} from '@angular/compiler/testing/test_component_builder';
+import {ComponentFixture} from '@angular/compiler/testing/test_component_builder';
+import {MockBackend} from '@angular/http/testing';
+import {Router} from '@angular/router-deprecated';
+import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend} from '@angular/http';
+import {provide} from '@angular/core';
+import {RootRouter} from '@angular/router-deprecated/src/router';
 import {HttpClient} from '../../util/httpClient';
 import {HttpClientTestHelper} from '../../util/httpClientTestHelper.spec';
 import {UsersImportComponent} from './usersImportComponent';
 import {UsersImportApi} from './usersImportApi';
+import {COMPILER_PROVIDERS, XHR} from '@angular/compiler';
+import {MockXHR} from '@angular/compiler/testing';
 
 describe('Component: UsersImportComponent', () => {
 	let usersImportComponent: UsersImportComponent;
 	let connectionBackend: MockBackend;
 	let element: any;
-	let fixture: ComponentFixture;
+	let fixture: ComponentFixture<UsersImportComponent>;
 
 	let createResponse = (asyncResolve: boolean, _connectionBackend) => {
 		HttpClientTestHelper.createResponse({
@@ -34,6 +37,8 @@ describe('Component: UsersImportComponent', () => {
 	beforeEachProviders(() => {
 		return [
 			HTTP_PROVIDERS,
+			COMPILER_PROVIDERS,
+			provide(XHR, { useClass: MockXHR }),
 			provide(Router, { useClass: RootRouter }),
 			provide(XHRBackend, { useClass: MockBackend }),
 			provide(HttpClient, { useClass: HttpClient }),

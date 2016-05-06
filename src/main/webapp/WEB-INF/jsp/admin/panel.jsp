@@ -4,6 +4,8 @@
 	<meta charset="utf-8" />
 	<spring:url value="/" var="appBase"/>
 	<spring:url value="/frontend/dist/javascript" var="appBaseJavaScript"/>
+	<spring:url value="/frontend/node_modules/rxjs" var="rxjs"/>
+	<spring:url value="/frontend/node_modules/@angular" var="angular2"/>
 	<spring:url value="/frontend/dist/javascript/vendor.js" var="vendorJs"/>
 	<spring:url value="/frontend/dist/css/vendor.css" var="vendorCss"/>
 	<spring:url value="/frontend/dist/css/admin.css" var="adminCss"/>
@@ -11,17 +13,50 @@
 	<link href="${adminCss}" rel="stylesheet"/>
 	<script src="${vendorJs}"></script>
 	<script>
-		System.config({
-			map: {
-				app: "${appBaseJavaScript}"
+		var map = {
+			'app': "${appBaseJavaScript}",
+			'rxjs': "${rxjs}",
+			'@angular': "${angular2}",
+		};
+
+		var packages = {
+			'app': {
+				main: 'main.js',
+				defaultExtension: 'js',
+				format: 'register'
 			},
-			packages: {
-				app: {
-					format: 'register',
-					defaultExtension: 'js'
-				}
-			}
+			'rxjs': {
+				defaultExtension: 'js'
+			},
+		};
+
+		var packageNames = [
+			'@angular/common',
+			'@angular/compiler',
+			'@angular/core',
+			'@angular/http',
+			'@angular/platform-browser',
+			'@angular/platform-browser-dynamic',
+			'@angular/router',
+			'@angular/router-deprecated',
+			'@angular/testing',
+			'@angular/upgrade',
+		];
+
+		packageNames.forEach(function(pkgName) {
+			packages[pkgName] = {
+				main: 'index.js',
+				defaultExtension: 'js'
+			};
 		});
+
+		var config = {
+			map: map,
+			packages: packages
+		};
+
+		System.config(config);
+
 		System.import('app/admin/appAdminBootstrap');
 		window.__carmenConfig = {
 			appBaseUrl: "${appBase}"

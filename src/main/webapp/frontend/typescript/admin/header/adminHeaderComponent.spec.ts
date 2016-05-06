@@ -1,29 +1,33 @@
 /// <reference path="../../../typings/main/ambient/jasmine/index.d.ts" />
 /// <reference path="../../../typings/jquery/jquery.d.ts" />
 
-import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders, TestComponentBuilder,
-	ComponentFixture, setBaseTestProviders} from 'angular2/testing';
-import {Router, APP_BASE_HREF, ROUTER_PRIMARY_COMPONENT, Location} from 'angular2/router';
-import {provide} from 'angular2/core';
-import {SpyLocation} from 'angular2/src/mock/location_mock';
-import {RootRouter} from 'angular2/src/router/router';
-import {RouteRegistry} from 'angular2/src/router/route_registry';
-import {TEST_BROWSER_PLATFORM_PROVIDERS, TEST_BROWSER_APPLICATION_PROVIDERS} from 'angular2/platform/testing/browser';
+import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders} from '@angular/core/testing';
+import {TestComponentBuilder} from '@angular/compiler/testing/test_component_builder';
+import {ComponentFixture} from '@angular/compiler/testing/test_component_builder';
+import {Router, ROUTER_PRIMARY_COMPONENT} from '@angular/router-deprecated';
+import {RootRouter} from '@angular/router-deprecated/src/router';
+import {APP_BASE_HREF} from '@angular/common/src/location/location_strategy';
+import {Location} from '@angular/common/src/location/location';
+import {provide} from '@angular/core';
+import {SpyLocation} from '@angular/common/testing';
+import {RouteRegistry} from '@angular/router-deprecated';
 import {AppAdminComponent} from '../appAdminComponent';
 import {AdminHeaderComponent} from './adminHeaderComponent';
 import {AdminHeaderElementsProvider} from './adminHeaderElementsProvider';
 import {HttpClient} from '../util/httpClient';
+import {COMPILER_PROVIDERS, XHR} from '@angular/compiler';
+import {MockXHR} from '@angular/compiler/testing';
 
 describe('Component: AdminHeaderComponent', () => {
-	setBaseTestProviders(TEST_BROWSER_PLATFORM_PROVIDERS, TEST_BROWSER_APPLICATION_PROVIDERS);
-
 	let adminHeaderComponent: AdminHeaderComponent;
 	let element: any;
-	let fixture: ComponentFixture;
+	let fixture: ComponentFixture<AdminHeaderComponent>;
 
 	beforeEachProviders(() => {
 		return [
+			COMPILER_PROVIDERS,
 			RouteRegistry,
+			provide(XHR, { useClass: MockXHR }),
 			provide(Location, {useClass: SpyLocation}),
 			provide(APP_BASE_HREF, {useValue: '/'}),
 			provide(Router, {useClass: RootRouter}),

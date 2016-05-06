@@ -37,7 +37,6 @@ public class SchemaUpdateFilesStateHelper {
 
     public boolean hasFilesChanged() {
         List<String> filesPaths = getAnnotatedFilesPaths();
-        System.out.println(filesPaths);
         Result diffResult = GitLocal.diff(filesPaths);
         return diffResult.isSuccessFul() && StringUtils.trimAllWhitespace(diffResult.getOutput()).length() > 0;
     }

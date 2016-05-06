@@ -5,23 +5,51 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
 __karma__.loaded = function() {};
 
-System.config({
-	map: {
-		'base/dist/': "/base/dist/"
+var map = {
+	'app': "base/dist/javascript",
+	'rxjs': "base/node_modules/rxjs",
+	'@angular': "base/node_modules/@angular",
+};
+
+var packages = {
+	'app': {
+		main: 'main.js',
+		defaultExtension: 'js',
+		format: 'register'
 	},
-	packages: {
-		'base/dist/': {
-			defaultExtension: 'js',
-			format: 'register',
-			map: Object
-				.keys(window.__karma__.files)
-				.filter(onlyAppFiles)
-				.reduce(createPathRecords, {})
-		}
-	}
+	'rxjs': {
+		defaultExtension: 'js'
+	},
+};
+
+var packageNames = [
+	'@angular/common',
+	'@angular/compiler',
+	'@angular/core',
+	'@angular/http',
+	'@angular/platform-browser',
+	'@angular/platform-browser-dynamic',
+	'@angular/router',
+	'@angular/router-deprecated',
+	'@angular/testing',
+	'@angular/upgrade',
+];
+
+packageNames.forEach(function(pkgName) {
+	packages[pkgName] = {
+		main: 'index.js',
+		defaultExtension: 'js'
+	};
 });
 
-System.import('angular2/src/platform/browser/browser_adapter')
+var config = {
+	map: map,
+	packages: packages
+};
+
+System.config(config);
+
+System.import('@angular/platform-browser/src/browser/browser_adapter')
 	.then(function(browser_adapter) {
 		browser_adapter.BrowserDomAdapter.makeCurrent();
 	})

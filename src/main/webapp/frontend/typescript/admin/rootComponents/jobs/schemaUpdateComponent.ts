@@ -1,7 +1,7 @@
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 import {AbstractStatefulComponent} from '../abstract/abstractStatefulComponent';
 import {SchemaUpdateApi} from './schemaUpdateApi';
-import {NgClass} from 'angular2/common';
+import {NgClass} from '@angular/common';
 import {FormatterService} from '../../util/formatterService';
 
 @Component({

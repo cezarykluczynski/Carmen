@@ -1,4 +1,4 @@
-import {Component} from 'angular2/core';
+import {Component} from '@angular/core';
 import {UsersImportComponent} from './crons/usersImportComponent';
 import {SchemaUpdateComponent} from './jobs/schemaUpdateComponent';
 

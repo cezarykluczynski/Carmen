@@ -1,21 +1,24 @@
-import {it, describe, expect, beforeEach, inject, injectAsync, beforeEachProviders, TestComponentBuilder,
-	ComponentFixture} from 'angular2/testing';
-import {Router} from 'angular2/router';
-import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend, RequestMethod} from 'angular2/http';
-import {RootRouter} from 'angular2/src/router/router';
-import {MockBackend} from 'angular2/http/testing';
+import {it, describe, expect, beforeEach, injectAsync, inject, beforeEachProviders} from '@angular/core/testing';
+import {TestComponentBuilder} from '@angular/compiler/testing/test_component_builder';
+import {ComponentFixture} from '@angular/compiler/testing/test_component_builder';
+import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend, RequestMethod} from '@angular/http';
+import {Router} from '@angular/router-deprecated';
+import {RootRouter} from '@angular/router-deprecated/src/router';
+import {MockBackend} from '@angular/http/testing';
 import {HttpClient} from '../../util/httpClient';
-import {provide} from 'angular2/core';
+import {provide} from '@angular/core';
 import {HttpClientTestHelper} from '../../util/httpClientTestHelper.spec';
 import {SchemaUpdateComponent} from './schemaUpdateComponent';
 import {SchemaUpdateApi} from './schemaUpdateApi';
+import {COMPILER_PROVIDERS, XHR} from '@angular/compiler';
+import {MockXHR} from '@angular/compiler/testing';
 
 describe('Component: SchemaUpdateComponent', () => {
 	const LINGUIST_VERSION = '4.7.5';
 	let schemaUpdateComponent: SchemaUpdateComponent;
 	let connectionBackend: MockBackend;
 	let element: any;
-	let fixture: ComponentFixture;
+	let fixture: ComponentFixture<SchemaUpdateComponent>;
 
 	let createResponse = (asyncResolve: boolean, _connectionBackend, method: RequestMethod) => {
 		HttpClientTestHelper.createResponse({
@@ -35,10 +38,13 @@ describe('Component: SchemaUpdateComponent', () => {
 	beforeEachProviders(() => {
 		return [
 			HTTP_PROVIDERS,
+			COMPILER_PROVIDERS,
+			provide(XHR, { useClass: MockXHR }),
 			provide(Router, { useClass: RootRouter }),
 			provide(XHRBackend, { useClass: MockBackend }),
 			provide(HttpClient, { useClass: HttpClient }),
 			provide(SchemaUpdateComponent, { useClass: SchemaUpdateComponent }),
+			provide(TestComponentBuilder, { useClass: TestComponentBuilder }),
 			provide(SchemaUpdateApi, { useClass: SchemaUpdateApi }),
 			provide(ConnectionBackend, { useClass: MockBackend }),
 			provide(Http, { useClass: Http })

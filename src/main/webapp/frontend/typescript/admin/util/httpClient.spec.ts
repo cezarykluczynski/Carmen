@@ -1,9 +1,9 @@
-import {it, describe, expect, beforeEach, inject, beforeEachProviders} from 'angular2/testing';
-import {MockBackend} from 'angular2/http/testing';
-import {Router} from 'angular2/router';
-import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend, RequestMethod} from 'angular2/http';
-import {provide} from 'angular2/core';
-import {RootRouter} from 'angular2/src/router/router';
+import {it, describe, expect, beforeEach, inject, beforeEachProviders} from '@angular/core/testing';
+import {MockBackend} from '@angular/http/testing';
+import {Router} from '@angular/router-deprecated';
+import {HTTP_PROVIDERS, XHRBackend, Http, ConnectionBackend, RequestMethod} from '@angular/http';
+import {provide} from '@angular/core';
+import {RootRouter} from '@angular/router-deprecated/src/router';
 import {HttpClient} from './httpClient';
 import {HttpClientTestHelper} from './httpClientTestHelper.spec';
 

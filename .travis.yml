@@ -30,8 +30,7 @@ script:
   - mvn verify
   - rspec
 after_success:
-  - codecov
-  - codecov -f "target/site/simplecov/.resultset.json"
+  - bash <(curl -s https://codecov.io/bash) -f "src/main/webapp/frontend/coverage/coverage-final.json" -f "target/site/jacoco/ut/jacoco.xml" -f "target/site/jacoco/it/jacoco.xml" -f "target/site/simplecov/.resultset.json"
 env:
   global:
     - secure: J4OhtLGCbT3N/ZzJ86NxN45dYw6HvJ96csigQTX3HkdjLXHs+xptu1t964SXrxbttRKl6dehGBZrCix8wscJLGIe0+BPhzdMZjifhcbmEbs1s9ieABSEuxeAX64aSqtLH5ULXC544V7sVsihONyO2ftuE76msOLmP7/Wh0yXu9kfrwCe2Cnihiczrq/qHNH8fhV4ft0/rMwBRF7rd01oumJGn4gbJngP4IUqM/fbBfX7Z8rlS9fbvIl6gsul1sWpnM9mWSUyTYqb+JdjX8b+xcSBc0Huvn+ebC36uzGZuHpya+DdA8qWIUyb9f/+V0FljLNSqlZlP7DJMaE5I9r9bdDeQ8YWNXwj2Vc6sGpBKzo+3D0x+pZ5ieeZV2GOIY19ZCuq7/FAsNxwDISsAnTylrwEJVxkSw7NtaQzC4XpYn/L2mktRBNdYN2au0uK/fR3R2UsX64n5GUED/yTYHKD5XZdGZ+tLMNSvT7YYcHPtoWAd8y593vojui3KRa6pDY/JGSfXBSTO9LEYSlGiNQWFwA1+qcUXvoYKgFIW5Ee21/ehX389HzBCMAlz9mxIsgmmFcK/jxxdA7Q7wzzvaOsks+TehNg9BSpOx8gIPxJmfXd15/dsuvTPodGT5I0sW0MGczGZhbhnLoOCR+un14xSv+nixixYDuXKuUaXcvJNKk=

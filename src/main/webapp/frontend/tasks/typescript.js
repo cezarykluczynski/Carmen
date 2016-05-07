@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 				noImplicitAny: false,
 				fast: 'never'
 			},
-			default : {
+			'default': {
 				files: [
 					{
 						src: ['typescript/**/*.ts'],

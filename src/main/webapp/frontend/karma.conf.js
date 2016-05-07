@@ -9,6 +9,7 @@ module.exports = function(config) {
 			{pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: true},
 			{pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: true},
 			{pattern: 'node_modules/jquery/dist/jquery.js', included: true, watched: true},
+			{pattern: 'karma-conf.js', included: false, watched: true},
 			{pattern: 'karma-test-shim.js', included: true, watched: true},
 			{pattern: 'dist/javascript/**/*.js', included: false, watched: true},
 			{pattern: 'typescript/**/*.ts', included: false, watched: true}
@@ -19,7 +20,7 @@ module.exports = function(config) {
 		port: 9876,
 		logLevel: config.LOG_INFO,
 		colors: true,
-		autoWatch: true,
+		autoWatch: false,
 		singleRun: true,
 		browsers: ['PhantomJS'],
 		plugins: [

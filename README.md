@@ -36,11 +36,22 @@ mvn clean tomcat7:run
 
 ## Tests
 
+### Java tests
 There are unit tests and integration tests.
-
-Test using:
 
 ```sh
 mvn clean test
 mvn clean verify
+```
+
+### TypeScript tests
+
+```sh
+cd src/main/webapp/frontend && npm install && grunt to
+```
+
+### Ruby
+
+```sh
+rspec
 ```

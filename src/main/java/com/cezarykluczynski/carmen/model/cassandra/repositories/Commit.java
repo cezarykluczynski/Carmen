@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.model.cassandra.github_repositories;
+package com.cezarykluczynski.carmen.model.cassandra.repositories;
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;

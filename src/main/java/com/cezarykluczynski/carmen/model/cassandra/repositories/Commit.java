@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Commit extends CarmenNoSQLEntity {
 
     @PrimaryKey
-    private UUID id;
+    public UUID id;
 
     @Column("hash")
     public String hash;

@@ -36,7 +36,8 @@ public class LanguagesListUpdateExecutor implements Runnable {
                 createLanguagesListToSave(missingLinguistLanguageList);
         languagesDAO.saveAll(languagesListToSave);
 
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = cc(linguistLanguageList);
+        List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = getLanguagesWithParents(
+                linguistLanguageList);
         languagesDAO.saveAll(languagesWithParentsToSave);
     }
 
@@ -62,7 +63,8 @@ public class LanguagesListUpdateExecutor implements Runnable {
         return languagesListToSave;
     }
 
-    private List<com.cezarykluczynski.carmen.model.pub.Language> cc(List<Language> linguistLanguageList) {
+    private List<com.cezarykluczynski.carmen.model.pub.Language> getLanguagesWithParents(
+            List<Language> linguistLanguageList) {
         List<com.cezarykluczynski.carmen.model.pub.Language> savedLanguagesList = languagesDAO.findAll();
         List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = new ArrayList<>();
 

@@ -1,9 +1,7 @@
 package com.cezarykluczynski.carmen.repository.githubstats;
 
 import org.springframework.data.repository.CrudRepository;
-
 import org.springframework.data.cassandra.repository.Query;
-
 import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees;
 
 public interface FollowersAndFolloweesRepository extends CrudRepository<FollowersAndFollowees, Long> {

@@ -1,6 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.factory;
 
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
+import com.cezarykluczynski.carmen.cron.languages.util.FieldNameUtil;
 
 import java.util.Comparator;
 import java.util.SortedSet;
@@ -19,7 +20,7 @@ public class TreeSetEntityFieldFactory {
                     return 0;
                 }
 
-                if (nameAreLanguage(name1, name2)) {
+                if (namesAreAnyLanguage(name1, name2)) {
                     Integer languageComparison = compareLanguages(name1, name2);
 
                     if (languageComparison != null) {
@@ -44,37 +45,33 @@ public class TreeSetEntityFieldFactory {
 
         if (language1Number.compareTo(language2Number) != 0) {
             return language1Number.compareTo(language2Number);
-        } else if (nameIsLanguage(name1) && !nameIsLanguage(name2)) {
+        } else if (nameIsAnyLanguage(name1) && !nameIsAnyLanguage(name2)) {
             return -1;
-        } else if (!nameIsLanguage(name1) && nameIsLanguage(name2)) {
+        } else if (!nameIsAnyLanguage(name1) && nameIsAnyLanguage(name2)) {
             return 1;
-        } else if (nameIsAdded(name1) && nameIsRemoved(name2)) {
+        } else if (nameIsLanguageAdded(name1) && nameIsLanguageRemoved(name2)) {
             return -1;
-        } else if (nameIsRemoved(name1) && nameIsAdded(name2)) {
+        } else if (nameIsLanguageRemoved(name1) && nameIsLanguageAdded(name2)) {
             return 1;
         }
 
         return null;
     }
 
-    private static boolean nameAreLanguage(String name1, String name2) {
-        return nameIsAnyLanguage(name1) && nameIsAnyLanguage(name2);
-    }
-
-    private static boolean nameIsLanguage(String name) {
-        return nameIsAnyLanguage(name) && !nameIsAdded(name) && !nameIsRemoved(name);
+    private static boolean namesAreAnyLanguage(String name1, String name2) {
+        return FieldNameUtil.isAnyLanguage(name1) && FieldNameUtil.isAnyLanguage(name2);
     }
 
     private static boolean nameIsAnyLanguage(String name) {
-        return name.startsWith("language_");
+        return FieldNameUtil.isAnyLanguage(name) && !FieldNameUtil.isLanguageAddedOrRemoved(name);
     }
 
-    private static boolean nameIsAdded(String name) {
-        return name.endsWith("_added");
+    private static boolean nameIsLanguageAdded(String name) {
+        return FieldNameUtil.isLanguageAdded(name);
     }
 
-    private static boolean nameIsRemoved(String name) {
-        return name.endsWith("_removed");
+    private static boolean nameIsLanguageRemoved(String name) {
+        return FieldNameUtil.isLanguageRemoved(name);
     }
 
 }

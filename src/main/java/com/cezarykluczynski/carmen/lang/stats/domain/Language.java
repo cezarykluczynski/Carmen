@@ -51,11 +51,7 @@ public class Language {
 
         Language language = (Language) o;
 
-        if (!this.getName().equals(language.getName())) {
-            return false;
-        }
-
-        return true;
+        return this.getName().equals(language.getName());
     }
 
     @Override

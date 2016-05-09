@@ -31,8 +31,8 @@ public class Language extends CarmenRelationalEntity {
     @Column(name="linguist_color")
     private String linguistColor;
 
-    @OneToOne(optional=true)
-    @JoinColumn(name="linguist_parent_id", nullable=true)
+    @OneToOne
+    @JoinColumn(name="linguist_parent_id")
     private Language linguistParent;
 
 }

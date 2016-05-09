@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.cron.languages.filter;
 import com.cezarykluczynski.carmen.cron.languages.api.FieldsFilter;
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory;
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
+import com.cezarykluczynski.carmen.cron.languages.util.FieldNameUtil;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -15,8 +16,7 @@ public class LanguageDiffFieldsFilter implements FieldsFilter {
         TreeSet<EntityField> entityFieldTreeSet = TreeSetEntityFieldFactory.create();
 
         entityFieldTreeSet.addAll(fields.stream()
-                .filter(field -> field.getName().startsWith("language_") &&
-                        (field.getName().endsWith("_added") || field.getName().endsWith("_removed")))
+                .filter(field -> FieldNameUtil.isLanguageAddedOrRemoved(field.getName()))
                 .collect(Collectors.toSet()));
 
         return entityFieldTreeSet;

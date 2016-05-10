@@ -1,12 +1,15 @@
 package com.cezarykluczynski.carmen.cron.languages.builder;
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.Annotations;
+import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile;
 import com.cezarykluczynski.carmen.cron.languages.api.CassandraEntityBuilder;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEntityFile;
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
+import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
+import com.google.common.collect.Lists;
 import com.squareup.javapoet.*;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
@@ -66,14 +69,26 @@ public class CassandraJavaPoetEntityBuilder extends AbstractCassandraMigrationBu
         Arrays.asList(refreshableTable.getBaseClass().getDeclaredAnnotations()).stream()
                 .map(Annotation::annotationType).filter(this::isOwnAnnotation).forEach(typeSpecBuilder::addAnnotation);
 
+        Keyspace keyspace = (Keyspace) refreshableTable.getBaseClass().getAnnotation(Keyspace.class);
+        if (keyspace != null) {
+            typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Keyspace.class)
+                    .addMember("value", "\"" + keyspace.value() + "\"").build());
+        }
+
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
                 .addMember("value", "\"" + getNormalizedTableName(refreshableTable) + "\"").build());
     }
 
     private TypeSpec.Builder createBuilder(RefreshableTable refreshableTable) {
-        return TypeSpec.classBuilder(refreshableTable.getBaseClass().getSimpleName())
+        TypeSpec.Builder builder = TypeSpec.classBuilder(refreshableTable.getBaseClass().getSimpleName())
                 .addModifiers(Modifier.PUBLIC)
                 .superclass(CarmenNoSQLEntity.class);
+
+        if (GitDescription.class.isAssignableFrom(refreshableTable.getBaseClass())) {
+            builder.addSuperinterface(GitDescription.class);
+        }
+
+        return builder;
     }
 
     private JavaFile createJavaFile(RefreshableTable refreshableTable, TypeSpec typeSpec) {

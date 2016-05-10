@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
+import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;
 import org.springframework.data.cassandra.mapping.Table;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @LanguagesStatistics
 @Keyspace("repositories")
 @Table("commits")
-public class Commit extends CarmenNoSQLEntity {
+public class Commit extends CarmenNoSQLEntity implements GitDescription {
 
     @PrimaryKey
     public UUID id;

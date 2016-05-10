@@ -25,9 +25,11 @@ class CassandraJavaPoetEntityBuilderTest {
     private String expectedContent = '''\
 package com.cezarykluczynski.carmen.cron.languages.fixture.entity;
 
+import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
+import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
 import java.util.UUID;
 import javax.annotation.Generated;
 import org.springframework.data.cassandra.mapping.Column;
@@ -37,8 +39,9 @@ import org.springframework.data.cassandra.mapping.Table;
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @LanguagesStatistics
 @LanguagesDiffStatistics
+@Keyspace("github_social_stats")
 @Table("entity_two")
-public class EntityTwo extends CarmenNoSQLEntity {
+public class EntityTwo extends CarmenNoSQLEntity implements GitDescription {
     @PrimaryKey
     public UUID id;
 

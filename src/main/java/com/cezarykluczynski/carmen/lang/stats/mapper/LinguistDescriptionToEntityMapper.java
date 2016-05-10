@@ -6,7 +6,6 @@ import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription;
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
 import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
-import com.cezarykluczynski.carmen.model.cassandra.repositories.Commit;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;

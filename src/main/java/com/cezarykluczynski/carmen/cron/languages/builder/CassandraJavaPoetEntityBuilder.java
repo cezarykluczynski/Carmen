@@ -9,7 +9,6 @@ import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEn
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
-import com.google.common.collect.Lists;
 import com.squareup.javapoet.*;
 import org.springframework.data.cassandra.mapping.Column;
 import org.springframework.data.cassandra.mapping.PrimaryKey;

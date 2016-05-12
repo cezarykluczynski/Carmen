@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.cron.languages.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"name", "type"})
 public class EntityField {
 
     @Getter

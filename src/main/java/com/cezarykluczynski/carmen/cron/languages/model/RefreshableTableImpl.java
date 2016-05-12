@@ -22,7 +22,7 @@ public class RefreshableTableImpl implements RefreshableTable {
 
     @Override
     public boolean hasChanged() {
-        return !initialFields.containsAll(fields);
+        return !getNewFields().isEmpty();
     }
 
     @Override

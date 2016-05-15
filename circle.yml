@@ -8,9 +8,6 @@ machine:
   node:
     version:
       5.5.0
-checkout:
-  post:
-    - git fetch --unshallow
 dependencies:
   pre:
     - nvm install 0.12

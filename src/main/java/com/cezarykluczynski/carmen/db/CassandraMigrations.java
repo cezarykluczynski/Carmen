@@ -18,6 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 class CassandraMigrations {
@@ -127,8 +130,23 @@ class CassandraMigrations {
         cassandraMigration.getConfigs().setScriptsLocations(scriptsLocations);
         cassandraMigration.setKeyspace(keyspace);
         log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration started.");
+        ScheduledExecutorService consoleOutputEnsuringThread = createConsoleOutputEnsuringThread();
         cassandraMigration.migrate();
+        consoleOutputEnsuringThread.shutdown();
         log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration finished.");
+    }
+
+    private static ScheduledExecutorService createConsoleOutputEnsuringThread() {
+        Runnable consoleLogger = new Runnable() {
+            public void run() {
+                System.out.println("Cassandra migrations in progress...");
+            }
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(consoleLogger, 0, 60, TimeUnit.SECONDS);
+
+        return executor;
     }
 
 }

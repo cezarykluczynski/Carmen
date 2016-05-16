@@ -8,6 +8,8 @@ machine:
   node:
     version:
       5.5.0
+  services:
+    - cassandra
 dependencies:
   pre:
     - nvm install 0.12
@@ -16,7 +18,6 @@ dependencies:
     - cp src/main/resources/travis/config.properties src/main/resources/config.properties
     - cp src/main/resources/travis/logback.xml src/main/resources/logback.xml
     - cp src/main/resources/travis/hibernate.cfg.xml src/main/resources/hibernate.cfg.xml
-    - git fetch --unshallow
     - rvm install ruby-2.1.5
     - rvm use 2.1.5
     - pip install --user codecov

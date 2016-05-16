@@ -25,6 +25,8 @@ dependencies:
     - mvn flyway:migrate
     - sudo service cassandra restart
     - curl -sSL https://s3.amazonaws.com/circle-downloads/wait-for-cassandra.sh | sh
+    - /usr/bin/nodetool enablethrift
+    - /usr/bin/nodetool enablegossip
     - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
     - sudo service cassandra restart
     - npm install --global grunt-cli typings tsd

@@ -27,6 +27,11 @@
       <name>JBoss repository</name>
       <url>http://repository.jboss.org/maven2</url>
     </repository>
+      <repository>
+        <id>egit</id>
+        <name>Eclipse egit</name>
+        <url>https://repo.eclipse.org/content/repositories/egit-releases/</url>
+      </repository>
   </repositories>
 
   <dependencies>

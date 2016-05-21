@@ -2,16 +2,13 @@ package com.cezarykluczynski.carmen.lang.stats.mapper;
 
 import com.cezarykluczynski.carmen.cron.languages.util.FieldNameUtil;
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
-import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription;
-import com.cezarykluczynski.carmen.lang.stats.domain.Language;
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat;
+import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +27,8 @@ public class LinguistDescriptionToEntityMapper {
         Map<Long, com.cezarykluczynski.carmen.model.pub.Language> map = listToLanguagesMap(languagesDAO.findAll());
         Map<Language, LineDiffStat> lineDiffStatMap = commitDescription.getLineDiffStats();
 
-        List<Field> fields = Lists.newArrayList(gitDescription.getClass().getFields());
-        fields.stream().filter(FieldNameUtil::isLanguageAddedOrRemoved)
+        Lists.newArrayList(gitDescription.getClass().getFields()).stream()
+                .filter(FieldNameUtil::isLanguageAddedOrRemoved)
                 .forEach(field -> {
                     try {
                         Long languageId = Long.valueOf(field.getName().substring(9).split("_")[0]);
@@ -41,10 +38,34 @@ public class LinguistDescriptionToEntityMapper {
                             LineDiffStat lineDiffStat = lineDiffStatMap
                                     .get(new Language(map.get(languageId).getName()));
                             if (isAdded) {
-                                field.set(gitDescription, lineDiffStat.getAddedLines());
+                                field.set(gitDescription, lineDiffStat == null ? 0 : lineDiffStat.getAddedLines());
                             } else {
-                                field.set(gitDescription, lineDiffStat.getRemovedLines());
+                                field.set(gitDescription, lineDiffStat == null ? 0 : lineDiffStat.getRemovedLines());
                             }
+                        } else {
+                            field.set(gitDescription, 0);
+                        }
+                    } catch (IllegalAccessException e) {
+                    }
+                });
+
+        return gitDescription;
+    }
+
+    public GitDescription updateCommitUsingRepositoryDescription(GitDescription gitDescription,
+                                                                 RepositoryDescription repositoryDescription) {
+        Map<Long, com.cezarykluczynski.carmen.model.pub.Language> map = listToLanguagesMap(languagesDAO.findAll());
+        Map<Language, LineStat> lineStatMap = repositoryDescription.getLineStats();
+
+        Lists.newArrayList(gitDescription.getClass().getFields()).stream()
+                .filter(FieldNameUtil::isLanguage)
+                .forEach(field -> {
+                    try {
+                        Long languageId = Long.valueOf(field.getName().substring(9).split("_")[0]);
+
+                        if (map.containsKey(languageId)) {
+                            LineStat lineStat = lineStatMap.get(new Language(map.get(languageId).getName()));
+                            field.set(gitDescription, lineStat == null ? 0 : lineStat.getLines());
                         } else {
                             field.set(gitDescription, 0);
                         }

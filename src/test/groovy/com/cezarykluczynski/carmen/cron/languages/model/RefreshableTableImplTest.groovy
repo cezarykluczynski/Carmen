@@ -70,15 +70,15 @@ class RefreshableTableImplTest {
 
         SortedSet<EntityField> fields = refreshableTable.getFields()
 
-        Assert.assertEquals fields.size(), 10
+        Assert.assertEquals fields.size(), 13
 
         fields.add new EntityField(ONE_MORE)
 
-        Assert.assertEquals refreshableTable.getFields().size(), 10
+        Assert.assertEquals refreshableTable.getFields().size(), 13
 
         refreshableTable.setFields fields
 
-        Assert.assertEquals refreshableTable.getFields().size(), 11
+        Assert.assertEquals refreshableTable.getFields().size(), 14
         Assert.assertEquals refreshableTable.getNewFields().size(), 1
         Assert.assertEquals refreshableTable.getNewFields().first(), new EntityField(ONE_MORE)
     }

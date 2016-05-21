@@ -20,6 +20,8 @@ class EntityOne implements GitDescription  {
 
     public Integer language_3
 
+    public Integer language_4
+
     public Integer language_1_added
 
     public Integer language_1_removed
@@ -31,5 +33,9 @@ class EntityOne implements GitDescription  {
     public Integer language_3_added
 
     public Integer language_3_removed
+
+    public Integer language_4_added
+
+    public Integer language_4_removed
 
 }

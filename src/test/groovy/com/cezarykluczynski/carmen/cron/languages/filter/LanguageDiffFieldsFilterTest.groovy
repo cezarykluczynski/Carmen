@@ -20,7 +20,7 @@ class LanguageDiffFieldsFilterTest {
 
     @Test
     void filterFields() {
-        Assert.assertEquals entityFieldsIterator.size(), 6
+        Assert.assertEquals entityFieldsIterator.size(), 8
     }
 
 }

@@ -29,6 +29,9 @@ class EntityFieldsIteratorTest {
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_3")
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_3_added")
         Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_3_removed")
+        Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_4")
+        Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_4_added")
+        Assert.assertEquals entityFieldsIterator.next(), new EntityField("language_4_removed")
         Assert.assertFalse entityFieldsIterator.hasNext()
     }
 

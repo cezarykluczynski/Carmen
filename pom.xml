@@ -643,6 +643,7 @@
         <configuration>
           <excludes>
             <exclude>com/cezarykluczynski/carmen/db/**/*.class</exclude>
+            <exclude>com/cezarykluczynski/carmen/model/**/*.class</exclude>
           </excludes>
         </configuration>
         <executions>

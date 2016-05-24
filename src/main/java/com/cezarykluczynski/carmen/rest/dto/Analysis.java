@@ -1,8 +1,5 @@
 package com.cezarykluczynski.carmen.rest.dto;
 
-import javax.persistence.Entity;
-
-@Entity
 public class Analysis {
 
     public Analysis(String username, String status) {

@@ -27,7 +27,7 @@ public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
 
     @Override
     public String getKeyspaceName() {
-        return "repositories";
+        return "carmen";
     }
 
     @Bean

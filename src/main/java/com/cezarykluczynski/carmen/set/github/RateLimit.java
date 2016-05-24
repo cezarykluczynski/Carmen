@@ -1,10 +1,7 @@
 package com.cezarykluczynski.carmen.set.github;
 
-import javax.persistence.Entity;
-
 import java.util.Date;
 
-@Entity
 public class RateLimit {
 
     public RateLimit(String resource, Integer limit, Integer remaining, Date reset) {

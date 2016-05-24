@@ -31,6 +31,7 @@ dependencies:
     - sudo service cassandra restart
     - npm install --global grunt-cli typings tsd
     - cd src/main/webapp/frontend && npm install && cd ../../../..
+    - mvn test -Dtest="BeforeAll"
 test:
   override:
     - cd src/main/webapp/frontend && grunt to && cd ../../../..

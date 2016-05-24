@@ -8,8 +8,8 @@ import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat
 import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
 import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
 import com.cezarykluczynski.carmen.lang.stats.persistence.CassandraPersister
-import com.cezarykluczynski.carmen.model.cassandra.repositories.Commit
-import com.cezarykluczynski.carmen.repository.repositories.CommitsRepository
+import com.cezarykluczynski.carmen.model.cassandra.carmen.Commit
+import com.cezarykluczynski.carmen.repository.carmen.CommitsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests

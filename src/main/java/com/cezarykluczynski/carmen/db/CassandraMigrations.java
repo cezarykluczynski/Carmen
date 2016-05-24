@@ -1,8 +1,7 @@
 package com.cezarykluczynski.carmen.db;
 
 import com.cezarykluczynski.carmen.db.migration.cassandra.KeyspaceDefinition;
-import com.cezarykluczynski.carmen.db.migration.cassandra.github_social_stats.GitHubSocialStatsKeyspaceDefinition;
-import com.cezarykluczynski.carmen.db.migration.cassandra.repositories.RepositoriesKeyspaceDefinition;
+import com.cezarykluczynski.carmen.db.migration.cassandra.carmen.CarmenKeyspaceDefinition;
 import com.contrastsecurity.cassandra.migration.CassandraMigration;
 import com.netflix.astyanax.*;
 import com.netflix.astyanax.Keyspace;
@@ -35,8 +34,7 @@ class CassandraMigrations {
         log.info("Carmen: Cassandra migrations started.");
 
         configure();
-        createAndMigrateKeyspace(new GitHubSocialStatsKeyspaceDefinition());
-        createAndMigrateKeyspace(new RepositoriesKeyspaceDefinition());
+        createAndMigrateKeyspace(new CarmenKeyspaceDefinition());
         System.exit(0);
     }
 
@@ -138,8 +136,12 @@ class CassandraMigrations {
 
     private static ScheduledExecutorService createConsoleOutputEnsuringThread() {
         Runnable consoleLogger = new Runnable() {
+
+            private int counter;
+
             public void run() {
-                System.out.println("Cassandra migrations in progress...");
+                System.out.println("Cassandra migrations in progress (" + counter + " minutes elapsed)...");
+                counter++;
             }
         };
 

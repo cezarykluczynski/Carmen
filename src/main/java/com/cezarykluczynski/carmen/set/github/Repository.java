@@ -4,11 +4,8 @@ import com.cezarykluczynski.carmen.util.github.GitHubResource;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-
 import java.util.Date;
 
-@Entity
 @Builder
 @Data
 public class Repository implements GitHubResource {

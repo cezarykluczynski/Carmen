@@ -11,10 +11,10 @@ import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees
+import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository
+import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository
 import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod

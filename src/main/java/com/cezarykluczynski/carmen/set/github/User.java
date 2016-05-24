@@ -3,9 +3,6 @@ package com.cezarykluczynski.carmen.set.github;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Entity;
-
-@Entity
 @Data
 @Builder
 public class User {

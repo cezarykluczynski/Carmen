@@ -354,10 +354,6 @@
         </exclusion>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-tomcat</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
       </exclusions>
@@ -441,7 +437,6 @@
       <artifactId>cassandra-migration</artifactId>
       <version>0.7-SNAPSHOT</version>
     </dependency>
-
   </dependencies>
 
   <build>

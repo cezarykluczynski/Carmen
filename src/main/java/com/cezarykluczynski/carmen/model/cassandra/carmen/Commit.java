@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.model.cassandra.repositories;
+package com.cezarykluczynski.carmen.model.cassandra.carmen;
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace;
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics;
@@ -14,11 +14,20 @@ import org.springframework.data.cassandra.mapping.Table;
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @LanguagesDiffStatistics
 @LanguagesStatistics
-@Keyspace("repositories")
+@Keyspace("carmen")
 @Table("commits")
 public class Commit extends CarmenNoSQLEntity implements GitDescription {
     @Column
     public String hash;
+
+    @Column
+    public String vendor;
+
+    @Column
+    public Integer user_id;
+
+    @Column
+    public Integer repository_id;
 
     @PrimaryKey
     public UUID id;

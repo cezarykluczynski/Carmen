@@ -7,8 +7,8 @@ import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
-import com.cezarykluczynski.carmen.repository.githubstats.FollowersAndFolloweesRepository;
-import com.cezarykluczynski.carmen.model.cassandra.github_social_stats.FollowersAndFollowees;
+import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository;
+import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 

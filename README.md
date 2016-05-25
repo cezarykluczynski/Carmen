@@ -3,6 +3,7 @@ Work in progress.
 ## Status
 
 [![CircleCI](https://circleci.com/gh/cezarykluczynski/Carmen.svg?style=svg)](https://circleci.com/gh/cezarykluczynski/Carmen)
+[![Build Status](https://travis-ci.org/cezarykluczynski/Carmen.svg?branch=master)](https://travis-ci.org/cezarykluczynski/Carmen)
 [![codecov](https://codecov.io/gh/cezarykluczynski/Carmen/branch/master/graph/badge.svg)](https://codecov.io/gh/cezarykluczynski/Carmen)
 
 ## Development

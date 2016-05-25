@@ -55,7 +55,6 @@ public class UsersImportCronImplTest extends AbstractTestNGSpringContextTests {
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        println responseBody
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals responseBody.getInt("highestGitHubUserId"), HIGHEST_GITHUB_USER_ID
     }

@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.model.pub.Language;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,4 +38,16 @@ public class LanguagesDAOImpl implements LanguagesDAO {
         session.flush();
         session.close();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Integer countAll() {
+        Session session = sessionFactory.openSession();
+        Integer count = ((Long) session.createCriteria(Language.class)
+                .setProjection(Projections.rowCount())
+                .uniqueResult()).intValue();
+        session.close();
+        return count;
+    }
+
 }

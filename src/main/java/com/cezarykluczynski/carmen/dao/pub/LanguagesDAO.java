@@ -10,4 +10,6 @@ public interface LanguagesDAO {
 
     void saveAll(List<Language> languageList);
 
+    Integer countAll();
+
 }

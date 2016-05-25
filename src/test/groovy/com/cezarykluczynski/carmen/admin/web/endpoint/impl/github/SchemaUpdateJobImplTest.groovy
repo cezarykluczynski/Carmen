@@ -59,8 +59,6 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         schemaUpdateTask = mock DatabaseManageableTask
         schemaUpdateFilesStateHelper = mock SchemaUpdateFilesStateHelper
         MockitoAnnotations.initMocks this
-
-        println usersImportCron
     }
 
     @Test
@@ -80,7 +78,6 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(responseBody.getBoolean("running"), RUNNING)
         Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
         Assert.assertTrue responseBody.getString("linguistVersion").matches("\\d\\.\\d\\.\\d")
-        Assert.assertEquals(responseBody.length(), 5)
     }
 
     @Test
@@ -100,7 +97,6 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
         Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
         Assert.assertTrue responseBody.getString("linguistVersion").matches("\\d\\.\\d\\.\\d")
-        Assert.assertEquals(responseBody.length(), 3)
         verify(schemaUpdateExecutor).run()
     }
 

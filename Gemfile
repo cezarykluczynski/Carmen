@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'github-linguist', '4.7.3'
+gem 'github-linguist', '4.8.5'
 gem 'sinatra', '1.4.6'
 gem 'json', '1.8.3'
 gem 'java-properties', '0.1.1'

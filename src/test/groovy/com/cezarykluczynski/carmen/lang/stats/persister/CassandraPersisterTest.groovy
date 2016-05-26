@@ -46,8 +46,8 @@ public class CassandraPersisterTest extends AbstractTestNGSpringContextTests {
         // assertion
         Commit commit = commitsRepository.findByHash commitDescription.commitHash
         Assert.assertNotNull commit
-        Assert.assertEquals commit.language_162_added, JAVA_ADDED
-        Assert.assertEquals commit.language_162_removed, JAVA_REMOVED
+        Assert.assertEquals commit.language_167_added, JAVA_ADDED
+        Assert.assertEquals commit.language_167_removed, JAVA_REMOVED
     }
 
     @Test
@@ -63,7 +63,7 @@ public class CassandraPersisterTest extends AbstractTestNGSpringContextTests {
         // assertion
         Commit commit = commitsRepository.findByHash repositoryDescription.commitHash
         Assert.assertNotNull commit
-        Assert.assertEquals commit.language_162, JAVA_TOTAL
+        Assert.assertEquals commit.language_167, JAVA_TOTAL
     }
 
     @AfterMethod

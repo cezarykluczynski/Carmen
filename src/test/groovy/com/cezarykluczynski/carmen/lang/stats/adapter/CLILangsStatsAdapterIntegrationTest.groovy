@@ -3,7 +3,6 @@ package com.cezarykluczynski.carmen.lang.stats.adapter
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
 import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
@@ -45,7 +44,7 @@ public class CLILangsStatsAdapterIntegrationTest extends AbstractTestNGSpringCon
 
         List<Language> languageList = cliLangsStatsAdapter.getSupportedLanguages()
 
-        Assert.assertEquals languageList.size(), 385
+        Assert.assertEquals languageList.size(), 401
     }
 
     @Test

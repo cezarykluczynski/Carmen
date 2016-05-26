@@ -20,15 +20,6 @@ public class Commit extends CarmenNoSQLEntity implements GitDescription {
     @Column
     public String hash;
 
-    @Column
-    public String vendor;
-
-    @Column
-    public Integer user_id;
-
-    @Column
-    public Integer repository_id;
-
     @PrimaryKey
     public UUID id;
 
@@ -3496,6 +3487,159 @@ public class Commit extends CarmenNoSQLEntity implements GitDescription {
 
     @Column
     public Integer language_385_removed;
+
+    @Column
+    public Integer language_386;
+
+    @Column
+    public Integer language_386_added;
+
+    @Column
+    public Integer language_386_removed;
+
+    @Column
+    public Integer language_387;
+
+    @Column
+    public Integer language_387_added;
+
+    @Column
+    public Integer language_387_removed;
+
+    @Column
+    public Integer language_388;
+
+    @Column
+    public Integer language_388_added;
+
+    @Column
+    public Integer language_388_removed;
+
+    @Column
+    public Integer language_389;
+
+    @Column
+    public Integer language_389_added;
+
+    @Column
+    public Integer language_389_removed;
+
+    @Column
+    public Integer language_390;
+
+    @Column
+    public Integer language_390_added;
+
+    @Column
+    public Integer language_390_removed;
+
+    @Column
+    public Integer language_391;
+
+    @Column
+    public Integer language_391_added;
+
+    @Column
+    public Integer language_391_removed;
+
+    @Column
+    public Integer language_392;
+
+    @Column
+    public Integer language_392_added;
+
+    @Column
+    public Integer language_392_removed;
+
+    @Column
+    public Integer language_393;
+
+    @Column
+    public Integer language_393_added;
+
+    @Column
+    public Integer language_393_removed;
+
+    @Column
+    public Integer language_394;
+
+    @Column
+    public Integer language_394_added;
+
+    @Column
+    public Integer language_394_removed;
+
+    @Column
+    public Integer language_395;
+
+    @Column
+    public Integer language_395_added;
+
+    @Column
+    public Integer language_395_removed;
+
+    @Column
+    public Integer language_396;
+
+    @Column
+    public Integer language_396_added;
+
+    @Column
+    public Integer language_396_removed;
+
+    @Column
+    public Integer language_397;
+
+    @Column
+    public Integer language_397_added;
+
+    @Column
+    public Integer language_397_removed;
+
+    @Column
+    public Integer language_398;
+
+    @Column
+    public Integer language_398_added;
+
+    @Column
+    public Integer language_398_removed;
+
+    @Column
+    public Integer language_399;
+
+    @Column
+    public Integer language_399_added;
+
+    @Column
+    public Integer language_399_removed;
+
+    @Column
+    public Integer language_400;
+
+    @Column
+    public Integer language_400_added;
+
+    @Column
+    public Integer language_400_removed;
+
+    @Column
+    public Integer language_401;
+
+    @Column
+    public Integer language_401_added;
+
+    @Column
+    public Integer language_401_removed;
+
+    @Column
+    public Integer repository_id;
+
+    @Column
+    public Integer user_id;
+
+    @Column
+    public String vendor;
 
     public UUID getId() {
         return id;

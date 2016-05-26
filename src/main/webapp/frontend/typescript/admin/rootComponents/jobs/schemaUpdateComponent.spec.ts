@@ -20,12 +20,13 @@ describe('Component: SchemaUpdateComponent', () => {
 	let element: any;
 	let fixture: ComponentFixture<SchemaUpdateComponent>;
 
-	let createResponse = (asyncResolve: boolean, _connectionBackend, method: RequestMethod) => {
+	let createResponse = (asyncResolve: boolean, _connectionBackend, method: RequestMethod, error?: Error) => {
 		HttpClientTestHelper.createResponse({
 			asyncResolve: asyncResolve,
 			connectionBackend: _connectionBackend,
 			unsubscribeAfter: true,
 			method,
+			error,
 			url: '/api/admin/github/job/schema_update'
 		}, {
 			enabled: false,
@@ -108,6 +109,20 @@ describe('Component: SchemaUpdateComponent', () => {
 				expect(schemaUpdateComponent.running).toBe(false);
 				expect(schemaUpdateComponent.enabled).toBe(false);
 				expect(schemaUpdateComponent.linguistVersion).toBe(LINGUIST_VERSION);
+				done();
+			});
+		});
+
+		it('should fail', (done) => {
+			expect(schemaUpdateComponent.updated).toBe(undefined);
+
+			createResponse(true, connectionBackend, RequestMethod.Post, new Error('Connection error.'));
+			schemaUpdateComponent.run();
+
+			expect(schemaUpdateComponent['schemaUpdateApi'].run).toHaveBeenCalled();
+			setTimeout(() => {
+				expect(schemaUpdateComponent.loading).toBe(false);
+				expect(schemaUpdateComponent.updated).toBe(undefined);
 				done();
 			});
 		});

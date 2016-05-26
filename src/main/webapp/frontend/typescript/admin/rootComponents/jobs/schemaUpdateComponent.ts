@@ -45,27 +45,20 @@ export class SchemaUpdateComponent extends AbstractStatefulComponent {
 	}
 
 	public refreshStatus() {
-		let self = this;
-		this.setLoading(true);
-		this.schemaUpdateApi.getStatus().then((response) => {
-			this.enabled = response.enabled;
-			this.linguistVersion = response.linguistVersion;
-			this.running = response.running;
-			this.saved = response.saved;
-			this.updated = response.updated;
-			self.setLoading(false);
-		}).catch(() => {
-			self.setLoading(false);
-		});
+		this.updateFromPromise(this.schemaUpdateApi.getStatus());
 	}
 
 	public run() {
+		this.updateFromPromise(this.schemaUpdateApi.run());
+	}
+
+	private updateFromPromise(promise: Promise<any>) {
 		let self = this;
 		this.setLoading(true);
-		this.schemaUpdateApi.run().then((response) => {
-			this.enabled = false;
+		promise.then((response) => {
+			this.enabled = response.enabled;
 			this.linguistVersion = response.linguistVersion;
-			this.running = false;
+			this.running = response.running;
 			this.saved = response.saved;
 			this.updated = response.updated;
 			self.setLoading(false);

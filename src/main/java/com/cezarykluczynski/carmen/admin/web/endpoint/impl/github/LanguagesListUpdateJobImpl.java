@@ -40,8 +40,8 @@ public class LanguagesListUpdateJobImpl implements LanguagesListUpdateJob {
     }
 
     private Response respond(boolean updateWhenCountsDiffers) {
-        Integer linguistLanguagesCount = langsStatsAdapter.getSupportedLanguages().size();
         Integer persistedLanguagesCount = languagesDAO.countAll();
+        Integer linguistLanguagesCount = langsStatsAdapter.getSupportedLanguages().size();
         Boolean countsDiffers = !linguistLanguagesCount.equals(persistedLanguagesCount);
 
         if (updateWhenCountsDiffers && countsDiffers) {

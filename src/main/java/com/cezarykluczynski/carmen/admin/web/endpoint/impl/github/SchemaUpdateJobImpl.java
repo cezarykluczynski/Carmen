@@ -38,22 +38,22 @@ public class SchemaUpdateJobImpl implements SchemaUpdateJob {
 
     @Override
     public Response getStatus() {
+        return respond();
+    }
+
+    @Override
+    public Response run() {
+        schemaUpdateExecutor.run();
+        return respond();
+    }
+
+    private Response respond() {
         return Response.ok(SchemaUpdateStatusDTO.builder()
                 .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
                 .linguistVersion(langsStatsAdapter.getLinguistVersion())
                 .updated(schemaUpdateTask.getUpdated())
                 .enabled(schemaUpdateTask.isEnabled())
                 .running(schemaUpdateTask.isRunning())
-                .build()).build();
-    }
-
-    @Override
-    public Response run() {
-        schemaUpdateExecutor.run();
-        return Response.ok(SchemaUpdateStatusDTO.builder()
-                .saved(!schemaUpdateFilesStateHelper.hasFilesChanged())
-                .linguistVersion(langsStatsAdapter.getLinguistVersion())
-                .updated(schemaUpdateTask.getUpdated())
                 .build()).build();
     }
 }

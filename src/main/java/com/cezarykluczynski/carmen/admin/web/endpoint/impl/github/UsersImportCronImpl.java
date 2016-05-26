@@ -29,8 +29,8 @@ public class UsersImportCronImpl implements UsersImportCron {
     @Override
     public Response get() {
         return Response.ok(UsersImportCronOverviewDTO.builder()
-                .highestGitHubUserId(userDao.findHighestGitHubUserId())
                 .enabled(usersImportTask.isEnabled())
+                .highestGitHubUserId(userDao.findHighestGitHubUserId())
                 .running(usersImportTask.isRunning())
                 .build()).build();
     }
@@ -42,6 +42,11 @@ public class UsersImportCronImpl implements UsersImportCron {
         } else {
             usersImportTask.disable();
         }
-        return Response.ok(UsersImportCronOverviewDTO.builder().enabled(status).build()).build();
+
+        return Response.ok(UsersImportCronOverviewDTO.builder()
+                .enabled(status)
+                .highestGitHubUserId(userDao.findHighestGitHubUserId())
+                .running(usersImportTask.isRunning())
+                .build()).build();
     }
 }

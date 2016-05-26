@@ -95,6 +95,8 @@ public class SchemaUpdateJobImplTest extends AbstractTestNGSpringContextTests {
 
         Assert.assertEquals responseStatus, 200
         Assert.assertEquals(LocalDateTime.parse(responseBody.getString("updated")), UPDATED)
+        Assert.assertEquals(responseBody.getBoolean("enabled"), ENABLED)
+        Assert.assertEquals(responseBody.getBoolean("running"), RUNNING)
         Assert.assertEquals(responseBody.getBoolean("saved"), !HAS_FILES_CHANGED)
         Assert.assertTrue responseBody.getString("linguistVersion").matches("\\d\\.\\d\\.\\d")
         verify(schemaUpdateExecutor).run()

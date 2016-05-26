@@ -22,11 +22,11 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
     @JoinColumn(name = "github_user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne(optional=true)
-    @JoinColumn(name="parent_id", nullable=true)
+    @OneToOne
+    @JoinColumn(name="parent_id")
     private Repository parent;
 
-    @OneToOne(optional=true, mappedBy = "repository")
+    @OneToOne(mappedBy = "repository")
     @JoinColumn
     private RepositoryClone repositoryClone;
 
@@ -62,6 +62,9 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
 
     @Column
     private Date pushed;
+
+    @Column(name = "commits_statistics_until")
+    private Date commitsStatisticsUntil;
 
     public Long getGitHubResourceId() {
         return getId();

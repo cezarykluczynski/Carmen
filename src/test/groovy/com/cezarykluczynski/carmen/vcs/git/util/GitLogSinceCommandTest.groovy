@@ -11,6 +11,12 @@ class GitLogSinceCommandTest {
     void "gets commits"() {
         Result result = Executor.execute(new GitLogSinceCommand(".", new Date(116, 4, 20, 12, 00, 00)))
 
+        println "get commits start"
+        println result.getOutput()
+        println result.getErrorReason()
+        println result.getErrorMessage()
+        println "get commits stop"
+
         Assert.assertTrue result.isSuccessFul()
 
         String output = result.getOutput()

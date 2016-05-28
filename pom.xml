@@ -352,6 +352,7 @@
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
         </exclusion>
+
         <exclusion>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-logging</artifactId>
@@ -590,7 +591,7 @@
           </execution>
         </executions>
         <configuration>
-          <argLine>${surefireArgLine}</argLine>
+          <argLine>${surefireArgLine} -Xmx1024m -XX:MaxPermSize=256m</argLine>
           <systemPropertyVariables>
             <noScheduledTasks>1</noScheduledTasks>
           </systemPropertyVariables>

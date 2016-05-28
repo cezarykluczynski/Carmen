@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.util;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -15,6 +16,10 @@ public class DateUtil {
             return null;
         }
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static String toGitReadableDateTime(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date.getTime());
     }
 
 }

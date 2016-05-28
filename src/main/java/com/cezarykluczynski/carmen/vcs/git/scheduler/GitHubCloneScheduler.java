@@ -16,7 +16,6 @@ public class GitHubCloneScheduler {
         this.githubCloneWorker = githubCloneWorker;
     }
 
-
     private TaskExecutor taskExecutor;
 
     public GitHubCloneScheduler(TaskExecutor taskExecutor) {

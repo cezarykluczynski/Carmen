@@ -9,6 +9,8 @@ public class Command {
     private String command;
 
     public Command(String command) {
+        System.out.println("created command:");
+        System.out.println(getCommandPrefix() + command);
         this.command = getCommandPrefix() + command;
     }
 

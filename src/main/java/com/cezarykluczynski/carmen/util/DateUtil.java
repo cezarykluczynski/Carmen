@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.util;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -19,7 +18,7 @@ public class DateUtil {
     }
 
     public static String toGitReadableDateTime(Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date.getTime());
+        return Integer.toString(Math.round(date.getTime() / 1000));
     }
 
 }

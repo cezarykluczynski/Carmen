@@ -19,8 +19,8 @@ public class RepositoryClone extends CarmenRelationalEntity {
     @JoinColumn(name="github_repository_id", referencedColumnName = "id", unique = true, nullable = false)
     private Repository repository;
 
-    @OneToOne(optional=true)
-    @JoinColumn(name="parent_id", nullable=true)
+    @OneToOne
+    @JoinColumn(name="parent_id")
     private RepositoryClone parent;
 
     @Column(name="location_directory")
@@ -37,5 +37,8 @@ public class RepositoryClone extends CarmenRelationalEntity {
 
     @Column
     private Date updated;
+
+    @Column(name = "commits_statistics_until")
+    private Date commitsStatisticsUntil;
 
 }

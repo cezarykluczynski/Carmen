@@ -1,9 +1,10 @@
 package com.cezarykluczynski.carmen.util.exec;
 
 import com.cezarykluczynski.carmen.util.OS;
+import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
 import com.cezarykluczynski.carmen.util.filesystem.Directory;
 
-public class MkDirCommand extends Command {
+public class MkDirCommand extends ApacheCommonsCommand {
 
     public MkDirCommand(String command) {
         super(wrapCommand(Directory.sanitizePathForOs(command)));

@@ -1,8 +1,9 @@
 package com.cezarykluczynski.carmen.util.exec;
 
 import com.cezarykluczynski.carmen.util.OS;
+import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
 
-public class RmDirCommand extends Command {
+public class RmDirCommand extends ApacheCommonsCommand {
 
     public RmDirCommand(String command) {
         super(wrapCommand(command));

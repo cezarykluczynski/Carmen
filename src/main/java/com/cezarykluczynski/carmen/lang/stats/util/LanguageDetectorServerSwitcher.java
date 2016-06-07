@@ -1,15 +1,11 @@
 package com.cezarykluczynski.carmen.lang.stats.util;
 
-import com.cezarykluczynski.carmen.util.exec.Command;
-import com.cezarykluczynski.carmen.util.exec.Executor;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
+import com.cezarykluczynski.carmen.util.exec.executor.Executor;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import org.apache.commons.io.IOUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Properties;
 
 public class LanguageDetectorServerSwitcher {
@@ -52,7 +48,7 @@ public class LanguageDetectorServerSwitcher {
     }
 
     private static void startServer() throws FileNotFoundException {
-        Result result = Executor.execute(new Command("ruby ruby/bin/server start"));
+        Result result = Executor.execute(new ApacheCommonsCommand("ruby ruby/bin/server start"));
 
         if (result.isSuccessFul()) {
             String output = result.getOutput();
@@ -74,7 +70,7 @@ public class LanguageDetectorServerSwitcher {
                 pid = IOUtils.toString(inputStream);
 
                 if (pid != null) {
-                    Executor.execute(new Command("ruby ruby/bin/server stop"));
+                    Executor.execute(new ApacheCommonsCommand("ruby ruby/bin/server stop"));
                 }
             } catch (FileNotFoundException e) {
             } finally {

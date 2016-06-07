@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.util
 
-import com.cezarykluczynski.carmen.util.exec.Executor
-import com.cezarykluczynski.carmen.util.exec.Result
+import com.cezarykluczynski.carmen.util.exec.executor.Executor
+import com.cezarykluczynski.carmen.util.exec.result.Result
 import org.testng.Assert
 import org.testng.annotations.Test
 
@@ -10,12 +10,6 @@ class GitLogSinceCommandTest {
     @Test
     void "gets commits"() {
         Result result = Executor.execute(new GitLogSinceCommand(".", new Date(116, 4, 20, 12, 00, 00)))
-
-        println "get commits start"
-        println result.getOutput()
-        println result.getErrorReason()
-        println result.getErrorMessage()
-        println "get commits stop"
 
         Assert.assertTrue result.isSuccessFul()
 

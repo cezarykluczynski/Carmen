@@ -6,7 +6,7 @@ import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityWithFixtu
 import com.cezarykluczynski.carmen.cron.languages.iterator.AnnotationIterator
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
-import com.cezarykluczynski.carmen.util.exec.Executor
+import com.cezarykluczynski.carmen.util.exec.executor.Executor
 import com.cezarykluczynski.carmen.vcs.git.util.GitCommand
 import org.testng.Assert
 import org.testng.annotations.AfterMethod

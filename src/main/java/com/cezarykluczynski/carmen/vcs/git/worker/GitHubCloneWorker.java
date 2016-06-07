@@ -4,7 +4,7 @@ import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO;
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitRemote;
 import com.cezarykluczynski.carmen.vcs.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;

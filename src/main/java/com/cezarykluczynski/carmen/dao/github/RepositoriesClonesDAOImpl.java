@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.dao.github;
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.DateUtil;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.util.exec.exception.MkDirException;
 import com.cezarykluczynski.carmen.util.filesystem.Directory;
 import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameGenerator;

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git;
 
-import com.cezarykluczynski.carmen.util.exec.Executor;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.executor.Executor;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.vcs.git.util.GitCommand;
 import com.google.common.base.Joiner;
 

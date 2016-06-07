@@ -9,9 +9,10 @@ import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.util.DateUtil
-import com.cezarykluczynski.carmen.util.exec.Command
-import com.cezarykluczynski.carmen.util.exec.Executor
-import com.cezarykluczynski.carmen.util.exec.Result
+import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand
+import com.cezarykluczynski.carmen.util.exec.command.Command
+import com.cezarykluczynski.carmen.util.exec.executor.Executor
+import com.cezarykluczynski.carmen.util.exec.result.Result
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
 import com.cezarykluczynski.carmen.vcs.server.ServerTest
@@ -94,7 +95,7 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
         "${repositoryCloneEntityResult.getLocationSubdirectory()}"
         String revParseCommandBody = "git rev-parse --resolve-git-dir ${cloneDirectory}/.git"
 
-        Command revParseCommand = new Command(revParseCommandBody)
+        Command revParseCommand = new ApacheCommonsCommand(revParseCommandBody)
         Result revParseCommandResult = Executor.execute(revParseCommand)
         Assert.assertTrue revParseCommandResult.isSuccessFul()
         Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())

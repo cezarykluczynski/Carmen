@@ -1,6 +1,9 @@
 package com.cezarykluczynski.carmen.util.exec;
 
-public class LanguageStatsCommand extends Command {
+import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
+import com.cezarykluczynski.carmen.util.exec.command.Command;
+
+public class LanguageStatsCommand extends ApacheCommonsCommand {
 
     public static Command createSupportedLanguagesCommand(String binPath) {
         return new LanguageStatsCommand(binPath + " supported_languages");

@@ -4,7 +4,7 @@ import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.iterator.AnnotationIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitLocal;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;

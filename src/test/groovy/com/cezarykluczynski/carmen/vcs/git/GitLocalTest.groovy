@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git
 
 import com.beust.jcommander.internal.Lists
-import com.cezarykluczynski.carmen.util.exec.Result
+import com.cezarykluczynski.carmen.util.exec.result.Result
 import org.testng.Assert
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod

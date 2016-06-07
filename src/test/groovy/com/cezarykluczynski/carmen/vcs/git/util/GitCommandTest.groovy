@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.util
 
-import com.cezarykluczynski.carmen.util.exec.Executor
-import com.cezarykluczynski.carmen.util.exec.Result
+import com.cezarykluczynski.carmen.util.exec.executor.Executor
+import com.cezarykluczynski.carmen.util.exec.result.Result
 import org.testng.annotations.Test
 import org.testng.Assert
 

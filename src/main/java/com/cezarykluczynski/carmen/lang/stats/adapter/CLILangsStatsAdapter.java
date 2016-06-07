@@ -2,9 +2,9 @@ package com.cezarykluczynski.carmen.lang.stats.adapter;
 
 import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper;
-import com.cezarykluczynski.carmen.util.exec.Executor;
+import com.cezarykluczynski.carmen.util.exec.executor.Executor;
 import com.cezarykluczynski.carmen.util.exec.LanguageStatsCommand;
-import com.cezarykluczynski.carmen.util.exec.Result;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import org.json.JSONObject;
 
 import java.util.List;

@@ -1,14 +1,14 @@
-package com.cezarykluczynski.carmen.util.exec;
+package com.cezarykluczynski.carmen.util.exec.command;
 
 import com.cezarykluczynski.carmen.util.OS;
 
-public class Command {
+public class ApacheCommonsCommand implements Command {
 
     private static final String WINDOWS_COMMAND_PREFIX = "cmd /c ";
 
     private String command;
 
-    public Command(String command) {
+    public ApacheCommonsCommand(String command) {
         this.command = getCommandPrefix() + command;
     }
 

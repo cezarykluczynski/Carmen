@@ -11,22 +11,15 @@ public class ProcessBuilderResult extends AbstractResult implements Result {
 
     private ProcessBuilderCommand command;
 
-    private String directory;
-
     public ProcessBuilderResult(Command command) {
         this.command = (ProcessBuilderCommand) command;
         execute();
     }
 
-    public ProcessBuilderResult(Command command, String directory) {
-        this.command = (ProcessBuilderCommand) command;
-        this.directory = directory;
-    }
-
     protected void execute() {
         ProcessBuilder pb = new ProcessBuilder(command.getCommand());
-        if (directory != null) {
-            pb.directory(new File(directory));
+        if (command.getDirectory() != null) {
+            pb.directory(new File(command.getDirectory()));
         }
         Process p;
         try {

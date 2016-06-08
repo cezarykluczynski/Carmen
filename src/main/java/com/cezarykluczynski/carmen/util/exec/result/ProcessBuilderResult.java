@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.util.exec.result;
 
-import com.cezarykluczynski.carmen.util.exec.ErrorReason;
 import com.cezarykluczynski.carmen.util.exec.command.Command;
 import com.cezarykluczynski.carmen.util.exec.command.ProcessBuilderCommand;
 import com.google.common.base.Joiner;
@@ -41,7 +40,6 @@ public class ProcessBuilderResult extends AbstractResult implements Result {
             setSuccessful(exitCode == 0);
             if (exitCode != 0) {
                 setErrorMessage(output);
-                setErrorReason(ErrorReason.RUNTIME);
             }
         } catch (IOException | InterruptedException e) {
             setSuccessful(false);

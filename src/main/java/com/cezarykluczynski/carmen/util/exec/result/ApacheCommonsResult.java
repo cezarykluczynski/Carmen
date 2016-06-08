@@ -2,7 +2,6 @@ package com.cezarykluczynski.carmen.util.exec.result;
 
 import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
 import com.cezarykluczynski.carmen.util.exec.command.Command;
-import com.cezarykluczynski.carmen.util.exec.ErrorReason;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
@@ -40,7 +39,6 @@ public class ApacheCommonsResult extends AbstractResult implements Result {
         } catch(IOException e) {
             setSuccessful(false);
             setErrorMessage(e.getMessage());
-            setErrorReason(ErrorReason.RUNTIME);
         }
     }
 

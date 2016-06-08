@@ -1,7 +1,5 @@
 package com.cezarykluczynski.carmen.util.exec.result;
 
-import com.cezarykluczynski.carmen.util.exec.ErrorReason;
-
 abstract public class AbstractResult {
 
     protected boolean successful;
@@ -10,14 +8,8 @@ abstract public class AbstractResult {
 
     protected String errorMessage;
 
-    protected ErrorReason errorReason;
-
     public boolean isSuccessFul() {
         return successful;
-    }
-
-    public ErrorReason getErrorReason() {
-        return errorReason;
     }
 
     public String getErrorMessage() {
@@ -30,10 +22,6 @@ abstract public class AbstractResult {
 
     protected void setSuccessful(boolean successful) {
         this.successful = successful;
-    }
-
-    protected void setErrorReason(ErrorReason errorReason) {
-        this.errorReason = errorReason;
     }
 
     protected void setErrorMessage(String errorMessage) {

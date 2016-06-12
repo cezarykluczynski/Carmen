@@ -1,31 +1,24 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
+import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor
+import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
+import com.cezarykluczynski.carmen.model.github.User
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
-import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor
-import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 import org.springframework.test.context.web.WebAppConfiguration
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
-
 import org.testng.annotations.AfterMethod
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
+
+import static org.mockito.Mockito.*
 
 @ContextConfiguration(classes = TestableApplicationConfiguration.class)
 @WebAppConfiguration
@@ -72,21 +65,9 @@ class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void runEmptyPendingRequestListException() {
+    void runNoPendingRequests() {
         // setup
-        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenThrow EmptyPendingRequestListException
-
-        // exercise
-        apiRequestExecutor.run()
-
-        // assertion
-        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
-    }
-
-    @Test
-    void runIOException() {
-        // setup
-        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenThrow IOException
+        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn null
 
         // exercise
         apiRequestExecutor.run()

@@ -2,28 +2,24 @@ package com.cezarykluczynski.carmen.dao.apiqueue
 
 import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
+import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
+import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.model.propagations.UserFollowers
+import com.cezarykluczynski.carmen.util.DateTimeConstants
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-import com.cezarykluczynski.carmen.util.DateTimeConstants
 import org.springframework.test.context.web.WebAppConfiguration
+import org.testng.Assert
 import org.testng.annotations.BeforeMethod
+import org.testng.annotations.Test
 
 import java.lang.reflect.Field
-
-import org.testng.annotations.Test
-import org.testng.Assert
 
 @ContextConfiguration(classes = TestableApplicationConfiguration.class)
 @WebAppConfiguration
@@ -103,7 +99,7 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void findMostImportantPendingRequestExistingEntities() throws EmptyPendingRequestListException {
+    void findMostImportantPendingRequestExistingEntities() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntityWith101Priority =
@@ -127,21 +123,13 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    void findMostImportantPendingRequestNoEntities() throws EmptyPendingRequestListException {
+    void findMostImportantPendingRequestNoEntities() {
         // setup
         SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
         setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactoryMock
 
-        try {
-            // exercise
-            apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
-
-            // assertion
-            Assert.assertTrue false
-        } catch (Throwable e) {
-            // assertion
-            Assert.assertTrue e instanceof EmptyPendingRequestListException
-        }
+        // exercise, assertion
+        Assert.assertNull apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
 
         // teardown
         setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactory

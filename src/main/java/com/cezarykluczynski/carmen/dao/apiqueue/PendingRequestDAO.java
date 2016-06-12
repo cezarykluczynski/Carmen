@@ -2,7 +2,6 @@ package com.cezarykluczynski.carmen.dao.apiqueue;
 
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.util.DateTimeConstants;
 
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public interface PendingRequestDAO {
 
     PendingRequest create(PendingRequest pendingRequest);
 
-    PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException;
+    PendingRequest findMostImportantPendingRequest();
 
     void update(PendingRequest pendingRequest);
 

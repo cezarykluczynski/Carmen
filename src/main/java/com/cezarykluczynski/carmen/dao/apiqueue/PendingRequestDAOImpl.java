@@ -1,28 +1,25 @@
 package com.cezarykluczynski.carmen.dao.apiqueue;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
 import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
-import com.cezarykluczynski.carmen.exception.EmptyPendingRequestListException;
 import com.cezarykluczynski.carmen.util.DateTimeConstants;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 @Repository
 public class PendingRequestDAOImpl implements PendingRequestDAO {
@@ -99,7 +96,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
 
     @Override
     @Transactional(readOnly = true)
-    public PendingRequest findMostImportantPendingRequest() throws EmptyPendingRequestListException {
+    public PendingRequest findMostImportantPendingRequest() {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(PendingRequest.class);
         criteria.addOrder(Order.desc("priority"));
@@ -108,11 +105,7 @@ public class PendingRequestDAOImpl implements PendingRequestDAO {
         List<PendingRequest> list = criteria.list();
         session.close();
 
-        if (list.size() == 0) {
-            throw new EmptyPendingRequestListException();
-        }
-
-        return list.get(0);
+        return list.size() == 0 ? null : list.get(0);
     }
 
     @Override

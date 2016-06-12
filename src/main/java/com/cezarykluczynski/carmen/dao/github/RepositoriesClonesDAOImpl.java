@@ -3,17 +3,17 @@ package com.cezarykluczynski.carmen.dao.github;
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.DateUtil;
-import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.util.exec.exception.MkDirException;
+import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.util.filesystem.Directory;
 import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameGenerator;
 import com.cezarykluczynski.carmen.vcs.server.Server;
+import com.google.common.collect.Lists;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -94,10 +94,11 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
     }
 
     protected void createDirectory(Server server, RepositoryClone repositoryCloneEntity) throws MkDirException {
-        List<String> pathElements = new ArrayList<String>();
-        pathElements.add(server.getCloneRoot());
-        pathElements.add(repositoryCloneEntity.getLocationDirectory());
-        pathElements.add(repositoryCloneEntity.getLocationSubdirectory());
+        List<String> pathElements = Lists.newArrayList(
+                server.getCloneRoot(),
+                repositoryCloneEntity.getLocationDirectory(),
+                repositoryCloneEntity.getLocationSubdirectory()
+        );
         Result commandResult = Directory.create(pathElements);
         if (!commandResult.isSuccessFul()) {
             throw new MkDirException("Directory could not be created.");

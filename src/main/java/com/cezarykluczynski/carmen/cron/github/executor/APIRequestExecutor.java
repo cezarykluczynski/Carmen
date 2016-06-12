@@ -34,14 +34,13 @@ public class APIRequestExecutor implements Runnable {
     }
 
     public void run() {
-        try {
-            PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest();
+        PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest();
+        if (pendingRequest != null) {
             runExecutor(pendingRequest);
-        } catch (IOException e) {
         }
     }
 
-    private void runExecutor(PendingRequest pendingRequest) throws IOException {
+    private void runExecutor(PendingRequest pendingRequest) {
         String executor = pendingRequest.getExecutor();
 
         switch (executor) {
@@ -59,16 +58,26 @@ public class APIRequestExecutor implements Runnable {
         }
     }
 
-    public void executeUsersGhostPaginator(PendingRequest pendingRequest) throws IOException {
-        userGhostPaginatorExecutor.execute(pendingRequest);
+    private void executeUsersGhostPaginator(PendingRequest pendingRequest) {
+        try {
+            userGhostPaginatorExecutor.execute(pendingRequest);
+        } catch (IOException e) {
+        }
     }
 
-    public void executeUserGhost(PendingRequest pendingRequest) throws IOException {
-        userGhostExecutor.execute(pendingRequest);
+    private void executeUserGhost(PendingRequest pendingRequest) {
+        try {
+            userGhostExecutor.execute(pendingRequest);
+        } catch (IOException e) {
+        }
+
     }
 
-    public void executeRepositories(PendingRequest pendingRequest) throws IOException {
-        repositoriesExecutor.execute(pendingRequest);
+    private void executeRepositories(PendingRequest pendingRequest) {
+        try {
+            repositoriesExecutor.execute(pendingRequest);
+        } catch (IOException e) {
+        }
     }
 
 }

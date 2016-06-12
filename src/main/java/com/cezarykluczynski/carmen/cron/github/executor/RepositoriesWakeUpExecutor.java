@@ -35,11 +35,9 @@ public class RepositoriesWakeUpExecutor implements Runnable {
     public void run() {
         repositoriesEntity = propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase();
 
-        if (repositoriesEntity == null) {
-            return;
+        if (repositoriesEntity != null) {
+            tryToMoveToRefreshPhase();
         }
-
-        tryToMoveToRefreshPhase();
     }
 
     private void tryToMoveToRefreshPhase() {

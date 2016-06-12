@@ -8,7 +8,6 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -78,9 +77,9 @@ class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
 
     @AfterMethod
     void tearDown() {
-        Mockito.reset apiqueuePendingRequestDAOImpl
-        Mockito.reset userGhostExecutor
-        Mockito.reset userGhostPaginatorExecutor
+        reset apiqueuePendingRequestDAOImpl
+        reset userGhostExecutor
+        reset userGhostPaginatorExecutor
     }
 
 }

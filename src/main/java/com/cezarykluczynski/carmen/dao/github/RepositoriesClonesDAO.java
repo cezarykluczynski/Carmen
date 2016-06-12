@@ -12,6 +12,8 @@ public interface RepositoriesClonesDAO {
 
     RepositoryClone findByRepositoryEntity(Repository repositoryEntity);
 
+    RepositoryClone findRepositoryCloneWithCommitsToPersist();
+
     void setStatusToCloned(RepositoryClone repositoryEntity);
 
     RepositoryClone create(RepositoryClone repositoryCloneEntity);

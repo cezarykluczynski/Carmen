@@ -22,23 +22,26 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
 
     private SessionFactory sessionFactory;
 
+    private Server server;
+
     @Autowired
-    public RepositoriesClonesDAOImpl(SessionFactory sessionFactory) {
+    public RepositoriesClonesDAOImpl(SessionFactory sessionFactory, Server server) {
         this.sessionFactory = sessionFactory;
+        this.server = server;
     }
 
     @Override
-    public RepositoryClone createStubEntity(Server server, Repository repositoryEntity) {
+    public RepositoryClone createStubEntity(Server serverInstance, Repository repositoryEntity) {
         RepositoryClone repositoryCloneEntity = new RepositoryClone();
         String repositoryFullName = repositoryEntity.getFullName();
         repositoryCloneEntity.setLocationDirectory(
                 DirectoryNameGenerator.generateLocationDirectory(repositoryFullName));
         repositoryCloneEntity.setLocationSubdirectory(repositoryFullName);
         repositoryCloneEntity.setRepository(repositoryEntity);
-        repositoryCloneEntity.setServerId(server.getServerId());
+        repositoryCloneEntity.setServerId(serverInstance.getServerId());
 
         try {
-            createDirectory(server, repositoryCloneEntity);
+            createDirectory(serverInstance, repositoryCloneEntity);
         } catch (MkDirException e) {
             return null;
         }
@@ -61,7 +64,31 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
     }
 
     @Override
-    public RepositoryClone truncateEntity(Server server, RepositoryClone repositoryCloneEntity) {
+    public RepositoryClone findRepositoryCloneWithCommitsToPersist() {
+        Session session = sessionFactory.openSession();
+
+        List<RepositoryClone> list = session.createQuery("SELECT rc FROM github.RepositoryClone rc " +
+                "WHERE rc.commitsStatisticsUntil = null AND rc.serverId = :serverId ORDER BY rc.updated")
+                .setParameter("serverId", server.getServerId())
+                .setMaxResults(1)
+                .list();
+
+        if (list.size() == 0) {
+                list = session.createQuery("SELECT rc FROM github.RepositoryClone rc " +
+                        "WHERE rc.commitsStatisticsUntil != null AND rc.serverId = :serverId " +
+                        "ORDER BY rc.commitsStatisticsUntil")
+                    .setParameter("serverId", server.getServerId())
+                    .setMaxResults(1)
+                    .list();
+        }
+
+        session.close();
+
+        return list.size() == 1 ? list.get(0) : null;
+    }
+
+    @Override
+    public RepositoryClone truncateEntity(Server serverInstance, RepositoryClone repositoryCloneEntity) {
         return null;
     }
 
@@ -93,9 +120,9 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
         return  repositoryCloneEntity;
     }
 
-    protected void createDirectory(Server server, RepositoryClone repositoryCloneEntity) throws MkDirException {
+    protected void createDirectory(Server serverInstance, RepositoryClone repositoryCloneEntity) throws MkDirException {
         List<String> pathElements = Lists.newArrayList(
-                server.getCloneRoot(),
+                serverInstance.getCloneRoot(),
                 repositoryCloneEntity.getLocationDirectory(),
                 repositoryCloneEntity.getLocationSubdirectory()
         );

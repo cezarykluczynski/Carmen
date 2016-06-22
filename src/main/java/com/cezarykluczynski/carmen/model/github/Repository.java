@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.model.github;
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @Entity(name = "github.Repository")
 @Table(schema = "github", name = "repositories")
+@ToString(exclude = {"user", "repositoryClone"})
 public class Repository extends CarmenRelationalEntity implements GitHubResource {
 
     @Id

@@ -1,18 +1,12 @@
 package com.cezarykluczynski.carmen.dao.github;
 
+import com.cezarykluczynski.carmen.model.github.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.hibernate.exception.ConstraintViolationException;
-import org.hibernate.persister.collection.BasicCollectionPersister;
-
-import com.cezarykluczynski.carmen.model.github.User;
-
-import java.util.Map;
 
 @Component
 public class UserDAOImplFollowersFolloweesLinkerDelegate {
@@ -30,15 +24,11 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
     }
 
     private void doLinkFollowerWithFollowee(Long followerId, Long followeeId) {
-        String tableName = getTableNameForLinkedUserEntities();
-        String followersColumn = getKeyColumnNameForLinkedUserEntities("followers");
-        String followeesColumn = getKeyColumnNameForLinkedUserEntities("followees");
-
         Session session = sessionFactory.openSession();
         try {
             session
                 .createSQLQuery(
-                    "INSERT INTO " + tableName + "(" +followersColumn + ", " + followeesColumn + ") " +
+                    "INSERT INTO github.user_followers(follower_id, followee_id) " +
                     "VALUES (:followerId, :followeeId)"
                 )
                 .setParameter("followerId", followerId)
@@ -50,25 +40,6 @@ public class UserDAOImplFollowersFolloweesLinkerDelegate {
         } finally {
             session.close();
         }
-    }
-
-    private String getKeyColumnNameForLinkedUserEntities(String relationName) {
-        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister(relationName);
-        String columnName = collectionPersister.getKeyColumnNames()[0];
-        return columnName;
-    }
-
-    private String getTableNameForLinkedUserEntities() {
-        BasicCollectionPersister collectionPersister = getLinkedCollectionPersister("followers");
-        String tableName = collectionPersister.getTableName();
-        return tableName;
-    }
-
-    private BasicCollectionPersister getLinkedCollectionPersister(String relationName) {
-        Map collectionMetadata = sessionFactory.getAllCollectionMetadata();
-        BasicCollectionPersister collectionPersister = (BasicCollectionPersister)
-                collectionMetadata.get("com.cezarykluczynski.carmen.model.github.User." + relationName);
-        return collectionPersister;
     }
 
 }

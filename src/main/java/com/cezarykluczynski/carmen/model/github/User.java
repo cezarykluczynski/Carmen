@@ -1,23 +1,21 @@
 package com.cezarykluczynski.carmen.model.github;
 
-import javax.persistence.*;
-
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
-
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.joda.time.MutableDateTime;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "github.User")
 @Table(schema = "github", name = "users")
+@ToString(exclude = {"userFollowers", "userFollowing"})
 public class User extends CarmenRelationalEntity {
 
     @Id
@@ -76,24 +74,6 @@ public class User extends CarmenRelationalEntity {
 
     @Column
     private String bio;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable
-    (
-        name="github.user_followers",
-        joinColumns={ @JoinColumn(name="follower_id", referencedColumnName="id") },
-        inverseJoinColumns={ @JoinColumn(name="followee_id", referencedColumnName="id") }
-    )
-    private Set<User> followers = new HashSet<User>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable
-    (
-        name="github.user_followers",
-        joinColumns={ @JoinColumn(name="followee_id", referencedColumnName="id") },
-        inverseJoinColumns={ @JoinColumn(name="follower_id", referencedColumnName="id") }
-    )
-    private Set<User> followees = new HashSet<User>();
 
     @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserFollowers userFollowers;

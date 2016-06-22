@@ -7,10 +7,12 @@ import java.util.Date;
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.github.User;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity(name = "propagations.UserFollowers")
 @Table(schema = "propagations", name = "user_followers")
+@ToString(exclude = {"user"})
 public class UserFollowers extends CarmenRelationalEntity implements Propagation {
 
     @Id

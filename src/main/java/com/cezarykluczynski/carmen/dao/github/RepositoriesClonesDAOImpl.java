@@ -2,9 +2,9 @@ package com.cezarykluczynski.carmen.dao.github;
 
 import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
-import com.cezarykluczynski.carmen.util.DateUtil;
 import com.cezarykluczynski.carmen.util.exec.exception.MkDirException;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
+import com.cezarykluczynski.carmen.util.factory.NowDateProvider;
 import com.cezarykluczynski.carmen.util.filesystem.Directory;
 import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameGenerator;
 import com.cezarykluczynski.carmen.vcs.server.Server;
@@ -24,10 +24,13 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
 
     private Server server;
 
+    private NowDateProvider nowDateProvider;
+
     @Autowired
-    public RepositoriesClonesDAOImpl(SessionFactory sessionFactory, Server server) {
+    public RepositoriesClonesDAOImpl(SessionFactory sessionFactory, Server server, NowDateProvider nowDateProvider) {
         this.sessionFactory = sessionFactory;
         this.server = server;
+        this.nowDateProvider = nowDateProvider;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
         repositoryCloneEntity.setRepository(repositoryEntity);
         repositoryCloneEntity.setServerId(serverInstance.getServerId());
 
+        // TODO: think of moving directiory creation out of here. GitHubCloneWorker should be the one doing it
         try {
             createDirectory(serverInstance, repositoryCloneEntity);
         } catch (MkDirException e) {
@@ -94,7 +98,7 @@ public class RepositoriesClonesDAOImpl implements RepositoriesClonesDAO {
 
     @Override
     public void setStatusToCloned(RepositoryClone repositoryEntity) {
-        Date now = DateUtil.now();
+        Date now = nowDateProvider.createNowDate();
         repositoryEntity.setCloned(now);
         repositoryEntity.setUpdated(now);
         update(repositoryEntity);

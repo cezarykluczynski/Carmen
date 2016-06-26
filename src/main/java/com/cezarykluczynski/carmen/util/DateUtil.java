@@ -26,12 +26,12 @@ public class DateUtil {
         return String.valueOf(date.toInstant().atZone(getDefaultZoneId()).toEpochSecond());
     }
 
-    private static ZoneId getDefaultZoneId() {
-        return getDefaultTimeZone().toZoneId();
+    public static TimeZone getDefaultTimeZone() {
+        return TimeZone.getTimeZone("UTC");
     }
 
-    private static TimeZone getDefaultTimeZone() {
-        return TimeZone.getTimeZone("UTC");
+    private static ZoneId getDefaultZoneId() {
+        return getDefaultTimeZone().toZoneId();
     }
 
 }

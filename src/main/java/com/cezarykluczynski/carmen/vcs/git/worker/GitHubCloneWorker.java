@@ -6,6 +6,7 @@ import com.cezarykluczynski.carmen.model.github.Repository;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitRemote;
+import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameBuilder;
 import com.cezarykluczynski.carmen.vcs.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,7 +36,11 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         }
 
         RepositoryClone repositoryCloneEntity = repositoriesClonesDAO.createStubEntity(server, repositoryEntity);
-        String cloneDirectory = buildCloneDirectory(repositoryCloneEntity);
+        if (repositoryCloneEntity == null) {
+            return;
+        }
+
+        String cloneDirectory =  DirectoryNameBuilder.buildCloneDirectory(server, repositoryCloneEntity);
         Result cloneResult = clone(repositoryEntity, cloneDirectory,  repositoryEntity.getFullName());
 
         if (cloneResult.isSuccessFul()) {
@@ -45,13 +50,9 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         }
     }
 
+    @Override
     protected Result clone(Repository repositoryEntity, String cloneDirectory, String originTargetName) {
         return GitRemote.clone(repositoryEntity.getCloneUrl(), cloneDirectory, originTargetName);
-    }
-
-    private String buildCloneDirectory(RepositoryClone repositoryCloneEntity) {
-        return buildCloneDirectory(server.getCloneRoot(), repositoryCloneEntity.getLocationDirectory(),
-                repositoryCloneEntity.getLocationSubdirectory());
     }
 
 }

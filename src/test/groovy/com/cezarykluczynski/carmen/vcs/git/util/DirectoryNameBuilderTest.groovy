@@ -27,7 +27,6 @@ class DirectoryNameBuilderTest {
         when server.getCloneRoot() thenReturn CLONE_ROOT
         when repositoryClone.getLocationDirectory() thenReturn LOCATION_DIRECTORY
         when repositoryClone.getLocationSubdirectory() thenReturn LOCATION_SUBDIRECTORY
-
     }
 
     @Test

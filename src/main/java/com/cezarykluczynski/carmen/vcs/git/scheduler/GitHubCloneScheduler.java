@@ -11,14 +11,11 @@ public class GitHubCloneScheduler {
 
     private GitHubCloneWorker githubCloneWorker;
 
-    @Autowired
-    public GitHubCloneScheduler(GitHubCloneWorker githubCloneWorker) {
-        this.githubCloneWorker = githubCloneWorker;
-    }
-
     private TaskExecutor taskExecutor;
 
-    public GitHubCloneScheduler(TaskExecutor taskExecutor) {
+    @Autowired
+    public GitHubCloneScheduler(GitHubCloneWorker githubCloneWorker, TaskExecutor taskExecutor) {
+        this.githubCloneWorker = githubCloneWorker;
         this.taskExecutor = taskExecutor;
     }
 

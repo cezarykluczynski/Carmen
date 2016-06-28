@@ -29,7 +29,11 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
+import static org.mockito.Matchers.isA
+import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.never
+import static org.mockito.Mockito.verify
 import static org.mockito.Mockito.when
 
 @ContextConfiguration(classes = TestableApplicationConfiguration.class)
@@ -105,6 +109,22 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    void nullRepositoryEntity() {
+        // setup
+        RepositoriesClonesDAO repositoriesClonesDAO = mock RepositoriesClonesDAO.class
+        when(repositoriesClonesDAO.createStubEntity(isA(Server.class), isA(Repository.class))).thenReturn null
+        RepositoriesDAO repositoriesDAO = mock RepositoriesDAO
+        when repositoriesDAO.findNotForkedRepositoryWithoutClone() thenReturn null
+        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAO, repositoriesClonesDAO, server)
+
+        // exercise
+        gitHubCloneWorker.run()
+
+        // assertion
+        verify(repositoriesClonesDAO, never()).createStubEntity(isA(Server.class), isA(Repository.class))
+    }
+
+    @Test
     void invalidRepositoryCannotBeCloned() {
         // setup
         repositoryEntity.setCloneUrl server.getCloneRoot()
@@ -119,6 +139,22 @@ class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
 
         // teardown
         repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
+    }
+
+    @Test
+    void invalidCloneRepositoryDoesNotMakeClone() {
+        // setup
+        RepositoriesClonesDAO repositoriesClonesDAO = mock RepositoriesClonesDAO.class
+        doNothing().when(repositoriesClonesDAO).setStatusToCloned(isA(RepositoryClone.class))
+        when(repositoriesClonesDAO.truncateEntity(isA(Server.class), isA(RepositoryClone.class))).thenReturn null
+        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAO, repositoriesClonesDAO, server)
+        when repositoriesClonesDAO.createStubEntity(server, repositoryEntity) thenReturn null
+
+        // exercise
+        gitHubCloneWorker.run()
+
+        verify(repositoriesClonesDAO, never()).setStatusToCloned(isA(RepositoryClone.class))
+        verify(repositoriesClonesDAO, never()).truncateEntity(isA(Server.class), isA(RepositoryClone.class))
     }
 
     @AfterMethod

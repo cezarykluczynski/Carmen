@@ -22,7 +22,6 @@ class CommitHashDescriptionsFactoryTest {
     private static final String LOCATION_SUBDIRECTORY = "c"
     private static final String CLONE_DIRECTORY = CLONE_ROOT + "/" + LOCATION_DIRECTORY + "/" + LOCATION_SUBDIRECTORY
 
-
     private CommitHashDescriptionsFactory commitHashDescriptionsFactory
 
     private LangsStatsAdapter langsStatsAdapter

@@ -19,7 +19,7 @@ public class GitHubCloneScheduler {
         this.taskExecutor = taskExecutor;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedDelay = 10000)
     public void execute() {
         taskExecutor.execute(githubCloneWorker);
     }

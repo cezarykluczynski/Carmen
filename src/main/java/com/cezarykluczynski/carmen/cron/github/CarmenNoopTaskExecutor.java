@@ -6,6 +6,7 @@ public class CarmenNoopTaskExecutor extends SimpleAsyncTaskExecutor {
 
     @Override
     public void execute(Runnable task) {
+        System.out.println(task.getClass());
     }
 
 }

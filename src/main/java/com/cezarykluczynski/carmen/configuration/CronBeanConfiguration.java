@@ -13,13 +13,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class CronBeanConfiguration {
 
     @Bean
-    @Profile("github-api-cron")
+    @Profile("scheduled")
     public TaskExecutor carmenSimpleAsyncTaskExecutor() {
         return new CarmenSimpleAsyncTaskExecutor();
     }
 
     @Bean
-    @Profile("!github-api-cron")
+    @Profile("!scheduled")
     public TaskExecutor carmenNoopTaskExecutor() {
         return new CarmenNoopTaskExecutor();
     }

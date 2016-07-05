@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class LanguagesIteratorsFactory {
 
-    public AnnotationIterator createAnnotationIterator() {
-        return new AnnotationIterator();
+    public LanguagesAnnotationIterator createLanguagesAnnotationIterator() {
+        return new LanguagesAnnotationIterator();
     }
 
     public RefreshableTableIterator createRefreshableTableIterator(Class clazz) {

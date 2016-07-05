@@ -3,9 +3,9 @@ package com.cezarykluczynski.carmen.cron.languages.util
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.fixture.annotation.FixtureAnnotation
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityWithFixtureAnnotation
-import com.cezarykluczynski.carmen.cron.languages.iterator.AnnotationIterator
-import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator
+import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesAnnotationIterator
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
+import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator
 import com.cezarykluczynski.carmen.util.exec.executor.Executor
 import com.cezarykluczynski.carmen.vcs.git.util.GitCommand
 import org.testng.Assert
@@ -33,7 +33,7 @@ class SchemaUpdateFilesStateHelperTest {
     void setUp() {
         Executor.execute(new GitCommand("checkout HEAD " + ENTITY_PATH))
 
-        AnnotationIterator annotationIterator = mock AnnotationIterator.class
+        LanguagesAnnotationIterator annotationIterator = mock LanguagesAnnotationIterator.class
         when annotationIterator.hasNext() thenReturn true, false
         when annotationIterator.next() thenReturn FixtureAnnotation.class
 
@@ -45,7 +45,7 @@ class SchemaUpdateFilesStateHelperTest {
         when refreshableTableIterator.next() thenReturn refreshableTable
 
         LanguagesIteratorsFactory annotationIteratorFactory = mock LanguagesIteratorsFactory.class
-        when annotationIteratorFactory.createAnnotationIterator() thenReturn annotationIterator
+        when annotationIteratorFactory.createLanguagesAnnotationIterator() thenReturn annotationIterator
         when annotationIteratorFactory.createRefreshableTableIterator(FixtureAnnotation.class) thenReturn refreshableTableIterator
 
         schemaUpdateFilesStateHelper = new SchemaUpdateFilesStateHelper(

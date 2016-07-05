@@ -8,9 +8,11 @@ public class CarmenSimpleAsyncTaskExecutor extends SimpleAsyncTaskExecutor {
     public void execute(Runnable task) {
         Object noTasks = System.getProperty("noScheduledTasks");
 
-        if (noTasks == null) {
-            super.execute(task);
+        if (noTasks != null) {
+            return;
         }
+
+        super.execute(task);
     }
 
 }

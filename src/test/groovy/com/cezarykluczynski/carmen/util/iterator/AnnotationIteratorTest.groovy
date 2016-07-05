@@ -1,8 +1,9 @@
-package com.cezarykluczynski.carmen.cron.languages.iterator
+package com.cezarykluczynski.carmen.util.iterator
 
 import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics
+import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
@@ -13,7 +14,7 @@ class AnnotationIteratorTest {
 
     @BeforeMethod
     void setUp() {
-        annotationIterator = new LanguagesIteratorsFactory().createAnnotationIterator()
+        annotationIterator = new LanguagesIteratorsFactory().createLanguagesAnnotationIterator()
     }
 
     @Test

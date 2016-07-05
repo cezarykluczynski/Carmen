@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.util;
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
-import com.cezarykluczynski.carmen.cron.languages.iterator.AnnotationIterator;
+import com.cezarykluczynski.carmen.util.iterator.AnnotationIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator;
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
@@ -42,7 +42,7 @@ public class SchemaUpdateFilesStateHelper {
     }
 
     private List<String> getAnnotatedFilesPaths() {
-        AnnotationIterator annotationIterator = languagesIteratorsFactory.createAnnotationIterator();
+        AnnotationIterator annotationIterator = languagesIteratorsFactory.createLanguagesAnnotationIterator();
         List<String> filePaths = Lists.newArrayList();
 
         while(annotationIterator.hasNext()) {

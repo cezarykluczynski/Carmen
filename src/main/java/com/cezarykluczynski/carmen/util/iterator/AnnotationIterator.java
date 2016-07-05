@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.cron.languages.iterator;
+package com.cezarykluczynski.carmen.util.iterator;
 
 import com.google.common.collect.Sets;
 import com.google.common.reflect.ClassPath;
@@ -6,11 +6,9 @@ import com.google.common.reflect.ClassPath;
 import java.io.IOException;
 import java.util.*;
 
-public class AnnotationIterator implements Iterator<Class> {
+public class AnnotationIterator extends AbstractClassIterator implements Iterator<Class> {
 
-    private Iterator<Class> iterator;
-
-    AnnotationIterator() {
+    public AnnotationIterator(String packageName) {
         ClassPath classPath;
 
         try {
@@ -21,7 +19,7 @@ public class AnnotationIterator implements Iterator<Class> {
 
         Set<Class> classes = Sets.newHashSet();
 
-        classPath.getTopLevelClasses("com.cezarykluczynski.carmen.cron.languages.annotations").stream()
+        classPath.getTopLevelClasses(packageName).stream()
                 .forEach(className -> {
                     try {
                         classes.add(Class.forName(className.getName()));
@@ -32,17 +30,4 @@ public class AnnotationIterator implements Iterator<Class> {
         iterator = classes.iterator();
     }
 
-    @Override
-    public boolean hasNext() {
-        return iterator != null && iterator.hasNext();
-    }
-
-    @Override
-    public Class next() {
-        if (iterator != null) {
-            return iterator.next();
-        } else {
-            throw new NoSuchElementException();
-        }
-    }
 }

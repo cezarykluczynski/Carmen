@@ -34,6 +34,16 @@ public class CronsDAOImpl implements CronsDAO {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Cron> findAll() {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Cron.class);
+        List<Cron> list = criteria.list();
+        session.close();
+        return list;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Cron findByNameAndServer(String name, String server) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(Cron.class);

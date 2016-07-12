@@ -18,6 +18,13 @@ class CronsDAOImplFixtures {
         return cron
     }
 
+    Cron createEntityWithNameAndServer(String name) {
+        Cron cron = new Cron()
+        cron.setName name
+        cronsDAOImpl.create cron
+        return cron
+    }
+
     void deleteEntity(Cron cron) {
         this.cronsDAOImpl.delete cron
     }

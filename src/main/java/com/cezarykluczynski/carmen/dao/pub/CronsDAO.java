@@ -8,6 +8,8 @@ public interface CronsDAO {
 
     List<Cron> findByName(String name);
 
+    List<Cron> findAll();
+
     Cron findByNameAndServer(String name, String server);
 
     Cron create(Cron cron);

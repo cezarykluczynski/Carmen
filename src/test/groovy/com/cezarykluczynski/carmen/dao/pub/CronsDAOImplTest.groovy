@@ -51,6 +51,20 @@ class CronsDAOImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    void findAll() {
+        // setup
+        Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name
+
+        // exercise, assertion
+        Assert.assertTrue cronsDAOImpl.findAll().stream()
+                .filter{cronListElement -> cronListElement.name == cron.name}
+                .findFirst().isPresent()
+
+        // teardown
+        cronsDAOImplFixtures.deleteEntity cron
+    }
+
+    @Test
     void findByNameAndServer() {
         // setup
         Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name, server

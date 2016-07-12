@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.scheduler;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,6 +9,7 @@ import com.cezarykluczynski.carmen.cron.github.executor.UserFollowingDiscoverToR
 import org.springframework.stereotype.Component;
 
 @Component
+@DatabaseSwitchableJob
 public class UserFollowingDiscoverToReportPhasePropagationScheduler {
 
     private TaskExecutor taskExecutor;

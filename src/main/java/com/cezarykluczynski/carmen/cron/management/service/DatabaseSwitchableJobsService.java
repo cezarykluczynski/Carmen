@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.management.service;
 
+import com.cezarykluczynski.carmen.configuration.AdminPanelConfiguration;
 import com.cezarykluczynski.carmen.cron.management.converter.DatabaseSwitchableJobDTOConverter;
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO;
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
@@ -13,6 +14,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class DatabaseSwitchableJobsService {
+
+    private static final List<String> databaseControllableComplexJobs = Lists.newArrayList(
+            AdminPanelConfiguration.USERS_IMPORT_TASK,
+            AdminPanelConfiguration.REPOSITORIES_IMPORT_TASK,
+            AdminPanelConfiguration.LANGUAGES_SCHEMA_UPDATE_TASK
+    );
 
     private CronsDAO cronsDAO;
 
@@ -63,6 +70,10 @@ public class DatabaseSwitchableJobsService {
                 .findFirst().orElse(null);
     }
 
+    private static boolean isNotDatabaseControllableComplexJob(Cron cron) {
+        return !databaseControllableComplexJobs.contains(cron.getName());
+    }
+
     private void setCronStatus(DatabaseSwitchableJobDTO dto, boolean enabled) {
         Cron cron = findCronByName(dto.getName());
         if (cron == null) {
@@ -81,6 +92,7 @@ public class DatabaseSwitchableJobsService {
 
     private List<String> getCronNames() {
         return cronsDAO.findAll().stream()
+                .filter(DatabaseSwitchableJobsService::isNotDatabaseControllableComplexJob)
                 .map(Cron::getName)
                 .collect(Collectors.toList());
     }

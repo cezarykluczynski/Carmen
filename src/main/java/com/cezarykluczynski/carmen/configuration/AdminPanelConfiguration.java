@@ -12,22 +12,28 @@ import org.springframework.context.annotation.Profile;
 @Profile("admin-panel")
 public class AdminPanelConfiguration {
 
+    public static final String USERS_IMPORT_TASK = "UsersImport";
+
+    public static final String REPOSITORIES_IMPORT_TASK = "RepositoriesImport";
+
+    public static final String LANGUAGES_SCHEMA_UPDATE_TASK = "LanguagesSchemaUpdate";
+
     @Autowired
     ApplicationContext ctx;
 
     @Bean(name = "usersImportTask")
     DatabaseManageableTask usersImportTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), "UsersImport");
+        return new DatabaseManageableTask(getCronsDAOBean(), USERS_IMPORT_TASK);
     }
 
     @Bean(name = "repositoriesImportTask")
     DatabaseManageableTask repositoriesImportTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), "RepositoriesImport");
+        return new DatabaseManageableTask(getCronsDAOBean(), REPOSITORIES_IMPORT_TASK);
     }
 
     @Bean(name = "languagesSchemaUpdateTask")
     DatabaseManageableTask languagesSchemaUpdateTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), "LanguagesSchemaUpdate");
+        return new DatabaseManageableTask(getCronsDAOBean(), LANGUAGES_SCHEMA_UPDATE_TASK);
     }
 
     private CronsDAO getCronsDAOBean() {

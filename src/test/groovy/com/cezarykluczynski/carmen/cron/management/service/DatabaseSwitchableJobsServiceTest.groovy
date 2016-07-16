@@ -4,10 +4,12 @@ import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO
 import com.cezarykluczynski.carmen.model.pub.Cron
+import org.mockito.ArgumentCaptor
 import org.testng.Assert
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
+import static org.mockito.Matchers.any
 import static org.mockito.Mockito.doNothing
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.never
@@ -16,7 +18,9 @@ import static org.mockito.Mockito.verify
 
 class DatabaseSwitchableJobsServiceTest {
 
-    private static final String NAME = "DatabaseSwitchableJobAnnotatedMock"
+    private static final String NAME_1 = "DatabaseSwitchableJobAnnotatedMock"
+    private static final String NAME_2 = "DatabaseSwitchableJobAnnotatedMock2"
+    private static final String NAME_3 = "DatabaseSwitchableJobAnnotatedMock3"
 
     private CronsDAO cronsDAOMock
 
@@ -28,19 +32,25 @@ class DatabaseSwitchableJobsServiceTest {
 
     private Cron cronMock
 
+    private Cron cronMock3
+
     @BeforeMethod
     void setup() {
         cronsDAOMock = mock CronsDAO
         jobListProviderMock = mock DatabaseSwitchableJobListProvider
+        cronMock = mock Cron
+        when cronMock.getName() thenReturn NAME_1
+        cronMock3 = mock Cron
+        when cronMock3.getName() thenReturn NAME_3
         when jobListProviderMock.getDatabaseSwitchableJobsClasses() thenReturn Lists
                 .newArrayList(DatabaseSwitchableJobAnnotatedMock.class)
-        cronMock = mock Cron
-        when cronMock.getName() thenReturn NAME
         doNothing().when(cronMock).setEnabled true
         doNothing().when(cronMock).setEnabled false
-        cronList = Lists.newArrayList(cronMock)
-        when cronsDAOMock.findAll() thenReturn cronList
         doNothing().when(cronsDAOMock).update cronMock
+        cronList = Lists.newArrayList cronMock
+        when cronsDAOMock.findAll() thenReturn cronList
+        when(cronsDAOMock.create(any(Cron.class))).thenReturn null
+        doNothing().when(cronsDAOMock).delete(any(Cron.class))
         service = new DatabaseSwitchableJobsService(cronsDAOMock, jobListProviderMock)
     }
 
@@ -51,8 +61,30 @@ class DatabaseSwitchableJobsServiceTest {
 
         // assertion
         Assert.assertEquals list.size(), 1
-        Assert.assertEquals list.get(0).getName(), NAME
+        Assert.assertEquals list.get(0).getName(), NAME_1
     }
+
+    @Test
+    void updateList() {
+        // setup
+        when jobListProviderMock.getDatabaseSwitchableJobsClasses() thenReturn Lists
+                .newArrayList(DatabaseSwitchableJobAnnotatedMock.class, DatabaseSwitchableJobAnnotatedMock2.class)
+        cronList = Lists.newArrayList(cronMock, cronMock3)
+        when cronsDAOMock.findAll() thenReturn cronList
+        when cronsDAOMock.findByName(NAME_3) thenReturn Lists.newArrayList(cronMock3)
+
+        // exercise
+        service.updateList()
+
+        // assertion
+        verify(cronsDAOMock).findAll()
+        ArgumentCaptor<Cron> cronArgumentCaptor = ArgumentCaptor.forClass Cron.class
+        verify(cronsDAOMock).create(cronArgumentCaptor.capture())
+        cronArgumentCaptor.allValues.get(0).name == NAME_2
+        verify(cronsDAOMock).delete(cronArgumentCaptor.capture())
+        cronArgumentCaptor.allValues.get(0).name == NAME_3
+    }
+
 
     @Test
     void enable() {
@@ -72,7 +104,7 @@ class DatabaseSwitchableJobsServiceTest {
     @Test
     void "does not enable when entity is missing"() {
         // setup
-        cronList.remove(0)
+        when cronsDAOMock.findAll() thenReturn Lists.newArrayList()
         DatabaseSwitchableJobDTO dto = createDatabaseSwitchableJobDTO()
 
         // exercise
@@ -99,7 +131,7 @@ class DatabaseSwitchableJobsServiceTest {
     }
 
     private static DatabaseSwitchableJobDTO createDatabaseSwitchableJobDTO() {
-        return DatabaseSwitchableJobDTO.builder().name(NAME).build()
+        return DatabaseSwitchableJobDTO.builder().name(NAME_1).build()
     }
 
 }

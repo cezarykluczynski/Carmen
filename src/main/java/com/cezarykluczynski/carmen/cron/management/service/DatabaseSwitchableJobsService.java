@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.cron.management.converter.DatabaseSwitchableJ
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO;
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
 import com.cezarykluczynski.carmen.model.pub.Cron;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,18 @@ public class DatabaseSwitchableJobsService {
                 .collect(Collectors.toList());
     }
 
+    public void updateList() {
+        List<String> classNames = getClassNames();
+        List<String> cronNames = getCronNames();
+
+        getCronNamesToCreate(classNames, cronNames).forEach(this::createCron);
+        getCronNamesToRemove(classNames, cronNames).forEach(this::removeCron);
+    }
+
     public void enable(DatabaseSwitchableJobDTO dto) {
         setCronStatus(dto, true);
     }
+
 
     public void disable(DatabaseSwitchableJobDTO dto) {
         setCronStatus(dto, false);
@@ -63,5 +73,50 @@ public class DatabaseSwitchableJobsService {
         cronsDAO.update(cron);
     }
 
+    private List<String> getClassNames() {
+        return databaseSwitchableJobListProvider.getDatabaseSwitchableJobsClasses().stream()
+                .map(Class::getSimpleName)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getCronNames() {
+        return cronsDAO.findAll().stream()
+                .map(Cron::getName)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getCronNamesToCreate(List<String> classNames, List<String> cronNames) {
+        List<String> cronNamesToCreate = Lists.newArrayList();
+
+        classNames.forEach(className -> {
+            if (!cronNames.contains(className)) {
+                cronNamesToCreate.add(className);
+            }
+        });
+
+        return cronNamesToCreate;
+    }
+
+    private List<String> getCronNamesToRemove(List<String> classNames, List<String> cronNames) {
+        List<String> cronNamesToRemove = Lists.newArrayList();
+
+        cronNames.forEach(cronName -> {
+            if (!classNames.contains(cronName)) {
+                cronNamesToRemove.add(cronName);
+            }
+        });
+
+        return cronNamesToRemove;
+    }
+
+    private void createCron(String cronName) {
+        Cron cron = new Cron();
+        cron.setName(cronName);
+        cronsDAO.create(cron);
+    }
+
+    private void removeCron(String cronName) {
+        cronsDAO.delete(cronsDAO.findByName(cronName).get(0));
+    }
 
 }

@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 @Controller
 @Path("/admin/cron/database_switchable_job")
 @Produces(MediaType.APPLICATION_JSON)
-public interface DatabaseSwitchableJobEndpoint {
+public interface DatabaseSwitchableJobsEndpoint {
 
     @GET
     Response getAll();

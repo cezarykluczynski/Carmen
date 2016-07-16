@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.cron.management.endpoint.impl;
 
-import com.cezarykluczynski.carmen.cron.management.endpoint.api.DatabaseSwitchableJobEndpoint;
+import com.cezarykluczynski.carmen.cron.management.endpoint.api.DatabaseSwitchableJobsEndpoint;
 import com.cezarykluczynski.carmen.cron.management.service.DatabaseSwitchableJobsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -10,12 +10,12 @@ import javax.ws.rs.core.Response;
 
 @Service
 @Profile("admin-panel")
-public class DatabaseSwitchableJobEndpointImpl implements DatabaseSwitchableJobEndpoint {
+public class DatabaseSwitchableJobsEndpointImpl implements DatabaseSwitchableJobsEndpoint {
 
     private DatabaseSwitchableJobsService databaseSwitchableJobsService;
 
     @Autowired
-    public DatabaseSwitchableJobEndpointImpl(DatabaseSwitchableJobsService databaseSwitchableJobsService) {
+    public DatabaseSwitchableJobsEndpointImpl(DatabaseSwitchableJobsService databaseSwitchableJobsService) {
         this.databaseSwitchableJobsService = databaseSwitchableJobsService;
     }
 

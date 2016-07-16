@@ -11,9 +11,9 @@ import javax.ws.rs.core.Response
 
 import static org.mockito.Mockito.*
 
-class DatabaseSwitchableJobEndpointImplTest {
+class DatabaseSwitchableJobsEndpointImplTest {
 
-    private DatabaseSwitchableJobEndpointImpl endpoint
+    private DatabaseSwitchableJobsEndpointImpl endpoint
 
     private DatabaseSwitchableJobsService jobsService
 
@@ -21,7 +21,7 @@ class DatabaseSwitchableJobEndpointImplTest {
     void setup() {
         jobsService = mock DatabaseSwitchableJobsService
         when jobsService.getAll() thenReturn Lists.newArrayList(mock(DatabaseSwitchableJobDTO))
-        endpoint = new DatabaseSwitchableJobEndpointImpl(jobsService)
+        endpoint = new DatabaseSwitchableJobsEndpointImpl(jobsService)
     }
 
     @Test

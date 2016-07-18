@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.worker;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO;
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
 import com.cezarykluczynski.carmen.model.github.Repository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@DatabaseSwitchableJob
 public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
 
     private RepositoriesDAO repositoriesDAO;

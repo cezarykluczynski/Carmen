@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO;
 import com.cezarykluczynski.carmen.model.propagations.Repositories;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.Date;
 
 @Component
+@DatabaseSwitchableJob
 public class RepositoriesWakeUpExecutor implements Runnable {
 
     private RepositoriesDAO propagationsRepositoriesDAOImpl;

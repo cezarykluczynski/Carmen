@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO;
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
 import com.cezarykluczynski.carmen.util.factory.DateFactory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@DatabaseSwitchableJob
 public class GitHubRepositoryClonePersister {
 
     private CommitHashPersistenceService commitHashPersistenceService;

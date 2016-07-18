@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,7 @@ import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
 
 @Component
+@DatabaseSwitchableJob
 public class APIRequestExecutor implements Runnable {
 
     private PendingRequestDAO apiqueuePendingRequestDAOImpl;

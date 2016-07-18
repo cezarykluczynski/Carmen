@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation;
 import com.cezarykluczynski.carmen.model.github.User;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@DatabaseSwitchableJob
 public class UserFollowersFollowingReportToSleepPhasePropagationExecutor implements Runnable {
 
     private UserDAO githubUserDAOImpl;

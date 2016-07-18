@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@DatabaseSwitchableJob
 public class UserFollowingDiscoverToReportPhasePropagationExecutor implements Runnable {
 
     private UserFollowingDAO propagationsUserFollowingDAOImpl;

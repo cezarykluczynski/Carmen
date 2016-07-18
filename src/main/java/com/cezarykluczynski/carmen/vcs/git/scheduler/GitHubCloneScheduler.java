@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.vcs.git.scheduler;
 
-import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.vcs.git.worker.GitHubCloneWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
@@ -8,7 +7,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-@DatabaseSwitchableJob
 public class GitHubCloneScheduler {
 
     private GitHubCloneWorker githubCloneWorker;

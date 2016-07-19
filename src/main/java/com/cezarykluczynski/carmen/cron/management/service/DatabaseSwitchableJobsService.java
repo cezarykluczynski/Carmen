@@ -51,9 +51,13 @@ public class DatabaseSwitchableJobsService {
         setCronStatus(dto, true);
     }
 
-
     public void disable(DatabaseSwitchableJobDTO dto) {
         setCronStatus(dto, false);
+    }
+
+    public boolean isEnabledOrNotDatabaseSwitchable(String name) {
+        Cron cron = findCronByName(name);
+        return cron == null || cron.isEnabled();
     }
 
     private boolean isSimpleDatabaseSwitchable(Cron cron) {

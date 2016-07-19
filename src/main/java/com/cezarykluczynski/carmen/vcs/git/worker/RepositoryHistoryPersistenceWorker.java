@@ -1,10 +1,12 @@
 package com.cezarykluczynski.carmen.vcs.git.worker;
 
+import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
 import com.cezarykluczynski.carmen.vcs.git.persistence.GitHubRepositoryClonePersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@DatabaseSwitchableJob
 public class RepositoryHistoryPersistenceWorker implements Runnable {
 
     private GitHubRepositoryClonePersister gitHubRepositoryClonePersister;

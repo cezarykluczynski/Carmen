@@ -130,6 +130,47 @@ class DatabaseSwitchableJobsServiceTest {
         verify(cronsDAOMock).update cronMock
     }
 
+    @Test
+    void "cron should be enabled when it is not found"() {
+        // setup
+        when cronsDAOMock.findAll() thenReturn Lists.newArrayList()
+
+        // exercise
+        boolean enabled = service.isEnabledOrNotDatabaseSwitchable NAME_1
+
+        // assertion
+        Assert.assertTrue enabled
+    }
+
+    @Test
+    void "cron should be enabled when it is enabled"() {
+        // setup
+        when cronsDAOMock.findAll() thenReturn Lists.newArrayList(
+                new Cron(name: NAME_1, enabled: true)
+        )
+
+        // exercise
+        boolean enabled = service.isEnabledOrNotDatabaseSwitchable NAME_1
+
+        // assertion
+        Assert.assertTrue enabled
+    }
+
+
+    @Test
+    void "cron should be disabled when it is not enabled"() {
+        // setup
+        when cronsDAOMock.findAll() thenReturn Lists.newArrayList(
+                new Cron(name: NAME_1, enabled: false)
+        )
+
+        // exercise
+        boolean enabled = service.isEnabledOrNotDatabaseSwitchable NAME_1
+
+        // assertion
+        Assert.assertFalse enabled
+    }
+
     private static DatabaseSwitchableJobDTO createDatabaseSwitchableJobDTO() {
         return DatabaseSwitchableJobDTO.builder().name(NAME_1).build()
     }

@@ -2,9 +2,7 @@ package com.cezarykluczynski.carmen.cron.management.endpoint.api;
 
 import org.springframework.stereotype.Controller;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -15,5 +13,17 @@ public interface DatabaseSwitchableJobsEndpoint {
 
     @GET
     Response getAll();
+
+    @POST
+    @Path("/update_list")
+    Response updateList();
+
+    @POST
+    @Path("/enable")
+    Response enable(@FormParam("name") String name);
+
+    @POST
+    @Path("/disable")
+    Response disable(@FormParam("name") String name);
 
 }

@@ -1,7 +1,9 @@
 package com.cezarykluczynski.carmen.cron.management.endpoint.impl;
 
+import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO;
 import com.cezarykluczynski.carmen.cron.management.endpoint.api.DatabaseSwitchableJobsEndpoint;
 import com.cezarykluczynski.carmen.cron.management.service.DatabaseSwitchableJobsService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -24,4 +26,23 @@ public class DatabaseSwitchableJobsEndpointImpl implements DatabaseSwitchableJob
         return Response.ok().entity(databaseSwitchableJobsService.getAll()).build();
     }
 
+    @Override
+    public Response updateList() {
+        databaseSwitchableJobsService.updateList();
+        return Response.ok(Lists.newArrayList()).build();
+    }
+
+    @Override
+    public Response enable(String name) {
+        DatabaseSwitchableJobDTO dto = DatabaseSwitchableJobDTO.builder().name(name).build();
+        databaseSwitchableJobsService.enable(dto);
+        return Response.ok(dto).build();
+    }
+
+    @Override
+    public Response disable(String name) {
+        DatabaseSwitchableJobDTO dto = DatabaseSwitchableJobDTO.builder().name(name).build();
+        databaseSwitchableJobsService.disable(dto);
+        return Response.ok(dto).build();
+    }
 }

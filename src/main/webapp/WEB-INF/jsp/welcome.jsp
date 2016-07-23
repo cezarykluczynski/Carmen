@@ -15,8 +15,8 @@
         </form>
         <div class="row user-count-container">
             <div class="col-xs-12">
-                <p class="text-muted users-count-summary">${analyzedUsersCount}</p>
-                <p class="text-muted users-count-summary">${connectedUsersCount}</p>
+                <p class="text-muted users-count-summary">${analyzedUsersCount} users analyzed.</p>
+                <p class="text-muted users-count-summary">${connectedUsersCount} users have connected.</p>
             </div>
         </div>
     </div>

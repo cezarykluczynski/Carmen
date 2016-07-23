@@ -1,75 +1,69 @@
 package com.cezarykluczynski.carmen.web.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
+import org.springframework.web.servlet.ModelAndView
+import spock.lang.Specification
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserControllerTest extends AbstractTestNGSpringContextTests {
+import javax.servlet.http.HttpServletResponse
 
-    @Autowired
+class UserControllerTest extends Specification {
+
+    private static final String LOGIN = "LOGIN"
+    private static final String VIEW_NAME_FOUND = "github/user/user"
+    private static final String VIEW_NAME_NOT_FOUND = "github/user/404"
+
+    private UserDAO userDAOMock
+
+    private HttpServletResponse httpServletResponseMock
+
     private UserController userController
 
-    @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
-
-    @Autowired
-    UserDAO githubUserDAOImpl
-
-    private MockMvc mockMvc
-
-    @BeforeMethod
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).build()
+    def setup() {
+        userDAOMock = Mock UserDAO
+        userController = new UserController(userDAOMock)
+        httpServletResponseMock = Mock HttpServletResponse
     }
 
-    @Test
-    void nonExistingUser() throws Exception {
-        mockMvc.perform(get("/github/this-user-should-never-exist"))
-            .andExpect(status().isNotFound())
+    def "gets found user"() {
+        given:
+        User user = new User(login: LOGIN, found: true)
+        userDAOMock.findByLogin(LOGIN) >> user
+
+        when:
+        ModelAndView modelAndView = userController.user LOGIN, httpServletResponseMock
+
+        then:
+        modelAndView.model.get("login") == LOGIN
+        modelAndView.model.get("user") == user
+        modelAndView.viewName == VIEW_NAME_FOUND
+        0 * httpServletResponseMock.setStatus(*_)
     }
 
-    @Test
-    void existingNotFoundUser() throws Exception {
-        // setup
-        User userEntity = githubUserDAOImplFixtures.createNotFoundRequestedUserEntity()
+    def "gets not existing found user"() {
+        when:
+        ModelAndView modelAndView = userController.user LOGIN, httpServletResponseMock
 
-        // exercise, assertion
-        mockMvc.perform(get("/github/" + userEntity.getLogin()))
-            .andExpect(status().isNotFound())
-
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        modelAndView.model.get("login") == LOGIN
+        modelAndView.model.get("user") == null
+        modelAndView.viewName == VIEW_NAME_NOT_FOUND
+        1 * httpServletResponseMock.setStatus(HttpServletResponse.SC_NOT_FOUND)
     }
 
-    @Test
-    void existingFoundUser() throws Exception {
-        // setup
-        User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+    def "gets not found user"() {
+        given:
+        User user = new User(login: LOGIN, found: false)
+        userDAOMock.findByLogin(LOGIN) >> user
 
-        // exercise, assertion
-        mockMvc.perform(get("/github/" + userEntity.getLogin()))
-            .andExpect(status().isOk())
+        when:
+        ModelAndView modelAndView = userController.user LOGIN, httpServletResponseMock
 
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        modelAndView.model.get("login") == LOGIN
+        modelAndView.model.get("user") == user
+        modelAndView.viewName == VIEW_NAME_NOT_FOUND
+        1 * httpServletResponseMock.setStatus(HttpServletResponse.SC_NOT_FOUND)
     }
 
 }

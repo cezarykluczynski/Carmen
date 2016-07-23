@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminPanelController {
 
     @RequestMapping("/panel")
-    public ModelAndView user() {
+    public ModelAndView adminPanel() {
         return new ModelAndView("admin/panel");
     }
 

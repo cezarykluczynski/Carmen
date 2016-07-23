@@ -1,44 +1,41 @@
 package com.cezarykluczynski.carmen.web
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.boot.test.SpringApplicationContextLoader
+import com.cezarykluczynski.carmen.dao.github.UserDAO
+import com.cezarykluczynski.carmen.dao.users.CarmenUserDAO
+import org.springframework.web.servlet.ModelAndView
+import spock.lang.Specification
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+class WelcomeControllerTest extends Specification {
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
+    private static final Object CONNECTED_USERS_COUNT = 2
+    private static final Object ANALYZED_CONNECTED_COUNT = 3
+    private static final String VIEW_NAME = "welcome"
 
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+    private CarmenUserDAO carmenUserDAOMock
 
-@ContextConfiguration(
-        classes = TestableApplicationConfiguration.class,
-        loader = SpringApplicationContextLoader.class,
-        locations = ["classpath:applicationContext.xml"]
-)
-@WebAppConfiguration
-class WelcomeControllerTest extends AbstractTestNGSpringContextTests {
+    private UserDAO userDAOMock
 
-    @Autowired
     private WelcomeController welcomeController
 
-    private MockMvc mockMvc
-
-    @BeforeMethod
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(welcomeController).build()
+    def setup() {
+        carmenUserDAOMock = Mock CarmenUserDAO
+        userDAOMock = Mock UserDAO
+        welcomeController = new WelcomeController(carmenUserDAOMock, userDAOMock)
     }
 
-    @Test
-    void welcome() throws Exception {
-        // exercise, assertion
-        mockMvc.perform(get("/"))
-            .andExpect(status().isOk())
+    def welcome() {
+        given:
+        carmenUserDAOMock.count() >> CONNECTED_USERS_COUNT
+        userDAOMock.countFound() >> ANALYZED_CONNECTED_COUNT
+
+        when:
+        ModelAndView modelAndView = welcomeController.welcome()
+
+        then:
+        modelAndView.model.get("analyzedUsersCount") == ANALYZED_CONNECTED_COUNT
+        modelAndView.model.get("connectedUsersCount") == CONNECTED_USERS_COUNT
+        modelAndView.viewName == VIEW_NAME
+
     }
 
 }

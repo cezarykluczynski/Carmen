@@ -22,7 +22,10 @@ module.exports = function(config) {
 		colors: true,
 		autoWatch: false,
 		singleRun: true,
-		browsers: ['PhantomJS'],
+		browsers: [
+			'PhantomJS',
+			// 'Chrome'
+		],
 		plugins: [
 			'karma-jasmine',
 			'karma-coverage',

@@ -1,98 +1,87 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
-import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.factory.DateFactory
 import com.cezarykluczynski.carmen.util.factory.NowDateProvider
 import com.cezarykluczynski.carmen.vcs.git.service.CommitHashPersistenceService
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import com.google.common.collect.Lists
+import spock.lang.Specification
 
 import static org.mockito.Matchers.isA
-import static org.mockito.Mockito.*
 
-class GitHubRepositoryClonePersisterTest {
+class GitHubRepositoryClonePersisterTest extends Specification {
 
     private static final Date NOW = DateUtil.now()
 
     private GitHubRepositoryClonePersister gitHubRepositoryClonePersister
 
-    private CommitHashPersistenceService commitHashPersistenceService
+    private CommitHashPersistenceService commitHashPersistenceServiceMock
 
-    private GitHubRepositoryCommitsToPersistFinder gitHubRepositoryCommitsToPersistFinder
+    private GitHubRepositoryCommitsToPersistFinder gitHubRepositoryCommitsToPersistFinderMock
 
-    private RepositoriesClonesDAO repositoriesClonesDAO
+    private RepositoriesClonesDAO repositoriesClonesDAOMock
 
-    private DateFactory dateFactory
+    private DateFactory dateFactoryMock
 
-    private RepositoryClone repositoryClone
+    private RepositoryClone repositoryCloneMock
 
-    @BeforeMethod
     void setup() {
-        commitHashPersistenceService = mock CommitHashPersistenceService
-        gitHubRepositoryCommitsToPersistFinder = mock GitHubRepositoryCommitsToPersistFinder
-        repositoriesClonesDAO = mock RepositoriesClonesDAO
-        dateFactory = new DateFactory(new NowDateProvider() {
+        commitHashPersistenceServiceMock = Mock CommitHashPersistenceService
+        gitHubRepositoryCommitsToPersistFinderMock = Mock GitHubRepositoryCommitsToPersistFinder
+        repositoriesClonesDAOMock = Mock RepositoriesClonesDAO
+        dateFactoryMock = new DateFactory(new NowDateProvider() {
             @Override
             public Date createNowDate() {
                 return NOW
             }
         })
 
-        repositoryClone = mock RepositoryClone
+        repositoryCloneMock = Mock RepositoryClone
 
-        gitHubRepositoryClonePersister = new GitHubRepositoryClonePersister(commitHashPersistenceService,
-                gitHubRepositoryCommitsToPersistFinder, repositoriesClonesDAO, dateFactory)
+        gitHubRepositoryClonePersister = new GitHubRepositoryClonePersister(commitHashPersistenceServiceMock,
+                gitHubRepositoryCommitsToPersistFinderMock, repositoriesClonesDAOMock, dateFactoryMock)
 
     }
 
-    @Test
     void "persist when there is no repository clones to process"() {
-        // setup
-        when repositoriesClonesDAO.findRepositoryCloneWithCommitsToPersist() thenReturn null
-        when gitHubRepositoryCommitsToPersistFinder.getCommitHashesToPersist(null) thenReturn null
+        given:
+        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> null
 
-        // exercise
+        when:
         gitHubRepositoryClonePersister.persist()
 
-        // assertion
-        verify gitHubRepositoryCommitsToPersistFinder, never() getCommitHashesToPersist null
+        then:
+        0 * gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(null) >> null
     }
 
-    @Test
     void "persist when there are error while retrieving hashes"() {
-        // setup
-        when repositoriesClonesDAO.findRepositoryCloneWithCommitsToPersist() thenReturn repositoryClone
-        when gitHubRepositoryCommitsToPersistFinder.getCommitHashesToPersist(repositoryClone) thenReturn null
-        when repositoriesClonesDAO.update(isA(RepositoryClone.class)) thenReturn null
-        when repositoriesClonesDAO.update(null) thenReturn null
+        given:
+        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
+        gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> null
 
-        // exercise
+        when:
         gitHubRepositoryClonePersister.persist()
 
-        // assertion
-        verify(repositoriesClonesDAO, never()).update isA(RepositoryClone.class)
-        verify(repositoriesClonesDAO, never()).update null
+        then:
+        0 * repositoriesClonesDAOMock.update(isA(RepositoryClone.class)) >> null
+        0 * repositoriesClonesDAOMock.update(null) >> null
     }
 
-
-    @Test
     void "sets commitsStatisticsUntil field to the beginning o not yet opened month, when commit list is empty"() {
-        // setup
-        doNothing().when(repositoryClone).setCommitsStatisticsUntil isA(Date.class)
-        when(repositoriesClonesDAO.update(repositoryClone)).thenReturn null
-        when repositoriesClonesDAO.findRepositoryCloneWithCommitsToPersist() thenReturn repositoryClone
-        when gitHubRepositoryCommitsToPersistFinder.getCommitHashesToPersist(repositoryClone) thenReturn Lists.newArrayList()
+        given:
+        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
+        gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> Lists.newArrayList()
 
-        // exercise
+        when:
         gitHubRepositoryClonePersister.persist()
 
-        // assertion
-        verify repositoryClone setCommitsStatisticsUntil(isA(Date.class))
-        verify repositoriesClonesDAO update repositoryClone
+        then:
+        1 * repositoryCloneMock.setCommitsStatisticsUntil(_ as Date) >> { date ->
+            assert date != null
+        }
+        1 * repositoriesClonesDAOMock.update(repositoryCloneMock)
     }
 
 }

@@ -34,21 +34,20 @@ public class GitHubRepositoryCommitsToPersistFinder {
     }
 
     public List<CommitHash> getCommitHashesToPersist(RepositoryClone repositoryClone) {
+        Preconditions.checkNotNull(repositoryClone);
         List<CommitHash> commitHashes = Lists.newArrayList();
         Result result = getGitLogSinceCommandResult(repositoryClone);
 
         if (result.isSuccessFul()) {
             commitHashes.addAll(convertGitLogSinceResultToCommitHashes(result));
-        } else {
-            // TODO Log it
-            return null;
+            return commitHashes;
         }
 
-        return commitHashes;
+        // TODO Log it
+        return null;
     }
 
     private Result getGitLogSinceCommandResult(RepositoryClone repositoryClone) {
-        Preconditions.checkNotNull(repositoryClone);
         String cloneDirectory = DirectoryNameBuilder.buildCloneDirectory(server, repositoryClone);
         return Executor.execute(new GitLogSinceCommand(
                 cloneDirectory,

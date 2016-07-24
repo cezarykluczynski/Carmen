@@ -7,14 +7,9 @@ import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHashDescriptions
 import com.cezarykluczynski.carmen.vcs.server.Server
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-class CommitHashDescriptionsFactoryTest {
+class CommitHashDescriptionsFactoryTest extends Specification {
 
     private static final String COMMIT_HASH = "abcdef1234abcdef1234abcdef1234abcdef1234"
     private static final String CLONE_ROOT = "a"
@@ -24,48 +19,45 @@ class CommitHashDescriptionsFactoryTest {
 
     private CommitHashDescriptionsFactory commitHashDescriptionsFactory
 
-    private LangsStatsAdapter langsStatsAdapter
+    private LangsStatsAdapter langsStatsAdapterMock
 
-    private Server server
+    private Server serverMock
 
-    private RepositoryClone repositoryClone
+    private RepositoryClone repositoryCloneMock
 
-    private CommitHash commitHash
+    private CommitHash commitHashMock
 
-    private CommitDescription commitDescription
+    private CommitDescription commitDescriptionMock
 
-    private RepositoryDescription repositoryDescription
+    private RepositoryDescription repositoryDescriptionMock
 
-    @BeforeMethod
-    void setup() {
-        langsStatsAdapter = mock LangsStatsAdapter
-        server = mock Server
-        repositoryClone = mock RepositoryClone
-        commitHash = mock CommitHash
-        commitDescription = mock CommitDescription
-        repositoryDescription = mock RepositoryDescription
+    def setup() {
+        langsStatsAdapterMock = Mock LangsStatsAdapter
+        serverMock = Mock Server
+        repositoryCloneMock = Mock RepositoryClone
+        commitHashMock = Mock CommitHash
+        commitDescriptionMock = Mock CommitDescription
+        repositoryDescriptionMock = Mock RepositoryDescription
 
-        when commitHash.getHash() thenReturn COMMIT_HASH
-        when server.getCloneRoot() thenReturn CLONE_ROOT
-        when repositoryClone.getLocationDirectory() thenReturn LOCATION_DIRECTORY
-        when repositoryClone.getLocationSubdirectory() thenReturn LOCATION_SUBDIRECTORY
-        when langsStatsAdapter.describeCommit(CLONE_DIRECTORY, COMMIT_HASH) thenReturn commitDescription
-        when langsStatsAdapter.describeRepository(CLONE_DIRECTORY, COMMIT_HASH) thenReturn repositoryDescription
+        commitHashMock.getHash() >> COMMIT_HASH
+        serverMock.getCloneRoot() >> CLONE_ROOT
+        repositoryCloneMock.getLocationDirectory() >> LOCATION_DIRECTORY
+        repositoryCloneMock.getLocationSubdirectory() >> LOCATION_SUBDIRECTORY
+        langsStatsAdapterMock.describeCommit(CLONE_DIRECTORY, COMMIT_HASH) >> commitDescriptionMock
+        langsStatsAdapterMock.describeRepository(CLONE_DIRECTORY, COMMIT_HASH) >> repositoryDescriptionMock
 
-        commitHashDescriptionsFactory = new CommitHashDescriptionsFactory(langsStatsAdapter, server)
+        commitHashDescriptionsFactory = new CommitHashDescriptionsFactory(langsStatsAdapterMock, serverMock)
     }
 
-
-    @Test
-    void createUsingRepositoryCloneAndCommitHash() {
-        // exercise
+    void "creates using repository clone and commit hash"() {
+        when:
         CommitHashDescriptions commitHashDescriptions = commitHashDescriptionsFactory
-                .createUsingRepositoryCloneAndCommitHash(repositoryClone, commitHash)
+                .createUsingRepositoryCloneAndCommitHash(repositoryCloneMock, commitHashMock)
 
-        // assertion
-        Assert.assertEquals commitHashDescriptions.getCommitHash().getHash(), COMMIT_HASH
-        Assert.assertEquals commitHashDescriptions.getCommitDescription(), commitDescription
-        Assert.assertEquals commitHashDescriptions.getRepositoryDescription(), repositoryDescription
+        then:
+        commitHashDescriptions.getCommitHash().getHash() == COMMIT_HASH
+        commitHashDescriptions.getCommitDescription() == commitDescriptionMock
+        commitHashDescriptions.getRepositoryDescription() == repositoryDescriptionMock
     }
 
 }

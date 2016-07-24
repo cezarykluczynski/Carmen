@@ -22,6 +22,14 @@ public class DateUtil {
         return date.toInstant().atZone(getDefaultZoneId()).toLocalDateTime();
     }
 
+    public static Date convert(LocalDateTime date) {
+        if (date == null) {
+            return null;
+        }
+
+        return Date.from(date.atZone(getDefaultZoneId()).toInstant());
+    }
+
     public static String toGitReadableDateTime(Date date) {
         return String.valueOf(date.toInstant().atZone(getDefaultZoneId()).toEpochSecond());
     }

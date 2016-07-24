@@ -13,10 +13,8 @@ public class TomcatServer implements Server {
     private String cloneRoot;
 
     @Autowired
-    public TomcatServer(
-        @Value("${githubCloneTomcatServer.serverId}") String serverId,
-        @Value("${githubCloneTomcatServer.cloneRoot}") String cloneRoot
-    ) {
+    public TomcatServer(@Value("${githubCloneTomcatServer.serverId}") String serverId,
+        @Value("${githubCloneTomcatServer.cloneRoot}") String cloneRoot) {
         Preconditions.checkNotNull(serverId);
         Preconditions.checkNotNull(cloneRoot);
         this.serverId = serverId;

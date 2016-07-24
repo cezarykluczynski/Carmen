@@ -1,6 +1,6 @@
 require 'rugged'
-require 'linguist'
 require_relative 'exceptions'
+require_relative 'linguist/repository'
 
 module LangStats
   class Detector
@@ -24,7 +24,7 @@ module LangStats
 
     def get_repository(path_to_repository, commit_hash)
       repository = Rugged::Repository.new(path_to_repository)
-      Linguist::Repository.new(repository, commit_hash)
+      LangStats::Repository.new(repository, commit_hash)
     end
 
     def get_files_affected_by_commit(path_to_repository, commit_hash)

@@ -25,10 +25,10 @@ describe 'CLI interface' do
   it 'should read repository statistics' do
     response = JSON.parse `ruby ./ruby/bin/lang_stats describe_repository . 3fe8afa350b369c6c697290f64da6aa996ede153`
 
-    expect(response['Java']).to be_within(10).of(194928)
-    expect(response['JavaScript']).to be_within(10).of(1854)
-    expect(response['CSS']).to be_within(10).of(318)
-    expect(response['Groovy']).to be_within(10).of(193544)
+    expect(response['Java']).to eq(6557)
+    expect(response['JavaScript']).to eq(65)
+    expect(response['CSS']).to eq(18)
+    expect(response['Groovy']).to eq(5511)
   end
 
   it 'should repo commit statistics' do

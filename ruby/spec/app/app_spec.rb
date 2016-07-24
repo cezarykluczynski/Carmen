@@ -41,10 +41,10 @@ describe 'HTTP interface' do
     expect(last_response).to be_ok
     response = JSON.parse last_response.body
 
-    expect(response['Java']).to be_within(10).of(194928)
-    expect(response['JavaScript']).to be_within(10).of(1854)
-    expect(response['CSS']).to be_within(10).of(318)
-    expect(response['Groovy']).to be_within(10).of(193544)
+    expect(response['Java']).to eq(6557)
+    expect(response['JavaScript']).to eq(65)
+    expect(response['CSS']).to eq(18)
+    expect(response['Groovy']).to eq(5511)
   end
 
   it 'should read commit statistics' do

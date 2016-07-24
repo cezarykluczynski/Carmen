@@ -29,9 +29,9 @@ detector = LangStats::Detector.new
 begin
   print detector.send(ARGV[0].to_sym, ARGV[1], ARGV[2]).to_json
 rescue LangStats::CommitHashNotFoundError => e
-  print "Fatal: commit hash not found."
+  print "Fatal: commit hash not found.\n"
   exit 1
 rescue LangStats::CommitHashMalformedException
-  print "Fatal: commit hash is malformed."
+  print "Fatal: commit hash is malformed.\n"
   exit 1
 end

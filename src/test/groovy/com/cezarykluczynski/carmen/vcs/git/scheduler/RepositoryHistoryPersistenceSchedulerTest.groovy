@@ -1,34 +1,29 @@
 package com.cezarykluczynski.carmen.vcs.git.scheduler
 
 import com.cezarykluczynski.carmen.vcs.git.worker.RepositoryHistoryPersistenceWorker
-import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.core.task.TaskExecutor
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.*
+class RepositoryHistoryPersistenceSchedulerTest extends Specification {
 
-class RepositoryHistoryPersistenceSchedulerTest {
+    private TaskExecutor taskExecutorMock
 
-    RepositoryHistoryPersistenceWorker repositoryHistoryPersistenceWorker
+    private RepositoryHistoryPersistenceWorker repositoryHistoryPersistenceWorkerMock
 
-    RepositoryHistoryPersistenceScheduler repositoryHistoryPeristenceScheduler
+    private RepositoryHistoryPersistenceScheduler repositoryHistoryPersistenceScheduler
 
-    @BeforeMethod
-    void setUp() {
-        TaskExecutor taskExecutor = new SyncTaskExecutor()
-        repositoryHistoryPersistenceWorker = mock RepositoryHistoryPersistenceWorker.class
-        doNothing().when(repositoryHistoryPersistenceWorker).run()
-        repositoryHistoryPeristenceScheduler =
-                new RepositoryHistoryPersistenceScheduler(taskExecutor, repositoryHistoryPersistenceWorker)
+    void setup() {
+        taskExecutorMock = Mock TaskExecutor
+        repositoryHistoryPersistenceWorkerMock = Mock RepositoryHistoryPersistenceWorker
+        repositoryHistoryPersistenceScheduler = new RepositoryHistoryPersistenceScheduler(taskExecutorMock,
+                repositoryHistoryPersistenceWorkerMock)
     }
 
-    @Test
     void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
-        // exercise
-        repositoryHistoryPeristenceScheduler.executePropagation()
+        when:
+        repositoryHistoryPersistenceScheduler.executePropagation()
 
-        // assertion
-        verify(repositoryHistoryPersistenceWorker).run()
+        then:
+        1 * taskExecutorMock.execute(repositoryHistoryPersistenceWorkerMock)
     }
 }

@@ -7,64 +7,52 @@ import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHashDescriptions
 import com.cezarykluczynski.carmen.vcs.git.persistence.CommitHashDescriptionsFactory
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
+public class CommitHashPersistenceServiceTest extends Specification {
 
-public class CommitHashPersistenceServiceTest {
+    private CommitHashDescriptionsFactory commitHashDescriptionsFactoryMock
+
+    private Persister persisterMock
+
+    private CommitHash commitHashMock
+
+    private RepositoryClone repositoryCloneMock
+
+    private CommitHashDescriptions commitHashDescriptionsMock
+
+    private CommitDescription commitDescriptionMock
+
+    private RepositoryDescription repositoryDescriptionMock
 
     private CommitHashPersistenceService commitHashPersistenceService
 
-    private CommitHashDescriptionsFactory commitHashDescriptionsFactory
-
-    private Persister persister
-
-    private CommitHash commitHash
-
-    private RepositoryClone repositoryClone
-
-    private CommitHashDescriptions commitHashDescriptions
-
-    private CommitDescription commitDescription
-
-    private RepositoryDescription repositoryDescription
-
-    @BeforeMethod
-    void setup() {
-        commitHashDescriptionsFactory = mock CommitHashDescriptionsFactory
-        persister = mock Persister
-        commitHash = mock CommitHash
-        repositoryClone = mock RepositoryClone
-        commitDescription = mock CommitDescription
-        repositoryDescription = mock RepositoryDescription
-        commitHashDescriptions = mock CommitHashDescriptions
-        when commitHashDescriptions.getCommitDescription() thenReturn commitDescription
-        when commitHashDescriptions.getRepositoryDescription() thenReturn repositoryDescription
-        commitHashPersistenceService = new CommitHashPersistenceService(commitHashDescriptionsFactory, persister)
+    def setup() {
+        commitHashDescriptionsFactoryMock = Mock CommitHashDescriptionsFactory
+        persisterMock = Mock Persister
+        commitHashMock = Mock CommitHash
+        repositoryCloneMock = Mock RepositoryClone
+        commitDescriptionMock = Mock CommitDescription
+        repositoryDescriptionMock = Mock RepositoryDescription
+        commitHashDescriptionsMock = Mock CommitHashDescriptions
+        commitHashDescriptionsMock.getCommitDescription() >> commitDescriptionMock
+        commitHashDescriptionsMock.getRepositoryDescription() >> repositoryDescriptionMock
+        commitHashPersistenceService = new CommitHashPersistenceService(commitHashDescriptionsFactoryMock, persisterMock)
     }
 
-    @Test
-    void persistAndDescribeCommitHashUsingRepositoryClone() {
-        // setup
-        when(commitHashDescriptionsFactory.createUsingRepositoryCloneAndCommitHash(repositoryClone, commitHash))
-                .thenReturn commitHashDescriptions
-        doNothing().when(persister).persist commitDescription
-        doNothing().when(persister).persist repositoryDescription
+    def persistAndDescribeCommitHashUsingRepositoryClone() {
+        given:
+        commitHashDescriptionsFactoryMock.createUsingRepositoryCloneAndCommitHash(repositoryCloneMock,
+                commitHashMock) >> commitHashDescriptionsMock
 
-        // exercise
+        when:
         CommitHashDescriptions commitHashDescriptionsResponse = commitHashPersistenceService
-                .persistAndDescribeCommitHashUsingRepositoryClone commitHash, repositoryClone
+                .persistAndDescribeCommitHashUsingRepositoryClone commitHashMock, repositoryCloneMock
 
-        // assertion
-        println commitHashDescriptionsResponse
-        Assert.assertEquals commitHashDescriptionsResponse, commitHashDescriptions
-        verify(persister).persist commitHashDescriptionsResponse.getCommitDescription()
-        verify(persister).persist commitHashDescriptionsResponse.getRepositoryDescription()
+        then:
+        commitHashDescriptionsResponse == commitHashDescriptionsMock
+        1 * persisterMock.persist(commitDescriptionMock)
+        1 * persisterMock.persist(repositoryDescriptionMock)
     }
 
 }

@@ -433,7 +433,6 @@
       <scope>test</scope>
     </dependency>
 
-
     <!-- Workaround. See https://github.com/Netflix/astyanax/issues/583 -->
     <dependency>
       <groupId>org.apache.cassandra</groupId>

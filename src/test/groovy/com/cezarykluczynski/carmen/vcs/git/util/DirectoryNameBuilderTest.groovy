@@ -2,37 +2,33 @@ package com.cezarykluczynski.carmen.vcs.git.util
 
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.vcs.server.Server
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-class DirectoryNameBuilderTest {
+class DirectoryNameBuilderTest extends Specification {
 
     private static final String CLONE_ROOT = "a"
     private static final String LOCATION_DIRECTORY = "b"
     private static final String LOCATION_SUBDIRECTORY = "c"
 
-    Server server
+    private Server serverMock
 
-    RepositoryClone repositoryClone
+    private RepositoryClone repositoryCloneMock
 
-    @BeforeMethod
-    void setup() {
-        server = mock Server
-        repositoryClone = mock RepositoryClone
+    def setup() {
+        serverMock = Mock Server
+        repositoryCloneMock = Mock RepositoryClone
 
-        when server.getCloneRoot() thenReturn CLONE_ROOT
-        when repositoryClone.getLocationDirectory() thenReturn LOCATION_DIRECTORY
-        when repositoryClone.getLocationSubdirectory() thenReturn LOCATION_SUBDIRECTORY
+        serverMock.getCloneRoot() >> CLONE_ROOT
+        repositoryCloneMock.getLocationDirectory() >> LOCATION_DIRECTORY
+        repositoryCloneMock.getLocationSubdirectory() >> LOCATION_SUBDIRECTORY
     }
 
-    @Test
-    void buildCloneDirectory() {
-        String cloneDirectory = DirectoryNameBuilder.buildCloneDirectory(server, repositoryClone)
-        Assert.assertEquals cloneDirectory, CLONE_ROOT + "/" + LOCATION_DIRECTORY + "/" + LOCATION_SUBDIRECTORY
+    def "builds clone directory"() {
+        when:
+        String cloneDirectory = DirectoryNameBuilder.buildCloneDirectory serverMock, repositoryCloneMock
+
+        then:
+        cloneDirectory == CLONE_ROOT + "/" + LOCATION_DIRECTORY + "/" + LOCATION_SUBDIRECTORY
     }
 
 }

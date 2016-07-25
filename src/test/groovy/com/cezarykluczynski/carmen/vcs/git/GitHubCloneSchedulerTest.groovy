@@ -1,37 +1,30 @@
 package com.cezarykluczynski.carmen.vcs.git
 
-import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor
-import com.cezarykluczynski.carmen.cron.github.scheduler.RepositoriesWakeUpScheduler
-import org.springframework.core.task.SyncTaskExecutor
+import com.cezarykluczynski.carmen.vcs.git.scheduler.GitHubCloneScheduler
+import com.cezarykluczynski.carmen.vcs.git.worker.GitHubCloneWorker
 import org.springframework.core.task.TaskExecutor
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+class GitHubCloneSchedulerTest extends Specification {
 
-class GitHubCloneSchedulerTest {
+    private GitHubCloneWorker githubCloneWorkerMock
 
-    RepositoriesWakeUpExecutor repositoriesWakeUpExecutor
+    private TaskExecutor taskExecutorMock
 
-    RepositoriesWakeUpScheduler repositoriesWakeUpScheduler
+    private GitHubCloneScheduler gitHubCloneScheduler
 
-    @BeforeMethod
-    void setUp() {
-        TaskExecutor taskExecutor = new SyncTaskExecutor()
-        repositoriesWakeUpExecutor = mock RepositoriesWakeUpExecutor.class
-        doNothing().when(repositoriesWakeUpExecutor).run()
-        repositoriesWakeUpScheduler = new RepositoriesWakeUpScheduler(taskExecutor, repositoriesWakeUpExecutor)
+    def setup() {
+        githubCloneWorkerMock = Mock GitHubCloneWorker
+        taskExecutorMock = Mock TaskExecutor
+        gitHubCloneScheduler = new GitHubCloneScheduler(githubCloneWorkerMock, taskExecutorMock)
     }
 
-    @Test
-    void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
-        // exercise
-        repositoriesWakeUpScheduler.executePropagation()
+    def "runs runnable using executor"() {
+        when:
+        gitHubCloneScheduler.execute()
 
-        // assertion
-        verify(repositoriesWakeUpExecutor).run()
+        then:
+        1 * taskExecutorMock.execute(githubCloneWorkerMock)
     }
 
 }

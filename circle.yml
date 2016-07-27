@@ -15,7 +15,7 @@ dependencies:
     - nvm install 0.12
     - nvm use 0.12
     - psql -c 'create database carmen;' -U postgres
-    - cp src/main/resources/circleci/config.properties src/main/resources/config.properties
+    - cp src/main/resources/circleci/application.properties src/main/resources/application.properties
     - cp src/main/resources/travis/logback.xml src/main/resources/logback.xml
     - cp src/main/resources/travis/hibernate.cfg.xml src/main/resources/hibernate.cfg.xml
     - bundle install

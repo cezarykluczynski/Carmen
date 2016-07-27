@@ -22,7 +22,7 @@ public class ApplicationConfiguration {
     @Bean
     public static PropertyPlaceholderConfigurer propertyPlaceholderConfigurer() {
         PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-        ppc.setLocation(new ClassPathResource("config.properties"));
+        ppc.setLocation(new ClassPathResource("application.properties"));
         return ppc;
     }
 

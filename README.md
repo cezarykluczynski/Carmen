@@ -15,7 +15,7 @@ This is your personal token. Do not commit it.
 ## Installation
 Install using:
 ```sh
-cp src/main/resources/example/config.properties src/main/resources/config.properties
+cp src/main/resources/example/application.properties src/main/resources/application.properties
 mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
 psql -c 'create database carmen;' -U postgres
 mvn clean compile

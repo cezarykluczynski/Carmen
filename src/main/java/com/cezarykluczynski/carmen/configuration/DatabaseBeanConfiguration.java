@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@PropertySource(value = { "classpath:config.properties" })
+@PropertySource(value = { "classpath:application.properties" })
 @ComponentScan("com.cezarykluczynski.carmen")
 @EnableTransactionManagement
 public class DatabaseBeanConfiguration  {

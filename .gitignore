@@ -19,7 +19,7 @@ src/main/webapp/frontend/typescript/**/*.js.map
 src/main/webapp/frontend/npm-debug.log
 src/main/webapp/frontend/tscommand-*
 .env
-src/main/resources/config.properties
+src/main/resources/application.properties
 src/main/resources/hibernate.cfg.xml
 src/main/resources/logback.xml
 Gemfile.lock

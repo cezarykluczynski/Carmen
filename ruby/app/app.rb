@@ -6,7 +6,7 @@ require_relative 'lang_stats/detector'
 require_relative 'lang_stats/supported_languages'
 require_relative 'lang_stats/linguist_version'
 
-properties = JavaProperties.load(File.expand_path(File.dirname(__FILE__)) << "/../../src/main/resources/config.properties")
+properties = JavaProperties.load(File.expand_path(File.dirname(__FILE__)) << "/../../src/main/resources/application.properties")
 detector_port = (properties["detector.port".to_sym] or 8081).to_i
 
 set :bind, '0.0.0.0'

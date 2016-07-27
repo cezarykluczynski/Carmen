@@ -47,7 +47,7 @@ class CassandraMigrations {
         try {
             Properties properties = new Properties();
             InputStream inputStream = CassandraMigrations.class.getClassLoader()
-                    .getResourceAsStream("config.properties");
+                    .getResourceAsStream("application.properties");
             properties.load(inputStream);
 
             contactpoints = properties.getProperty("cassandra.contactpoints");
@@ -56,7 +56,7 @@ class CassandraMigrations {
             cluster = properties.getProperty("cassandra.cluster");
             version = properties.getProperty("cassandra.version");
         } catch (IOException ioe) {
-            log.error("Carmen: config.properties for Cassandra not found or incomplete.");
+            log.error("Carmen: application.properties for Cassandra not found or incomplete.");
 
             throw ioe;
         }

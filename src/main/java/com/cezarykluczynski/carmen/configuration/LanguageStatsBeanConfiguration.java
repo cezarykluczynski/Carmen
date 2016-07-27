@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import java.io.IOException;
 
 @Configuration
-@PropertySource(value = { "classpath:config.properties" })
+@PropertySource(value = { "classpath:application.properties" })
 public class LanguageStatsBeanConfiguration {
 
     @Value("${detector.client}")

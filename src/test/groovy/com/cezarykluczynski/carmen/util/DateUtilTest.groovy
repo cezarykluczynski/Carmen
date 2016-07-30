@@ -1,18 +1,16 @@
 package com.cezarykluczynski.carmen.util
 
-import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class DateUtilTest {
+class DateUtilTest extends Specification {
 
     static {
-        TimeZone.setDefault TimeZone.getTimeZone("UTC")
+        TimeZone.setDefault DateUtil.getDefaultTimeZone()
     }
 
-
-    @Test
     void toGitReadableDateTime() {
-        Assert.assertEquals DateUtil.toGitReadableDateTime(new Date(110, 7, 4, 16, 25, 14)), "1280939114"
+        expect:
+        DateUtil.toGitReadableDateTime(new Date(110, 7, 4, 16, 25, 14)) == "1280939114"
     }
 
 }

@@ -1,15 +1,14 @@
 package com.cezarykluczynski.carmen.util.filesystem
 
-import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class DirectoryTest {
+class DirectoryTest extends Specification {
 
-    @Test
-    void convertPathToUnixStyleSlashes() {
-        Assert.assertEquals Directory.convertPathToUnixStyleSlashes("..\\a\\b\\c"), "../a/b/c"
-        Assert.assertEquals Directory.convertPathToUnixStyleSlashes("..\\\\a\\b"), "..//a/b"
-        Assert.assertEquals Directory.convertPathToUnixStyleSlashes("/a/b\\c"), "/a/b/c"
+    def "converts path to unix style slashes"() {
+        expect:
+        Directory.convertPathToUnixStyleSlashes("..\\a\\b\\c") == "../a/b/c"
+        Directory.convertPathToUnixStyleSlashes("..\\\\a\\b") == "..//a/b"
+        Directory.convertPathToUnixStyleSlashes("/a/b\\c") == "/a/b/c"
     }
 
 }

@@ -1,27 +1,25 @@
 package com.cezarykluczynski.carmen.util.factory
 
 import com.cezarykluczynski.carmen.util.DateUtil
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class NowDateProviderTest {
+class NowDateProviderTest extends Specification {
 
     private NowDateProvider nowDateProvider
 
-    @BeforeMethod
-    void setup() {
+    def setup() {
         nowDateProvider = new NowDateProvider()
     }
 
-    @Test
-    void createNowDate() {
+    def "creates now date"() {
+        when:
         Date before = DateUtil.now()
         Date now = nowDateProvider.createNowDate()
         Date after = DateUtil.now()
 
-        Assert.assertTrue(before.before(now) || before.equals(now))
-        Assert.assertTrue(after.after(now) || after.equals(now))
+        then:
+        before.before(now) || before.equals(now)
+        after.after(now) || after.equals(now)
     }
 
 }

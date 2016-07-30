@@ -4,25 +4,23 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.Keyspace
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStatistics
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class AnnotationIteratorTest {
+class AnnotationIteratorTest extends Specification {
 
-    AnnotationIterator annotationIterator
+    private AnnotationIterator annotationIterator
 
-    @BeforeMethod
-    void setUp() {
+    void setup() {
         annotationIterator = new LanguagesIteratorsFactory().createLanguagesAnnotationIterator()
     }
 
-    @Test
-    void annotationsAreDiscovered() {
+    def "annotations are discovered"() {
+        given:
         boolean languageDiffStatisticsDiscovered = false
         boolean languageStatisticsDiscovered = false
         boolean keyspaceDiscovered = false
 
+        when:
         while(annotationIterator.hasNext()) {
             Class annotation = annotationIterator.next()
 
@@ -40,11 +38,11 @@ class AnnotationIteratorTest {
 
         }
 
-        Assert.assertTrue languageDiffStatisticsDiscovered
-        Assert.assertTrue languageStatisticsDiscovered
-        Assert.assertTrue keyspaceDiscovered
-
-        Assert.assertFalse annotationIterator.hasNext()
+        then:
+        languageDiffStatisticsDiscovered
+        languageStatisticsDiscovered
+        keyspaceDiscovered
+        !annotationIterator.hasNext()
     }
 
 }

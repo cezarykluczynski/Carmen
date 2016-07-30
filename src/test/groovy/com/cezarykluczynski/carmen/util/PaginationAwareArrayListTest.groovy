@@ -1,64 +1,50 @@
 package com.cezarykluczynski.carmen.util
 
-import org.testng.annotations.Test
-import org.testng.annotations.BeforeMethod
-import org.testng.Assert
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.verify
-
 import org.eclipse.egit.github.core.User as EgitUser
 import org.eclipse.egit.github.core.client.PageIterator
+import spock.lang.Specification
 
-class PaginationAwareArrayListTest {
+class PaginationAwareArrayListTest extends Specification {
 
-    PaginationAwareArrayList paginationAwareArrayList
+    private PaginationAwareArrayList paginationAwareArrayList
 
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         paginationAwareArrayList = new PaginationAwareArrayList<EgitUser>()
     }
 
-    @Test
-    void extractPaginationDataFromIterator() {
-        // setup
-        PageIterator pageIteratorMock = mock PageIterator.class
-        when pageIteratorMock.getNextPage() thenReturn 3
-        when pageIteratorMock.hasNext() thenReturn true
+    def "extracts pagination data from iterator"() {
+        given:
+        PageIterator pageIteratorMock = Mock PageIterator
 
-        // exercise
+        when:
         paginationAwareArrayList.extractPaginationDataFromIterator pageIteratorMock
 
-        // assertion
-        verify(pageIteratorMock).getNextPage()
-        verify(pageIteratorMock).hasNext()
-        Assert.assertEquals paginationAwareArrayList.getNextPage(), 3
-        Assert.assertEquals paginationAwareArrayList.isLastPage(), false
+        then:
+        1 * pageIteratorMock.getNextPage() >> 3
+        1 * pageIteratorMock.hasNext() >> true
+        paginationAwareArrayList.nextPage == 3
+        !paginationAwareArrayList.lastPage
     }
 
-    @Test
-    void extractPaginationDataFromCollection() {
-        // setup
-        Collection collectionMock = mock Collection.class
-        when collectionMock.size() thenReturn 5
+    def "extracts pagination data from collection"() {
+        given:
+        Collection collectionMock = Mock Collection
 
-        // exercise
+        when:
         paginationAwareArrayList.extractPaginationDataFromCollection collectionMock
 
-        // assertion
-        verify(collectionMock).size()
-        Assert.assertEquals paginationAwareArrayList.getCount(), 5
+        then:
+        1 * collectionMock.size() >> 5
+        paginationAwareArrayList.getCount() == 5
     }
 
-    @Test
-    void addPaginationLimitAndOffset() {
-        // exercise
+    def "adds pagination limit and offset"() {
+        when:
         paginationAwareArrayList.addPaginationLimitAndOffset 10, 20
 
-        // assertion
-        Assert.assertEquals paginationAwareArrayList.getLimit(), 10
-        Assert.assertEquals paginationAwareArrayList.getOffset(), 20
+        then:
+        paginationAwareArrayList.getLimit() == 10
+        paginationAwareArrayList.getOffset() == 20
     }
 
 }

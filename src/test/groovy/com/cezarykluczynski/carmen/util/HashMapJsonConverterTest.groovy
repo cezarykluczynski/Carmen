@@ -1,39 +1,37 @@
 package com.cezarykluczynski.carmen.util
 
-import org.testng.annotations.Test
-import org.testng.Assert
+import com.google.common.collect.Maps
+import spock.lang.Specification
 
-class HashMapJsonConverterTest {
+class HashMapJsonConverterTest extends Specification {
 
-    String jsonString = '{"key1":"value1","key2":2,"key4":false}'
+    private static final String JSON_STRING = '{"key1":"value1","key2":2,"key4":false}'
 
-    @Test
-    void hashMapToJsonString() {
-        // setup
-        HashMap<String, Object> hashMap = new HashMap<String, Object>()
-        hashMap.put("key1", "value1");
-        hashMap.put("key2", 2);
-        hashMap.put("key3", null);
-        hashMap.put("key4", false);
+    def "converts hash map to json string"() {
+        given:
+        HashMap<String, Object> hashMap = Maps.newHashMap()
+        hashMap.put("key1", "value1")
+        hashMap.put("key2", 2)
+        hashMap.put("key3", null)
+        hashMap.put("key4", false)
 
-        // exercise
-        String stringifiedHashMap = HashMapJsonConverter.hashMapToJsonString hashMap
+        when:
+        String hashMapAsString = HashMapJsonConverter.hashMapToJsonString hashMap
 
-        // assertion
-        Assert.assertEquals stringifiedHashMap, jsonString
+        then:
+        hashMapAsString == JSON_STRING
     }
 
-    @Test
-    void jsonStringToHashMap() {
-        // exercise
-        HashMap<String, Object> unstringifiedHashMap = HashMapJsonConverter.jsonStringToHashMap jsonString
+    void "covnerts json string to hash map"() {
+        when:
+        HashMap<String, Object> hashMap = HashMapJsonConverter.jsonStringToHashMap JSON_STRING
 
-        // assertion
-        Assert.assertEquals unstringifiedHashMap.size(), 3
-        Assert.assertEquals unstringifiedHashMap.get("key1"), "value1"
-        Assert.assertEquals unstringifiedHashMap.get("key2"), 2
-        Assert.assertEquals unstringifiedHashMap.get("key3"), null
-        Assert.assertEquals unstringifiedHashMap.get("key4"), false
+        then:
+        hashMap.size() == 3
+        hashMap.get("key1") == "value1"
+        hashMap.get("key2") == 2
+        hashMap.get("key3") == null
+        hashMap.get("key4") == false
     }
 
 }

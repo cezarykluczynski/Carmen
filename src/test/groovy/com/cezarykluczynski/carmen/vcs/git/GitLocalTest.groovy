@@ -2,37 +2,43 @@ package com.cezarykluczynski.carmen.vcs.git
 
 import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.util.exec.result.Result
-import org.testng.Assert
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class GitLocalTest {
+class GitLocalTest extends Specification {
 
     private static final String DIFF_TARGET = "src/test/groovy/com/cezarykluczynski/carmen/fixture/git/diff-target"
-
     private static final String CHANGE_TEXT = "change"
 
-    @BeforeMethod
-    @AfterMethod
-    void setUpTearDown() {
-        File file = new File(DIFF_TARGET)
-        file.write ""
+    void setup() {
+        clear()
     }
 
-    @Test
+    void cleanup() {
+        clear()
+    }
+
     void "detects changed file"() {
+        when:
         new File(DIFF_TARGET).write CHANGE_TEXT
         Result diffResult = GitLocal.diff Lists.newArrayList(DIFF_TARGET)
-        Assert.assertTrue diffResult.isSuccessFul()
-        Assert.assertTrue diffResult.getOutput().contains(CHANGE_TEXT)
+
+        then:
+        diffResult.isSuccessFul()
+        diffResult.getOutput().contains(CHANGE_TEXT)
     }
 
-    @Test
     void "detects unchanged file"() {
+        when:
         Result diffResult = GitLocal.diff Lists.newArrayList(DIFF_TARGET)
-        Assert.assertTrue diffResult.isSuccessFul()
-        Assert.assertEquals diffResult.getOutput().length(), 0
+
+        then:
+        diffResult.isSuccessFul()
+        diffResult.getOutput().length() == 0
+    }
+
+    private static clear() {
+        File file = new File(DIFF_TARGET)
+        file.write ""
     }
 
 }

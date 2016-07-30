@@ -5,7 +5,6 @@ import spock.lang.Specification
 class TomcatServerTest extends Specification {
 
     private static final String SERVER_ID = "SERVER_ID"
-
     private static final String CLONE_ROOT = "CLONE_ROOT"
 
     private TomcatServer tomcatServer

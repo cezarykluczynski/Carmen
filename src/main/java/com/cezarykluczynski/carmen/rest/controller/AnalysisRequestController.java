@@ -18,17 +18,17 @@ import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededExceptio
 @RequestMapping("/rest/analyze")
 public class AnalysisRequestController {
 
-    UserDAO githubUserDAOImpl;
+    private UserDAO userDAO;
 
     @Autowired
-    public AnalysisRequestController(UserDAO githubUserDAOImpl) {
-        this.githubUserDAOImpl = githubUserDAOImpl;
+    public AnalysisRequestController(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     @RequestMapping(value = "/github/{login}", method = RequestMethod.GET)
     public Analysis github(@PathVariable String login) throws AssertionError, IOException {
         try {
-            User user = githubUserDAOImpl.createOrUpdateRequestedEntity(login);
+            User user = userDAO.createOrUpdateRequestedEntity(login);
             return new Analysis(login, user.isFound() ? "found" : "not_found");
         } catch(GithubRateLimitExceededException e) {
             return new Analysis(login, "core_rate_limit_exceeded");

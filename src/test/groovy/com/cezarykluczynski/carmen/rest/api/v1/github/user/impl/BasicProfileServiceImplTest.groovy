@@ -1,29 +1,13 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.rest.api.v1.github.user.api.BasicProfileService
 import org.json.JSONObject
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
 import javax.ws.rs.core.Response
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTests {
+public class BasicProfileServiceImplTest extends Specification {
 
     private static final String AVATAR_URL = "avatar_url"
     private static final String BIO = "Bio"
@@ -35,48 +19,47 @@ public class BasicProfileServiceImplTest extends AbstractTestNGSpringContextTest
     private static final String LOGIN = "username"
     private static final String NAME = "John Doe"
 
-    @Autowired
-    @InjectMocks
-    private BasicProfileService basicProfileService
+    private BasicProfileServiceImpl basicProfileService
 
-    @Mock
-    private UserDAO userDAO
+    private UserDAO userDAOMock
 
-    @BeforeMethod
     void setup() {
-        userDAO = mock UserDAO.class
-        MockitoAnnotations.initMocks this
+        userDAOMock = Mock UserDAO
+        basicProfileService = new BasicProfileServiceImpl(userDAOMock)
     }
 
-    @Test
-    public void "existing user is shown"() {
-        when userDAO.findByLogin("login") thenReturn createUserEntity()
+    def "existing user is shown"() {
+        given:
+        userDAOMock.findByLogin("login") >> createUserEntity()
 
+        when:
         Response response = basicProfileService.get("login")
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 200
-        Assert.assertEquals responseBody.getString("avatarUrl"), AVATAR_URL
-        Assert.assertEquals responseBody.getString("bio"), BIO
-        Assert.assertEquals responseBody.getString("blog"), BLOG
-        Assert.assertEquals responseBody.getString("company"), COMPANY
-        Assert.assertEquals responseBody.getBoolean("hireable"), HIREABLE
-        Assert.assertEquals responseBody.getString("email"), EMAIL
-        Assert.assertEquals responseBody.getBoolean("hireable"), HIREABLE
-        Assert.assertEquals responseBody.getString("location"), LOCATION
-        Assert.assertEquals responseBody.getString("login"), LOGIN
-        Assert.assertEquals responseBody.getString("name"), NAME
+        then:
+        responseStatus == 200
+        responseBody.getString("avatarUrl") == AVATAR_URL
+        responseBody.getString("bio") == BIO
+        responseBody.getString("blog") == BLOG
+        responseBody.getString("company") == COMPANY
+        responseBody.getBoolean("hireable") == HIREABLE
+        responseBody.getString("email") == EMAIL
+        responseBody.getBoolean("hireable") == HIREABLE
+        responseBody.getString("location") == LOCATION
+        responseBody.getString("login") == LOGIN
+        responseBody.getString("name") == NAME
     }
 
-    @Test
-    public void "non existing user is not shown"() {
+    def "non existing user is not shown"() {
+        when:
         Response response = basicProfileService.get("notALogin")
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 404
-        Assert.assertEquals responseBody.getString("message"), "404 Not Found"
+        then:
+        responseStatus == 404
+        responseBody.getString("message") == "404 Not Found"
     }
 
     private static User createUserEntity() {

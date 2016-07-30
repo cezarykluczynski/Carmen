@@ -1,10 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.worker
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.model.github.User
@@ -16,151 +13,120 @@ import com.cezarykluczynski.carmen.util.exec.result.Result
 import com.cezarykluczynski.carmen.util.filesystem.Directory
 import com.cezarykluczynski.carmen.vcs.server.Server
 import com.cezarykluczynski.carmen.vcs.server.ServerTest
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.Assert
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Shared
+import spock.lang.Specification
 
-import static org.mockito.Matchers.isA
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
+class GitHubCloneWorkerTest extends Specification {
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class GitHubCloneWorkerTest extends AbstractTestNGSpringContextTests {
+    private static final String LOCATION_DIRECTORY = 'c/c2'
+    private static final String LOCATION_SUBDIRECTORY = 'test/test'
+    private static final String CLONE_URL = '.'
+    private static final String RESULTING_CLONE_DIRECTORY = 'target/test-storage/c/c2/test/test'
 
-    @Autowired
-    UserDAOImplFixtures userDAOImplFixtures
+    private RepositoriesClonesDAO repositoriesClonesDAOMock
 
-    @Autowired
-    RepositoriesDAOImplFixtures repositoriesDAOImplFixtures
+    private GitHubCloneWorker gitHubCloneWorker
 
-    @Autowired
-    RepositoriesClonesDAO repositoriesClonesDAO
+    private RepositoriesDAO repositoriesDAOMock
 
-    @Mock
-    RepositoriesDAO repositoriesDAO
+    private Server serverMock
 
-    @Mock
-    Server server
+    private User userEntity
 
-    @Autowired
-    @InjectMocks
-    GitHubCloneWorker gitHubCloneWorker
+    private Repository repositoryEntity
 
-    User userEntity
+    @Shared
+    private Date now
 
-    Repository repositoryEntity
-
-    Date now
-
-    @BeforeClass
-    void setupClass() {
+    void setupSpec() {
         now = DateUtil.now()
     }
 
-    @BeforeMethod
-    void setup() {
-        repositoriesDAO = mock RepositoriesDAO.class
-        server = mock Server.class
-        MockitoAnnotations.initMocks this
+    def setup() {
+        userEntity = Mock User
+        repositoryEntity = Mock(Repository) {
+            getUser() >> userEntity
+            getCloneUrl() >> CLONE_URL
+            getFullName() >> LOCATION_SUBDIRECTORY
+        }
 
-        userEntity = userDAOImplFixtures.createFoundRequestedUserEntity()
-        repositoryEntity = repositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
-        repositoryEntity.setCloneUrl "."
-        repositoryEntity.setFullName "test/test"
+        repositoriesClonesDAOMock = Mock RepositoriesClonesDAO
+        repositoriesDAOMock = Mock RepositoriesDAO
+        serverMock = Mock(Server) {
+            getCloneRoot() >> ServerTest.CLONE_ROOT
+        }
 
-        when server.getCloneRoot() thenReturn ServerTest.CLONE_ROOT
-        when repositoriesDAO.findNotForkedRepositoryWithoutClone() thenReturn repositoryEntity
+        gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAOMock, repositoriesClonesDAOMock, serverMock)
     }
 
-    @Test
-    void localRepositoryCanBeCloned() {
-        // exercise
+    def "local repository can be cloned"() {
+        given:
+        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> repositoryEntity
+        RepositoryClone repositoryCloneEntity = Mock(RepositoryClone) {
+            getLocationDirectory() >> LOCATION_DIRECTORY
+            getLocationSubdirectory() >> LOCATION_SUBDIRECTORY
+        }
+        repositoriesClonesDAOMock.createStubEntity(*_) >> repositoryCloneEntity
+
+        when:
         gitHubCloneWorker.run()
 
-        // assertion
-        RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
-        Assert.assertEquals repositoryCloneEntityResult.getServerId(), server.getServerId()
-        Assert.assertTrue repositoryCloneEntityResult.getCloned().getTime() >= now.getTime()
-
-        String cloneDirectory = "${server.getCloneRoot()}/${repositoryCloneEntityResult.getLocationDirectory()}/" +
-        "${repositoryCloneEntityResult.getLocationSubdirectory()}"
+        String cloneDirectory = "${ServerTest.CLONE_ROOT}/${LOCATION_DIRECTORY}/${LOCATION_SUBDIRECTORY}"
         String revParseCommandBody = "git rev-parse --resolve-git-dir ${cloneDirectory}/.git"
-
         Command revParseCommand = new ApacheCommonsCommand(revParseCommandBody)
         Result revParseCommandResult = Executor.execute(revParseCommand)
-        Assert.assertTrue revParseCommandResult.isSuccessFul()
-        Assert.assertTrue revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
 
-        // teardown
-        repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
+        then:
+        1 * repositoriesClonesDAOMock.setStatusToCloned(repositoryCloneEntity)
+        revParseCommandResult.isSuccessFul()
+        revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
+
+        cleanup:
+        Directory.delete RESULTING_CLONE_DIRECTORY
     }
 
-    @Test
-    void nullRepositoryEntity() {
-        // setup
-        RepositoriesClonesDAO repositoriesClonesDAO = mock RepositoriesClonesDAO.class
-        when(repositoriesClonesDAO.createStubEntity(isA(Server.class), isA(Repository.class))).thenReturn null
-        RepositoriesDAO repositoriesDAO = mock RepositoriesDAO
-        when repositoriesDAO.findNotForkedRepositoryWithoutClone() thenReturn null
-        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAO, repositoriesClonesDAO, server)
+    def "null repository entity does not generate clone repository entity"() {
+        given:
+        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> null
 
-        // exercise
+        when:
         gitHubCloneWorker.run()
 
-        // assertion
-        verify(repositoriesClonesDAO, never()).createStubEntity(isA(Server.class), isA(Repository.class))
+        then:
+        0 * repositoriesClonesDAOMock.createStubEntity(*_) >> null
     }
 
-    @Test
-    void invalidRepositoryCannotBeCloned() {
-        // setup
-        repositoryEntity.setCloneUrl server.getCloneRoot()
+    def "invalid repository cannot be cloned"() {
+        given:
+        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> repositoryEntity
+        RepositoryClone repositoryCloneEntity = Mock(RepositoryClone) {
+            getLocationDirectory() >> '.'
+            getLocationSubdirectory() >> '.'
+        }
+        repositoriesClonesDAOMock.createStubEntity(*_) >> repositoryCloneEntity
+        repositoryEntity.getCloneUrl() >> "target"
 
-        // exercise
+        when:
         gitHubCloneWorker.run()
 
-        // assertion
-        RepositoryClone repositoryCloneEntityResult = repositoriesClonesDAO.findByRepositoryEntity repositoryEntity
-        Assert.assertNull repositoryCloneEntityResult.getServerId()
-        Assert.assertNull repositoryCloneEntityResult.getCloned()
+        then:
+        1 * repositoriesClonesDAOMock.truncateEntity(*_)
 
-        // teardown
-        repositoriesDAOImplFixtures.deleteRepositoryEntity repositoryEntity
+        cleanup:
+        Directory.delete RESULTING_CLONE_DIRECTORY
     }
 
-    @Test
-    void invalidCloneRepositoryDoesNotMakeClone() {
-        // setup
-        RepositoriesClonesDAO repositoriesClonesDAO = mock RepositoriesClonesDAO.class
-        doNothing().when(repositoriesClonesDAO).setStatusToCloned(isA(RepositoryClone.class))
-        when(repositoriesClonesDAO.truncateEntity(isA(Server.class), isA(RepositoryClone.class))).thenReturn null
-        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAO, repositoriesClonesDAO, server)
-        when repositoriesClonesDAO.createStubEntity(server, repositoryEntity) thenReturn null
+    def "invalid clone repository does not make clone"() {
+        given:
+        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAOMock, repositoriesClonesDAOMock, serverMock)
+        repositoriesClonesDAOMock.createStubEntity(serverMock, repositoryEntity) >> null
 
-        // exercise
+        when:
         gitHubCloneWorker.run()
 
-        verify(repositoriesClonesDAO, never()).setStatusToCloned(isA(RepositoryClone.class))
-        verify(repositoriesClonesDAO, never()).truncateEntity(isA(Server.class), isA(RepositoryClone.class))
-    }
-
-    @AfterMethod
-    void tearDown() {
-        userDAOImplFixtures.deleteUserEntity userEntity
-        Directory.delete server.getCloneRoot()
+        then:
+        0 * repositoriesClonesDAOMock.setStatusToCloned(_)
+        0 * repositoriesClonesDAOMock.truncateEntity(*_)
     }
 
 }

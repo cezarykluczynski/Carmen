@@ -2,15 +2,15 @@ package com.cezarykluczynski.carmen.util.exec;
 
 import com.cezarykluczynski.carmen.util.OS;
 import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
-import com.cezarykluczynski.carmen.util.filesystem.Directory;
 
 public class MkDirCommand extends ApacheCommonsCommand {
 
     public MkDirCommand(String command) {
-        super(wrapCommand(Directory.sanitizePathForOs(command)));
+        super(wrapCommand(command));
     }
 
-    protected static String wrapCommand(String command) {
+    private static String wrapCommand(String command) {
+        // TODO: it should not fail if directory exists
         if (OS.isLinux()) {
             return "mkdir -p " + command;
         } else if (OS.isWindows()) {

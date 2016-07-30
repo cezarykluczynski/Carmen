@@ -3,7 +3,6 @@ package com.cezarykluczynski.carmen.vcs.git.persistence
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.factory.DateFactory
-import com.cezarykluczynski.carmen.util.factory.NowDateProvider
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash
 import com.cezarykluczynski.carmen.vcs.server.Server
 import spock.lang.Specification

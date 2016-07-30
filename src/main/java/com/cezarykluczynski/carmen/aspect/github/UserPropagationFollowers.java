@@ -14,7 +14,7 @@ import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation;
 @Component
 public class UserPropagationFollowers {
 
-    UserFollowersPropagation userFollowersPropagation;
+    private UserFollowersPropagation userFollowersPropagation;
 
     @Autowired
     public UserPropagationFollowers(UserFollowersPropagation userFollowersPropagation) {

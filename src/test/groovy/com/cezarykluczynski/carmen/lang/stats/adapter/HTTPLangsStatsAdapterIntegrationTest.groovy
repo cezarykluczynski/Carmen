@@ -1,147 +1,136 @@
 package com.cezarykluczynski.carmen.lang.stats.adapter
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
 import com.cezarykluczynski.carmen.lang.stats.mapper.LanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
+import com.cezarykluczynski.carmen.lang.stats.util.LanguageDetectorServerSwitcher
 import com.cezarykluczynski.carmen.util.network.HTTPClient
 import com.cezarykluczynski.carmen.util.network.HTTPJSONClientImpl
 import com.cezarykluczynski.carmen.util.network.HTTPRequestException
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
 import org.testng.Assert
-import org.testng.SkipException
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.Test
+import spock.lang.Requires
+import spock.lang.Shared
+import spock.lang.Specification
 
-import java.lang.reflect.Field
+@Requires({ LanguageDetectorServerSwitcher.getAssumeRunningServer() ||
+        LanguageDetectorServerSwitcher.getClient() == 'http' })
+class HTTPLangsStatsAdapterIntegrationTest extends Specification {
 
-import static org.mockito.Matchers.anyMap
-import static org.mockito.Matchers.anyString
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTests {
-
-    @Value('${detector.ip}')
+    @Shared
     private String detectorIp
 
-    @Value('${detector.port}')
+    @Shared
     private int detectorPort
-
-    @Value('${detector.client}')
-    private String detectorClient
-
-    @Value('${detector.test.assumeRunningServer}')
-    private Boolean detectorTestAssumeRunningServer
 
     private LanguageMapper languageMapper = new LinguistLanguageMapper()
 
     private HTTPLangsStatsAdapter httpLangsStatsAdapter
 
-    HTTPClient httpClient
+    private HTTPClient httpClient
 
-    HTTPClient invalidHttpClient
+    private HTTPClient invalidHttpClientMock
 
-    @BeforeClass
-    void setUpClass() {
-        if (!detectorClient.equals("cli") && detectorTestAssumeRunningServer != true) {
-            throw new SkipException("Local Ruby server cannot be started, and it's not expected to be running.")
-        }
+    def setupSpec() {
+        Properties prop = LanguageDetectorServerSwitcher.getApplicationProperties()
+        detectorIp = prop.getProperty('detector.ip')
+        detectorPort = Integer.valueOf prop.getProperty('detector.port')
+    }
 
+    def setup() {
         httpClient = new HTTPJSONClientImpl(detectorIp, detectorPort)
 
-        invalidHttpClient = mock HTTPJSONClientImpl.class
-        when invalidHttpClient.get(anyString()) thenThrow new HTTPRequestException(new Throwable())
-        when invalidHttpClient.post(anyString(), anyMap()) thenThrow new HTTPRequestException(new Throwable())
+        invalidHttpClientMock = Mock HTTPJSONClientImpl
+        invalidHttpClientMock.get(_) >> { args ->
+            throw new HTTPRequestException(new Throwable())
+        }
+        invalidHttpClientMock.post(*_) >> { args ->
+            throw new HTTPRequestException(new Throwable())
+        }
 
         httpLangsStatsAdapter = new HTTPLangsStatsAdapter(httpClient, languageMapper)
     }
 
-    @Test
-    void getSupportedLanguages() {
-        // setup
+    def "gets supported languages"() {
+        given:
         injectValidHttpClient()
 
+        when:
         List<Language> languageList = httpLangsStatsAdapter.getSupportedLanguages()
 
+        then:
         Assert.assertEquals languageList.size(), 401
     }
 
-    @Test
-    void getSupportedLanguagesInvalid() {
-        // setup
+    def "returns null for unsuccessful supported languages request"() {
+        given:
         injectInvalidHttpClient()
 
-        Assert.assertNull httpLangsStatsAdapter.getSupportedLanguages()
+        expect:
+        httpLangsStatsAdapter.getSupportedLanguages() == null
     }
 
-
-    @Test
-    void getLinguistVersion() {
-        // setup
+    def "gets linguist version"() {
+        given:
         injectValidHttpClient()
 
+        when:
         String linguistVersion = httpLangsStatsAdapter.getLinguistVersion()
 
-        Assert.assertTrue linguistVersion.matches("\\d\\.\\d\\.\\d")
+        then:
+        linguistVersion.matches("\\d\\.\\d\\.\\d")
     }
 
-    @Test
-    void getLinguistVersionInvalid() {
-        // setup
+    def "returns null for unsuccessful linguist version request"() {
+        given:
         injectInvalidHttpClient()
 
-        Assert.assertNull httpLangsStatsAdapter.getLinguistVersion()
+        expect:
+        httpLangsStatsAdapter.getLinguistVersion() == null
     }
 
-    @Test
-    void describeRepository() {
-        // setup
+    def "describes repository"() {
+        given:
         injectValidHttpClient()
-
         final String commitHash = "3fe8afa350b369c6c697290f64da6aa996ede153"
 
+        when:
         RepositoryDescription repositoryDescription = httpLangsStatsAdapter.describeRepository(".", commitHash)
 
-        Assert.assertEquals repositoryDescription.getLineStats().size(), 4
-        Assert.assertEquals repositoryDescription.getCommitHash(), commitHash
+        then:
+        repositoryDescription.getLineStats().size() == 4
+        repositoryDescription.getCommitHash() == commitHash
     }
 
-    @Test
-    void describeRepositoryInvalid() {
-        // setup
+    def "returns null for unsuccessful repository description request"() {
+        given:
         injectInvalidHttpClient()
 
-        Assert.assertNull httpLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153")
+        expect:
+        httpLangsStatsAdapter.describeRepository(".", "3fe8afa350b369c6c697290f64da6aa996ede153") == null
     }
 
-    @Test
-    void describeCommit() {
-        // setup
+    def "describes commit"() {
+        given:
         injectValidHttpClient()
-
         final String commitHash = "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1"
 
+        when:
         CommitDescription commitDescription =
                 httpLangsStatsAdapter.describeCommit(".", commitHash)
 
-        Assert.assertEquals commitDescription.getLineDiffStats().size(), 2
-        Assert.assertEquals commitDescription.getCommitHash(), commitHash
+        then:
+        commitDescription.getLineDiffStats().size() == 2
+        commitDescription.getCommitHash() == commitHash
     }
 
-    @Test
-    void describeCommitInvalid() {
-        // setup
+    def "returns null for unsuccessful commit description request"() {
+        given:
         injectInvalidHttpClient()
 
-        Assert.assertNull httpLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1")
+        expect:
+        httpLangsStatsAdapter.describeCommit(".", "21628ec99e149f6509bfb3b3ce8faf8eb2f391c1") == null
     }
 
     private void injectValidHttpClient() {
@@ -149,14 +138,11 @@ class HTTPLangsStatsAdapterIntegrationTest extends AbstractTestNGSpringContextTe
     }
 
     private void injectInvalidHttpClient() {
-        injectHttpClient invalidHttpClient
+        injectHttpClient invalidHttpClientMock
     }
 
-    private void injectHttpClient(HTTPClient httpClientImpl) {
-        Field binPathField = httpLangsStatsAdapter.getClass().getDeclaredField "httpClient"
-        binPathField.setAccessible true
-        binPathField.set httpLangsStatsAdapter, httpClientImpl
-
+    private void injectHttpClient(HTTPClient httpClient) {
+        httpLangsStatsAdapter.httpClient = httpClient
     }
 
 }

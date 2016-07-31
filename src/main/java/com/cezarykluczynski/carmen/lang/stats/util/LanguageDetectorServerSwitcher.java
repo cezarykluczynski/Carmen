@@ -40,11 +40,19 @@ public class LanguageDetectorServerSwitcher {
     }
 
     public static String getClient() throws IOException {
+        return getApplicationProperties().getProperty("detector.client");
+    }
+
+    public static Boolean getAssumeRunningServer() throws IOException {
+        return getApplicationProperties().getProperty("detector.test.assumeRunningServer").equals("true");
+    }
+
+    public static Properties getApplicationProperties() throws IOException  {
         Properties prop = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream stream = loader.getResourceAsStream("application.properties");
         prop.load(stream);
-        return prop.getProperty("detector.client");
+        return prop;
     }
 
     private static void startServer() throws FileNotFoundException {

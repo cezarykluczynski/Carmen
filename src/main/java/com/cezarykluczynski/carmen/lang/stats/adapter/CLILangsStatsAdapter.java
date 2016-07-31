@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
-    private String binPath = "./ruby/bin/lang_stats";
+    private String binCommandPrefix = "ruby ./ruby/bin/lang_stats";
 
     private LanguageMapper languageMapper;
 
@@ -21,7 +21,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
     @Override
     public List<Language> getSupportedLanguages() {
-        Result commandResult = Executor.execute(LanguageStatsCommand.createSupportedLanguagesCommand(binPath));
+        Result commandResult = Executor.execute(LanguageStatsCommand.createSupportedLanguagesCommand(binCommandPrefix));
         if (commandResult.isSuccessFul()) {
             return languageMapper.mapLanguageList(new JSONObject(commandResult.getOutput()));
         }
@@ -31,7 +31,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
 
     @Override
     public String getLinguistVersion() {
-        Result commandResult = Executor.execute(LanguageStatsCommand.createLinguistVersionCommand(binPath));
+        Result commandResult = Executor.execute(LanguageStatsCommand.createLinguistVersionCommand(binCommandPrefix));
         if (commandResult.isSuccessFul()) {
             return languageMapper.mapLinguistVersion(new JSONObject(commandResult.getOutput()));
         }
@@ -42,7 +42,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     @Override
     public RepositoryDescription describeRepository(String relativeDirectory, String commitHash) {
         Result commandResult = Executor.execute(
-                LanguageStatsCommand.createDescribeRepositoryCommand(binPath, relativeDirectory, commitHash));
+                LanguageStatsCommand.createDescribeRepositoryCommand(binCommandPrefix, relativeDirectory, commitHash));
 
         if (commandResult.isSuccessFul()) {
             return languageMapper.toRepositoryDescription(commitHash, new JSONObject(commandResult.getOutput()));
@@ -54,7 +54,7 @@ public class CLILangsStatsAdapter implements LangsStatsAdapter {
     @Override
     public CommitDescription describeCommit(String relativeDirectory, String commitHash) {
         Result commandResult = Executor.execute(
-                LanguageStatsCommand.createDescribeCommitCommand(binPath, relativeDirectory, commitHash));
+                LanguageStatsCommand.createDescribeCommitCommand(binCommandPrefix, relativeDirectory, commitHash));
 
         if (commandResult.isSuccessFul()) {
             return languageMapper.toCommitDescription(commitHash, new JSONObject(commandResult.getOutput()));

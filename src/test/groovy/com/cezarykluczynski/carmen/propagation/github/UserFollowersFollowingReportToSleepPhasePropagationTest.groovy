@@ -1,59 +1,48 @@
 package com.cezarykluczynski.carmen.propagation.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
-import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees
+import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-import org.testng.Assert
+import org.springframework.beans.factory.annotation.Autowired
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTestNGSpringContextTests {
+class UserFollowersFollowingReportToSleepPhasePropagationTest extends IntegrationTest {
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase
+    private UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase
 
     @Autowired
-    FollowersAndFolloweesRepository followersAndFolloweesRepository
+    private FollowersAndFolloweesRepository followersAndFolloweesRepository
 
     @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl
+    private UserFollowersDAO propagationsUserFollowersDAOImpl
 
     @Autowired
-    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
 
     @Autowired
-    UserFollowingDAO propagationsUserFollowingDAOImpl
+    private UserFollowingDAO propagationsUserFollowingDAOImpl
 
     @Autowired
-    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
-    User userEntity
+    private User userEntity
 
-    UserFollowers userFollowersEntity
+    private UserFollowers userFollowersEntity
 
-    UserFollowing userFollowingEntity
+    private UserFollowing userFollowingEntity
 
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         propagationUserFollowersFollowingReportToSleepPhase.setUserEntity userEntity
         userFollowersEntity = propagationsUserFollowersDAOImplFixtures
@@ -62,37 +51,34 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends AbstractTe
             .createUserFollowingEntityUsingUserEntityAndPhase userEntity, "report"
     }
 
-    @Test
-    void propagateNonExistingFollowersAndFolloweesEntity() {
-        // exercise
-        propagationUserFollowersFollowingReportToSleepPhase.propagate()
-
-        // assertion
-        Assert.assertEquals propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase(), "sleep"
-        Assert.assertEquals propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase(), "sleep"
-        Assert.assertTrue followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
+    def cleanup() {
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void propagateExistingFollowersAndFolloweesEntity() {
-        // setup
+    def "propagates non-existing followers and followees entity"() {
+        when:
+        propagationUserFollowersFollowingReportToSleepPhase.propagate()
+
+        then:
+        propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase() == "sleep"
+        propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase() == "sleep"
+        followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
+    }
+
+    def "propagates existing followers and followees entity"() {
+        given:
         FollowersAndFollowees followersAndFolloweesEntity = new FollowersAndFollowees()
         followersAndFolloweesEntity.setId()
         followersAndFolloweesEntity.setUserId userEntity.getId()
         followersAndFolloweesRepository.save followersAndFolloweesEntity
 
-        // exercise
+        when:
         propagationUserFollowersFollowingReportToSleepPhase.propagate()
 
-        // assertion
-        Assert.assertEquals propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase(), "sleep"
-        Assert.assertEquals propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase(), "sleep"
-        Assert.assertTrue followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
-    }
-
-    @AfterMethod
-    void tearDown() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase() == "sleep"
+        propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase() == "sleep"
+        followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
     }
 
 }

@@ -21,8 +21,7 @@ psql -c 'create database carmen;' -U postgres
 mvn clean compile
 mvn flyway:migrate
 npm install --global gulp
-npm install
-gulp
+cd src/main/webapp/frontend && npm install && gulp
 ```
 
 You may need to customize PostgreSQL and Cassandra credendials.

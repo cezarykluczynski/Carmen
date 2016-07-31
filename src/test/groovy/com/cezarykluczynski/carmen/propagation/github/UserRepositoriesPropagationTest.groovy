@@ -1,74 +1,89 @@
 package com.cezarykluczynski.carmen.propagation.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.Repositories
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
 import org.testng.Assert
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
+class UserRepositoriesPropagationTest extends IntegrationTest {
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesDAO propagationsRepositoriesDAOImpl
 
     @Autowired
-    UserRepositoriesPropagation userRepositoriesPropagation
+    private UserRepositoriesPropagation userRepositoriesPropagation
 
     @Autowired
-    RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
+    private RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
 
     @Autowired
-    PendingRequestDAO apiqueuePendingRequestDAOImpl
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl
 
-    User userEntity
+    private User userEntity
 
-    Repositories repositoriesEntity
+    private Repositories repositoriesEntity
 
-    @Test
-    void propagateNotFoundEntity() {
-        // setup
+    def "propagates not found entity"() {
+        given:
         userEntity = githubUserDAOImplFixtures.createNotFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
 
-        // exercise
+        when:
         userRepositoriesPropagation.propagate()
 
-        // assertion
-        Assert.assertNull propagationsRepositoriesDAOImpl.findByUser(userEntity)
+        then:
+        propagationsRepositoriesDAOImpl.findByUser(userEntity) == null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void propagateFoundEntity() {
-        // setup
+    def "propagates found entity"() {
+        given:
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
 
-        // exercise
+        when:
         userRepositoriesPropagation.propagate()
-
-        // assertion
         repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
+
+        then:
         Assert.assertTrue repositoriesEntity instanceof Repositories
         Assert.assertEquals repositoriesEntity.getUser().getId(), userEntity.getId()
+        findPendingRequestEntity() instanceof PendingRequest
 
+        cleanup:
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
+    def "propagates found entity that is already propagated"() {
+        given:
+        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userRepositoriesPropagation.setUserEntity userEntity
+
+        when:
+        userRepositoriesPropagation.propagate()
+        repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
+        userRepositoriesPropagation.propagate()
+        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
+
+        then:
+        propagationsRepositoriesDAOImpl.findByUser(userEntity) == null
+
+        cleanup:
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
+    private PendingRequest findPendingRequestEntity() {
         PendingRequest pendingRequestEntityFound = null
         List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser(userEntity)
         for(PendingRequest pendingRequestEntity in pendingRequestEntitiesList) {
@@ -76,33 +91,11 @@ class UserRepositoriesPropagationTest extends AbstractTestNGSpringContextTests {
                 if (pendingRequestEntityFound == null) {
                     pendingRequestEntityFound = pendingRequestEntity
                 } else {
-                    Assert.assertTrue false
+                    return null
                 }
             }
         }
-        Assert.assertTrue pendingRequestEntityFound instanceof PendingRequest
-
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
-    }
-
-    @Test
-    void propagateFoundEntityAlreadyPropagated() {
-            // setup
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        userRepositoriesPropagation.setUserEntity userEntity
-
-        // exercise
-        userRepositoriesPropagation.propagate()
-        repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
-        userRepositoriesPropagation.propagate()
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
-
-        // assertion
-        Assert.assertNull propagationsRepositoriesDAOImpl.findByUser(userEntity)
-
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        return pendingRequestEntityFound
     }
 
 }

@@ -1,32 +1,16 @@
 package com.cezarykluczynski.carmen.client.github;
 
-import java.io.IOException;
-
-import org.springframework.stereotype.Component;
-
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
-import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.set.github.RateLimit;
 import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.User;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-@Component
 public class GithubClient implements GithubClientInterface {
-
-    public GithubClient(
-        GithubClientInterface githubJcabiClient,
-        GithubClientInterface githubKohsukeClient,
-        GithubClientInterface githubEgitClient,
-        RateLimitDAO rateLimitDAOImpl
-    ) {
-        this.githubJcabiClient = githubJcabiClient;
-        this.githubKohsukeClient = githubKohsukeClient;
-        this.githubEgitClient = githubEgitClient;
-        this.rateLimitDAOImpl = rateLimitDAOImpl;
-    }
 
     private GithubClientInterface githubJcabiClient;
 
@@ -35,6 +19,15 @@ public class GithubClient implements GithubClientInterface {
     private GithubClientInterface githubEgitClient;
 
     private RateLimitDAO rateLimitDAOImpl;
+
+
+    public GithubClient(GithubClientInterface githubJcabiClient, GithubClientInterface githubKohsukeClient,
+        GithubClientInterface githubEgitClient, RateLimitDAO rateLimitDAOImpl) {
+        this.githubJcabiClient = githubJcabiClient;
+        this.githubKohsukeClient = githubKohsukeClient;
+        this.githubEgitClient = githubEgitClient;
+        this.rateLimitDAOImpl = rateLimitDAOImpl;
+    }
 
     public RateLimit getCoreLimit() throws IOException {
         return githubJcabiClient.getCoreLimit();

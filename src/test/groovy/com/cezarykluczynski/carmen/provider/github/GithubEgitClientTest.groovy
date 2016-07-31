@@ -1,75 +1,71 @@
 package com.cezarykluczynski.carmen.provider.github
 
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubEgitClient
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
-import org.testng.Assert
-
 import com.cezarykluczynski.carmen.set.github.Repository
 import com.cezarykluczynski.carmen.set.github.User
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import org.springframework.beans.factory.annotation.Autowired
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class GithubEgitClientTest extends AbstractTestNGSpringContextTests {
+import java.util.stream.Collectors
+
+class GithubEgitClientTest extends IntegrationTest {
 
     @Autowired
-    GithubEgitClient githubEgitClient
+    private GithubEgitClient githubEgitClient
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getCoreLimit() {
+    def "getCoreLimit throws exception"() {
+        when:
         githubEgitClient.getCoreLimit()
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getSearchLimit() {
+    def "getSearchLimit throws exception"() {
+        when:
         githubEgitClient.getSearchLimit()
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getUser() {
-        githubEgitClient.getUser()
+    def "getUser throws exception"() {
+        when:
+        githubEgitClient.getUser("login")
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test
-    void getRepositories() {
+    def "gets repositories"() {
+        when:
         List<Repository> repositoriesList = githubEgitClient.getRepositories "cezarykluczynski"
-        for(Repository repository in repositoriesList) {
-            if (repository.getName() == "Carmen") {
-                Assert.assertTrue true
-                return;
-            }
-        }
 
-        Assert.fail()
+        then:
+        repositoriesList.stream().map({repository -> repository.name}).collect(Collectors.toList()).contains("Carmen")
     }
 
-    @Test
-    void getFollowers() {
-        // exercise
+    def "gets followers"() {
+        when:
         PaginationAwareArrayList<User> followersList = githubEgitClient.getFollowers "octocat", 10, 0
 
-        // assertion
-        Assert.assertEquals followersList.size(), 10
-
-        User userSet = followersList.get 0
-        Assert.assertNotNull userSet.getLogin()
+        then:
+        followersList.size() == 10
+        followersList.get(0).getLogin() != null
     }
 
-    @Test
-    void getFollowing() {
-        // exercise
+    def "gets following"() {
+        when:
         PaginationAwareArrayList<User> followingList = githubEgitClient.getFollowing "octocat", 10, 0
 
+        then:
         // assertion: last time checked, Octocat was following 6 GitHub employees
-        Assert.assertTrue followingList.size() > 5
-
-        User userSet = followingList.get 0
-        Assert.assertNotNull userSet.getLogin()
+        followingList.size() > 5
+        followingList.get(0).getLogin() != null
     }
 
 }

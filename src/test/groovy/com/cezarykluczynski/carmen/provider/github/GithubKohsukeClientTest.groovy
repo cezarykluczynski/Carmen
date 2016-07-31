@@ -1,48 +1,68 @@
 package com.cezarykluczynski.carmen.provider.github
 
 import com.cezarykluczynski.carmen.client.github.GithubKohsukeClient
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class GithubKohsukeClientTest extends AbstractTestNGSpringContextTests {
+class GithubKohsukeClientTest extends Specification {
 
-    @Autowired
-    GithubKohsukeClient githubKohsukeClient
+    private GithubKohsukeClient githubKohsukeClient
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getCoreLimit() {
+    def setup() {
+        githubKohsukeClient = new GithubKohsukeClient(null)
+    }
+
+    def "getCoreLimit throws exception"() {
+        when:
         githubKohsukeClient.getCoreLimit()
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getSearchLimit() {
+    def "getSearchLimit throws exception"() {
+        when:
         githubKohsukeClient.getSearchLimit()
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getUser() {
+    def "getUser throws exception"() {
+        when:
         githubKohsukeClient.getUser "name"
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getRepositories() {
+    def "getRepositories throws exception"() {
+        when:
         githubKohsukeClient.getRepositories "name"
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getFollowers() {
+    def "getFollowers throws exception"() {
+        when:
         githubKohsukeClient.getFollowers "name", 1, 0
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getFollowing() {
+    def "getFollowing throws exception"() {
+        when:
         githubKohsukeClient.getFollowing "name", 1, 0
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
 }

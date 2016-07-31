@@ -55,7 +55,7 @@ class UserDAOImplFixtures {
         return userEntity
     }
 
-    public String generateRandomLogin() {
+    public static String generateRandomLogin() {
         return "random_login" + System.currentTimeMillis() + RandomStringUtils.randomNumeric(10)
     }
 

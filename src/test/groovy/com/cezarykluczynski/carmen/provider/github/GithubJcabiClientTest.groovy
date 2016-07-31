@@ -1,74 +1,82 @@
 package com.cezarykluczynski.carmen.provider.github
 
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubJcabiClient
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
-import org.testng.Assert
-
-import com.cezarykluczynski.carmen.set.github.User
 import com.cezarykluczynski.carmen.set.github.RateLimit
+import com.cezarykluczynski.carmen.set.github.User
+import org.springframework.beans.factory.annotation.Autowired
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class GithubJcabiClientTest extends AbstractTestNGSpringContextTests {
+class GithubJcabiClientTest extends IntegrationTest {
 
     @Autowired
-    GithubJcabiClient githubJcabiClient
+    private GithubJcabiClient githubJcabiClient
 
-    @Test
-    void getCoreLimit() {
+    def "gets core limit"() {
+        when:
         RateLimit rateLimitSet = githubJcabiClient.getCoreLimit()
 
-        Assert.assertEquals rateLimitSet.getResource(), "core"
-        Assert.assertTrue rateLimitSet.getLimit() instanceof Integer
-        Assert.assertTrue rateLimitSet.getRemaining() instanceof Integer
-        Assert.assertTrue rateLimitSet.getReset() instanceof Date
+        then:
+        rateLimitSet.getResource() == "core"
+        rateLimitSet.getLimit() instanceof Integer
+        rateLimitSet.getRemaining() instanceof Integer
+        rateLimitSet.getReset() instanceof Date
     }
 
-    @Test
-    void getSearchLimit() {
+    def "gets search limit"() {
+        when:
         RateLimit rateLimitSet = githubJcabiClient.getSearchLimit()
 
-        Assert.assertEquals rateLimitSet.getResource(), "search"
-        Assert.assertTrue rateLimitSet.getLimit() instanceof Integer
-        Assert.assertTrue rateLimitSet.getRemaining() instanceof Integer
-        Assert.assertTrue rateLimitSet.getReset() instanceof Date
+        then:
+        rateLimitSet.getResource() == "search"
+        rateLimitSet.getLimit() instanceof Integer
+        rateLimitSet.getRemaining() instanceof Integer
+        rateLimitSet.getReset() instanceof Date
     }
 
-    @Test
-    void getExistingUser() {
+    def "gets existing user"() {
+        when:
         User userSet = githubJcabiClient.getUser "octocat"
 
-        Assert.assertNotNull userSet.getId()
-        Assert.assertEquals userSet.getLogin(), "octocat"
-        Assert.assertEquals userSet.getCompany(), "GitHub"
+        then:
+        userSet.getId() != null
+        userSet.getLogin() == "octocat"
+        userSet.getCompany() == "GitHub"
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getRepositories() {
+    def "gets repositories throws exception"() {
+        when:
         githubJcabiClient.getRepositories "name"
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test
-    void getNonExistingUser() {
+    def "gets non existing user"() {
+        when:
         User userSet = githubJcabiClient.getUser "carmen-user-404-integration-test"
 
-        Assert.assertNull userSet.getId()
-        Assert.assertEquals userSet.getLogin(), "carmen-user-404-integration-test"
+        then:
+        userSet.getId() == null
+        userSet.getLogin() == "carmen-user-404-integration-test"
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getFollowers() {
+    def "get followers throws exception"() {
+        when:
         githubJcabiClient.getFollowers "name", 1, 0
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
-    @Test(expectedExceptions = IOException.class, expectedExceptionsMessageRegExp = "Implemented in different provider.")
-    void getFollowing() {
+    def "get following throws exception"() {
+        when:
         githubJcabiClient.getFollowing "name", 1, 0
+
+        then:
+        IOException ex = thrown()
+        ex.message == "Implemented in different provider."
     }
 
 }

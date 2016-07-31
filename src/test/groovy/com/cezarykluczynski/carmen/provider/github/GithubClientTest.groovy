@@ -1,78 +1,50 @@
 package com.cezarykluczynski.carmen.client.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
-import org.testng.annotations.BeforeMethod
-import org.testng.Assert
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.verify
-
-import com.cezarykluczynski.carmen.set.github.User as UserSet
-import com.cezarykluczynski.carmen.set.github.RateLimit
-import com.cezarykluczynski.carmen.set.github.Repository
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
 import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.set.github.RateLimit
+import com.cezarykluczynski.carmen.set.github.Repository
+import com.cezarykluczynski.carmen.set.github.User as UserSet
+import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import spock.lang.Specification
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class GithubClientTest extends AbstractTestNGSpringContextTests {
+class GithubClientTest extends Specification {
 
-    @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private static final String LOGIN = "LOGIN"
 
-    GithubClient githubClient
+    private GithubClient githubClient
 
-    GithubJcabiClient githubJcabiClientMock
+    private GithubJcabiClient githubJcabiClientMock
 
-    GithubEgitClient githubEgitClientMock
+    private GithubEgitClient githubEgitClientMock
 
-    GithubKohsukeClient githubKohsukeClientMock
+    private GithubKohsukeClient githubKohsukeClientMock
 
-    RateLimitDAO rateLimitDAOImplMock
+    private RateLimitDAO rateLimitDAOImplMock
 
-    RateLimit rateLimitSetCore
+    private RateLimit rateLimitSetCore
 
-    RateLimit rateLimitSetSearch
+    private RateLimit rateLimitSetSearch
 
-    UserSet userSet
+    private UserSet userSet
 
-    String login
+    private PaginationAwareArrayList followersList
 
-    PaginationAwareArrayList followersList
+    private PaginationAwareArrayList followingList
 
-    PaginationAwareArrayList followingList
+    private List<Repository> repositoriesList
 
-    List<Repository> repositoriesList
-
-    @BeforeMethod
-    void setUp() {
-        githubJcabiClientMock = mock GithubJcabiClient.class
-        githubEgitClientMock = mock GithubEgitClient.class
-        githubKohsukeClientMock = mock GithubKohsukeClient.class
-        rateLimitDAOImplMock = mock RateLimitDAOImpl.class
-        rateLimitSetCore = mock RateLimit.class
-        rateLimitSetSearch = mock RateLimit.class
-        userSet = mock UserSet.class
-        repositoriesList = mock List.class
-        followersList = mock PaginationAwareArrayList.class
-        followingList = mock PaginationAwareArrayList.class
-
-        login = githubUserDAOImplFixtures.generateRandomLogin()
-
-        when githubJcabiClientMock.getCoreLimit() thenReturn rateLimitSetCore
-        when githubJcabiClientMock.getSearchLimit() thenReturn rateLimitSetSearch
-        when githubJcabiClientMock.getUser(login) thenReturn userSet
-        when githubEgitClientMock.getRepositories(login) thenReturn repositoriesList
-        when githubEgitClientMock.getFollowers(login, 1, 0) thenReturn followersList
-        when githubEgitClientMock.getFollowing(login, 1, 0) thenReturn followingList
+    def setup() {
+        githubJcabiClientMock = Mock GithubJcabiClient
+        githubEgitClientMock = Mock GithubEgitClient
+        githubKohsukeClientMock = Mock GithubKohsukeClient
+        rateLimitDAOImplMock = Mock RateLimitDAOImpl
+        rateLimitSetCore = Mock RateLimit
+        rateLimitSetSearch = Mock RateLimit
+        userSet = Mock UserSet
+        repositoriesList = Mock List
+        followersList = Mock PaginationAwareArrayList
+        followingList = Mock PaginationAwareArrayList
 
         githubClient = new GithubClient(
             githubJcabiClientMock,
@@ -82,64 +54,58 @@ class GithubClientTest extends AbstractTestNGSpringContextTests {
         )
     }
 
-    @Test
-    void getCoreLimit() {
-        // exercise
+    def "gets core limit"() {
+        when:
         RateLimit rateLimitSetCoreReturned = githubClient.getCoreLimit()
 
-        // assertion
-        verify(githubJcabiClientMock).getCoreLimit()
-        Assert.assertEquals rateLimitSetCoreReturned, rateLimitSetCore
+        then:
+        1 * githubJcabiClientMock.getCoreLimit() >> rateLimitSetCore
+        rateLimitSetCoreReturned == rateLimitSetCore
     }
 
-    @Test
-    void getSearchLimit() {
-        // exercise
+    def "gets search limit"() {
+        when:
         RateLimit rateLimitSetSearchReturned = githubClient.getSearchLimit()
 
-        // assertion
-        verify(githubJcabiClientMock).getSearchLimit()
-        Assert.assertEquals rateLimitSetSearchReturned, rateLimitSetSearch
+        then:
+        1 * githubJcabiClientMock.getSearchLimit() >> rateLimitSetSearch
+        rateLimitSetSearchReturned == rateLimitSetSearch
     }
 
-    @Test
-    void getUser() {
-        // exercise
-        UserSet userSetReturned = githubClient.getUser(login)
+    def "gets user"() {
+        when:
+        UserSet userSetReturned = githubClient.getUser(LOGIN)
 
-        // assertion
-        verify(githubJcabiClientMock).getUser(login)
-        Assert.assertEquals userSetReturned, userSet
+        then:
+        1 * githubJcabiClientMock.getUser(LOGIN) >> userSet
+        userSetReturned == userSet
     }
 
-    @Test
-    void getRepositories() {
-        // exercise
-        List<Repository> repositoriesListReturned = githubClient.getRepositories(login)
+    def "gets repositories"() {
+        when:
+        List<Repository> repositoriesListReturned = githubClient.getRepositories(LOGIN)
 
-        // assertion
-        verify(githubEgitClientMock).getRepositories(login)
-        Assert.assertEquals repositoriesListReturned, repositoriesList
+        then:
+        1 * githubEgitClientMock.getRepositories(LOGIN) >> repositoriesList
+        repositoriesListReturned == repositoriesList
     }
 
-    @Test
-    void getFollowers() {
-        // exercise
-        PaginationAwareArrayList<UserSet> followersListReturned = githubClient.getFollowers(login, 1, 0)
+    def "gets followers"() {
+        when:
+        PaginationAwareArrayList<UserSet> followersListReturned = githubClient.getFollowers(LOGIN, 1, 0)
 
-        // assertion
-        verify(githubEgitClientMock).getFollowers(login, 1, 0)
-        Assert.assertEquals followersListReturned, followersList
+        then:
+        1 * githubEgitClientMock.getFollowers(LOGIN, 1, 0) >> followersList
+        followersListReturned == followersList
     }
 
-    @Test
-    void getFollowing() {
-        // exercise
-        PaginationAwareArrayList<UserSet> followingListReturned = githubClient.getFollowing(login, 1, 0)
+    def "gets following"() {
+        when:
+        PaginationAwareArrayList<UserSet> followingListReturned = githubClient.getFollowing(LOGIN, 1, 0)
 
-        // assertion
-        verify(githubEgitClientMock).getFollowing(login, 1, 0)
-        Assert.assertEquals followingListReturned, followingList
+        then:
+        1 * githubEgitClientMock.getFollowing(LOGIN, 1, 0) >> followingList
+        followingListReturned == followingList
     }
 
 }

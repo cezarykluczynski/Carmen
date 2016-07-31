@@ -395,13 +395,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.stefanbirkner</groupId>
-      <artifactId>system-rules</artifactId>
-      <version>1.16.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.reflections</groupId>
       <artifactId>reflections</artifactId>
       <version>0.9.10</version>

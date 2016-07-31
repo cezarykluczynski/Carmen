@@ -3,22 +3,11 @@ package com.cezarykluczynski.carmen.lang.stats.mapper
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import com.cezarykluczynski.carmen.lang.stats.domain.LanguageType
 import org.json.JSONObject
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class LinguistLanguageMapperTest {
+class LinguistLanguageMapperTest extends Specification {
 
-    LanguageMapper languageMapper
-
-    @BeforeMethod
-    void setUp() {
-        languageMapper = new LinguistLanguageMapper()
-    }
-
-    @Test
-    void mapList() {
-        String response = '''
+    private static final String RESPONSE = '''
             {
                 "C2hs Haskell":{
                     "type":"programming",
@@ -45,25 +34,34 @@ class LinguistLanguageMapperTest {
             }
          '''
 
-        List<Language> languageList = languageMapper.mapLanguageList(new JSONObject(response))
+    private LanguageMapper languageMapper
 
-        Assert.assertEquals languageList.size(), 3
+    def setup() {
+        languageMapper = new LinguistLanguageMapper()
+    }
 
-        Assert.assertEquals languageList.get(0).getName(), "C2hs Haskell"
-        Assert.assertEquals languageList.get(0).getParent(), languageList.get(1)
-        Assert.assertEquals languageList.get(0).getColor(), "#29b544"
-        Assert.assertEquals languageList.get(0).getType(), LanguageType.PROGRAMMING
+    def "maps list"() {
+        when:
+        List<Language> languageList = languageMapper.mapLanguageList(new JSONObject(RESPONSE))
+
+        then:
+        languageList.size() == 3
+
+        languageList.get(0).getName() == "C2hs Haskell"
+        languageList.get(0).getParent() == languageList.get(1)
+        languageList.get(0).getColor() == "#29b544"
+        languageList.get(0).getType() == LanguageType.PROGRAMMING
 
 
-        Assert.assertEquals languageList.get(1).getName(), "Haskell"
-        Assert.assertNull languageList.get(1).getParent()
-        Assert.assertEquals languageList.get(1).getColor(), "#29b544"
-        Assert.assertEquals languageList.get(1).getType(), LanguageType.PROGRAMMING
+        languageList.get(1).getName() == "Haskell"
+        languageList.get(1).getParent() == null
+        languageList.get(1).getColor() == "#29b544"
+        languageList.get(1).getType() == LanguageType.PROGRAMMING
 
-        Assert.assertEquals languageList.get(2).getName(), "HTML"
-        Assert.assertNull languageList.get(2).getParent()
-        Assert.assertEquals languageList.get(2).getColor(), "#e44b23"
-        Assert.assertEquals languageList.get(2).getType(), LanguageType.MARKUP
+        languageList.get(2).getName() == "HTML"
+        languageList.get(2).getParent() == null
+        languageList.get(2).getColor() == "#e44b23"
+        languageList.get(2).getType() == LanguageType.MARKUP
     }
 
 }

@@ -2,21 +2,13 @@ package com.cezarykluczynski.carmen.lang.stats.mapper
 
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
-import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription
-import com.cezarykluczynski.carmen.lang.stats.domain.Language
-import com.cezarykluczynski.carmen.lang.stats.domain.LineDiffStat
-import com.cezarykluczynski.carmen.lang.stats.domain.LineStat
-import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
-import  com.cezarykluczynski.carmen.model.pub.Language as LanguageEntity
+import com.cezarykluczynski.carmen.lang.stats.domain.*
+import com.cezarykluczynski.carmen.model.pub.Language as LanguageEntity
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
-import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-class LinguistDescriptionToEntityMapperTest {
+class LinguistDescriptionToEntityMapperTest extends Specification {
 
     private static final String COMMIT_HASH = "abcdef1234abcdef1234abcdef1234abcdef1234"
     private static final String JAVA_NAME = "Java"
@@ -32,11 +24,11 @@ class LinguistDescriptionToEntityMapperTest {
     private static final Long RUBY_ID = 4
     private static final String RUBY_NAME = "Ruby"
 
-    @Test
-    void "updates commit entity from commit description"() {
+    def "updates commit entity from commit description"() {
+        given:
         List languagesList = getLanguages()
-        LanguagesDAO languagesDAOMock = mock(LanguagesDAO.class)
-        when languagesDAOMock.findAll() thenReturn languagesList
+        LanguagesDAO languagesDAOMock = Mock LanguagesDAO
+        languagesDAOMock.findAll() >> languagesList
 
         EntityOne entityOne = new EntityOne()
         entityOne.language_1_added = 11
@@ -50,24 +42,27 @@ class LinguistDescriptionToEntityMapperTest {
 
         LinguistDescriptionToEntityMapper linguistDescriptionToEntityMapper =
                 new LinguistDescriptionToEntityMapper(languagesDAOMock)
+
+        when:
         EntityOne resultCommit = (EntityOne) linguistDescriptionToEntityMapper
                 .updateCommitUsingCommitDescription(entityOne, commitDescription)
 
-        Assert.assertEquals resultCommit.language_1_added, 0
-        Assert.assertEquals resultCommit.language_1_removed, 0
-        Assert.assertEquals resultCommit.language_2_added, JAVA_ADDED
-        Assert.assertEquals resultCommit.language_2_removed, JAVA_REMOVED
-        Assert.assertEquals resultCommit.language_3_added, GROOVY_ADDED
-        Assert.assertEquals resultCommit.language_3_removed, GROOVY_REMOVED
-        Assert.assertEquals resultCommit.language_4_added, 0
-        Assert.assertEquals resultCommit.language_4_removed, 0
+        then:
+        resultCommit.language_1_added == 0
+        resultCommit.language_1_removed == 0
+        resultCommit.language_2_added == JAVA_ADDED
+        resultCommit.language_2_removed == JAVA_REMOVED
+        resultCommit.language_3_added == GROOVY_ADDED
+        resultCommit.language_3_removed == GROOVY_REMOVED
+        resultCommit.language_4_added == 0
+        resultCommit.language_4_removed == 0
     }
 
-    @Test
-    void "updates commit entity from repository description"() {
+    def "updates commit entity from repository description"() {
+        given:
         List languagesList = getLanguages()
-        LanguagesDAO languagesDAOMock = mock(LanguagesDAO.class)
-        when languagesDAOMock.findAll() thenReturn languagesList
+        LanguagesDAO languagesDAOMock = Mock LanguagesDAO
+        languagesDAOMock.findAll() >> languagesList
 
         EntityOne entityOne = new EntityOne()
         entityOne.language_1 = 11
@@ -81,13 +76,15 @@ class LinguistDescriptionToEntityMapperTest {
         LinguistDescriptionToEntityMapper linguistDescriptionToEntityMapper =
                 new LinguistDescriptionToEntityMapper(languagesDAOMock)
 
+        when:
         EntityOne resultCommit = (EntityOne) linguistDescriptionToEntityMapper
                 .updateCommitUsingRepositoryDescription(entityOne, repositoryDescription)
 
-        Assert.assertEquals resultCommit.language_1, 0
-        Assert.assertEquals resultCommit.language_2, JAVA_TOTAL
-        Assert.assertEquals resultCommit.language_3, GROOVY_TOTAL
-        Assert.assertEquals resultCommit.language_4, 0
+        then:
+        resultCommit.language_1 == 0
+        resultCommit.language_2 == JAVA_TOTAL
+        resultCommit.language_3 == GROOVY_TOTAL
+        resultCommit.language_4 == 0
     }
 
     private static List<LanguageEntity> getLanguages() {

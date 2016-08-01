@@ -1,71 +1,52 @@
 package com.cezarykluczynski.carmen.executor.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
+import com.beust.jcommander.internal.Lists
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
-import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
+import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO as PropagationsRepositoriesDAO
+import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
+import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
-import org.springframework.test.context.web.WebAppConfiguration
+import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
+import com.google.common.collect.Maps
+import org.springframework.beans.factory.annotation.Autowired
 
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
-
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-import org.testng.Assert
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
+class RepositoriesExecutorTest extends IntegrationTest {
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RepositoriesDAO githubRepositoriesDAOImpl
+    private RepositoriesDAO githubRepositoriesDAOImpl
 
     @Autowired
-    PropagationsRepositoriesDAO propagationsRepositoriesDAOImpl
+    private PropagationsRepositoriesDAO propagationsRepositoriesDAOImpl
 
     @Autowired
-    UserRepositoriesPropagation userRepositoriesPropagation
+    private UserRepositoriesPropagation userRepositoriesPropagation
 
     @Autowired
-    @InjectMocks
-    RepositoriesExecutor repositoriesExecutor
+    private RepositoriesExecutor repositoriesExecutor
 
-    @Mock
-    GithubClient githubClient
+    private GithubClient githubClientMock
 
-    User userEntity
+    private User userEntity
 
-    PendingRequest pendingRequestEntity
+    private PendingRequest pendingRequestEntity
 
-    HashMap<String, Object> pathParams
+    private HashMap<String, Object> pathParams
 
-    List<RepositorySet> repositoriesSetList
+    private List<RepositorySet> repositoriesSetList
 
-    String userEntityLogin
+    private String userEntityLogin
 
-    String mockRepositoryFullName
+    private String mockRepositoryFullName
 
-    @BeforeMethod
-    void setUp() {
-        githubClient = mock GithubClient.class
-        MockitoAnnotations.initMocks this
+    void setup() {
+        githubClientMock = Mock GithubClient
+        repositoriesExecutor.githubClient = githubClientMock
 
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
@@ -76,32 +57,28 @@ class RepositoriesExecutorTest extends AbstractTestNGSpringContextTests {
 
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor "Repositories"
-        pathParams = new HashMap<String, Object>()
+        pathParams = Maps.newHashMap()
         pathParams.put("login", userEntityLogin)
         pendingRequestEntity.setPathParams pathParams
 
-        repositoriesSetList = new ArrayList<RepositorySet>()
-        RepositorySet repositorySet = mock RepositorySet.class
-        when repositorySet.getFullName() thenReturn mockRepositoryFullName
-        when githubClient.getRepositories(userEntityLogin) thenReturn repositoriesSetList
+        repositoriesSetList = Lists.newArrayList()
+        RepositorySet repositorySet = Mock RepositorySet
+        repositorySet.getFullName() >> mockRepositoryFullName
         repositoriesSetList.add repositorySet
     }
 
-    @Test
-    void execute() {
-        // exercuse
-        repositoriesExecutor.execute pendingRequestEntity
-
-        // assertion
-        Assert.assertEquals githubRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName(), mockRepositoryFullName
-        Assert.assertEquals propagationsRepositoriesDAOImpl.findByUser(userEntity).getPhase(), "sleep"
-        verify(githubClient).getRepositories(userEntityLogin)
+    void cleanup() {
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
+    def "executes"() {
+        when:
+        repositoriesExecutor.execute pendingRequestEntity
 
-    @AfterMethod
-    void tearDown() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        githubRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName() == mockRepositoryFullName
+        propagationsRepositoriesDAOImpl.findByUser(userEntity).getPhase() == "sleep"
+        1 * githubClientMock.getRepositories(userEntityLogin) >> repositoriesSetList
     }
 
 }

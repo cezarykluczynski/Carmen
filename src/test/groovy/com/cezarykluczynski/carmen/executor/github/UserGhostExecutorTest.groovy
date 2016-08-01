@@ -1,56 +1,36 @@
 package com.cezarykluczynski.carmen.executor.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import org.springframework.test.context.web.WebAppConfiguration
+import com.cezarykluczynski.carmen.model.github.User
+import com.google.common.collect.Maps
+import org.springframework.beans.factory.annotation.Autowired
 
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
-
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserGhostExecutorTest extends AbstractTestNGSpringContextTests {
+class UserGhostExecutorTest extends IntegrationTest {
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    @InjectMocks
-    UserGhostExecutor userGhostExecutor
+    private UserGhostExecutor userGhostExecutor
 
-    @Mock
-    UserDAOImpl githubUserDAOImpl
+    private UserDAOImpl githubUserDAOImpl
 
-    User userEntity1
+    private User userEntity1
 
-    User userEntity2
+    private User userEntity2
 
-    PendingRequest pendingRequestEntity
+    private PendingRequest pendingRequestEntity
 
-    HashMap<String, Object> params
+    private HashMap<String, Object> params
 
-    HashMap<String, Object> pathParams
+    private HashMap<String, Object> pathParams
 
-    @BeforeMethod
-    void setUp() {
-        githubUserDAOImpl = mock UserDAOImpl.class
-        MockitoAnnotations.initMocks this
+    def setup() {
+        githubUserDAOImpl = Mock UserDAOImpl
+        userGhostExecutor.githubUserDAOImpl = githubUserDAOImpl
 
         userEntity1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         userEntity2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
@@ -58,7 +38,7 @@ class UserGhostExecutorTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor "UsersGhost"
 
-        params = new HashMap<String, Object>()
+        params = Maps.newHashMap()
         params.put("link_with", userEntity2.getId())
 
         pathParams = new HashMap<String, Object>()
@@ -66,45 +46,38 @@ class UserGhostExecutorTest extends AbstractTestNGSpringContextTests {
         pendingRequestEntity.setPathParams pathParams
     }
 
-    @Test
-    void executeFollower() {
-        // setup
-        params.put("link_as", "follower")
-        pendingRequestEntity.setParams params
-
-        doNothing().when(githubUserDAOImpl).linkFollowerWithFollowee(userEntity1, userEntity2)
-        when githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) thenReturn userEntity1
-        when githubUserDAOImpl.findById(userEntity2.getId().intValue()) thenReturn userEntity2
-
-        // exercise
-        userGhostExecutor.execute pendingRequestEntity
-
-        // assertion
-        verify(githubUserDAOImpl).linkFollowerWithFollowee(userEntity1, userEntity2)
+    void cleanup() {
+        githubUserDAOImplFixtures.deleteUserEntity userEntity1
+        githubUserDAOImplFixtures.deleteUserEntity userEntity2
     }
 
-    @Test
-    void executeFollowee() {
-        // setup
+    def "executes follower"() {
+        given:
+        params.put("link_as", "follower")
+        pendingRequestEntity.setParams params
+        githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) >> userEntity1
+        githubUserDAOImpl.findById(userEntity2.getId().intValue()) >> userEntity2
+
+        when:
+        userGhostExecutor.execute pendingRequestEntity
+
+        then:
+        1 * githubUserDAOImpl.linkFollowerWithFollowee(userEntity1, userEntity2)
+    }
+
+    def "executes followee"() {
+        given:
         params.put("link_as", "followee")
         pendingRequestEntity.setParams params
         pendingRequestEntity.setPathParams pathParams
+        githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) >> userEntity1
+        githubUserDAOImpl.findById(userEntity2.getId().intValue()) >> userEntity2
 
-        doNothing().when(githubUserDAOImpl).linkFollowerWithFollowee(userEntity2, userEntity1)
-        when githubUserDAOImpl.createOrUpdateGhostEntity(userEntity1.getLogin()) thenReturn userEntity1
-        when githubUserDAOImpl.findById(userEntity2.getId().intValue()) thenReturn userEntity2
-
-        // exercise
+        when:
         userGhostExecutor.execute pendingRequestEntity
 
-        // assertion
-        verify(githubUserDAOImpl).linkFollowerWithFollowee(userEntity2, userEntity1)
-    }
-
-    @AfterMethod
-    void tearDown() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity1
-        githubUserDAOImplFixtures.deleteUserEntity userEntity2
+        then:
+        1 * githubUserDAOImpl.linkFollowerWithFollowee(userEntity2, userEntity1)
     }
 
 }

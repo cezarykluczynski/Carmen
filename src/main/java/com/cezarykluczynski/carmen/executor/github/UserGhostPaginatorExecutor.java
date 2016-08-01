@@ -1,5 +1,6 @@
 package com.cezarykluczynski.carmen.executor.github;
 
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -53,9 +54,8 @@ public class UserGhostPaginatorExecutor implements Executor {
         }
     }
 
-    private PaginationAwareArrayList<User> getUserListFromPendingRequest(
-        PendingRequest pendingRequest
-    ) throws IOException {
+    private PaginationAwareArrayList<User> getUserListFromPendingRequest(PendingRequest pendingRequest)
+            throws IOException {
         HashMap<String, Object> pathParams = pendingRequest.getPathParams();
 
         String login = (String) pathParams.get("login");
@@ -67,13 +67,11 @@ public class UserGhostPaginatorExecutor implements Executor {
             githubClient.getFollowing(login, paginationLimit, page);
     }
 
-    private void createUserGhostPendingRequests(
-        PaginationAwareArrayList<User> users,
-        PendingRequest pendingRequest
-    ) throws IOException {
-        HashMap<String, Object> pathParams = new HashMap<String, Object>();
-        HashMap<String, Object> queryParams = new HashMap<String, Object>();
-        HashMap<String, Object> params = new HashMap<String, Object>();
+    private void createUserGhostPendingRequests(PaginationAwareArrayList<User> users, PendingRequest pendingRequest)
+            throws IOException {
+        HashMap<String, Object> pathParams = Maps.newHashMap();
+        HashMap<String, Object> queryParams = Maps.newHashMap();
+        HashMap<String, Object> params = Maps.newHashMap();
 
         params.put("link_with", pendingRequest.getUser().getId());
         params.put("link_as", convertPendingRequestToRole(pendingRequest));

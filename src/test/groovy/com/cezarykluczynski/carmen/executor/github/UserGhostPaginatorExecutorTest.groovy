@@ -32,7 +32,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
     @Autowired
     private UserGhostPaginatorExecutor userGhostPaginatorExecutor
-    
+
     GithubClient githubClientMock
 
     @Value('${executor.UserGhostPaginatorExecutor.paginationLimit}')

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.dao.apiqueue
 
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
@@ -9,21 +9,12 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import com.cezarykluczynski.carmen.util.DateTimeConstants
+import com.google.common.collect.Maps
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
 
-import java.lang.reflect.Field
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
+class PendingRequestDAOImplTest extends IntegrationTest {
 
     private PendingRequestDAOImpl apiqueuePendingRequestDAOImpl
 
@@ -42,42 +33,36 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private GithubClient githubClient
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         apiqueuePendingRequestDAOImpl = new PendingRequestDAOImpl(sessionFactory, githubClient)
     }
 
-    @Test
-    void findByUser() {
-        // setup
+    def "finds pending requests by user"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity(userEntity)
 
-        // exercise
+        when:
         List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser userEntity
 
-        // assertion
-        Assert.assertEquals pendingRequestEntitiesList.get(0).getId(), pendingRequestEntity.getId()
-        Assert.assertEquals pendingRequestEntitiesList.size(), 1
+        then:
+        pendingRequestEntitiesList[0].id == pendingRequestEntity.id
+        pendingRequestEntitiesList.size() == 1
 
-        // teardown
+        cleanup:
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void create() {
-        // setup
+    def "creates pending request"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity
-        HashMap<String, Object> emptyParams = new HashMap<String, Object>()
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+                .createUserFollowersEntityUsingUserEntity userEntity
+        HashMap<String, Object> emptyParams = Maps.newHashMap()
 
-        // exercise
+        when:
         PendingRequest pendingRequestEntity = apiqueuePendingRequestDAOImpl.create(
             "RandomExecutor",
             userEntity,
@@ -88,19 +73,18 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
             0
         )
 
-        // assertion
-        Assert.assertNotNull pendingRequestEntity.getId()
-        Assert.assertEquals pendingRequestEntity.getPropagationId(), userFollowersEntity.getId()
+        then:
+        pendingRequestEntity.id != null
+        pendingRequestEntity.getPropagationId() == userFollowersEntity.getId()
 
-        // teardown
+        cleanup:
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findMostImportantPendingRequestExistingEntities() {
-        // setup
+    def "finds most important pending request based on priority"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntityWith101Priority =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndPriority userEntity, 101
@@ -109,138 +93,131 @@ class PendingRequestDAOImplTest extends AbstractTestNGSpringContextTests {
         PendingRequest pendingRequestEntityWith100Priority =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndPriority userEntity, 100
 
-        // exercise
-        PendingRequest pendingRequestEntityMostImportant = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
+        when:
+        PendingRequest pendingRequestEntityMostImportant = apiqueuePendingRequestDAOImpl
+                .findMostImportantPendingRequest()
 
-        // assertion
-        Assert.assertEquals pendingRequestEntityMostImportant.getId(), pendingRequestEntityWith102Priority.getId()
+        then:
+        pendingRequestEntityMostImportant.id == pendingRequestEntityWith102Priority.id
 
-        // teardown
+        cleanup:
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntityWith101Priority
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntityWith100Priority
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntityWith102Priority
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findMostImportantPendingRequestNoEntities() {
-        // setup
-        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
+    def "returns null when most important pending request cannot be found"() {
+        given:
+        SessionFactory sessionFactoryMock = SessionFactoryFixtures
+                .createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
         setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactoryMock
 
-        // exercise, assertion
-        Assert.assertNull apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
+        when:
+        PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest()
 
-        // teardown
+        then:
+        pendingRequest == null
+
+        cleanup:
         setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactory
     }
 
-    @Test
-    void update() {
-        // setup
+    def "updates executor"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
         pendingRequestEntity.setExecutor "ExecutorForUpdateTest"
 
-        // exercise
+        when:
         apiqueuePendingRequestDAOImpl.update pendingRequestEntity
 
-        // assertion
-        Session session = sessionFactory.openSession()
-        List<PendingRequest> list = session.createQuery(
-            "SELECT pr FROM api_queue.PendingRequests pr " +
-            "WHERE pr.id = :id"
-        )
-            .setLong("id", pendingRequestEntity.getId())
-            .setMaxResults(1)
-            .list();
-        session.close();
-        Assert.assertEquals list.get(0).getExecutor(), "ExecutorForUpdateTest"
+        then:
+        findPendingRequestById(pendingRequestEntity.getId()).getExecutor() == "ExecutorForUpdateTest"
 
-        // teardown
+        cleanup:
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void delete() {
-        // setup
+    def "deletes entity"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
 
         Long pendingRequestEntityId = pendingRequestEntity.getId()
 
-        // exercise
+        when:
         apiqueuePendingRequestDAOImpl.delete pendingRequestEntity
 
-        // assertion
-        Session session = sessionFactory.openSession()
-        List<PendingRequest> list = session.createQuery(
-            "SELECT pr FROM api_queue.PendingRequests pr " +
-            "WHERE pr.id = :id"
-        )
-            .setLong("id", pendingRequestEntityId)
-            .setMaxResults(1)
-            .list();
-        session.close()
-        Assert.assertEquals list.size(), 0
+        then:
+        findPendingRequestById(pendingRequestEntityId) == null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void countByPropagationId() {
-        // setup
+    def "counts pending request by propagation id"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntity userEntity
-        PendingRequest pendingRequestEntity1 =
-            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(
-                userEntity, userFollowersEntity
-            )
-        PendingRequest pendingRequestEntity2 =
-            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(
-                userEntity, userFollowersEntity
-            )
+        UserFollowers userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+                .createUserFollowersEntityUsingUserEntity userEntity
+        PendingRequest pendingRequestEntity1 = apiqueuePendingRequestDAOImplFixtures
+                .createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(userEntity, userFollowersEntity)
+        PendingRequest pendingRequestEntity2 = apiqueuePendingRequestDAOImplFixtures
+                .createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(userEntity, userFollowersEntity)
 
-        // exercise, assertion
-        Assert.assertEquals apiqueuePendingRequestDAOImpl.countByPropagationId(userFollowersEntity.getId()), 2
+        when:
+        Long count = apiqueuePendingRequestDAOImpl.countByPropagationId userFollowersEntity.getId()
 
-        // teardown
+        then:
+        count == 2L
+
+        cleanup:
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity1
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity2
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void postponeRequest() {
-        // setup
+    def "postpones pending request"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         PendingRequest pendingRequestEntity =
             apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntity
         pendingRequestEntity.setUpdated new Date()
         apiqueuePendingRequestDAOImpl.update pendingRequestEntity
 
-        // exercise
+        when:
         apiqueuePendingRequestDAOImpl.postponeRequest(pendingRequestEntity, DateTimeConstants.MILLISECONDS_IN_MINUTE)
-
         PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
 
-        // assertion
-        Assert.assertEquals pendingRequestEntityFound.getUpdated().getTime(), pendingRequestEntity.getUpdated().getTime()
+        then:
+        pendingRequestEntityFound.updated.time == pendingRequestEntity.updated.time
 
-        // teardown
+        cleanup:
         apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    private static void setSessionFactoryToDao(PendingRequestDAO apiqueuePendingRequestDAOImpl, SessionFactory sessionFactory) {
-        Field field = apiqueuePendingRequestDAOImpl.getClass().getDeclaredField "sessionFactory"
-        field.setAccessible true
-        field.set apiqueuePendingRequestDAOImpl, sessionFactory
+    private static void setSessionFactoryToDao(PendingRequestDAOImpl apiqueuePendingRequestDAOImpl,
+                                               SessionFactory sessionFactory) {
+        apiqueuePendingRequestDAOImpl.sessionFactory = sessionFactory
+    }
+
+    private PendingRequest findPendingRequestById(Long id) {
+        Session session = sessionFactory.openSession()
+        List<PendingRequest> list = session.createQuery(
+                "SELECT pr FROM api_queue.PendingRequests pr " +
+                        "WHERE pr.id = :id"
+        )
+                .setLong("id", id)
+                .setMaxResults(1)
+                .list()
+        session.close()
+        return list.empty ? null : list[0]
     }
 
 }

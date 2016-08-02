@@ -24,6 +24,7 @@ public interface UserDAO {
 
     User createOrUpdateGhostEntity(String username) throws IOException;
 
+    // TODO: make the following two into one method
     User findById(Integer userId);
 
     User findById(Long userId);

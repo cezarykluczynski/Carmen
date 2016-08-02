@@ -1,25 +1,27 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+import org.springframework.beans.factory.annotation.Autowired
 
-import org.testng.Assert
+class UserDAOImplTest extends IntegrationTest {
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserDAOImplTest extends AbstractTestNGSpringContextTests {
+    private static final Long ID = 2147483647
+    private static final String LOGIN = UserDAOImplFixtures.generateRandomLogin()
+    private static final String NAME = "Random Name"
+    private static final String AVATAR_URL = "http://avatar.url/"
+    private static final String TYPE = "User"
+    private static final boolean SITE_ADMIN = false
+    private static final String COMPANY = "Company"
+    private static final String BLOG = "http://blog.url/"
+    private static final String LOCATION = "Place"
+    private static final String EMAIL = LOGIN + "@example.com"
+    private static final boolean HIREABLE = false
 
     @Autowired
     private SessionFactory sessionFactory
@@ -36,217 +38,202 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private UserDAO githubUserDAOImpl
 
-    @Test
-    void create() {
-        // setup
-        Long id = 2147483647
-        String login = githubUserDAOImplFixtures.generateRandomLogin()
-        String name = "Random Name"
-        String avatarUrl = "http://avatar.url/"
-        String type = "User"
-        boolean siteAdmin = false
-        String company = "Company"
-        String blog = "http://blog.url/"
-        String location = "Place"
-        String email = login + "@example.com"
-        boolean hireable = false
-
+    def "should be created"() {
+        given:
         UserSet userSet = UserSet.builder()
-            .id(id)
-            .login(login)
-            .name(name)
-            .avatarUrl(avatarUrl)
-            .type(type)
-            .siteAdmin(siteAdmin)
-            .company(company)
-            .blog(blog)
-            .location(location)
-            .email(email)
-            .hireable(hireable)
+            .id(ID)
+            .login(LOGIN)
+            .name(NAME)
+            .avatarUrl(AVATAR_URL)
+            .type(TYPE)
+            .siteAdmin(SITE_ADMIN)
+            .company(COMPANY)
+            .blog(BLOG)
+            .location(LOCATION)
+            .email(EMAIL)
+            .hireable(HIREABLE)
             .build()
 
-        // exercise
+        when:
         User userEntity = githubUserDAOImpl.create userSet
 
-        // assertion
-        Assert.assertNotNull userEntity.getId()
-        Assert.assertEquals userEntity.getLogin(), login
-        Assert.assertEquals userEntity.getName(), name
-        Assert.assertEquals userEntity.getAvatarUrl(), avatarUrl
-        Assert.assertEquals userEntity.isSiteAdmin(), siteAdmin
-        Assert.assertEquals userEntity.getCompany(), company
-        Assert.assertEquals userEntity.getBlog(), blog
-        Assert.assertEquals userEntity.getLocation(), location
-        Assert.assertEquals userEntity.getEmail(), email
-        Assert.assertEquals userEntity.isHireable(), hireable
+        then:
+        userEntity.getId() != null
+        userEntity.getLogin() == LOGIN
+        userEntity.getName() == NAME
+        userEntity.getAvatarUrl() == AVATAR_URL
+        userEntity.isSiteAdmin() == SITE_ADMIN
+        userEntity.getCompany() == COMPANY
+        userEntity.getBlog() == BLOG
+        userEntity.getLocation() == LOCATION
+        userEntity.getEmail() == EMAIL
+        userEntity.isHireable() == HIREABLE
 
-        // teardown
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void findByLogin() {
-        // setup
+    def "entity is found by login"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
 
-        // exercise
+        when:
         User userEntityFound = githubUserDAOImpl.findByLogin userEntity.getLogin()
 
-        // assertion
-        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
+        then:
+        userEntityFound.id == userEntity.id
 
-        // teardown
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void findByIdInteger() {
-        // setup
+    def "entity is found by integer id"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        when:
         User userEntityFound = githubUserDAOImpl.findById userEntity.getId().intValue()
-        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
 
-        // teardown
+        then:
+        userEntityFound.id == userEntity.id
+
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void findByIdLong() {
-        // setup
+    def "entity is found by long id"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        when:
         User userEntityFound = githubUserDAOImpl.findById userEntity.getId()
-        Assert.assertEquals userEntityFound.getId(), userEntity.getId()
 
-        // teardown
+        then:
+        userEntityFound.id == userEntity.id
+
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void findByNotExistingId() {
-        // setup
+    def "non-existing entity is not found"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
 
+        when:
         User userEntityFound = githubUserDAOImpl.findById 2147483647
-        Assert.assertNull userEntityFound
 
-        // teardown
+        then:
+        userEntityFound == null
+
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void updateUserEntity() {
-        // setup
+    def "entity is updated"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         userEntity.setLogin newLogin
 
-        // exercise
+        when:
         githubUserDAOImpl.update userEntity
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
-        Assert.assertEquals newLogin, userEntityUpdated.getLogin()
 
-        // teardown
+        then:
+        userEntity.id == userEntityUpdated.id
+        newLogin == userEntityUpdated.login
+
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void updateUserEntityUsingUserSet() {
-        // setup
+    def "entity is updated using UserSet"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createNotFoundEntity()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = UserSet.builder().login(newLogin).build()
 
-        // exercise
+        when:
         githubUserDAOImpl.update userEntity, userSet
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntity.getId(), userEntityUpdated.getId()
-        Assert.assertEquals newLogin, userEntityUpdated.getLogin()
 
-        // teardown
+        then:
+        userEntity.id == userEntityUpdated.id
+        newLogin == userEntityUpdated.login
+
+        cleanup:
         githubUserDAOImpl.delete userEntity
     }
 
-    @Test
-    void linkFollowerWithFolloweeWithNoPreviousLinkExisting() {
-        // setup
+    def "links follower with followee with no previous link existing"() {
+        given:
         User userEntityFollowee = githubUserDAOImplFixtures.createNotFoundEntity()
         User userEntityFollower = githubUserDAOImplFixtures.createNotFoundEntity()
 
-        // exercise
+        when:
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
 
-        // assertion
-        Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 1
-        Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 1
+        then:
+        githubUserDAOImpl.countFollowees(userEntityFollower) == 1
+        githubUserDAOImpl.countFollowers(userEntityFollowee) == 1
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
     }
 
-    @Test
-    void linkFollowerWithFolloweeWithPreviousLinkExisting() {
-        // setup
+    def "links follower with followee with previous link existing"() {
+        given:
         User userEntityFollowee = githubUserDAOImplFixtures.createNotFoundEntity()
         User userEntityFollower = githubUserDAOImplFixtures.createNotFoundEntity()
 
-        // exercise
+        when:
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
         githubUserDAOImpl.linkFollowerWithFollowee userEntityFollower, userEntityFollowee
 
-        // assertion
-        Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 1
-        Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 1
+        then:
+        githubUserDAOImpl.countFollowees(userEntityFollower) == 1
+        githubUserDAOImpl.countFollowers(userEntityFollowee) == 1
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
     }
 
-    @Test
-    void findUserInReportFollowersFolloweesPhaseExistingEntity() {
-        // setup
+    def "finds existing user in report phase"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "report")
         propagationsUserFollowingDAOImplFixtures.createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
-        // exercise
+        when:
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
 
-        // assertion
-        Assert.assertEquals userEntity.getId(), userEntityFound.getId()
+        then:
+        userEntity.id == userEntityFound.id
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findUserInReportFollowersFolloweesPhaseNonExistingEntity() {
-        // setup
+    def "does not find non-existing user in report phase"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         propagationsUserFollowersDAOImplFixtures.createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
         propagationsUserFollowingDAOImplFixtures.createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "report")
 
-        // exercise
+        when:
         User userEntityFound = githubUserDAOImpl.findUserInReportFollowersFolloweesPhase()
 
-        // assertion
-        Assert.assertNull userEntityFound
+        then:
+        userEntityFound == null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void countFollowers() {
-        // setup
+    def "count followers"() {
+        given:
         User userEntityFollowee = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntityFollower1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntityFollower2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
@@ -263,17 +250,20 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             .executeUpdate()
         session.close()
 
-        Assert.assertEquals githubUserDAOImpl.countFollowers(userEntityFollowee), 2
+        when:
+        Integer followersCount = githubUserDAOImpl.countFollowers(userEntityFollowee)
 
-        // teardown
+        then:
+        followersCount == 2
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower1
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower2
     }
 
-    @Test
-    void countFollowees() {
-        // setup
+    def "counts followees"() {
+        given:
         User userEntityFollower = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntityFollowee1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntityFollowee2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
@@ -290,18 +280,20 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             .executeUpdate()
         session.close()
 
-        // exercise, assertion
-        Assert.assertEquals githubUserDAOImpl.countFollowees(userEntityFollower), 2
+        when:
+        Integer followeesCount = githubUserDAOImpl.countFollowees(userEntityFollower)
 
-        // teardown
+        then:
+        followeesCount == 2
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollower
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee1
         githubUserDAOImplFixtures.deleteUserEntity userEntityFollowee2
     }
 
-    @Test
-    void countFollowersFollowing() {
-        // setup
+    def "count followers following"() {
+        given:
         User userEntityBase = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntitySatelite1 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         User userEntitySatelite2 = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
@@ -326,10 +318,13 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
             .executeUpdate()
         session.close()
 
-        // exercise, assertion
-        Assert.assertEquals githubUserDAOImpl.countFollowersFollowing(userEntityBase), 2
+        when:
+        Integer followersFollowingCount = githubUserDAOImpl.countFollowersFollowing(userEntityBase)
 
-        // teardown
+        then:
+        followersFollowingCount == 2
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityBase
         githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite1
         githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite2
@@ -337,16 +332,18 @@ class UserDAOImplTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImplFixtures.deleteUserEntity userEntitySatelite4
     }
 
-    @Test
-    void findHighestGitHubUserId() {
-        // setup
+    def "finds highest GitHub user id"() {
+        given:
         Integer gitHubUserId = System.currentTimeMillis()
         User userEntity = githubUserDAOImplFixtures.createEntityWithGitHubUserId gitHubUserId
 
-        // exercise, assertion
-        Assert.assertEquals githubUserDAOImpl.findHighestGitHubUserId(), gitHubUserId
+        when:
+        Integer highestGitHubUserId = githubUserDAOImpl.findHighestGitHubUserId()
 
-        // teardown
+        then:
+        highestGitHubUserId == gitHubUserId
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 

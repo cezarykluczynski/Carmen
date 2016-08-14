@@ -4,13 +4,9 @@ import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO
 import com.cezarykluczynski.carmen.model.pub.Cron
 import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
-
-class DatabaseManageableTaskTest {
+class DatabaseManageableTaskTest extends Specification {
 
     private static final String NAME = "TestableCron"
     private static final String SERVER = "testable-server"
@@ -21,108 +17,98 @@ class DatabaseManageableTaskTest {
 
     private Cron cron
 
-    @Test
-    void enable() {
-        // setup
+    void "task can be enabled"() {
+        given:
         createTask false, false, false
 
-        // exercise
+        when:
         databaseManageableTask.enable()
 
-        // assertion
-        Assert.assertTrue cron.isEnabled()
-        verify(cronsDAOMock).update cron
+        then:
+        1 * cronsDAOMock.update(cron)
+        cron.isEnabled()
     }
 
-    @Test
-    void disable() {
-        // setup
+    def "task can be disabled"() {
+        given:
         createTask true, false, true
 
-        // exercise
+        when:
         databaseManageableTask.disable()
 
-        // assertion
-        Assert.assertFalse cron.isEnabled()
-        verify(cronsDAOMock).update cron
+        then:
+        1 * cronsDAOMock.update(cron)
+        !cron.isEnabled()
     }
 
-    @Test
-    void "isOff when is enabled and is running"() {
-        // setup
+    def "isOff is false when task is enabled and running"() {
+        given:
         createTask true, true, false
 
-        // exercise, assertion
-        Assert.assertFalse databaseManageableTask.isOff()
+        expect:
+        !databaseManageableTask.isOff()
     }
 
-    @Test
-    void "isOff when is disabled and is running"() {
-        // setup
+    def "isOff is false when task is disabled and running"() {
+        given:
         createTask false, true, true
 
-        // exercise, assertion
-        Assert.assertFalse databaseManageableTask.isOff()
+        expect:
+        !databaseManageableTask.isOff()
     }
 
-
-    @Test
-    void "isOff when is disabled and is not running"() {
-        // setup
+    def "isOff is true when task is disabled and not running"() {
+        given:
         createTask false, false, false
 
-        // exercise, assertion
-        Assert.assertTrue databaseManageableTask.isOff()
+        expect:
+        databaseManageableTask.isOff()
     }
 
-    @Test
-    void "isEnabled when it is enabled"() {
-        // setup
+    def "isEnabled is true when task is enabled"() {
+        given:
         createTask true, false, true
 
-        // exercise, assertion
-        Assert.assertTrue databaseManageableTask.isEnabled()
+        expect:
+        databaseManageableTask.isEnabled()
     }
 
-    @Test
-    void "isEnabled when it is disabled"() {
-        // setup
+    def "isEnabled is false when task is disabled"() {
+        given:
         createTask false, false, false
 
-        // exercise, assertion
-        Assert.assertFalse databaseManageableTask.isEnabled()
+        expect:
+        !databaseManageableTask.isEnabled()
     }
 
-
-    @Test
-    void "isRunning when it is running"() {
-        // setup
+    def "isRunning is true when task is running"() {
+        given:
         createTask false, true, true
 
-        // exercise, assertion
+        expect:
         Assert.assertTrue databaseManageableTask.isRunning()
     }
 
-    @Test
-    void "isRunning when it is not running"() {
-        // setup
+    def "isRunning is when task is not running"() {
+        given:
         createTask false, false, false
 
-        // exercise, assertion
+        expect:
         Assert.assertFalse databaseManageableTask.isRunning()
     }
 
     private void createTask(boolean enabled, boolean running, boolean withServer) {
-        cronsDAOMock = mock CronsDAO.class
+        cronsDAOMock = Mock CronsDAO
 
-        cron = new Cron()
-        cron.setName NAME
-        cron.setServer SERVER
-        cron.setEnabled enabled
-        cron.setRunning running
+        cron = new Cron(
+                name: NAME,
+                server: SERVER,
+                enabled: enabled,
+                running: running
+        )
 
-        when cronsDAOMock.findByName(NAME) thenReturn Lists.newArrayList(cron)
-        when cronsDAOMock.findByNameAndServer(NAME, SERVER) thenReturn cron
+        cronsDAOMock.findByName(NAME) >> Lists.newArrayList(cron)
+        cronsDAOMock.findByNameAndServer(NAME, SERVER) >> cron
 
         if (withServer) {
             databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, NAME, SERVER)

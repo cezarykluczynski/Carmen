@@ -1,30 +1,16 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.hibernate.Session
-import org.hibernate.SessionFactory
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
+import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import org.hibernate.Session
+import org.hibernate.SessionFactory
+import org.springframework.beans.factory.annotation.Autowired
 
-import org.testng.Assert
+class RateLimitDAOImplTest extends IntegrationTest {
 
-import java.lang.reflect.Field
-
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
-
-    @Autowired
-    private RateLimitDAO rateLimitDAOImpl
+    private RateLimitDAOImpl rateLimitDAOImpl
 
     @Autowired
     private RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures
@@ -32,18 +18,12 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private SessionFactory sessionFactory
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         rateLimitDAOImpl = new RateLimitDAOImpl(sessionFactory)
     }
 
-    @Test
-    void create() {
-        // setup
+    def "entity is created"() {
+        given:
         RateLimitSet rateLimitSet = new RateLimitSet(
             "core",
             5000,
@@ -51,102 +31,100 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
             new Date()
         )
 
-        // exercise
+        when:
         RateLimit rateLimitEntity = rateLimitDAOImpl.create rateLimitSet
-
-        // assertion
-        Assert.assertEquals rateLimitEntity.getResource(), "core"
-        Assert.assertEquals rateLimitEntity.getLimit(), 5000
-        Assert.assertEquals rateLimitEntity.getRemaining(), 4999
         long differenceInDates = (new Date()).getTime() - rateLimitEntity.getReset().getTime()
-        Assert.assertTrue differenceInDates >= 0 && differenceInDates <= 10000
 
-        // teardown
+        then:
+        rateLimitEntity.getResource() == "core"
+        rateLimitEntity.getLimit() == 5000
+        rateLimitEntity.getRemaining() == 4999
+        differenceInDates >= 0 && differenceInDates <= 10000
+
+        cleanup:
         rateLimitDAOImpl.delete rateLimitEntity
     }
 
-    @Test
-    void getCoreLimitExisting() {
-        // setup
+    def "core limit exists"() {
+        given:
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
-        // exercise
+        when:
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getCoreLimit()
 
-        // assertion
-        Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
+        then:
+        rateLimitEntityMock.getId() == rateLimitEntityExpected.getId()
 
-        // teardown
+        cleanup:
         rateLimitDAOImpl.delete rateLimitEntityMock
     }
 
-    @Test
-    void getCoreLimitNotExisting() {
-        // setup
+    def "core limit does not exists"() {
+        given:
         SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
+        when:
+        def success = true
         try {
             // exercise
             rateLimitDAOImpl.getCoreLimit()
 
-            // assertion
-            Assert.assertTrue false
+            success = false
         } catch (Throwable e) {
-            // assertion
-            Assert.assertTrue e instanceof NullPointerException
         }
 
-        // teardown
+        then:
+        success
+
+        cleanup:
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactory
     }
 
-    @Test
-    void getSearchLimitExisting() {
-        // setup
+    def "search limit exists"() {
+        given:
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "search"
 
-        // exercise
+        when:
         RateLimit rateLimitEntityExpected = rateLimitDAOImpl.getSearchLimit()
 
-        // assertion
-        Assert.assertEquals rateLimitEntityMock.getId(), rateLimitEntityExpected.getId()
+        then:
+        rateLimitEntityMock.getId() == rateLimitEntityExpected.getId()
 
-        // teardown
+        cleanup:
         rateLimitDAOImpl.delete rateLimitEntityMock
     }
 
-    @Test
-    void getSearchLimitNotExisting() {
-        // setup
+    def "search limit does not exists"() {
+        given:
         SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
+        when:
+        def success = true
         try {
             // exercise
             rateLimitDAOImpl.getSearchLimit()
 
-            // assertion
-            Assert.assertTrue false
+            success = false
         } catch (Throwable e) {
-            // assertion
-            Assert.assertTrue e instanceof NullPointerException
         }
 
-        // teardown
+        then:
+        success
+
+        cleanup:
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactory
     }
 
-    @Test
-    void decrementRateLimitRemainingCounter() {
-        // setup
+    def "remaining counter is decremented"() {
+        given:
         RateLimit rateLimitEntityMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
         Integer previousRemaining = rateLimitEntityMock.getRemaining()
 
-        // exercise
+        when:
         rateLimitDAOImpl.decrementRateLimitRemainingCounter()
 
-        // assertion
         Session session = sessionFactory.openSession()
         RateLimit rateLimitEntityMockUpdated = (RateLimit) session
             .createQuery("from github.RateLimit as r where r.id = :rateLimitId")
@@ -155,21 +133,20 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
             .get(0)
         session.close()
 
-        Assert.assertEquals previousRemaining - 1, rateLimitEntityMockUpdated.getRemaining()
+        then:
+        previousRemaining - 1 == rateLimitEntityMockUpdated.getRemaining()
     }
 
-    @Test
-    void deleteOldLimits() {
-        // setup
+    def "old limits gets deleted"() {
+        given:
         RateLimit rateLimitEntityOldMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
         Long rateLimitEntityOldMockId = rateLimitEntityOldMock.getId()
         Thread.sleep 1100
         RateLimit rateLimitEntityCurrentMock = githubRateLimitDAOImplFixtures.createRateLimitEntityExpiringIn1Second "core"
 
-        // exercise
+        when:
         rateLimitDAOImpl.deleteOldLimits "core"
 
-        // assertion
         Session session = sessionFactory.openSession()
         List<RateLimit> rateLimitEntityOldMockList = session
             .createQuery("from github.RateLimit as r where r.id = :rateLimitId")
@@ -181,17 +158,16 @@ class RateLimitDAOImplTest extends AbstractTestNGSpringContextTests {
             .list()
         session.close()
 
-        Assert.assertEquals rateLimitEntityOldMockList.size(), 0
-        Assert.assertEquals rateLimitEntityCurrentMockList.size(), 1
+        then:
+        rateLimitEntityOldMockList.size() == 0
+        rateLimitEntityCurrentMockList.size() == 1
 
-        // teardown
+        cleanup:
         rateLimitDAOImpl.delete rateLimitEntityCurrentMock
     }
 
-    private static void setSessionFactoryToDao(RateLimitDAO rateLimitDAOImpl, SessionFactory sessionFactory) {
-        Field field = rateLimitDAOImpl.getClass().getDeclaredField "sessionFactory"
-        field.setAccessible true
-        field.set rateLimitDAOImpl, sessionFactory
+    private static void setSessionFactoryToDao(RateLimitDAOImpl rateLimitDAOImpl, SessionFactory sessionFactory) {
+        rateLimitDAOImpl.sessionFactory = sessionFactory
     }
 
 }

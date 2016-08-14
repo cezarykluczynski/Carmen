@@ -1,38 +1,16 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImpl
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
-import org.hibernate.SessionFactory
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
+import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.User as UserSet
-import com.cezarykluczynski.carmen.client.github.GithubClient
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.BeforeMethod
-
-import java.lang.reflect.Field
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.verify
-
-import org.testng.annotations.Test
-import org.testng.Assert
-
+import org.hibernate.SessionFactory
 import org.joda.time.MutableDateTime
+import org.springframework.beans.factory.annotation.Autowired
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
+class UserDAOImplCreateOrUpdateTest extends IntegrationTest {
 
     private UserDAOImpl githubUserDAOImpl
 
@@ -54,136 +32,124 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private GithubClient githubClient
 
-    @BeforeMethod
-    void setUp() {
+    void setup() {
         githubUserDAOImpl = new UserDAOImpl(sessionFactory, githubClient, githubUserDAOImplFollowersFolloweesLinkerDelegate)
     }
 
-    @Test
-    void createOrUpdateExistingRequestedEntityThatCannotBeUpdated() {
-        // setup
+    def "creates or updates existing requested entity that cannot be updated"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         String currentLogin = userEntity.getLogin()
-        UserSet userSet = UserSet.builder().login(currentLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
-        when githubClientMock.getUser(currentLogin) thenReturn userSet
         setGithubClientToDao githubUserDAOImpl, githubClientMock
 
-        // exercise
+        when:
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin currentLogin
-        verify(githubClientMock, never()).getUser currentLogin
-        Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
 
-        // teardown
+        then:
+        0 * githubClientMock.getUser(currentLogin)
+        userEntityUpdated.getLogin() == currentLogin
+
+        cleanup:
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
-    @Test
-    void createOrUpdateExistingRequestedEntityThatCanBeUpdated() {
-        // setup
+    def "creates or updates existing requested entity that can be updated"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSetMock = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
-        when githubClientMock.getUser(currentLogin) thenReturn userSetMock
         setGithubClientToDao githubUserDAOImpl, githubClientMock
 
-        // exercise
+        when:
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertTrue userEntityUpdated instanceof User
-        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
-        verify(githubClientMock).getUser currentLogin
 
-        // teardown
+        then:
+        1 * githubClientMock.getUser(currentLogin) >> userSetMock
+        userEntityUpdated instanceof User
+        userEntityUpdated.getLogin() == newLogin
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
-    @Test
-    void createOrUpdateExistingGhostEntity() {
-        // setup
+    def "creates or updates existing ghost entity"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
         setUserEntityUpdatedDateToTwoDaysAgo userEntity
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
-        when githubClientMock.getUser(currentLogin) thenReturn userSet
+        githubClientMock.getUser(currentLogin) >> userSet
         setGithubClientToDao githubUserDAOImpl, githubClientMock
 
-        // exercise
+        when:
         githubUserDAOImpl.createOrUpdateGhostEntity currentLogin
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntityUpdated.isRequested(), false
-        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
 
-        // teardown
+        then:
+        !userEntityUpdated.isRequested()
+        userEntityUpdated.getLogin() == newLogin
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
-    @Test
-    void createOrUpdateExistingGhostEntityWithExistingRequestedEntity() {
-        // setup
+    def "creates or updates existing ghost entity with existing requested entity"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundGhostUserEntity()
         String currentLogin = userEntity.getLogin()
         String newLogin = githubUserDAOImplFixtures.generateRandomLogin()
         UserSet userSet = UserSet.builder().login(newLogin).build()
         GithubClient githubClientMock = getGithubClientMock()
-        when githubClientMock.getUser(currentLogin) thenReturn userSet
+        githubClientMock.getUser(currentLogin) >> userSet
         setGithubClientToDao githubUserDAOImpl, githubClientMock
 
-        // exercise
+        when:
         githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
-
-        // assertion
         User userEntityUpdated = githubUserDAOImpl.findByLogin newLogin
-        Assert.assertEquals userEntityUpdated.isRequested(), true
-        Assert.assertEquals userEntityUpdated.getLogin(), newLogin
 
-        // teardown
+        then:
+        userEntityUpdated.isRequested()
+        userEntityUpdated.getLogin() == newLogin
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
         setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
-    @Test
-    void createOrUpdateNonExistingEntity() {
-        // setup
+    def "creates or updates non-existing entity"() {
+        given:
         String currentLogin = githubUserDAOImplFixtures.generateRandomLogin()
         GithubClient githubClientMock = getGithubClientMock()
         UserSet userSetMock = UserSet.builder().login(currentLogin).build()
-        when githubClientMock.getUser(currentLogin) thenReturn userSetMock
+        githubClientMock.getUser(currentLogin) >> userSetMock
         setGithubClientToDao githubUserDAOImpl, githubClient
 
-        // exercise
+        when:
         User userEntityUpdated = githubUserDAOImpl.createOrUpdateRequestedEntity currentLogin
 
-        // assertion
-        Assert.assertEquals userEntityUpdated.getLogin(), currentLogin
+        then:
+        userEntityUpdated.getLogin() == currentLogin
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityUpdated
         setGithubClientToDao githubUserDAOImpl, githubClient
     }
 
     private GithubClient getGithubClientMock() {
-        GithubClient githubClientMock = mock GithubClient.class
-        doNothing().when(githubClientMock).checkApiLimit "getUser"
-        doNothing().when(githubClientMock).decrementRateLimitRemainingCounter "getUser"
-        return githubClientMock
+        return Mock(GithubClient)
     }
 
     private void setUserEntityUpdatedDateToTwoDaysAgo(User userEntity) {
@@ -194,10 +160,8 @@ class UserDAOImplCreateOrUpdateTest extends AbstractTestNGSpringContextTests {
         githubUserDAOImpl.update userEntity
     }
 
-    private static void setGithubClientToDao(UserDAO githubUserDAOImpl, GithubClient githubClient) {
-        Field field = githubUserDAOImpl.getClass().getDeclaredField "githubClient"
-        field.setAccessible true
-        field.set githubUserDAOImpl, githubClient
+    private static void setGithubClientToDao(UserDAOImpl githubUserDAOImpl, GithubClient githubClient) {
+        githubUserDAOImpl.githubClient = githubClient
     }
 
 }

@@ -1,28 +1,13 @@
 package com.cezarykluczynski.carmen.dao.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.hibernate.SessionFactory
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.testng.Assert
 
-@ContextConfiguration(
-        classes = TestableApplicationConfiguration.class,
-        locations = ["classpath:applicationContext.xml"],
-        loader = SpringApplicationContextLoader.class
-)
-@WebAppConfiguration
-class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
+class RepositoriesDAOImplTest extends IntegrationTest {
 
     @Autowired
     private RepositoriesDAO githubRepositoriesDAOImpl
@@ -33,34 +18,27 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private UserDAOImplFixtures githubUserDAOImplFixtures
 
-    @Autowired
-    private SessionFactory sessionFactory
+    private User userEntity
 
-    User userEntity
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    def cleanup() {
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findById() {
-        // setup
+    def "entity is found using user entity"() {
+        given:
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        Repository repositoryEntity1 =
-            githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
-        Repository repositoryEntity2 =
-            githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
+        githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
+        githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
 
-        // exercise
+        when:
         List<Repository> repositoriesEntitiesList = githubRepositoriesDAOImpl.findByUser userEntity
 
-        // assertion
-        Assert.assertEquals repositoriesEntitiesList.size(), 2
+        then:
+        repositoriesEntitiesList.size() == 2
     }
 
-    @Test
-    void refresh() {
-        // setup
+    def "repositories are refreshed"() {
+        given:
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repository repositoryEntity1 =
             githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
@@ -82,62 +60,48 @@ class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
         repositoriesSetList.add repositorySet2
         repositoriesSetList.add repositorySet3
 
-        // exercise
+        when:
         githubRepositoriesDAOImpl.refresh userEntity, repositoriesSetList
 
-        // assertion
         List<Repository> repositoriesEntitiesList = githubRepositoriesDAOImpl.findByUser userEntity
-        Assert.assertEquals repositoriesEntitiesList.size(), 2
 
-        def okPreserve = false
-        def okCreate = false
+        def preserved = false
+        def created = false
+        def deleted = true
 
         for (Repository repositoryEntity in repositoriesEntitiesList) {
             if (repositoryEntity.getId().equals(repositoryEntity1.getId())) {
-                Assert.fail "Repository should be deleted, but wasn't."
+                deleted = false
             }
             if (repositoryEntity.getId().equals(repositorySet2.getId())) {
-                okPreserve = true
-                Assert.assertTrue okPreserve
+                preserved = true
+                Assert.assertTrue preserved
             }
             if (repositoryEntity.getId().equals(repositorySet3.getId())) {
-                okCreate = true
-                Assert.assertTrue okCreate
+                created = true
+                Assert.assertTrue created
             }
         }
 
-        if (!okPreserve) {
-            Assert.fail "Repository was not preserved."
-        }
-
-        if (!okCreate) {
-            Assert.fail "Repository was not created."
-        }
+        then:
+        repositoriesEntitiesList.size() == 2
+        created
+        preserved
+        deleted
     }
 
-    @Test
-    void delete() {
-         // setup
+    def "repositories are deleted"() {
+        given:
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repository repositoryEntity =
             githubRepositoriesDAOImplFixtures.createRandomEntityUsingUserEntity userEntity
 
-        // assertion
-        List<Repository> repositoriesEntitiesListBefore = githubRepositoriesDAOImpl.findByUser userEntity
-        Assert.assertEquals repositoriesEntitiesListBefore.size(), 1
-
-        // exercise
+        when:
         githubRepositoriesDAOImpl.delete repositoryEntity
-
-        // assertion
         List<Repository> repositoriesEntitiesListAfter = githubRepositoriesDAOImpl.findByUser userEntity
-        Assert.assertEquals repositoriesEntitiesListAfter.size(), 0
-    }
 
-    @AfterMethod
-    void tearDown() {
-        // teardown
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        repositoriesEntitiesListAfter.size() == 0
     }
 
 }

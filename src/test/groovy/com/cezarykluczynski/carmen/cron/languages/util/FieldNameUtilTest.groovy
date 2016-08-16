@@ -1,84 +1,78 @@
 package com.cezarykluczynski.carmen.cron.languages.util
 
-import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
 import java.lang.reflect.Field
 
-class FieldNameUtilTest {
+class FieldNameUtilTest extends Specification {
 
-    @Test
-    void isLanguage() {
-        Assert.assertTrue FieldNameUtil.isLanguage(createFiledWithName("language_5"))
-        Assert.assertTrue FieldNameUtil.isLanguage(createFiledWithName("language_500"))
-
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("language_5_added"))
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("language_500_added"))
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("language_5_removed"))
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("language_500_removed"))
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("language_500_gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguage(createFiledWithName("gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguage((Field) null)
-        Assert.assertFalse FieldNameUtil.isLanguage((String) null)
+    def "isLanguage correctly detects language field names"() {
+        expect:
+        FieldNameUtil.isLanguage(createFiledWithName("language_5"))
+        FieldNameUtil.isLanguage(createFiledWithName("language_500"))
+        !FieldNameUtil.isLanguage(createFiledWithName("language_5_added"))
+        !FieldNameUtil.isLanguage(createFiledWithName("language_500_added"))
+        !FieldNameUtil.isLanguage(createFiledWithName("language_5_removed"))
+        !FieldNameUtil.isLanguage(createFiledWithName("language_500_removed"))
+        !FieldNameUtil.isLanguage(createFiledWithName("language_500_gibberish"))
+        !FieldNameUtil.isLanguage(createFiledWithName("gibberish"))
+        !FieldNameUtil.isLanguage((Field) null)
+        !FieldNameUtil.isLanguage((String) null)
     }
 
-    @Test
-    void isLanguageAdded() {
-        Assert.assertTrue FieldNameUtil.isLanguageAdded(createFiledWithName("language_1_added"))
-        Assert.assertTrue FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_added"))
-
-        Assert.assertFalse FieldNameUtil.isLanguageAdded(createFiledWithName("language_1"))
-        Assert.assertFalse FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_removed"))
-        Assert.assertFalse FieldNameUtil.isLanguageAdded(createFiledWithName("language_1"))
-        Assert.assertFalse FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_removed"))
-        Assert.assertFalse FieldNameUtil.isLanguageAdded(createFiledWithName("gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguageAdded((Field) null)
-        Assert.assertFalse FieldNameUtil.isLanguageAdded((String) null)
+    def "isLanguageAdded correctly detects language field names"() {
+        expect:
+        FieldNameUtil.isLanguageAdded(createFiledWithName("language_1_added"))
+        FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_added"))
+        !FieldNameUtil.isLanguageAdded(createFiledWithName("language_1"))
+        !FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_removed"))
+        !FieldNameUtil.isLanguageAdded(createFiledWithName("language_1"))
+        !FieldNameUtil.isLanguageAdded(createFiledWithName("language_100_removed"))
+        !FieldNameUtil.isLanguageAdded(createFiledWithName("gibberish"))
+        !FieldNameUtil.isLanguageAdded((Field) null)
+        !FieldNameUtil.isLanguageAdded((String) null)
 
     }
 
-    @Test
-    void isLanguageRemoved() {
-        Assert.assertTrue FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2_removed"))
-        Assert.assertTrue FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200_removed"))
-
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2"))
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200"))
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2_added"))
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200_added"))
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved(createFiledWithName("gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved((Field) null)
-        Assert.assertFalse FieldNameUtil.isLanguageRemoved((String) null)
+    def "isLanguageRemoved correctly detects language field names"() {
+        expect:
+        FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2_removed"))
+        FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200_removed"))
+        !FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2"))
+        !FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200"))
+        !FieldNameUtil.isLanguageRemoved(createFiledWithName("language_2_added"))
+        !FieldNameUtil.isLanguageRemoved(createFiledWithName("language_200_added"))
+        !FieldNameUtil.isLanguageRemoved(createFiledWithName("gibberish"))
+        !FieldNameUtil.isLanguageRemoved((Field) null)
+        !FieldNameUtil.isLanguageRemoved((String) null)
     }
 
-    @Test
-    void isAnyLanguage() {
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_3_removed"))
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_3_added"))
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_removed"))
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_added"))
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_3"))
-        Assert.assertTrue FieldNameUtil.isAnyLanguage(createFiledWithName("language_300"))
-
-        Assert.assertFalse FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_gibberish"))
-        Assert.assertFalse FieldNameUtil.isAnyLanguage(createFiledWithName("gibberish"))
-        Assert.assertFalse FieldNameUtil.isAnyLanguage((Field) null)
-        Assert.assertFalse FieldNameUtil.isAnyLanguage((String) null)
+    def "isAnyLanguage correctly detects language field names"() {
+        expect:
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_3_removed"))
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_3_added"))
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_removed"))
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_added"))
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_3"))
+        FieldNameUtil.isAnyLanguage(createFiledWithName("language_300"))
+        !FieldNameUtil.isAnyLanguage(createFiledWithName("language_300_gibberish"))
+        !FieldNameUtil.isAnyLanguage(createFiledWithName("gibberish"))
+        !FieldNameUtil.isAnyLanguage((Field) null)
+        !FieldNameUtil.isAnyLanguage((String) null)
     }
 
-    @Test
-    void isLanguageAddedOrRemoved() {
-        Assert.assertTrue FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4_removed"))
-        Assert.assertTrue FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4_added"))
-        Assert.assertTrue FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400_removed"))
-        Assert.assertTrue FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400_added"))
-
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4"))
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400"))
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_300_gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("gibberish"))
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved((Field) null)
-        Assert.assertFalse FieldNameUtil.isLanguageAddedOrRemoved((String) null)
+    def "isLanguageAddedOrRemoved correctly detects language field names"() {
+        expect:
+        FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4_removed"))
+        FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4_added"))
+        FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400_removed"))
+        FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400_added"))
+        !FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_4"))
+        !FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_400"))
+        !FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("language_300_gibberish"))
+        !FieldNameUtil.isLanguageAddedOrRemoved(createFiledWithName("gibberish"))
+        !FieldNameUtil.isLanguageAddedOrRemoved((Field) null)
+        !FieldNameUtil.isLanguageAddedOrRemoved((String) null)
     }
 
     private static Field createFiledWithName(String name) {

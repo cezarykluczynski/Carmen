@@ -8,15 +8,9 @@ import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFac
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator
 import com.cezarykluczynski.carmen.util.exec.executor.Executor
 import com.cezarykluczynski.carmen.vcs.git.util.GitCommand
-import org.testng.Assert
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-class SchemaUpdateFilesStateHelperTest {
+class SchemaUpdateFilesStateHelperTest extends Specification {
 
     private static final String ENTITY_PATH = "src/test/groovy/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityWithFixtureAnnotation.groovy"
 
@@ -24,44 +18,44 @@ class SchemaUpdateFilesStateHelperTest {
 
     SchemaUpdateFilesStateHelper schemaUpdateFilesStateHelper
 
-    @AfterMethod
-    void tearDown() {
-        Executor.execute(new GitCommand("checkout HEAD " + ENTITY_PATH))
-    }
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         Executor.execute(new GitCommand("checkout HEAD " + ENTITY_PATH))
 
-        LanguagesAnnotationIterator annotationIterator = mock LanguagesAnnotationIterator.class
-        when annotationIterator.hasNext() thenReturn true, false
-        when annotationIterator.next() thenReturn FixtureAnnotation.class
+        LanguagesAnnotationIterator annotationIterator = Mock LanguagesAnnotationIterator
+        annotationIterator.hasNext() >>> [true, false]
+        annotationIterator.next() >> FixtureAnnotation.class
 
-        RefreshableTable refreshableTable = mock RefreshableTable.class
-        when refreshableTable.getBaseClass() thenReturn EntityWithFixtureAnnotation.class
+        RefreshableTable refreshableTable = Mock RefreshableTable
+        refreshableTable.getBaseClass() >> EntityWithFixtureAnnotation.class
 
-        RefreshableTableIterator refreshableTableIterator = mock RefreshableTableIterator.class
-        when refreshableTableIterator.hasNext() thenReturn true, false
-        when refreshableTableIterator.next() thenReturn refreshableTable
+        RefreshableTableIterator refreshableTableIterator = Mock RefreshableTableIterator
+        refreshableTableIterator.hasNext() >>> [true, false]
+        refreshableTableIterator.next() >> refreshableTable
 
-        LanguagesIteratorsFactory annotationIteratorFactory = mock LanguagesIteratorsFactory.class
-        when annotationIteratorFactory.createLanguagesAnnotationIterator() thenReturn annotationIterator
-        when annotationIteratorFactory.createRefreshableTableIterator(FixtureAnnotation.class) thenReturn refreshableTableIterator
+        LanguagesIteratorsFactory annotationIteratorFactory = Mock LanguagesIteratorsFactory
+        annotationIteratorFactory.createLanguagesAnnotationIterator() >> annotationIterator
+        annotationIteratorFactory.createRefreshableTableIterator(FixtureAnnotation.class) >> refreshableTableIterator
 
         schemaUpdateFilesStateHelper = new SchemaUpdateFilesStateHelper(
                 annotationIteratorFactory, "src/test/groovy/", "groovy")
     }
 
-    @Test
-    void "should detect unchanged files"() {
-        Assert.assertFalse schemaUpdateFilesStateHelper.hasFilesChanged()
+    def cleanup() {
+        Executor.execute(new GitCommand("checkout HEAD " + ENTITY_PATH))
     }
 
-    @Test
-    void "should detect changed files"() {
+    def "should detect unchanged files"() {
+        expect:
+        !schemaUpdateFilesStateHelper.hasFilesChanged()
+    }
+
+    def "should detect changed files"() {
+        given:
         File file = new File(ENTITY_PATH)
         file.append CHANGE_TEXT
-        Assert.assertTrue schemaUpdateFilesStateHelper.hasFilesChanged()
+
+        expect:
+        schemaUpdateFilesStateHelper.hasFilesChanged()
     }
 
 

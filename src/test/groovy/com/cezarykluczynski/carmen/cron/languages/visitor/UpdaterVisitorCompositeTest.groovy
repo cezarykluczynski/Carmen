@@ -2,13 +2,9 @@ package com.cezarykluczynski.carmen.cron.languages.visitor
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-
-class UpdaterVisitorCompositeTest {
+class UpdaterVisitorCompositeTest extends Specification {
 
     private EntityUpdaterVisitor entityUpdaterVisitor
 
@@ -24,26 +20,26 @@ class UpdaterVisitorCompositeTest {
 
     private RefreshableTable refreshableTable
 
-    @BeforeMethod
-    void setUp() {
-        refreshableTable = mock RefreshableTable.class
-        languagesDAO = mock LanguagesDAO.class
-        entityUpdaterVisitor = mock EntityUpdaterVisitor.class
-        languagesDiffStatisticsUpdaterVisitor = mock LanguagesDiffStatisticsUpdaterVisitor.class
-        languagesStatisticsUpdaterVisitor = mock LanguagesStatisticsUpdaterVisitor.class
-        schemaUpdaterVisitor = mock SchemaUpdaterVisitor.class
+    def setup() {
+        refreshableTable = Mock RefreshableTable
+        languagesDAO = Mock LanguagesDAO
+        entityUpdaterVisitor = Mock EntityUpdaterVisitor
+        languagesDiffStatisticsUpdaterVisitor = Mock LanguagesDiffStatisticsUpdaterVisitor
+        languagesStatisticsUpdaterVisitor = Mock LanguagesStatisticsUpdaterVisitor
+        schemaUpdaterVisitor = Mock SchemaUpdaterVisitor
         updaterVisitorComposite = new UpdaterVisitorComposite(entityUpdaterVisitor,
                 languagesDiffStatisticsUpdaterVisitor, languagesStatisticsUpdaterVisitor, schemaUpdaterVisitor)
     }
 
-    @Test
-    void "all components are called"() {
+    def "all components are called"() {
+        when:
         updaterVisitorComposite.visit refreshableTable
 
-        verify entityUpdaterVisitor visit(refreshableTable)
-        verify languagesDiffStatisticsUpdaterVisitor visit(refreshableTable)
-        verify languagesStatisticsUpdaterVisitor visit(refreshableTable)
-        verify schemaUpdaterVisitor visit(refreshableTable)
+        then:
+        1 * entityUpdaterVisitor.visit(refreshableTable)
+        1 * languagesDiffStatisticsUpdaterVisitor.visit(refreshableTable)
+        1 * languagesStatisticsUpdaterVisitor.visit(refreshableTable)
+        1 * schemaUpdaterVisitor.visit(refreshableTable)
     }
 
 }

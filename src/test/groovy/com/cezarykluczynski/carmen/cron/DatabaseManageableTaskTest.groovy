@@ -3,7 +3,6 @@ package com.cezarykluczynski.carmen.cron
 import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO
 import com.cezarykluczynski.carmen.model.pub.Cron
-import org.testng.Assert
 import spock.lang.Specification
 
 class DatabaseManageableTaskTest extends Specification {
@@ -86,7 +85,7 @@ class DatabaseManageableTaskTest extends Specification {
         createTask false, true, true
 
         expect:
-        Assert.assertTrue databaseManageableTask.isRunning()
+        databaseManageableTask.isRunning()
     }
 
     def "isRunning is when task is not running"() {
@@ -94,7 +93,7 @@ class DatabaseManageableTaskTest extends Specification {
         createTask false, false, false
 
         expect:
-        Assert.assertFalse databaseManageableTask.isRunning()
+        !databaseManageableTask.isRunning()
     }
 
     private void createTask(boolean enabled, boolean running, boolean withServer) {

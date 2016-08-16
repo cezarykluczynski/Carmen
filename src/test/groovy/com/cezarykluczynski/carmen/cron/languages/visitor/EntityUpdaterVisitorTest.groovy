@@ -4,15 +4,9 @@ import com.cezarykluczynski.carmen.cron.languages.api.CassandraBuiltFile
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
-
-class EntityUpdaterVisitorTest {
+class EntityUpdaterVisitorTest extends Specification {
 
     private EntityUpdaterVisitor entityUpdaterVisitor
 
@@ -20,31 +14,33 @@ class EntityUpdaterVisitorTest {
 
     private RefreshableTable refreshableTable
 
-    @BeforeMethod
-    void setUp() {
-        refreshableTable = mock RefreshableTable.class
-        cassandraJavaPoetEntityBuilder = mock CassandraJavaPoetEntityBuilder.class
+    def setup() {
+        refreshableTable = Mock RefreshableTable
+        cassandraJavaPoetEntityBuilder = Mock CassandraJavaPoetEntityBuilder
         entityUpdaterVisitor = new EntityUpdaterVisitor(cassandraJavaPoetEntityBuilder)
     }
 
-    @Test
-    void "does not visit unchanged entity"() {
-        when(refreshableTable.hasChanged()).thenReturn false
+    def "does not visit unchanged entity"() {
+        given:
+        refreshableTable.hasChanged() >> false
 
+        when:
         entityUpdaterVisitor.visit refreshableTable
 
-        verify(refreshableTable, never()).getFields()
+        then:
+        0 * refreshableTable.getFields()
     }
 
-    @Test
-    void "do visit changed entity"() {
-        when refreshableTable.hasChanged()  thenReturn true
-        when refreshableTable.getBaseClass() thenReturn EntityOne.class
-        when cassandraJavaPoetEntityBuilder.build(refreshableTable) thenReturn(mock(CassandraBuiltFile.class))
+    def "do visit changed entity"() {
+        given:
+        refreshableTable.hasChanged() >> true
+        refreshableTable.getBaseClass() >> EntityOne.class
 
+        when:
         entityUpdaterVisitor.visit refreshableTable
 
-        verify(cassandraJavaPoetEntityBuilder).build refreshableTable
+        then:
+        1 * cassandraJavaPoetEntityBuilder.build(refreshableTable) >> Mock(CassandraBuiltFile)
     }
 
 }

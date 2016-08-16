@@ -1,18 +1,14 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
+import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
 import com.cezarykluczynski.carmen.model.pub.Language
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-
-class LanguagesStatisticsUpdaterVisitorTest {
+class LanguagesStatisticsUpdaterVisitorTest extends Specification {
 
     private LanguagesStatisticsUpdaterVisitor languagesStatisticsUpdaterVisitor
 
@@ -20,35 +16,35 @@ class LanguagesStatisticsUpdaterVisitorTest {
 
     private RefreshableTable refreshableTable
 
-    @BeforeMethod
-    void setUp() {
-        refreshableTable = mock RefreshableTable.class
-        languagesDAO = mock LanguagesDAO.class
+    def setup() {
+        refreshableTable = Mock RefreshableTable
+        languagesDAO = Mock LanguagesDAO
         languagesStatisticsUpdaterVisitor = new LanguagesStatisticsUpdaterVisitor(languagesDAO)
     }
 
-    @Test
-    void "field list is updated"() {
+    def "field list is updated"() {
+        given:
         SortedSet<EntityField> fieldsSet = TreeSetEntityFieldFactory.create()
         fieldsSet.add new EntityField("language_1")
         fieldsSet.add new EntityField("language_2")
-        when refreshableTable.getFields() thenReturn fieldsSet
-        List<Language> languageList = new ArrayList<>()
+        refreshableTable.getFields() >> fieldsSet
+        List<Language> languageList = Lists.newArrayList()
         Language language3 = new Language()
         Language language4 = new Language()
         language3.setId 3
         language4.setId 4
         languageList.add language3
         languageList.add language4
-        when languagesDAO.findAll() thenReturn languageList
+        languagesDAO.findAll() >> languageList
 
+        when:
         languagesStatisticsUpdaterVisitor.visit refreshableTable
+        SortedSet<EntityField> fields = refreshableTable.getFields()
 
-        SortedSet<String> fields = refreshableTable.getFields()
-
-        Assert.assertEquals fields.size(), 4
-        Assert.assertTrue fields.contains(new EntityField("language_3"))
-        Assert.assertTrue fields.contains(new EntityField("language_4"))
+        then:
+        fields.size() == 4
+        fields.contains(new EntityField("language_3"))
+        fields.contains(new EntityField("language_4"))
     }
 
 }

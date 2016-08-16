@@ -2,30 +2,29 @@ package com.cezarykluczynski.carmen.cron.management.converter
 
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO
 import com.cezarykluczynski.carmen.model.pub.Cron
-import org.testng.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class DatabaseSwitchableJobDTOConverterTest {
+class DatabaseSwitchableJobDTOConverterTest extends Specification {
 
     private static final String NAME = "Some cron"
     private static final boolean ENABLED = true
 
-    @Test
-    void "converts null to null"() {
-        Assert.assertNull DatabaseSwitchableJobDTOConverter.fromEntity(null)
+    def "converts null to null"() {
+        expect:
+        DatabaseSwitchableJobDTOConverter.fromEntity(null) == null
     }
 
-    @Test
-    void "converts from entity"() {
-        // setup
-        Cron entity = new Cron()
-        entity.setName NAME
-        entity.setEnabled ENABLED
+    def "converts from entity"() {
+        given:
+        Cron entity = new Cron(
+                name: NAME,
+                enabled: ENABLED
+        )
 
-        // exercise
+        when:
         DatabaseSwitchableJobDTO dto = DatabaseSwitchableJobDTOConverter.fromEntity entity
 
-        // assertion
+        then:
         dto.name == NAME
         dto.enabled == ENABLED
     }

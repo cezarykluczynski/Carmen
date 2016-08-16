@@ -4,15 +4,13 @@ import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO
 import com.cezarykluczynski.carmen.cron.management.service.DatabaseSwitchableJobsService
 import org.json.JSONObject
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
 import javax.ws.rs.core.Response
 
-import static org.mockito.Mockito.*
+import static org.mockito.Mockito.mock
 
-class DatabaseSwitchableJobsEndpointImplTest {
+class DatabaseSwitchableJobsEndpointImplTest extends Specification {
 
     private static final String NAME = "name"
 
@@ -20,65 +18,55 @@ class DatabaseSwitchableJobsEndpointImplTest {
 
     private DatabaseSwitchableJobsService jobsService
 
-    @BeforeMethod
-    void setup() {
-        jobsService = mock DatabaseSwitchableJobsService
-        when jobsService.getAll() thenReturn Lists.newArrayList(mock(DatabaseSwitchableJobDTO))
-        doNothing().when(jobsService).updateList()
+    def setup() {
+        jobsService = Mock DatabaseSwitchableJobsService
         endpoint = new DatabaseSwitchableJobsEndpointImpl(jobsService)
     }
 
-    @Test
-    void getAll() {
-        // exercise
+    def "gets all jobs"() {
+        when:
         Response response = endpoint.getAll()
-
-        // assertion
         List<DatabaseSwitchableJobDTO> entity = (List<DatabaseSwitchableJobDTO>) response.getEntity()
 
-        Assert.assertEquals response.getStatus(), 200
-        Assert.assertEquals entity.size(), 1
-        verify(jobsService).getAll()
+        then:
+        1 * jobsService.getAll() >> Lists.newArrayList(mock(DatabaseSwitchableJobDTO))
+        response.getStatus() == 200
+        entity.size() == 1
     }
 
-    @Test
-    void updateList() {
-        // exercise
+    def "updates list"() {
+        when:
         Response response = endpoint.updateList()
 
-        // assertion
-        Assert.assertEquals response.getStatus(), 200
-        verify(jobsService).updateList()
+        then:
+        1 * jobsService.updateList()
+        response.getStatus() == 200
     }
 
-    @Test
-    void enable() {
-        // setup
-        doNothing().when(jobsService).enable(any(DatabaseSwitchableJobDTO.class))
-
-        // exercise
+    def "enables job by name"() {
+        when:
         Response response = endpoint.enable NAME
-
-        // assertion
         JSONObject responseBody = new JSONObject(response.getEntity())
-        verify(jobsService).enable(any(DatabaseSwitchableJobDTO.class))
-        Assert.assertEquals response.getStatus(), 200
-        Assert.assertEquals responseBody.getString("name"), NAME
+
+        then:
+        1 * jobsService.enable(_) >> {args ->
+            assert ((DatabaseSwitchableJobDTO) args[0]).name == NAME
+        }
+        response.getStatus() == 200
+        responseBody.getString("name") == NAME
     }
 
-    @Test
-    void disable() {
-        // setup
-        doNothing().when(jobsService).disable(any(DatabaseSwitchableJobDTO.class))
-
-        // exercise
+    def "disables job by name"() {
+        when:
         Response response = endpoint.disable NAME
-
-        // assertion
         JSONObject responseBody = new JSONObject(response.getEntity())
-        verify(jobsService).disable(any(DatabaseSwitchableJobDTO.class))
-        Assert.assertEquals response.getStatus(), 200
-        Assert.assertEquals responseBody.getString("name"), NAME
+
+        then:
+        1 * jobsService.disable(_) >> {args ->
+            assert ((DatabaseSwitchableJobDTO) args[0]).name == NAME
+        }
+        response.getStatus() == 200
+        responseBody.getString("name") == NAME
     }
 
 }

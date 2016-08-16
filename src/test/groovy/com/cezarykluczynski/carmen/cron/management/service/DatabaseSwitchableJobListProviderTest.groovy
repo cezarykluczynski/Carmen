@@ -1,21 +1,18 @@
 package com.cezarykluczynski.carmen.cron.management.service
 
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class DatabaseSwitchableJobListProviderTest {
+class DatabaseSwitchableJobListProviderTest extends Specification {
 
     private DatabaseSwitchableJobListProvider provider
 
-    @BeforeMethod
-    void setup() {
+    def setup() {
         provider = new DatabaseSwitchableJobListProvider()
     }
 
-    @Test
-    void getDatabaseSwitchableJobsClasses() {
-         Assert.assertFalse provider.getDatabaseSwitchableJobsClasses().isEmpty()
+    def "database switchable jobs classes list is not empty"() {
+        expect:
+        !provider.getDatabaseSwitchableJobsClasses().isEmpty()
     }
 
 }

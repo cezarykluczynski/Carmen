@@ -58,5 +58,4 @@ class SchemaUpdateFilesStateHelperTest extends Specification {
         schemaUpdateFilesStateHelper.hasFilesChanged()
     }
 
-
 }

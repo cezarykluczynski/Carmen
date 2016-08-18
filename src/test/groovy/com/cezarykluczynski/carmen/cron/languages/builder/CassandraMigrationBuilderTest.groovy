@@ -10,10 +10,9 @@ import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFac
 import com.cezarykluczynski.carmen.cron.languages.model.CassandraBuiltFileNullObject
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
-import org.junit.Assert
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class CassandraMigrationBuilderTest {
+class CassandraMigrationBuilderTest extends Specification {
 
     private static final String TEST_MIGRATION_DIRECTORY =
             "src/test/groovy/com/cezarykluczynski/carmen/cron/languages/fixture/migration/"
@@ -39,86 +38,106 @@ ALTER TABLE github_social_stats.entity_one ADD some_uuid uuid;
 
     private CassandraMigrationBuilder cassandraMigrationBuilder
 
-    @Test
-    void "path is built for existing entity in non-empty folder"() {
+    def "path is built for existing entity in non-empty folder"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals TEST_MIGRATION_DIRECTORY + "github_social_stats/V2_0__Update_entity_one_table.cql",
-                cassandraBuiltFile.getPath()
+        then:
+        TEST_MIGRATION_DIRECTORY + "github_social_stats/V2_0__Update_entity_one_table.cql" == cassandraBuiltFile.getPath()
     }
 
-    @Test
-    void "path is build for existing entity in empty folder"() {
+    def "path is build for existing entity in empty folder"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(EMPTY_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals EMPTY_MIGRATION_DIRECTORY + "github_social_stats/V1_0__Update_entity_one_table.cql",
-                cassandraBuiltFile.getPath()
+        then:
+        EMPTY_MIGRATION_DIRECTORY + "github_social_stats/V1_0__Update_entity_one_table.cql" == cassandraBuiltFile.getPath()
     }
 
-    @Test
-    void "path is built for empty entity in non-empty folder"() {
+    def "path is built for empty entity in non-empty folder"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals TEST_MIGRATION_DIRECTORY + "github_social_stats/V2_0__Create_entity_empty_table.cql",
-                cassandraBuiltFile.getPath()
+        then:
+        TEST_MIGRATION_DIRECTORY + "github_social_stats/V2_0__Create_entity_empty_table.cql" == cassandraBuiltFile.getPath()
     }
 
-    @Test
-    void "path is built for empty entity in empty folder"() {
+    def "path is built for empty entity in empty folder"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(EMPTY_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals EMPTY_MIGRATION_DIRECTORY + "github_social_stats/V1_0__Create_entity_empty_table.cql",
-                cassandraBuiltFile.getPath()
+        then:
+        EMPTY_MIGRATION_DIRECTORY + "github_social_stats/V1_0__Create_entity_empty_table.cql" == cassandraBuiltFile.getPath()
     }
 
-    @Test
-    void "CQL is built for new entity with new fields"() {
+    def "CQL is built for new entity with new fields"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals NEW_ENTITY_CONTENTS_WITH_NEW_FIELDS, cassandraBuiltFile.getContents()
+        then:
+        NEW_ENTITY_CONTENTS_WITH_NEW_FIELDS == cassandraBuiltFile.getContents()
     }
 
-    @Test
-    void "CQL is built for new entity without new fields"() {
+    def "CQL is built for new entity without new fields"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityEmpty.class)
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals NEW_ENTITY_CONTENTS_WITHOUT_NEW_FIELDS, cassandraBuiltFile.getContents()
+        then:
+        NEW_ENTITY_CONTENTS_WITHOUT_NEW_FIELDS == cassandraBuiltFile.getContents()
     }
 
-    @Test
-    void "CQL is built for existing entity"() {
+    def "CQL is built for existing entity"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
         refreshableTable.setFields getEntityFields()
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertEquals EXISTING_ENTITY_CONTENTS, cassandraBuiltFile.getContents()
+        then:
+        EXISTING_ENTITY_CONTENTS == cassandraBuiltFile.getContents()
     }
 
-    @Test
-    void "null object is returned when no changes has been made to non-empty entity"() {
+    def "null object is returned when no changes has been made to non-empty entity"() {
+        given:
         cassandraMigrationBuilder = new CassandraMigrationBuilder(TEST_MIGRATION_DIRECTORY)
         RefreshableTable refreshableTable = createEntityFieldsIterator(EntityOne.class)
+
+        when:
         CassandraBuiltFile cassandraBuiltFile = cassandraMigrationBuilder.build(refreshableTable)
 
-        Assert.assertTrue cassandraBuiltFile instanceof CassandraBuiltFileNullObject
+        then:
+        cassandraBuiltFile instanceof CassandraBuiltFileNullObject
     }
 
     private static TreeSet<EntityField> getEntityFields() {

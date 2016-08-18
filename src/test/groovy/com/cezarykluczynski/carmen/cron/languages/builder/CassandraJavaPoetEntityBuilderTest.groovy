@@ -9,12 +9,9 @@ import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFac
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.cron.languages.model.RefreshableTableImpl
 import org.apache.commons.io.FileUtils
-import org.testng.Assert
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class CassandraJavaPoetEntityBuilderTest {
+class CassandraJavaPoetEntityBuilderTest extends Specification {
 
     private CassandraJavaPoetEntityBuilder cassandraJavaPoetEntityBuilder
 
@@ -71,8 +68,7 @@ public class EntityTwo extends CarmenNoSQLEntity implements GitDescription {
 
     private String expectedPath = "src/main/java/com/cezarykluczynski/carmen/cron/languages/fixture/entity/EntityTwo.java"
 
-    @BeforeMethod
-    void setUp() {
+    void setup() {
         cassandraJavaPoetEntityBuilder = new CassandraJavaPoetEntityBuilder()
         refreshableTable = new RefreshableTableImpl(EntityTwo.class,
                 new LanguagesIteratorsFactory().createEntityFieldsIterator(EntityTwo.class, FieldsFilter.ALL))
@@ -88,24 +84,27 @@ public class EntityTwo extends CarmenNoSQLEntity implements GitDescription {
         cassandraBuiltFile = cassandraJavaPoetEntityBuilder.build refreshableTable
     }
 
-    @Test
-    void "entity has the right content and is saved in the right place"() {
+    def cleanup() {
+        FileUtils.deleteQuietly new File("./" + expectedPath)
+    }
+
+    def "entity has the right content"() {
+        when:
         String content = cassandraBuiltFile.getContents()
         String path = cassandraBuiltFile.getPath()
 
-        Assert.assertEquals content, expectedContent
-        Assert.assertEquals path, expectedPath
-
-        cassandraBuiltFile.save()
-
-        String fileContent = FileUtils.readFileToString new File("./" + expectedPath)
-
-        Assert.assertEquals fileContent, expectedContent
+        then:
+        content == expectedContent
+        path == expectedPath
     }
 
-    @AfterMethod
-    void tearDown() {
-        FileUtils.deleteQuietly new File("./" + expectedPath)
+    def "entity is saved in the right place"() {
+        when:
+        cassandraBuiltFile.save()
+        String fileContent = FileUtils.readFileToString new File("./" + expectedPath)
+
+        then:
+        fileContent == expectedContent
     }
 
 }

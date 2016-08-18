@@ -6,14 +6,9 @@ import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
-import org.apache.commons.lang.math.RandomUtils
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import java.util.stream.Collectors
-
-class RefreshableTableImplTest {
+class RefreshableTableImplTest extends Specification {
 
     private RefreshableTable refreshableTable
 
@@ -21,16 +16,18 @@ class RefreshableTableImplTest {
 
     private static final LanguagesIteratorsFactory languagesIteratorFactory = new LanguagesIteratorsFactory()
 
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         refreshableTable = new RefreshableTableImpl(EntityOne,
                 languagesIteratorFactory.createEntityFieldsIterator(EntityOne, FieldsFilter.ALL))
     }
 
-    @Test
-    void "has changed when fields was changed"() {
-        Assert.assertFalse refreshableTable.hasChanged()
+    def "does not initialize in changed state"() {
+        expect:
+        !refreshableTable.hasChanged()
+    }
 
+    def "has changed when fields was changed"() {
+        when:
         refreshableTable.accept(new RefreshableTableVisitor() {
             @Override
             void visit(RefreshableTable refreshableTable) {
@@ -40,13 +37,12 @@ class RefreshableTableImplTest {
             }
         })
 
-        Assert.assertTrue refreshableTable.hasChanged()
+        then:
+        refreshableTable.hasChanged()
     }
 
-    @Test
-    void "has not changed when fields were not changed"() {
-        Assert.assertFalse refreshableTable.hasChanged()
-
+    def "has not changed when fields were not changed"() {
+        when:
         refreshableTable.accept(new RefreshableTableVisitor() {
             @Override
             void visit(RefreshableTable refreshableTable) {
@@ -61,26 +57,26 @@ class RefreshableTableImplTest {
                 refreshableTable.setFields fields
             }
         })
-        Assert.assertFalse refreshableTable.hasChanged()
+
+        then:
+        !refreshableTable.hasChanged()
     }
 
-    @Test
-    void gettersAndSetters() {
-        Assert.assertEquals refreshableTable.getBaseClass(), EntityOne.class
-
+    def "getters and setters works properly"() {
+        given:
         SortedSet<EntityField> fields = refreshableTable.getFields()
-
-        Assert.assertEquals fields.size(), 13
-
+        assert fields.size() == 13
         fields.add new EntityField(ONE_MORE)
 
-        Assert.assertEquals refreshableTable.getFields().size(), 13
 
+        when:
         refreshableTable.setFields fields
 
-        Assert.assertEquals refreshableTable.getFields().size(), 14
-        Assert.assertEquals refreshableTable.getNewFields().size(), 1
-        Assert.assertEquals refreshableTable.getNewFields().first(), new EntityField(ONE_MORE)
+        then:
+        refreshableTable.getBaseClass() == EntityOne.class
+        refreshableTable.getFields().size() == 14
+        refreshableTable.getNewFields().size() == 1
+        refreshableTable.getNewFields().first() == new EntityField(ONE_MORE)
     }
 
 }

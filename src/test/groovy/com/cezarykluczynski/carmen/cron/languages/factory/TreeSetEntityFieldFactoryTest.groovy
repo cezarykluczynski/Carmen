@@ -2,17 +2,15 @@ package com.cezarykluczynski.carmen.cron.languages.factory
 
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
 import java.time.LocalDateTime
 
-public class TreeSetEntityFieldFactoryTest {
+public class TreeSetEntityFieldFactoryTest  extends Specification {
 
-    TreeSet<EntityField> entityFieldTreeSet
+    private TreeSet<EntityField> entityFieldTreeSet
 
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         entityFieldTreeSet = TreeSetEntityFieldFactory.create()
 
         ArrayList<EntityField> entityFieldArrayList = new ArrayList<>()
@@ -59,63 +57,65 @@ public class TreeSetEntityFieldFactoryTest {
         }
     }
 
-    @Test
-    void "comparator produces correct order"() {
+    def "comparator produces correct order"() {
+        when:
         Iterator<EntityField> iterator = entityFieldTreeSet.iterator()
 
-        Assert.assertEquals iterator.next().getName(), "created"
-        Assert.assertEquals iterator.next().getName(), "id"
+        then:
+        iterator.next().getName() == "created"
+        iterator.next().getName() == "id"
 
-        Assert.assertEquals iterator.next().getName(), "language_1"
-        Assert.assertEquals iterator.next().getName(), "language_1_added"
-        Assert.assertEquals iterator.next().getName(), "language_1_removed"
+        iterator.next().getName() == "language_1"
+        iterator.next().getName() == "language_1_added"
+        iterator.next().getName() == "language_1_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_2"
-        Assert.assertEquals iterator.next().getName(), "language_2_added"
-        Assert.assertEquals iterator.next().getName(), "language_2_removed"
+        iterator.next().getName() == "language_2"
+        iterator.next().getName() == "language_2_added"
+        iterator.next().getName() == "language_2_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_3"
-        Assert.assertEquals iterator.next().getName(), "language_3_added"
-        Assert.assertEquals iterator.next().getName(), "language_3_removed"
+        iterator.next().getName() == "language_3"
+        iterator.next().getName() == "language_3_added"
+        iterator.next().getName() == "language_3_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_10"
-        Assert.assertEquals iterator.next().getName(), "language_10_added"
-        Assert.assertEquals iterator.next().getName(), "language_10_removed"
+        iterator.next().getName() == "language_10"
+        iterator.next().getName() == "language_10_added"
+        iterator.next().getName() == "language_10_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_30"
-        Assert.assertEquals iterator.next().getName(), "language_30_added"
-        Assert.assertEquals iterator.next().getName(), "language_30_removed"
+        iterator.next().getName() == "language_30"
+        iterator.next().getName() == "language_30_added"
+        iterator.next().getName() == "language_30_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_100"
-        Assert.assertEquals iterator.next().getName(), "language_100_added"
-        Assert.assertEquals iterator.next().getName(), "language_100_removed"
+        iterator.next().getName() == "language_100"
+        iterator.next().getName() == "language_100_added"
+        iterator.next().getName() == "language_100_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_300"
-        Assert.assertEquals iterator.next().getName(), "language_300_added"
-        Assert.assertEquals iterator.next().getName(), "language_300_removed"
+        iterator.next().getName() == "language_300"
+        iterator.next().getName() == "language_300_added"
+        iterator.next().getName() == "language_300_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_500"
-        Assert.assertEquals iterator.next().getName(), "language_500_added"
-        Assert.assertEquals iterator.next().getName(), "language_500_removed"
+        iterator.next().getName() == "language_500"
+        iterator.next().getName() == "language_500_added"
+        iterator.next().getName() == "language_500_removed"
 
-        Assert.assertEquals iterator.next().getName(), "language_1000"
-        Assert.assertEquals iterator.next().getName(), "language_1000_added"
-        Assert.assertEquals iterator.next().getName(), "language_1000_removed"
+        iterator.next().getName() == "language_1000"
+        iterator.next().getName() == "language_1000_added"
+        iterator.next().getName() == "language_1000_removed"
 
-        Assert.assertEquals iterator.next().getName(), "refreshed"
+        iterator.next().getName() == "refreshed"
 
         Assert.assertFalse iterator.hasNext()
     }
 
-    @Test
-    void "exact copy is created"() {
+    def "exact copy is created"() {
+        when:
         TreeSet<EntityField> entityFieldTreeSetCopy = TreeSetEntityFieldFactory.copy entityFieldTreeSet
 
         Iterator<EntityField> iterator = entityFieldTreeSet.iterator()
         Iterator<EntityField> copyIterator = entityFieldTreeSetCopy.iterator()
 
+        then:
         while(iterator.hasNext()) {
-            Assert.assertEquals iterator.next(), copyIterator.next()
+            assert iterator.next() == copyIterator.next()
         }
     }
 

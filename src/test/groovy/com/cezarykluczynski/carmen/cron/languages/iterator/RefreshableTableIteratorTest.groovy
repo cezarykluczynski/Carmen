@@ -4,28 +4,26 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistic
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityTwo
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-class RefreshableTableIteratorTest {
+class RefreshableTableIteratorTest extends Specification {
 
     private RefreshableTableIterator tableIterator
 
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         tableIterator = new RefreshableTableIterator(LanguagesStatistics.class, new LanguagesIteratorsFactory())
     }
 
-    @Test
-    void iteratorIsNotEmpty() {
-        Assert.assertTrue tableIterator.hasNext()
+    def "iterator is not empty"() {
+        expect:
+        tableIterator.hasNext()
     }
 
-    @Test
-    void testEntitiesArePickedUp() {
+    def "test entities are picked up"() {
+        given:
         int pickedUpTestEntityCount = 0
 
+        when:
         while(tableIterator.hasNext()) {
             RefreshableTable refreshableTable = tableIterator.next()
             if (refreshableTable.getBaseClass().equals(EntityOne) || refreshableTable.getBaseClass().equals(EntityTwo)) {
@@ -33,7 +31,8 @@ class RefreshableTableIteratorTest {
             }
         }
 
-        Assert.assertEquals pickedUpTestEntityCount, 2
+        then:
+        pickedUpTestEntityCount == 2
     }
 
 }

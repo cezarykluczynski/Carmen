@@ -1,85 +1,135 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
+import com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor
 import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
-import static org.mockito.Mockito.*
+class APIRequestExecutorTest extends Specification {
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class APIRequestExecutorTest extends AbstractTestNGSpringContextTests {
+    private static final String REPOSITORIES = "Repositories"
+    private static final String USERS_GHOST_PAGINATOR = "UsersGhostPaginator"
+    private static final String USER_GHOST = "UserGhost"
 
-    @Mock
-    PendingRequestDAO apiqueuePendingRequestDAOImpl
+    private PendingRequestDAO apiqueuePendingRequestDAOImpl
 
-    @Mock
-    UserGhostExecutor userGhostExecutor
+    private RepositoriesExecutor repositoriesExecutorMock
 
-    @Mock
-    UserGhostPaginatorExecutor userGhostPaginatorExecutor
+    private UserGhostPaginatorExecutor userGhostPaginatorExecutorMock
 
-    @Autowired
-    @InjectMocks
-    APIRequestExecutor apiRequestExecutor
+    private UserGhostExecutor userGhostExecutorMock
 
-    User userEntity
+    private APIRequestExecutor apiRequestExecutor
 
-    @BeforeMethod
-    void setUp() {
-        userEntity = new User()
-        MockitoAnnotations.initMocks this
+    private PendingRequest pendingRequestEntity
+
+    def setup() {
+        apiqueuePendingRequestDAOImpl = Mock PendingRequestDAO
+        repositoriesExecutorMock = Mock RepositoriesExecutor
+        userGhostPaginatorExecutorMock = Mock UserGhostPaginatorExecutor
+        userGhostExecutorMock = Mock UserGhostExecutor
+        apiRequestExecutor = new APIRequestExecutor(apiqueuePendingRequestDAOImpl, repositoriesExecutorMock,
+                userGhostPaginatorExecutorMock, userGhostExecutorMock)
     }
 
-    @Test
-    void runNonExistingExecutor() {
-        // setup
-        PendingRequest pendingRequestEntityMock = mock PendingRequest.class
-        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn pendingRequestEntityMock
-        doNothing().when(userGhostExecutor).execute()
-        doNothing().when(userGhostPaginatorExecutor).execute()
-        when pendingRequestEntityMock.getExecutor() thenReturn "NotExistingExecutor"
-
-        // exercise
+    def "should not run when there is no pending request"() {
+        when:
         apiRequestExecutor.run()
 
-        // assertion
-        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
-        verify(userGhostExecutor, never()).execute()
-        verify(userGhostPaginatorExecutor, never()).execute()
-        verify(pendingRequestEntityMock).getExecutor()
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> null
+        0 * repositoriesExecutorMock.execute(*_)
+        0 * userGhostPaginatorExecutorMock.execute(*_)
+        0 * userGhostExecutorMock.execute(*_)
     }
 
-    @Test
-    void runNoPendingRequests() {
-        // setup
-        when apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() thenReturn null
+    def "should run Repositories"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: REPOSITORIES)
 
-        // exercise
+        when:
         apiRequestExecutor.run()
 
-        // assertion
-        verify(apiqueuePendingRequestDAOImpl).findMostImportantPendingRequest()
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        1 * repositoriesExecutorMock.execute(pendingRequestEntity)
+        0 * userGhostPaginatorExecutorMock.execute(*_)
+        0 * userGhostExecutorMock.execute(*_)
     }
 
-    @AfterMethod
-    void tearDown() {
-        reset apiqueuePendingRequestDAOImpl
-        reset userGhostExecutor
-        reset userGhostPaginatorExecutor
+    def "should run Repositories and tolerate exception"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: REPOSITORIES)
+
+        when:
+        apiRequestExecutor.run()
+
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        1 * repositoriesExecutorMock.execute(pendingRequestEntity) >> { args ->
+            throw new IOException()
+        }
+        noExceptionThrown()
+    }
+
+    def "should run UsersGhostPaginator"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: USERS_GHOST_PAGINATOR)
+
+        when:
+        apiRequestExecutor.run()
+
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        0 * repositoriesExecutorMock.execute(*_)
+        1 * userGhostPaginatorExecutorMock.execute(pendingRequestEntity)
+        0 * userGhostExecutorMock.execute(*_)
+    }
+
+    def "should run UsersGhostPaginator and tolerate exception"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: USERS_GHOST_PAGINATOR)
+
+        when:
+        apiRequestExecutor.run()
+
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        1 * userGhostPaginatorExecutorMock.execute(pendingRequestEntity) >> { args ->
+            throw new IOException()
+        }
+        noExceptionThrown()
+    }
+
+    def "should run UserGhost"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: USER_GHOST)
+
+        when:
+        apiRequestExecutor.run()
+
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        0 * repositoriesExecutorMock.execute(*_)
+        0 * userGhostPaginatorExecutorMock.execute(*_)
+        1 * userGhostExecutorMock.execute(pendingRequestEntity)
+    }
+
+    def "should run UserGhost and tolerate exception"() {
+        given:
+        pendingRequestEntity = new PendingRequest(executor: USER_GHOST)
+
+        when:
+        apiRequestExecutor.run()
+
+        then:
+        1 * apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest() >> pendingRequestEntity
+        1 * userGhostExecutorMock.execute(pendingRequestEntity) >> { args ->
+            throw new IOException()
+        }
+        noExceptionThrown()
     }
 
 }

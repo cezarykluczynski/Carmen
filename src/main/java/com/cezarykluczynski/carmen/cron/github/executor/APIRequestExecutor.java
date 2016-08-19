@@ -46,17 +46,24 @@ public class APIRequestExecutor implements Runnable {
         String executor = pendingRequest.getExecutor();
 
         switch (executor) {
+            case "Repositories":
+                executeRepositories(pendingRequest);
+                break;
             case "UsersGhostPaginator":
                 executeUsersGhostPaginator(pendingRequest);
                 break;
             case "UserGhost":
                 executeUserGhost(pendingRequest);
                 break;
-            case "Repositories":
-                executeRepositories(pendingRequest);
-                break;
             default:
                 break;
+        }
+    }
+
+    private void executeRepositories(PendingRequest pendingRequest) {
+        try {
+            repositoriesExecutor.execute(pendingRequest);
+        } catch (IOException e) {
         }
     }
 
@@ -70,14 +77,6 @@ public class APIRequestExecutor implements Runnable {
     private void executeUserGhost(PendingRequest pendingRequest) {
         try {
             userGhostExecutor.execute(pendingRequest);
-        } catch (IOException e) {
-        }
-
-    }
-
-    private void executeRepositories(PendingRequest pendingRequest) {
-        try {
-            repositoriesExecutor.execute(pendingRequest);
         } catch (IOException e) {
         }
     }

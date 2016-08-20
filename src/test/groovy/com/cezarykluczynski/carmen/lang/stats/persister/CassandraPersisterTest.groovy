@@ -17,7 +17,7 @@ class CassandraPersisterTest extends IntegrationTest {
     private static final JAVA_TOTAL = 15
 
     @Autowired
-    CommitsRepository commitsRepository
+    private CommitsRepository commitsRepository
 
     @Autowired
     private CassandraPersister cassandraPersister

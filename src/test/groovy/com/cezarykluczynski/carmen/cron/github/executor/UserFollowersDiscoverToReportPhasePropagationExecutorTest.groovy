@@ -1,118 +1,75 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-import org.testng.Assert
+import spock.lang.Specification
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends AbstractTestNGSpringContextTests {
+class UserFollowersDiscoverToReportPhasePropagationExecutorTest extends Specification {
 
-    @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private static final Integer USER_FOLLOWERS_ID = 1
+    private static final String DISCOVER_PHASE = "discover"
+    private static final String REPORT_PHASE = "report"
+    private static final String SLEEP_PHASE = "sleep"
 
-    @Autowired
-    UserFollowersDAO propagationsUserFollowersDAOImpl
+    private UserFollowersDAO userFollowersDAOImpl
 
-    @Autowired
-    UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private PendingRequestDAO pendingRequestDAOImpl
 
-    @Autowired
-    PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
+    private UserFollowersDiscoverToReportPhasePropagationExecutor userFollowersDiscoverToReportPhasePropagationExecutor
 
-    @Autowired
-    UserFollowersDiscoverToReportPhasePropagationExecutor userFollowersDiscoverToReportPhasePropagationExecutor
+    private UserFollowers userFollowers
 
-    User userEntity
-
-    UserFollowers userFollowersEntity
-
-    @BeforeMethod
-    public void setUp() {
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+    def setup() {
+        userFollowersDAOImpl = Mock UserFollowersDAO
+        pendingRequestDAOImpl = Mock PendingRequestDAO
+        userFollowersDiscoverToReportPhasePropagationExecutor = new UserFollowersDiscoverToReportPhasePropagationExecutor(
+                userFollowersDAOImpl, pendingRequestDAOImpl
+        )
     }
 
-    @Test
-    void tryToMoveToReportPhaseNoPendingRequestDiscoverPhase() {
-        // setup
-        userFollowersEntity = propagationsUserFollowersDAOImplFixtures
-            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
-        userFollowersEntity.setUpdated(new Date(0L))
-        propagationsUserFollowersDAOImpl.update userFollowersEntity
+    def "entity is moved to report phase when there is no more propagations"() {
+        given:
+        userFollowers = new UserFollowers(id: USER_FOLLOWERS_ID, phase: DISCOVER_PHASE)
+        userFollowersDAOImpl.findOldestPropagationInDiscoverPhase() >> userFollowers
+        pendingRequestDAOImpl.countByPropagationId(USER_FOLLOWERS_ID) >> 0
 
-        // exercise
+        when:
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
-        // assertion
-        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
-        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "report"
-
-        // teardown
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+        then:
+        1 * userFollowersDAOImpl.update(_ as UserFollowers) >> { UserFollowers userFollowersArg ->
+            assert userFollowersArg == userFollowers
+            assert userFollowersArg.getPhase() == REPORT_PHASE
+        }
     }
 
-    @Test
-    void tryToMoveToReportPhaseNoPendingRequestSleepPhase() {
-        // setup
-        userFollowersEntity = propagationsUserFollowersDAOImplFixtures
-            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "sleep")
-        userFollowersEntity.setUpdated(new Date(0L))
-        propagationsUserFollowersDAOImpl.update userFollowersEntity
+    def "does not move to report phase when entity is in sleep phase and there is no more propagations"() {
+        given:
+        userFollowers = new UserFollowers(id: USER_FOLLOWERS_ID, phase: SLEEP_PHASE)
+        userFollowersDAOImpl.findOldestPropagationInDiscoverPhase() >> userFollowers
+        pendingRequestDAOImpl.countByPropagationId(USER_FOLLOWERS_ID) >> 1
 
-        // exercise
+        when:
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
-        // assertion
-        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "sleep"
-
-        // teardown
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
+        then:
+        userFollowers.phase == SLEEP_PHASE
+        0 * userFollowersDAOImpl.update(*_)
     }
 
-    @Test
-    void tryToMoveToReportPhasePendingRequestDiscoverPhase() {
-        // setup
-        userFollowersEntity = propagationsUserFollowersDAOImplFixtures
-            .createUserFollowersEntityUsingUserEntityAndPhase(userEntity, "discover")
-        userFollowersEntity.setUpdated(new Date(0L))
-        propagationsUserFollowersDAOImpl.update userFollowersEntity
-        PendingRequest pendingRequestEntity =
-            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntityAndUserFollowersEntity(
-                userEntity, userFollowersEntity
-            )
-        pendingRequestEntity.setPropagationId userFollowersEntity.getId()
+    def "entity is not moved to report phase when there is more propagations"() {
+        given:
+        userFollowers = new UserFollowers(id: USER_FOLLOWERS_ID, phase: DISCOVER_PHASE)
+        userFollowersDAOImpl.findOldestPropagationInDiscoverPhase() >> userFollowers
+        pendingRequestDAOImpl.countByPropagationId(USER_FOLLOWERS_ID) >> 1
 
-        // exercise
+        when:
         userFollowersDiscoverToReportPhasePropagationExecutor.run()
 
-        // assertion
-        UserFollowers propagationsUserFollowersEntity = propagationsUserFollowersDAOImpl.findByUser(userEntity)
-        Assert.assertEquals propagationsUserFollowersEntity.getPhase(), "discover"
-
-        // teardown
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
-        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestEntity
-    }
-
-    @AfterMethod
-    void tearDown() {
-        propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntityByUserEntity userEntity
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        userFollowers.phase == DISCOVER_PHASE
+        0 * userFollowersDAOImpl.update(*_)
     }
 
 }

@@ -1,104 +1,72 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory
 import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.util.DateTimeConstants
-import org.springframework.test.context.web.WebAppConfiguration
+import spock.lang.Specification
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import org.mockito.Mock
-import org.mockito.InjectMocks
-import org.mockito.MockitoAnnotations
+class RepositoriesWakeUpExecutorTest extends Specification {
 
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-import org.testng.Assert
+    private Integer refreshIntervalDays
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class RepositoriesWakeUpExecutorTest extends AbstractTestNGSpringContextTests {
+    private RepositoriesDAO propagationsRepositoriesDAOImpl
 
-    @Value('${executor.RepositoriesWakeUpExecutor.refreshIntervalDays}')
-    private Integer refreshIntervalDays;
+    private PendingRequestFactory pendingRequestFactory
 
-    @Mock
-    RepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesWakeUpExecutor repositoriesWakeUpExecutor
 
-    @Mock
-    PendingRequestFactory pendingRequestFactory
+    private Repositories repositoriesEntity
 
-    @Autowired
-    @InjectMocks
-    RepositoriesWakeUpExecutor propagationRepositoriesWakeUpExecutor
+    private PendingRequest pendingRequestEntity
 
-    Repositories repositoriesEntity
-
-    PendingRequest pendingRequestEntity
-
-    @BeforeMethod
-    void setUp() {
-        MockitoAnnotations.initMocks this
-
-        repositoriesEntity = mock Repositories.class
-        when propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() thenReturn repositoriesEntity
-        doNothing().when(propagationsRepositoriesDAOImpl).moveToRefreshPhase(repositoriesEntity)
-
-        pendingRequestEntity = mock PendingRequest.class
-        when pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity) thenReturn pendingRequestEntity
+    def setup() {
+        refreshIntervalDays = 3
+        repositoriesEntity = Mock Repositories
+        pendingRequestEntity = Mock PendingRequest
+        propagationsRepositoriesDAOImpl = Mock RepositoriesDAO
+        pendingRequestFactory = Mock PendingRequestFactory
+        pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity) >> pendingRequestEntity
+        repositoriesWakeUpExecutor = new RepositoriesWakeUpExecutor(propagationsRepositoriesDAOImpl,
+                pendingRequestFactory, refreshIntervalDays)
     }
 
-    @Test
-    void testNonExistingEntity() {
-        // setup
-        when propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() thenReturn null
+    def "null entity does not throw exceptions"() {
+        given:
+        propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> null
 
-        // exercise
-        propagationRepositoriesWakeUpExecutor.run()
+        when:
+        repositoriesWakeUpExecutor.run()
 
-        // assert it's OK: there were no NullPointerException to this point
-        Assert.assertTrue true
+        then:
+        noExceptionThrown()
     }
 
-    @Test
-    void testExistingEntityThatShouldNotBeUpdated() {
-        // setup
-        when(repositoriesEntity.getUpdated()).thenReturn(new Date())
+    def "not updatable entity is not updated"() {
+        given:
+        propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> repositoriesEntity
 
-        // exercise
-        propagationRepositoriesWakeUpExecutor.run()
+        when:
+        repositoriesWakeUpExecutor.run()
 
-        // assertion
-        verify(repositoriesEntity).getUpdated()
-        verify(pendingRequestFactory, never()).createPendingRequestForUserRepositoriesPropagation repositoriesEntity
-        verify(propagationsRepositoriesDAOImpl, never()).moveToRefreshPhase repositoriesEntity
+        then:
+        1 * repositoriesEntity.getUpdated() >> new Date()
+        0 * pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity)
+        0 * propagationsRepositoriesDAOImpl.moveToRefreshPhase(repositoriesEntity)
     }
 
-    @Test
-    void testExistingEntityThatShouldBeUpdated() {
-        // setup
-        when(repositoriesEntity.getUpdated()).thenReturn(new Date(
-            System.currentTimeMillis() - (- 1 + refreshIntervalDays * DateTimeConstants.MILLISECONDS_IN_DAY.getValue())
-        ))
+    def "updatable entity is updated"() {
+        given:
+        repositoriesEntity.getUpdated() >> new Date(System.currentTimeMillis() - (- 1 + refreshIntervalDays * DateTimeConstants.MILLISECONDS_IN_DAY.getValue()))
 
-        // exercise
-        propagationRepositoriesWakeUpExecutor.run()
+        when:
+        repositoriesWakeUpExecutor.run()
 
-        // assertion
-        verify(propagationsRepositoriesDAOImpl).findOldestPropagationInSleepPhase()
-        verify(pendingRequestFactory).createPendingRequestForUserRepositoriesPropagation(repositoriesEntity)
-        verify(propagationsRepositoriesDAOImpl).moveToRefreshPhase(repositoriesEntity)
+        then:
+        1 * propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> repositoriesEntity
+        1 * pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity)
+        1 * propagationsRepositoriesDAOImpl.moveToRefreshPhase(repositoriesEntity)
     }
 
 }

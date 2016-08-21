@@ -1,38 +1,29 @@
 package com.cezarykluczynski.carmen.cron.github.scheduler
 
+import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor
 import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.core.task.TaskExecutor
+import spock.lang.Specification
 
-import com.cezarykluczynski.carmen.cron.github.executor.UserFollowersFollowingReportToSleepPhasePropagationExecutor
+class UserFollowersFollowingReportToSleepPhasePropagationSchedulerTest extends Specification {
 
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+    private UserFollowersFollowingReportToSleepPhasePropagationExecutor propagationExecutor
 
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+    private UserFollowersFollowingReportToSleepPhasePropagationScheduler propagationScheduler
 
-class UserFollowersFollowingReportToSleepPhasePropagationSchedulerTest {
-
-    UserFollowersFollowingReportToSleepPhasePropagationExecutor propagationExecutor
-
-    UserFollowersFollowingReportToSleepPhasePropagationScheduler propagationScheduler
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         TaskExecutor taskExecutor = new SyncTaskExecutor()
-        propagationExecutor = mock UserFollowersFollowingReportToSleepPhasePropagationExecutor.class
-        doNothing().when(propagationExecutor).run()
-        propagationScheduler = new UserFollowersFollowingReportToSleepPhasePropagationScheduler(taskExecutor, propagationExecutor)
+        propagationExecutor = Mock UserFollowersFollowingReportToSleepPhasePropagationExecutor
+        propagationScheduler = new UserFollowersFollowingReportToSleepPhasePropagationScheduler(taskExecutor,
+                propagationExecutor)
     }
 
-    @Test
-    void scheduledUserFollowersFollowingReportToSleepPhasePropagationExecutor() {
-        // exercise
+    def "executor runs"() {
+        when:
         propagationScheduler.executePropagation()
 
-        // assertion
-        verify(propagationExecutor).run()
+        then:
+        1 * propagationExecutor.run()
     }
 
 }

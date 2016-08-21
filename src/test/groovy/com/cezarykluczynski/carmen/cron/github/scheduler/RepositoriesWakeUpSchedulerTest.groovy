@@ -1,38 +1,28 @@
 package com.cezarykluczynski.carmen.cron.github.scheduler
 
+import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor
 import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.core.task.TaskExecutor
+import spock.lang.Specification
 
-import com.cezarykluczynski.carmen.cron.github.executor.RepositoriesWakeUpExecutor
+class RepositoriesWakeUpSchedulerTest extends Specification {
 
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+    private RepositoriesWakeUpExecutor repositoriesWakeUpExecutor
 
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+    private RepositoriesWakeUpScheduler repositoriesWakeUpScheduler
 
-class RepositoriesWakeUpSchedulerTest {
-
-    RepositoriesWakeUpExecutor repositoriesWakeUpExecutor
-
-    RepositoriesWakeUpScheduler repositoriesWakeUpScheduler
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         TaskExecutor taskExecutor = new SyncTaskExecutor()
-        repositoriesWakeUpExecutor = mock RepositoriesWakeUpExecutor.class
-        doNothing().when(repositoriesWakeUpExecutor).run()
+        repositoriesWakeUpExecutor = Mock RepositoriesWakeUpExecutor
         repositoriesWakeUpScheduler = new RepositoriesWakeUpScheduler(taskExecutor, repositoriesWakeUpExecutor)
     }
 
-    @Test
-    void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
-        // exercise
+    def "executor runs"() {
+        when:
         repositoriesWakeUpScheduler.executePropagation()
 
-        // assertion
-        verify(repositoriesWakeUpExecutor).run()
+        then:
+        1 * repositoriesWakeUpExecutor.run()
     }
 
 }

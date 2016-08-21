@@ -1,38 +1,28 @@
 package com.cezarykluczynski.carmen.cron.github.scheduler
 
+import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
 import org.springframework.core.task.SyncTaskExecutor
 import org.springframework.core.task.TaskExecutor
+import spock.lang.Specification
 
-import com.cezarykluczynski.carmen.cron.github.executor.APIRequestExecutor
+class APIRequestExecutorCallsAPIRequestSchedulerTest extends Specification {
 
-import static org.mockito.Mockito.doNothing
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
+    private APIRequestExecutor apiRequestExecutor
 
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+    private APIRequestScheduler apiRequestScheduler
 
-class APIRequestExecutorCallsAPIRequestSchedulerTest {
-
-    APIRequestExecutor apiRequestExecutor
-
-    APIRequestScheduler apiRequestScheduler
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         TaskExecutor taskExecutor = new SyncTaskExecutor()
-        apiRequestExecutor = mock APIRequestExecutor.class
-        doNothing().when(apiRequestExecutor).run()
+        apiRequestExecutor = Mock APIRequestExecutor
         apiRequestScheduler = new APIRequestScheduler(taskExecutor, apiRequestExecutor)
     }
 
-    @Test
-    void scheduledAPIRequestExecutorCallsAPIRequestExecutor() {
-        // exercise
+    def "executor runs"() {
+        when:
         apiRequestScheduler.executePropagation()
 
-        // assertion
-        verify(apiRequestExecutor).run()
+        then:
+        1 * apiRequestExecutor.run()
     }
 
 }

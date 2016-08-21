@@ -18,7 +18,7 @@ before_install:
   - rvm use 2.1.5
   - pip install --user codecov
   - bundle install
-  - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && cd cassandra-migration && git reset --hard 9bfe574f76e5094c6bbde702c97e570d72962e25 && rm -rf src/test/java && mvn clean install && cd ..
+  - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && cd cassandra-migration && git reset --hard bee6eec11bb896ef8b47dba4eb26ae4802da35c7 && rm -rf src/test/java && mvn clean install && cd ..
   - mvn compile
   - gem install sass
 install:

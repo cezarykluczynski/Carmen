@@ -27,7 +27,7 @@ install:
   - sudo service cassandra restart
   - npm install --global grunt-cli typings tsd
   - cd src/main/webapp/frontend && npm install && cd ../../../..
-  - mvn test -Dtest="BeforeAll"
+  - mvn test -Dtest="BeforeAll" -DfailIfNoTests=false
 script:
   - cd src/main/webapp/frontend && grunt to && cd ../../../..
   - mvn verify

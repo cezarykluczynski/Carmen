@@ -1,186 +1,164 @@
 package com.cezarykluczynski.carmen.dao.propagations
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import org.hibernate.SessionFactory
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
-import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.model.propagations.UserFollowing
+import org.hibernate.SessionFactory
+import org.joda.time.DateTimeConstants
+import org.springframework.beans.factory.annotation.Autowired
 import org.testng.Assert
 
-import org.joda.time.DateTimeConstants
+class UserFollowingDAOImplTest extends IntegrationTest {
 
-import java.lang.reflect.Field
+    private static final String DISCOVER_PHASE = "discover"
+    private static final String SLEEP_PHASE = "sleep"
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class UserFollowingDAOImplTest extends AbstractTestNGSpringContextTests {
-
-    UserFollowingDAOImpl propagationsUserFollowingDAOImpl
+    private UserFollowingDAOImpl propagationsUserFollowingDAOImpl
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
 
     @Autowired
     private SessionFactory sessionFactory
 
-
-    @BeforeMethod
-    void setUp() {
+    def setup() {
         propagationsUserFollowingDAOImpl = new UserFollowingDAOImpl(sessionFactory)
     }
 
-    @Test
-    void findByUser() {
-        // setup
+    def "entity is found by user"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
+                .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, DISCOVER_PHASE)
 
-        // exercise
-        UserFollowing userFollowingEntityFound = propagationsUserFollowingDAOImpl.findByUser userEntity
+        when:
+        UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findByUser userEntity
 
-        // assertion
-        Assert.assertTrue userFollowingEntityFound instanceof UserFollowing
+        then:
+        Assert.assertTrue userFollowingFoundEntity instanceof UserFollowing
 
-        // teardown
+        cleanup:
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findOldestPropagationInDiscoverPhaseExistingEntity() {
-        // setup
+    def "oldest propagation in discover phase is found when it exists"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
-            .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
+                .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, DISCOVER_PHASE)
 
-        Date oneDaySinceEpoch = new Date(DateTimeConstants.SECONDS_PER_DAY)
-        userFollowingEntity.setUpdated oneDaySinceEpoch
+        userFollowingEntity.updated = new Date(DateTimeConstants.SECONDS_PER_DAY)
         propagationsUserFollowingDAOImpl.update userFollowingEntity
 
-        // exercise
+        when:
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase()
 
-        // assertion
-        Assert.assertEquals userFollowingFoundEntity.getId(), userFollowingEntity.getId()
+        then:
+        userFollowingFoundEntity.id == userFollowingEntity.id
 
-        // teardown
+        cleanup:
         propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findOldestPropagationInDiscoverPhaseNonExistingEntity() {
-        // setup
+    def "oldest propagation in discover phase is not found when it does not exists"() {
+        given:
         SessionFactory sessionFactoryMock = SessionFactoryFixtures
-            .createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowing.class
+                .createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowing.class
         setSessionFactoryToDao propagationsUserFollowingDAOImpl, sessionFactoryMock
 
-        // exercise
+        when:
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase()
 
-         // assertion
-        Assert.assertNull userFollowingFoundEntity
+        then:
+        userFollowingFoundEntity == null
 
-        // teardown
+        cleanup:
         setSessionFactoryToDao propagationsUserFollowingDAOImpl, sessionFactory
     }
 
-    @Test
-    void create() {
-        // setup
+    def "entity is created using user entity and phase name"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
-        // exercise
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, "sleep")
-
-        // assertion
+        when:
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, SLEEP_PHASE)
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findByUser userEntity
-        Assert.assertEquals userFollowingFoundEntity.getId(), userFollowingEntity.getId()
-        Assert.assertEquals userFollowingFoundEntity.getPhase(), "sleep"
 
-        // teardown
+        then:
+        userFollowingFoundEntity.id == userFollowingEntity.id
+        userFollowingFoundEntity.phase == SLEEP_PHASE
+
+        cleanup:
         propagationsUserFollowingDAOImpl.delete userFollowingEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
     void update() {
         // setup
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, "sleep")
-        userFollowingEntity.setPhase "discover"
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, SLEEP_PHASE)
+        userFollowingEntity.setPhase DISCOVER_PHASE
 
         // exercise
         propagationsUserFollowingDAOImpl.update userFollowingEntity
 
         // assertion
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findByUser userEntity
-        Assert.assertEquals userFollowingFoundEntity.getPhase(), "discover"
+        Assert.assertEquals userFollowingFoundEntity.getPhase(), DISCOVER_PHASE
 
         // teardown
         propagationsUserFollowingDAOImpl.delete userFollowingEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void delete() {
-        // setup
+    def "entity is deleted"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, "sleep")
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, SLEEP_PHASE)
 
-        // exercise
+        when:
         propagationsUserFollowingDAOImpl.delete userFollowingEntity
 
-        // assertion
-        Assert.assertNull propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId())
+        then:
+        propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()) == null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findByIdExistingEntity() {
-        // setup
+    def "existing entity is found by id"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, "sleep")
+        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImpl.create(userEntity, SLEEP_PHASE)
 
-        // exercise
+        when:
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId())
 
-        // assertion
-        Assert.assertTrue userFollowingFoundEntity instanceof UserFollowing
+        then:
+        userFollowingFoundEntity instanceof UserFollowing
 
-        // teardown
+        cleanup:
         propagationsUserFollowingDAOImpl.delete userFollowingEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findByIdNonExistingEntity() {
-        // exercise
+    def "non existing entity is not found"() {
+        when:
         UserFollowing userFollowingFoundEntity = propagationsUserFollowingDAOImpl.findById 2147483647
 
-        // assertion
-        Assert.assertNull userFollowingFoundEntity
+        then:
+        userFollowingFoundEntity == null
     }
 
-    private static void setSessionFactoryToDao(UserFollowingDAO propagationsUserFollowingDAOImpl, SessionFactory sessionFactory) {
-        Field field = propagationsUserFollowingDAOImpl.getClass().getDeclaredField "sessionFactory"
-        field.setAccessible true
-        field.set propagationsUserFollowingDAOImpl, sessionFactory
+    private static void setSessionFactoryToDao(UserFollowingDAOImpl propagationsUserFollowingDAOImpl, SessionFactory sessionFactory) {
+        propagationsUserFollowingDAOImpl.sessionFactory = sessionFactory
     }
 
 }

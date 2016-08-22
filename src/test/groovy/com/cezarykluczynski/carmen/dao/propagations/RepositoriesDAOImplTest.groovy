@@ -1,119 +1,105 @@
 package com.cezarykluczynski.carmen.dao.propagations
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.model.propagations.Repositories
 import com.cezarykluczynski.carmen.model.github.User
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.Test
-import org.testng.Assert
+import com.cezarykluczynski.carmen.model.propagations.Repositories
+import org.springframework.beans.factory.annotation.Autowired
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class RepositoriesDAOImplTest extends AbstractTestNGSpringContextTests {
+class RepositoriesDAOImplTest extends IntegrationTest {
 
     @Autowired
-    RepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesDAO propagationsRepositoriesDAOImpl
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
+    private RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
 
-    @Test
-    void findByUser() {
-        // setup
+    def "entity is found by user"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         propagationsRepositoriesDAOImplFixtures.createRepositoriesEntityUsingUserEntity(userEntity)
 
-        // exercise
+        when:
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser userEntity
 
-        // assertion
-        Assert.assertTrue repositoriesEntityFound instanceof Repositories
+        then:
+        repositoriesEntityFound != null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void create() {
-        // setup
+    def "entity is created"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
 
-        // exercise
+        when:
         propagationsRepositoriesDAOImpl.create(userEntity)
-
-        // assertion
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser(userEntity)
-        Assert.assertTrue repositoriesEntityFound instanceof Repositories
-        // teardown
+
+        then:
+        repositoriesEntityFound != null
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void update() {
-        // setup
+    def "entity is updated"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repositories repositoriesEntity = propagationsRepositoriesDAOImpl.create(userEntity)
         repositoriesEntity.setPhase "sleep"
 
-        // exercise
+        when:
         propagationsRepositoriesDAOImpl.update repositoriesEntity
-
-        // assertion
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findByUser(userEntity)
-        Assert.assertEquals repositoriesEntityFound.getPhase(), "sleep"
 
-        // teardown
+        then:
+        repositoriesEntityFound.getPhase() == "sleep"
+
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void delete() {
-        // setup
+    def "entity is deleted"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repositories repositoriesEntity = propagationsRepositoriesDAOImpl.create(userEntity)
 
-        // exercise
+        when:
         propagationsRepositoriesDAOImpl.delete repositoriesEntity
 
-        // assertion
-        Assert.assertNull propagationsRepositoriesDAOImpl.findById(repositoriesEntity.getId())
+        then:
+        propagationsRepositoriesDAOImpl.findById(repositoriesEntity.getId()) == null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findByIdExistingEntity() {
-        // setup
+    def "existing entity is found by id"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         Repositories repositoriesEntity = propagationsRepositoriesDAOImpl.create(userEntity)
 
-        // exercise
+        when:
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findById(repositoriesEntity.getId())
 
-        // assertion
-        Assert.assertTrue repositoriesEntityFound instanceof Repositories
+        then:
+        repositoriesEntityFound != null
 
-        // teardown
+        cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    @Test
-    void findByIdNonExistingEntity() {
-        // exercise
+    def "non-existing entity is not found by id"() {
+        when:
         Repositories repositoriesEntityFound = propagationsRepositoriesDAOImpl.findById 2147483647
 
-        // assertion
-        Assert.assertNull repositoriesEntityFound
+        then:
+        repositoriesEntityFound == null
     }
 
 }

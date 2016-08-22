@@ -1,20 +1,11 @@
 package com.cezarykluczynski.carmen.dao.pub
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
+import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.model.pub.Cron
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.Assert
-import org.testng.annotations.BeforeClass
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
 
-@ContextConfiguration(classes = TestableApplicationConfiguration.class)
-@WebAppConfiguration
-class CronsDAOImplTest extends AbstractTestNGSpringContextTests {
+class CronsDAOImplTest extends IntegrationTest {
 
     private CronsDAOImpl cronsDAOImpl
 
@@ -27,99 +18,97 @@ class CronsDAOImplTest extends AbstractTestNGSpringContextTests {
     private String name
     private String server
 
-    @BeforeClass
-    void setUpClass() {
+    def setup() {
         cronsDAOImpl = new CronsDAOImpl(sessionFactory)
-    }
-
-    @BeforeMethod
-    void setUp() {
         name = "name_" + System.currentTimeMillis()
         server = "server_" + System.currentTimeMillis()
     }
 
-    @Test
-    void findByName() {
-        // setup
+    def "entity is found by name"() {
+        given:
         Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name, server
 
-        // exercise, assertion
-        Assert.assertEquals cronsDAOImpl.findByName(name).get(0).getId(), cron.getId()
+        when:
+        Cron foundCron = cronsDAOImpl.findByName(name).get(0)
 
-        // teardown
+        then:
+        foundCron.id == cron.id
+
+        cleanup:
         cronsDAOImplFixtures.deleteEntity cron
     }
 
-    @Test
-    void findAll() {
-        // setup
+    def "finds all entities"() {
+        given:
         Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name
 
-        // exercise, assertion
-        Assert.assertTrue cronsDAOImpl.findAll().stream()
+        when:
+        Optional<Cron> foundCron = cronsDAOImpl.findAll().stream()
                 .filter{cronListElement -> cronListElement.name == cron.name}
-                .findFirst().isPresent()
+                .findFirst()
 
-        // teardown
+        then:
+        foundCron.isPresent()
+
+        cleanup:
         cronsDAOImplFixtures.deleteEntity cron
     }
 
-    @Test
-    void findByNameAndServer() {
-        // setup
+    def "entity is found by name and server"() {
+        given:
         Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name, server
 
-        // exercise, assertion
-        Assert.assertEquals cronsDAOImpl.findByNameAndServer(name, server).getId(), cron.getId()
+        when:
+        Cron foundCron =  cronsDAOImpl.findByNameAndServer(name, server)
 
-        // teardown
+        then:
+        foundCron.id == cron.id
+
+        cleanup:
         cronsDAOImplFixtures.deleteEntity cron
     }
 
-    @Test
-    void create() {
-        // setup
+    def "entity is created"() {
+        given:
         Cron cron = createCronEntity()
 
-        // exercise
+        when:
         cronsDAOImpl.create cron
 
-        // assertion
-        Assert.assertNotNull cronsDAOImpl.findByNameAndServer(name, server).getId()
+        then:
+        cronsDAOImpl.findByNameAndServer(name, server).id != null
 
-        // teardown
+        cleanup:
         cronsDAOImplFixtures.deleteEntity cron
     }
 
-    @Test
-    void update() {
-        // setup
+    def "entity is updated"() {
+        given:
         Cron cron = createCronEntity()
         cronsDAOImpl.create cron
         String serverRenamed = server + "2"
         cron.setServer serverRenamed
 
-        // exercise
+        when:
         cronsDAOImpl.update cron
 
-        // assertion
-        Assert.assertNull cronsDAOImpl.findByNameAndServer(name, server)
-        Assert.assertNotNull cronsDAOImpl.findByNameAndServer(name, serverRenamed)
+        then:
+        cronsDAOImpl.findByNameAndServer(name, server) == null
+        cronsDAOImpl.findByNameAndServer(name, serverRenamed) != null
 
-        // teardown
+        cleanup:
         cronsDAOImplFixtures.deleteEntity cron
     }
 
-    @Test
-    void delete() {
-        // setup
+    def "entity is deleted"() {
+        given:
         Cron cron = cronsDAOImplFixtures.createEntityWithNameAndServer name, server
 
-        // exercise
+        when:
         cronsDAOImpl.delete cron
 
-        // assertion
-        Assert.assertNull cronsDAOImpl.findByNameAndServer(name, server)
+        then:
+        cronsDAOImpl.findByNameAndServer(name, server) == null
     }
 
     private Cron createCronEntity() {

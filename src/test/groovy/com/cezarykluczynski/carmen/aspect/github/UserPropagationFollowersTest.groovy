@@ -1,70 +1,43 @@
 package com.cezarykluczynski.carmen.aspect.github
 
-import com.cezarykluczynski.carmen.configuration.TestableApplicationConfiguration
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests
-import org.springframework.test.context.web.WebAppConfiguration
-import org.testng.annotations.AfterMethod
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
-
+import com.cezarykluczynski.carmen.AspectIntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersPropagation
+import org.springframework.beans.factory.annotation.Autowired
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.doNothing
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
-import org.mockito.InjectMocks
-
-@ContextConfiguration(
-        classes = TestableApplicationConfiguration.class,
-        loader = SpringApplicationContextLoader.class,
-        locations = ["classpath:applicationContext.xml"]
-)
-@WebAppConfiguration
-class UserPropagationFollowersTest extends AbstractTestNGSpringContextTests {
+class UserPropagationFollowersTest extends AspectIntegrationTest {
 
     @Autowired
-    UserDAO githubUserDAOImpl
+    private UserDAO githubUserDAOImpl
 
     @Autowired
-    UserDAOImplFixtures githubUserDAOImplFixtures
-
-    @Mock
-    UserFollowersPropagation userFollowersPropagation
+    private UserDAOImplFixtures githubUserDAOImplFixtures
 
     @Autowired
-    @InjectMocks
-    UserPropagationFollowers userPropagationFollowers
+    private UserPropagationFollowers userPropagationFollowers
+
+    private UserFollowersPropagation userFollowersPropagation
 
     private User userEntity
 
-    @BeforeMethod
-    void setUp() {
-        userFollowersPropagation = mock UserFollowersPropagation.class
-        doNothing().when(userFollowersPropagation).propagate()
-        MockitoAnnotations.initMocks this
+    def setup() {
+        userFollowersPropagation = Mock UserFollowersPropagation
         userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userPropagationFollowers.userFollowersPropagation = userFollowersPropagation
     }
 
-    @Test
-    void followersPropagateAfterUserCreation() {
-        // exercise
+    def cleanup() {
+        githubUserDAOImplFixtures.deleteUserEntity userEntity
+    }
+
+    def followersPropagateAfterUserCreation() {
+        when:
         githubUserDAOImpl.createOrUpdateRequestedEntity userEntity.getLogin()
 
-        // assertion
-        verify(userFollowersPropagation).propagate()
-    }
-
-    @AfterMethod
-    void tearDown() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        then:
+        1 * userFollowersPropagation.propagate()
     }
 
 }

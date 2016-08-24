@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.util.exec.result.Result
+import com.google.common.collect.Lists
 import spock.lang.Specification
 
 class GitLocalTest extends Specification {

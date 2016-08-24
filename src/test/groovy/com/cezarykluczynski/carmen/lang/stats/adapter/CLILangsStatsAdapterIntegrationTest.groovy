@@ -5,7 +5,6 @@ import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
 import com.cezarykluczynski.carmen.lang.stats.mapper.LinguistLanguageMapper
 import com.cezarykluczynski.carmen.lang.stats.util.LanguageDetectorServerSwitcher
-import org.testng.Assert
 import spock.lang.Requires
 import spock.lang.Specification
 
@@ -26,7 +25,7 @@ public class CLILangsStatsAdapterIntegrationTest extends Specification {
         List<Language> languageList = cliLangsStatsAdapter.getSupportedLanguages()
 
         then:
-        Assert.assertEquals languageList.size(), 401
+        languageList.size() == 401
     }
 
     def "returns null for unsuccessful supported languages request"() {

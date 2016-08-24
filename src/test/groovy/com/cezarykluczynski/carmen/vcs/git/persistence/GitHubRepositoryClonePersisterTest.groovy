@@ -9,8 +9,6 @@ import com.cezarykluczynski.carmen.vcs.git.service.CommitHashPersistenceService
 import com.google.common.collect.Lists
 import spock.lang.Specification
 
-import static org.mockito.Matchers.isA
-
 class GitHubRepositoryClonePersisterTest extends Specification {
 
     private static final Date NOW = DateUtil.now()
@@ -27,7 +25,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
 
     private RepositoryClone repositoryCloneMock
 
-    void setup() {
+    def setup() {
         commitHashPersistenceServiceMock = Mock CommitHashPersistenceService
         gitHubRepositoryCommitsToPersistFinderMock = Mock GitHubRepositoryCommitsToPersistFinder
         repositoriesClonesDAOMock = Mock RepositoriesClonesDAO
@@ -45,7 +43,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
 
     }
 
-    void "persist when there is no repository clones to process"() {
+    def "persist when there is no repository clones to process"() {
         given:
         repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> null
 
@@ -56,7 +54,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
         0 * gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(null) >> null
     }
 
-    void "persist when there are error while retrieving hashes"() {
+    def "persist when there are error while retrieving hashes"() {
         given:
         repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
         gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> null
@@ -65,11 +63,11 @@ class GitHubRepositoryClonePersisterTest extends Specification {
         gitHubRepositoryClonePersister.persist()
 
         then:
-        0 * repositoriesClonesDAOMock.update(isA(RepositoryClone.class)) >> null
+        0 * repositoriesClonesDAOMock.update(*_) >> null
         0 * repositoriesClonesDAOMock.update(null) >> null
     }
 
-    void "sets commitsStatisticsUntil field to the beginning o not yet opened month, when commit list is empty"() {
+    def "sets commitsStatisticsUntil field to the beginning o not yet opened month, when commit list is empty"() {
         given:
         repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
         gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> Lists.newArrayList()

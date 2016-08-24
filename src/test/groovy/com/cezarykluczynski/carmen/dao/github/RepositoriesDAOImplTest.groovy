@@ -5,7 +5,6 @@ import com.cezarykluczynski.carmen.model.github.Repository
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import org.springframework.beans.factory.annotation.Autowired
-import org.testng.Assert
 
 class RepositoriesDAOImplTest extends IntegrationTest {
 
@@ -75,11 +74,9 @@ class RepositoriesDAOImplTest extends IntegrationTest {
             }
             if (repositoryEntity.getId().equals(repositorySet2.getId())) {
                 preserved = true
-                Assert.assertTrue preserved
             }
             if (repositoryEntity.getId().equals(repositorySet3.getId())) {
                 created = true
-                Assert.assertTrue created
             }
         }
 

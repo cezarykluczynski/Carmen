@@ -1,11 +1,11 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
 import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
 import com.cezarykluczynski.carmen.model.pub.Language
+import com.google.common.collect.Lists
 import spock.lang.Specification
 
 class LanguagesStatisticsUpdaterVisitorTest extends Specification {

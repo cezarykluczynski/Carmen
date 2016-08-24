@@ -2,13 +2,11 @@ package com.cezarykluczynski.carmen.dao.propagations
 
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
 import org.hibernate.SessionFactory
 import org.joda.time.DateTimeConstants
 import org.springframework.beans.factory.annotation.Autowired
-import org.testng.Assert
 
 class UserFollowersDAOImplTest extends IntegrationTest {
 
@@ -40,7 +38,7 @@ class UserFollowersDAOImplTest extends IntegrationTest {
         UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
 
         then:
-        Assert.assertTrue userFollowersFoundEntity instanceof UserFollowers
+        userFollowersFoundEntity instanceof UserFollowers
 
         cleanup:
         propagationsUserFollowersDAOImplFixtures.deleteUserFollowersEntity userFollowersEntity
@@ -69,8 +67,7 @@ class UserFollowersDAOImplTest extends IntegrationTest {
 
     def "oldest propagation in discover phase is not found when it does not exists"() {
         given:
-        SessionFactory sessionFactoryMock = SessionFactoryFixtures
-            .createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowers.class
+        SessionFactory sessionFactoryMock = createSessionFactoryMockWithEmptyCriteriaListAndMethods UserFollowers.class
         setSessionFactoryToDao propagationsUserFollowersDAOImpl, sessionFactoryMock
 
         when:
@@ -100,20 +97,20 @@ class UserFollowersDAOImplTest extends IntegrationTest {
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }
 
-    void update() {
-        // setup
+    def "entity is updated"() {
+        given:
         User userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
         UserFollowers userFollowersEntity = propagationsUserFollowersDAOImpl.create(userEntity, SLEEP_PHASE)
         userFollowersEntity.setPhase DISCOVER_PHASE
 
-        // exercise
+        when:
         propagationsUserFollowersDAOImpl.update userFollowersEntity
-
-        // assertion
         UserFollowers userFollowersFoundEntity = propagationsUserFollowersDAOImpl.findByUser userEntity
-        Assert.assertEquals userFollowersFoundEntity.getPhase(), DISCOVER_PHASE
 
-        // teardown
+        then:
+        userFollowersFoundEntity.phase == DISCOVER_PHASE
+
+        cleanup:
         propagationsUserFollowersDAOImpl.delete userFollowersEntity
         githubUserDAOImplFixtures.deleteUserEntity userEntity
     }

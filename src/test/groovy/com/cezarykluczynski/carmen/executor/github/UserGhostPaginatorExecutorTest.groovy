@@ -14,7 +14,6 @@ import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.testng.Assert
 
 class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
@@ -233,7 +232,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById pendingRequestEntity.getId()
 
         then:
-        Assert.assertTrue updatedBefore.getTime() < pendingRequestEntityFound.getUpdated().getTime()
+        updatedBefore.getTime() < pendingRequestEntityFound.getUpdated().getTime()
 
         cleanup:
         githubUserDAOImplFixtures.deleteUserEntity userEntityBlocking

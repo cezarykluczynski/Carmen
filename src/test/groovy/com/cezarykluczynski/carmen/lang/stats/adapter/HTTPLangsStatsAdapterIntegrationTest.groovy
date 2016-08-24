@@ -9,7 +9,6 @@ import com.cezarykluczynski.carmen.lang.stats.util.LanguageDetectorServerSwitche
 import com.cezarykluczynski.carmen.util.network.HTTPClient
 import com.cezarykluczynski.carmen.util.network.HTTPJSONClientImpl
 import com.cezarykluczynski.carmen.util.network.HTTPRequestException
-import org.testng.Assert
 import spock.lang.Requires
 import spock.lang.Shared
 import spock.lang.Specification
@@ -60,7 +59,7 @@ class HTTPLangsStatsAdapterIntegrationTest extends Specification {
         List<Language> languageList = httpLangsStatsAdapter.getSupportedLanguages()
 
         then:
-        Assert.assertEquals languageList.size(), 401
+        languageList.size() == 401
     }
 
     def "returns null for unsuccessful supported languages request"() {

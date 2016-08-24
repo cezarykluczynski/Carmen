@@ -9,7 +9,6 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.Repositories
 import org.springframework.beans.factory.annotation.Autowired
-import org.testng.Assert
 
 class UserRepositoriesPropagationTest extends IntegrationTest {
 
@@ -57,8 +56,8 @@ class UserRepositoriesPropagationTest extends IntegrationTest {
         repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
 
         then:
-        Assert.assertTrue repositoriesEntity instanceof Repositories
-        Assert.assertEquals repositoriesEntity.getUser().getId(), userEntity.getId()
+        repositoriesEntity instanceof Repositories
+        repositoriesEntity.user.id == userEntity.id
         findPendingRequestEntity() instanceof PendingRequest
 
         cleanup:

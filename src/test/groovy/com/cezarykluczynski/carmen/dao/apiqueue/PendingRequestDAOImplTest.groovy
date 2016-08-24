@@ -4,7 +4,6 @@ import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers
@@ -109,8 +108,7 @@ class PendingRequestDAOImplTest extends IntegrationTest {
 
     def "returns null when most important pending request cannot be found"() {
         given:
-        SessionFactory sessionFactoryMock = SessionFactoryFixtures
-                .createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
+        SessionFactory sessionFactoryMock = createSessionFactoryMockWithEmptyCriteriaList PendingRequest.class
         setSessionFactoryToDao apiqueuePendingRequestDAOImpl, sessionFactoryMock
 
         when:

@@ -1,14 +1,12 @@
 package com.cezarykluczynski.carmen.cron.management.endpoint.impl
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO
 import com.cezarykluczynski.carmen.cron.management.service.DatabaseSwitchableJobsService
+import com.google.common.collect.Lists
 import org.json.JSONObject
 import spock.lang.Specification
 
 import javax.ws.rs.core.Response
-
-import static org.mockito.Mockito.mock
 
 class DatabaseSwitchableJobsEndpointImplTest extends Specification {
 
@@ -29,7 +27,7 @@ class DatabaseSwitchableJobsEndpointImplTest extends Specification {
         List<DatabaseSwitchableJobDTO> entity = (List<DatabaseSwitchableJobDTO>) response.getEntity()
 
         then:
-        1 * jobsService.getAll() >> Lists.newArrayList(mock(DatabaseSwitchableJobDTO))
+        1 * jobsService.getAll() >> Lists.newArrayList(Mock(DatabaseSwitchableJobDTO))
         response.getStatus() == 200
         entity.size() == 1
     }

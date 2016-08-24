@@ -1,13 +1,12 @@
 package com.cezarykluczynski.carmen.lang.stats.persister
 
-import com.beust.jcommander.internal.Maps
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.lang.stats.domain.*
 import com.cezarykluczynski.carmen.lang.stats.persistence.CassandraPersister
 import com.cezarykluczynski.carmen.model.cassandra.carmen.Commit
 import com.cezarykluczynski.carmen.repository.carmen.CommitsRepository
+import com.google.common.collect.Maps
 import org.springframework.beans.factory.annotation.Autowired
-import org.testng.Assert
 
 class CassandraPersisterTest extends IntegrationTest {
 
@@ -56,8 +55,8 @@ class CassandraPersisterTest extends IntegrationTest {
         Commit commit = commitsRepository.findByHash repositoryDescription.commitHash
 
         then:
-        Assert.assertNotNull commit
-        Assert.assertEquals commit.language_167, JAVA_TOTAL
+        commit != null
+        commit.language_167 == JAVA_TOTAL
     }
 
 }

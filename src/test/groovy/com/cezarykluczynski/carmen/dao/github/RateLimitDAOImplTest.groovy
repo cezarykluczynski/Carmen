@@ -1,7 +1,6 @@
 package com.cezarykluczynski.carmen.dao.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
-import com.cezarykluczynski.carmen.fixture.org.hibernate.SessionFactoryFixtures
 import com.cezarykluczynski.carmen.model.github.RateLimit
 import com.cezarykluczynski.carmen.set.github.RateLimit as RateLimitSet
 import org.hibernate.Session
@@ -61,13 +60,12 @@ class RateLimitDAOImplTest extends IntegrationTest {
 
     def "core limit does not exists"() {
         given:
-        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        SessionFactory sessionFactoryMock = createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
         when:
         def success = true
         try {
-            // exercise
             rateLimitDAOImpl.getCoreLimit()
 
             success = false
@@ -97,13 +95,12 @@ class RateLimitDAOImplTest extends IntegrationTest {
 
     def "search limit does not exists"() {
         given:
-        SessionFactory sessionFactoryMock = SessionFactoryFixtures.createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
+        SessionFactory sessionFactoryMock = createSessionFactoryMockWithEmptyCriteriaList RateLimit.class
         setSessionFactoryToDao rateLimitDAOImpl, sessionFactoryMock
 
         when:
         def success = true
         try {
-            // exercise
             rateLimitDAOImpl.getSearchLimit()
 
             success = false

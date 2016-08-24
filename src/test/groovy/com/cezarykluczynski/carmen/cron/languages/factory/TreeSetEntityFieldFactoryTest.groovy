@@ -1,7 +1,6 @@
 package com.cezarykluczynski.carmen.cron.languages.factory
 
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
-import org.testng.Assert
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -103,7 +102,7 @@ public class TreeSetEntityFieldFactoryTest  extends Specification {
 
         iterator.next().getName() == "refreshed"
 
-        Assert.assertFalse iterator.hasNext()
+        !iterator.hasNext()
     }
 
     def "exact copy is created"() {

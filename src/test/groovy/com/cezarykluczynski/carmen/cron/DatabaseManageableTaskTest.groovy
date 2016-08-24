@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.cron
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.dao.pub.CronsDAO
 import com.cezarykluczynski.carmen.model.pub.Cron
+import com.google.common.collect.Lists
 import spock.lang.Specification
 
 class DatabaseManageableTaskTest extends Specification {

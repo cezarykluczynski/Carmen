@@ -1,6 +1,5 @@
 package com.cezarykluczynski.carmen.executor.github
 
-import com.beust.jcommander.internal.Lists
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
 import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
@@ -10,6 +9,7 @@ import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
 import com.cezarykluczynski.carmen.model.github.User
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
+import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import org.springframework.beans.factory.annotation.Autowired
 

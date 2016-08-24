@@ -1,11 +1,8 @@
 package com.cezarykluczynski.carmen.util.github
 
-import com.beust.jcommander.internal.Lists
+import com.google.common.collect.Lists
 import spock.lang.Shared
 import spock.lang.Specification
-
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.when
 
 class GitHubResourcesSynchronizerTest extends Specification {
 
@@ -15,26 +12,30 @@ class GitHubResourcesSynchronizerTest extends Specification {
 
     @Shared
     private GitHubResource resource1
+
     @Shared
     private GitHubResource resource2
+
     @Shared
     private GitHubResource resource3
+
     @Shared
     private GitHubResource resource4
+
     @Shared
     private GitHubResource resource5
 
     def setupSpec() {
-        resource1 = mock GitHubResource
-        when resource1.getGitHubResourceId() thenReturn 1L
-        resource2 = mock GitHubResource
-        when resource2.getGitHubResourceId() thenReturn 2L
-        resource3 = mock GitHubResource
-        when resource3.getGitHubResourceId() thenReturn 3L
-        resource4 = mock GitHubResource
-        when resource4.getGitHubResourceId() thenReturn 4L
-        resource5 = mock GitHubResource
-        when resource5.getGitHubResourceId() thenReturn 5L
+        resource1 = Mock GitHubResource
+        resource1.getGitHubResourceId() >> 1L
+        resource2 = Mock GitHubResource
+        resource2.getGitHubResourceId() >> 2L
+        resource3 = Mock GitHubResource
+        resource3.getGitHubResourceId() >> 3L
+        resource4 = Mock GitHubResource
+        resource4.getGitHubResourceId() >> 4L
+        resource5 = Mock GitHubResource
+        resource5.getGitHubResourceId() >> 5L
     }
 
     def setup() {

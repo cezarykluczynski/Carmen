@@ -5,18 +5,11 @@ import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import org.json.JSONObject
-import org.testng.Assert
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import spock.lang.Specification
 
 import javax.ws.rs.core.Response
 
-import static org.mockito.Mockito.mock
-import static org.mockito.Mockito.never
-import static org.mockito.Mockito.verify
-import static org.mockito.Mockito.when
-
-class LanguagesListUpdateJobImplTest {
+class LanguagesListUpdateJobImplTest extends Specification {
 
     private LanguagesListUpdateJobImpl languagesListUpdateJob
 
@@ -26,91 +19,92 @@ class LanguagesListUpdateJobImplTest {
 
     private LanguagesDAO languagesDAO
 
-    @BeforeMethod
     def setup() {
-        languagesListUpdateExecutor = mock LanguagesListUpdateExecutor.class
-        langsStatsAdapter = mock LangsStatsAdapter.class
-        languagesDAO = mock LanguagesDAO.class
+        languagesListUpdateExecutor = Mock LanguagesListUpdateExecutor
+        langsStatsAdapter = Mock LangsStatsAdapter
+        languagesDAO = Mock LanguagesDAO
         languagesListUpdateJob = new LanguagesListUpdateJobImpl(languagesListUpdateExecutor, langsStatsAdapter,
             languagesDAO)
     }
 
-    @Test
-    void "gets status when all languages are persisted"() {
-        List<Language> linguistLanguages = mock(List.class)
-        when linguistLanguages.size() thenReturn 3
-        when langsStatsAdapter.getSupportedLanguages() thenReturn linguistLanguages
+    def "gets status when all languages are persisted"() {
+        given:
+        List<Language> linguistLanguages = Mock List
+        linguistLanguages.size() >> 3
+        langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
+        languagesDAO.countAll() >> 3
 
-        when languagesDAO.countAll() thenReturn 3
-
+        when:
         Response response = languagesListUpdateJob.getStatus()
-
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 200
-        Assert.assertFalse responseBody.getBoolean("updatable")
-        Assert.assertEquals(responseBody.getInt("persistedLanguagesCount"), 3)
-        Assert.assertEquals(responseBody.getInt("linguistLanguagesCount"), 3)
+        then:
+        responseStatus == 200
+        !responseBody.getBoolean("updatable")
+        responseBody.getInt("persistedLanguagesCount") == 3
+        responseBody.getInt("linguistLanguagesCount") == 3
     }
 
-    @Test
-    void "gets status when not all languages are persisted"() {
-        List<Language> linguistLanguages = mock(List.class)
-        when linguistLanguages.size() thenReturn 4
-        when langsStatsAdapter.getSupportedLanguages() thenReturn linguistLanguages
+    def "gets status when not all languages are persisted"() {
+        given:
+        List<Language> linguistLanguages = Mock List
+        linguistLanguages.size() >> 4
+        langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
+        languagesDAO.countAll() >> 3
 
-        when languagesDAO.countAll() thenReturn 3
-
+        when:
         Response response = languagesListUpdateJob.getStatus()
-
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 200
-        Assert.assertTrue responseBody.getBoolean("updatable")
-        Assert.assertEquals(responseBody.getInt("persistedLanguagesCount"), 3)
-        Assert.assertEquals(responseBody.getInt("linguistLanguagesCount"), 4)
+        then:
+        responseStatus == 200
+        responseBody.getBoolean("updatable")
+        responseBody.getInt("persistedLanguagesCount") == 3
+        responseBody.getInt("linguistLanguagesCount") == 4
     }
 
-    @Test
-    void "updates status when there are languages to persist"() {
-        List<Language> linguistLanguages = mock(List.class)
-        when linguistLanguages.size() thenReturn 4
-        when langsStatsAdapter.getSupportedLanguages() thenReturn linguistLanguages
+    def "updates status when there are languages to persist"() {
+        given:
+        List<Language> linguistLanguages = Mock List
+        linguistLanguages.size() >> 4
+        langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
+        languagesDAO.countAll() >>> [3, 4]
 
-        when languagesDAO.countAll() thenReturn 3, 4
-
+        when:
         Response response = languagesListUpdateJob.run()
 
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 200
-        Assert.assertFalse responseBody.getBoolean("updatable")
-        Assert.assertEquals(responseBody.getInt("persistedLanguagesCount"), 4)
-        Assert.assertEquals(responseBody.getInt("linguistLanguagesCount"), 4)
-        verify languagesListUpdateExecutor run()
+        then:
+        1 * languagesListUpdateExecutor.run()
+        responseStatus == 200
+        !responseBody.getBoolean("updatable")
+        responseBody.getInt("persistedLanguagesCount") == 4
+        responseBody.getInt("linguistLanguagesCount") == 4
     }
 
-    @Test
-    void "does not updates status when there are no languages to persist"() {
-        List<Language> linguistLanguages = mock(List.class)
-        when linguistLanguages.size() thenReturn 3
-        when langsStatsAdapter.getSupportedLanguages() thenReturn linguistLanguages
+    def "does not updates status when there are no languages to persist"() {
+        given:
+        List<Language> linguistLanguages = Mock List
+        linguistLanguages.size() >> 3
+        langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
+        languagesDAO.countAll() >> 3
 
-        when languagesDAO.countAll() thenReturn 3
-
+        when:
         Response response = languagesListUpdateJob.run()
 
         int responseStatus = response.getStatus()
         JSONObject responseBody = new JSONObject(response.getEntity())
 
-        Assert.assertEquals responseStatus, 200
-        Assert.assertFalse responseBody.getBoolean("updatable")
-        Assert.assertEquals(responseBody.getInt("persistedLanguagesCount"), 3)
-        Assert.assertEquals(responseBody.getInt("linguistLanguagesCount"), 3)
-        verify(languagesListUpdateExecutor, never()).run()
+        then:
+        0 * languagesListUpdateExecutor.run()
+        responseStatus == 200
+        !responseBody.getBoolean("updatable")
+        responseBody.getInt("persistedLanguagesCount") == 3
+        responseBody.getInt("linguistLanguagesCount") == 3
     }
 
 }

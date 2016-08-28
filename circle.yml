@@ -8,10 +8,9 @@ machine:
   node:
     version:
       5.5.0
-  services:
-    - cassandra
 dependencies:
   pre:
+    - sudo ./install-cassandra.sh
     - nvm install 0.12
     - nvm use 0.12
     - psql -c 'create database carmen;' -U postgres
@@ -23,11 +22,6 @@ dependencies:
     - mvn compile
     - gem install sass
     - mvn flyway:migrate
-    - sudo service cassandra restart
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/wait-for-cassandra.sh | sh
-    - /usr/bin/nodetool enablethrift
-    - /usr/bin/nodetool enablegossip
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/wait-for-cassandra.sh | sh
     - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
     - sudo service cassandra restart
     - npm install --global grunt-cli typings tsd

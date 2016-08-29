@@ -27,19 +27,22 @@ import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesDiffStati
 import com.cezarykluczynski.carmen.cron.languages.annotations.LanguagesStatistics;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
 import java.util.UUID;
 import javax.annotation.Generated;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
 
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @LanguagesStatistics
 @LanguagesDiffStatistics
 @Keyspace("github_social_stats")
-@Table("entity_two")
+@Table(
+        keyspace = "github_social_stats",
+        name = "entity_two"
+)
 public class EntityTwo extends CarmenNoSQLEntity implements GitDescription {
-    @PrimaryKey
+    @PartitionKey
     public UUID id;
 
     @Column

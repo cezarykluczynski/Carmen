@@ -8,10 +8,9 @@ machine:
   node:
     version:
       5.5.0
-  services:
-    - cassandra
 dependencies:
   pre:
+    - sudo ./install-cassandra.sh
     - nvm install 0.12
     - nvm use 0.12
     - psql -c 'create database carmen;' -U postgres
@@ -19,17 +18,10 @@ dependencies:
     - cp src/main/resources/travis/logback.xml src/main/resources/logback.xml
     - cp src/main/resources/travis/hibernate.cfg.xml src/main/resources/hibernate.cfg.xml
     - bundle install
-    - git clone https://github.com/Contrast-Security-OSS/cassandra-migration.git cassandra-migration && cd cassandra-migration && git reset --hard bee6eec11bb896ef8b47dba4eb26ae4802da35c7 && rm -rf src/test/java && mvn clean install && cd ..
     - mvn compile
     - gem install sass
     - mvn flyway:migrate
-    - sudo service cassandra restart
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/wait-for-cassandra.sh | sh
-    - /usr/bin/nodetool enablethrift
-    - /usr/bin/nodetool enablegossip
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/wait-for-cassandra.sh | sh
     - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
-    - sudo service cassandra restart
     - npm install --global grunt-cli typings tsd
     - cd src/main/webapp/frontend && npm install && cd ../../../..
     - mvn test -Dtest="BeforeAll" -DfailIfNoTests=false

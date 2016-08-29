@@ -1,12 +1,31 @@
 package com.cezarykluczynski.carmen.repository.carmen;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.cassandra.repository.Query;
 import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees;
+import com.datastax.driver.mapping.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public interface FollowersAndFolloweesRepository extends CrudRepository<FollowersAndFollowees, Long> {
+@Repository
+public class FollowersAndFolloweesRepository {
 
-    @Query("select * from followers_and_followees where user_id = ?0")
-    FollowersAndFollowees findByUserId(Long userId);
+    private Mapper<FollowersAndFollowees> followersAndFolloweesMapper;
+
+    private FollowersAndFolloweesAccessor followersAndFolloweesAccessor;
+
+    @Autowired
+    public FollowersAndFolloweesRepository(Mapper<FollowersAndFollowees> followersAndFolloweesMapper,
+                             FollowersAndFolloweesAccessor followersAndFolloweesAccessor) {
+        this.followersAndFolloweesMapper = followersAndFolloweesMapper;
+        this.followersAndFolloweesAccessor = followersAndFolloweesAccessor;
+    }
+
+    public FollowersAndFollowees findByUserId(Long userId) {
+        return followersAndFolloweesAccessor.findByUserId(userId);
+    }
+
+    public void save(FollowersAndFollowees followersAndFollowees) {
+        followersAndFolloweesMapper.save(followersAndFollowees);
+    }
+
 
 }

@@ -9,10 +9,10 @@ import com.cezarykluczynski.carmen.cron.languages.model.CassandraJavaPoetBuiltEn
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
 import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
 import com.squareup.javapoet.*;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Generated;
@@ -53,7 +53,7 @@ public class CassandraJavaPoetEntityBuilder extends AbstractCassandraMigrationBu
                 .addModifiers(Modifier.PUBLIC);
 
         if (entityField.getType() == UUID.class) {
-            fieldSpecBuilder.addAnnotation(PrimaryKey.class);
+            fieldSpecBuilder.addAnnotation(PartitionKey.class);
         } else {
             fieldSpecBuilder.addAnnotation(Column.class);
         }
@@ -75,7 +75,9 @@ public class CassandraJavaPoetEntityBuilder extends AbstractCassandraMigrationBu
         }
 
         typeSpecBuilder.addAnnotation(AnnotationSpec.builder(Table.class)
-                .addMember("value", "\"" + getNormalizedTableName(refreshableTable) + "\"").build());
+                .addMember("keyspace", "\"" +  keyspace.value() + "\"")
+                .addMember("name", "\"" + getNormalizedTableName(refreshableTable) + "\"")
+                .build());
     }
 
     private TypeSpec.Builder createBuilder(RefreshableTable refreshableTable) {

@@ -7,20 +7,21 @@ import com.cezarykluczynski.carmen.model.CarmenNoSQLEntity;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
 import java.util.UUID;
 import javax.annotation.Generated;
-import org.springframework.data.cassandra.mapping.Column;
-import org.springframework.data.cassandra.mapping.PrimaryKey;
-import org.springframework.data.cassandra.mapping.Table;
+
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
 
 @Generated("com.cezarykluczynski.carmen.cron.languages.builder.CassandraJavaPoetEntityBuilder")
 @LanguagesDiffStatistics
 @LanguagesStatistics
 @Keyspace("carmen")
-@Table("commits")
+@Table(keyspace = "carmen", name = "commits")
 public class Commit extends CarmenNoSQLEntity implements GitDescription {
     @Column
     public String hash;
 
-    @PrimaryKey
+    @PartitionKey
     public UUID id;
 
     @Column
@@ -3633,10 +3634,10 @@ public class Commit extends CarmenNoSQLEntity implements GitDescription {
     public Integer language_401_removed;
 
     @Column
-    public Integer repository_id;
+    public Long repository_id;
 
     @Column
-    public Integer user_id;
+    public Long user_id;
 
     @Column
     public String vendor;

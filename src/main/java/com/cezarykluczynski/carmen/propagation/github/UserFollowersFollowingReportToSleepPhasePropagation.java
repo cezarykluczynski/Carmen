@@ -1,16 +1,15 @@
 package com.cezarykluczynski.carmen.propagation.github;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.dao.github.UserDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
 import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
-import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository;
 import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees;
+import com.cezarykluczynski.carmen.model.github.User;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
+import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 // TODO make thread-safe
 @Component

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS carmen.commits (
     id uuid,
-    user_id int,
-    repository_id int,
+    user_id bigint,
+    repository_id bigint,
     vendor varchar,
     hash varchar,
     language_1 int,
@@ -1209,5 +1209,3 @@ CREATE TABLE IF NOT EXISTS carmen.commits (
     language_401_removed int,
     PRIMARY key(id)
 );
-
-CREATE INDEX IF NOT EXISTS hash_idx ON carmen.commits (hash);

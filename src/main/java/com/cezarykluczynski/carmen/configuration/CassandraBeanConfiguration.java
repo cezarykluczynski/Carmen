@@ -1,70 +1,55 @@
 package com.cezarykluczynski.carmen.configuration;
 
+import com.cezarykluczynski.carmen.model.cassandra.carmen.Commit;
+import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees;
+import com.cezarykluczynski.carmen.repository.carmen.CommitAccessor;
+import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesAccessor;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.mapping.Mapper;
+import com.datastax.driver.mapping.MappingManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
-import org.springframework.data.cassandra.config.CassandraSessionFactoryBean;
-import org.springframework.data.cassandra.config.SchemaAction;
-import org.springframework.data.cassandra.convert.CassandraConverter;
-import org.springframework.data.cassandra.convert.MappingCassandraConverter;
-import org.springframework.data.cassandra.mapping.BasicCassandraMappingContext;
-import org.springframework.data.cassandra.mapping.CassandraMappingContext;
-import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
-import org.springframework.data.cassandra.config.java.AbstractCassandraConfiguration;
-import org.springframework.data.cassandra.core.CassandraAdminOperations;
-import org.springframework.data.cassandra.core.CassandraAdminTemplate;
 
 @Configuration
-@PropertySource(value = { "classpath:application.properties" })
-@EnableCassandraRepositories(basePackages = { "com.cezarykluczynski.carmen.repository" })
-public class CassandraBeanConfiguration extends AbstractCassandraConfiguration {
+public class CassandraBeanConfiguration {
+
+    @Autowired
+    private ApplicationContext ctx;
 
     @Autowired
     private Environment env;
 
-    @Override
-    public String getKeyspaceName() {
-        return "carmen";
+    @Bean
+    public MappingManager mappingManager() {
+        Cluster cluster = Cluster.builder()
+                .addContactPoint(env.getProperty("cassandra.contactpoints"))
+                .withPort(Integer.parseInt(env.getProperty("cassandra.port")))
+                .build();
+
+        return new MappingManager(cluster.connect());
     }
 
     @Bean
-    public CassandraClusterFactoryBean cluster() {
-        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-
-        cluster.setContactPoints(env.getProperty("cassandra.contactpoints"));
-        cluster.setPort(Integer.parseInt(env.getProperty("cassandra.port")));
-
-        return cluster;
+    public Mapper<Commit> commitMapper() {
+        return ctx.getBean(MappingManager.class).mapper(Commit.class);
     }
 
     @Bean
-    public CassandraMappingContext mappingContext() {
-       return new BasicCassandraMappingContext();
+    public CommitAccessor commitAccessor() {
+        return ctx.getBean(MappingManager.class).createAccessor(CommitAccessor.class);
     }
 
     @Bean
-    public CassandraConverter converter() {
-        return new MappingCassandraConverter(mappingContext());
+    public Mapper<FollowersAndFollowees> followersAndFolloweesMapper() {
+        return ctx.getBean(MappingManager.class).mapper(FollowersAndFollowees.class);
     }
 
     @Bean
-    public CassandraSessionFactoryBean session() throws Exception {
-        CassandraSessionFactoryBean session = new CassandraSessionFactoryBean();
-
-        session.setCluster(cluster().getObject());
-        session.setKeyspaceName(getKeyspaceName());
-        session.setConverter(converter());
-        session.setSchemaAction(SchemaAction.NONE);
-
-        return session;
-    }
-
-    @Bean
-    public CassandraAdminOperations cassandraTemplate() throws Exception {
-        return new CassandraAdminTemplate(session().getObject(), converter());
+    public FollowersAndFolloweesAccessor followersAndFolloweesAccessor() {
+        return ctx.getBean(MappingManager.class).createAccessor(FollowersAndFolloweesAccessor.class);
     }
 
 }

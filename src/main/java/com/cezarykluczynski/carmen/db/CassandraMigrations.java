@@ -2,35 +2,28 @@ package com.cezarykluczynski.carmen.db;
 
 import com.cezarykluczynski.carmen.db.migration.cassandra.KeyspaceDefinition;
 import com.cezarykluczynski.carmen.db.migration.cassandra.carmen.CarmenKeyspaceDefinition;
-import com.contrastsecurity.cassandra.migration.CassandraMigration;
-import com.netflix.astyanax.*;
-import com.netflix.astyanax.Keyspace;
-import com.netflix.astyanax.impl.*;
-import com.netflix.astyanax.connectionpool.*;
-import com.netflix.astyanax.connectionpool.impl.*;
-import com.netflix.astyanax.thrift.ThriftFamilyFactory;
-import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
-
-import com.google.common.collect.ImmutableMap;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.exceptions.AlreadyExistsException;
+import com.datastax.driver.mapping.MappingManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 class CassandraMigrations {
 
     private static String contactpoints;
-    private static Integer thriftPort;
-    private static Integer port;
-    private static String cluster;
-    private static String version;
 
-    public static void main(String[] args) throws ConnectionException, IOException {
+    private static Integer port;
+
+    private static Session session;
+
+    public static void main(String[] args) throws IOException {
         log.info("Carmen: Cassandra migrations started.");
 
         configure();
@@ -38,7 +31,7 @@ class CassandraMigrations {
         System.exit(0);
     }
 
-    private static void createAndMigrateKeyspace(KeyspaceDefinition keyspaceDefinition) throws ConnectionException {
+    private static void createAndMigrateKeyspace(KeyspaceDefinition keyspaceDefinition) {
         createKeyspace(keyspaceDefinition);
         migrateKeyspace(keyspaceDefinition);
     }
@@ -51,10 +44,7 @@ class CassandraMigrations {
             properties.load(inputStream);
 
             contactpoints = properties.getProperty("cassandra.contactpoints");
-            thriftPort = Integer.parseInt(properties.getProperty("cassandra.thrift_port"));
             port = Integer.parseInt(properties.getProperty("cassandra.port"));
-            cluster = properties.getProperty("cassandra.cluster");
-            version = properties.getProperty("cassandra.version");
         } catch (IOException ioe) {
             log.error("Carmen: application.properties for Cassandra not found or incomplete.");
 
@@ -62,93 +52,42 @@ class CassandraMigrations {
         }
     }
 
-    private static void createKeyspaceIfNotExists(Keyspace keyspace, KeyspaceDefinition keyspaceDefinition)
-            throws ConnectionException {
-        String keyspaceName = keyspace.getKeyspaceName();
+    private static void createKeyspace(KeyspaceDefinition keyspaceDefinition) {
+        Cluster cluster = Cluster.builder()
+                .addContactPoint(contactpoints)
+                .withPort(port)
+                .build();
+
+        MappingManager mappingManager = new MappingManager(cluster.connect());
+        session = mappingManager.getSession();
 
         try {
-            keyspace.describeKeyspace();
-
-            log.info("Carmen: Keyspace \"" + keyspaceName + "\" already exists.");
-        } catch(Exception e) {
-            try {
-                 keyspace.createKeyspace(ImmutableMap.<String, Object>builder()
-                    .put("strategy_options", ImmutableMap.<String, Object>builder()
-                            .put("replication_factor", keyspaceDefinition.getReplicationFactor())
-                            .build())
-                    .put("strategy_class", "SimpleStrategy")
-                    .build()
-                );
-                log.debug("Carmen: Keyspace \"" + keyspaceName + "\" created.");
-            } catch (ConnectionException ce) {
-                log.error("Carmen: Could not create keyspace \"" + keyspaceName + "\".");
-                throw ce;
-            }
+            session.execute("CREATE KEYSPACE " + keyspaceDefinition.getName() + " WITH REPLICATION = { 'class' : " +
+                    "'SimpleStrategy', 'replication_factor' : " + keyspaceDefinition.getReplicationFactor() +
+                    " } AND DURABLE_WRITES = true;");
+        } catch (AlreadyExistsException existsException) {
         }
-    }
-
-    private static void createKeyspace(KeyspaceDefinition keyspaceDefinition) throws ConnectionException {
-        AstyanaxContext<Keyspace> context = createKeyspaceContext(keyspaceDefinition);
-        context.start();
-        createKeyspaceIfNotExists(context.getClient(), keyspaceDefinition);
-        context.shutdown();
-    }
-
-    private static AstyanaxContext<Keyspace> createKeyspaceContext(KeyspaceDefinition keyspaceDefinition) {
-        return new AstyanaxContext.Builder()
-                .forCluster(cluster)
-                .forKeyspace(keyspaceDefinition.getName())
-                .withAstyanaxConfiguration(new AstyanaxConfigurationImpl()
-                        .setTargetCassandraVersion(version)
-                        .setCqlVersion("3.1.1")
-                        .setDiscoveryType(NodeDiscoveryType.NONE)
-                )
-                .withConnectionPoolConfiguration(new ConnectionPoolConfigurationImpl("MyConnectionPool")
-                                .setPort(thriftPort)
-                                .setMaxConnsPerHost(3)
-                                .setSeeds(contactpoints + ":" + Integer.toString(thriftPort))
-                        // TODO: allow multiple contactpoints
-                )
-                .withConnectionPoolMonitor(new CountingConnectionPoolMonitor())
-                .buildKeyspace(ThriftFamilyFactory.getInstance());
     }
 
     private static void migrateKeyspace(KeyspaceDefinition keyspaceDefinition) {
         String[] scriptsLocations = new String[keyspaceDefinition.getScriptsLocations().size()];
         keyspaceDefinition.getScriptsLocations().toArray(scriptsLocations);
 
-        com.contrastsecurity.cassandra.migration.config.Keyspace keyspace =
-                new com.contrastsecurity.cassandra.migration.config.Keyspace();
-        keyspace.setName(keyspaceDefinition.getName());
-        com.contrastsecurity.cassandra.migration.config.Cluster migrationCluster = keyspace.getCluster();
-        migrationCluster.setContactpoints(contactpoints);
-        migrationCluster.setPort(port);
-
-        CassandraMigration cassandraMigration = new CassandraMigration();
-        cassandraMigration.getConfigs().setScriptsLocations(scriptsLocations);
-        cassandraMigration.setKeyspace(keyspace);
-        log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration started.");
-        ScheduledExecutorService consoleOutputEnsuringThread = createConsoleOutputEnsuringThread();
-        cassandraMigration.migrate();
-        consoleOutputEnsuringThread.shutdown();
-        log.info("Carmen: Keyspace \"" + keyspace.getName() + "\" migration finished.");
-    }
-
-    private static ScheduledExecutorService createConsoleOutputEnsuringThread() {
-        Runnable consoleLogger = new Runnable() {
-
-            private int counter;
-
-            public void run() {
-                System.out.println("Cassandra migrations in progress (" + counter + " minutes elapsed)...");
-                counter++;
+        for (int i = 0; i < scriptsLocations.length; i++) {
+            try {
+                Files.walk(Paths.get(scriptsLocations[i].replace("filesystem:", "./"))).forEach(filePath -> {
+                    if (Files.isRegularFile(filePath) && filePath.getFileName().toString().endsWith(".cql")) {
+                        try {
+                            byte[] encoded = Files.readAllBytes(filePath);
+                            String command = new String(encoded, "UTF-8");
+                            session.execute(command);
+                        } catch (IOException e) {
+                        }
+                    }
+                });
+            } catch (IOException e) {
             }
-        };
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(consoleLogger, 0, 60, TimeUnit.SECONDS);
-
-        return executor;
+        }
     }
 
 }

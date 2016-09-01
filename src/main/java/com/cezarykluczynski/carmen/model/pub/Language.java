@@ -17,10 +17,8 @@ public class Language extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column
     private String name;
 
     @Column(name="linguist_type")
@@ -28,7 +26,6 @@ public class Language extends CarmenRelationalEntity {
     @Type(type="com.cezarykluczynski.carmen.model.enums.LinguistLanguageTypeEnumType")
     private LinguistLanguageType linguistLanguageType;
 
-    @Column(name="linguist_color")
     private String linguistColor;
 
     @OneToOne

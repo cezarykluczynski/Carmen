@@ -19,7 +19,6 @@ public class PendingRequest extends CarmenRelationalEntity {
     @Setter
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Getter
@@ -30,31 +29,24 @@ public class PendingRequest extends CarmenRelationalEntity {
 
     @Getter
     @Setter
-    @Column
     private String executor;
 
-    @Column(name = "params")
     private String params;
 
-    @Column(name = "path_params")
     private String pathParams;
 
-    @Column(name = "query_params")
     private String queryParams;
 
     @Getter
     @Setter
-    @Column(name = "propagation_id")
     private Long propagationId;
 
     @Getter
     @Setter
-    @Column
     private Integer priority;
 
     @Getter
     @Setter
-    @Column
     private Date updated;
 
 

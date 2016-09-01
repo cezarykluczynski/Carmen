@@ -17,7 +17,6 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column
     private Long id;
 
     @OneToOne
@@ -32,37 +31,26 @@ public class Repository extends CarmenRelationalEntity implements GitHubResource
     @JoinColumn
     private RepositoryClone repositoryClone;
 
-    @Column(name = "github_id")
     private Long githubId;
 
-    @Column
     private String name;
 
-    @Column(name = "full_name")
     private String fullName;
 
-    @Column
     private String description;
 
-    @Column
     private String homepage;
 
-    @Column
     private boolean fork;
 
-    @Column(name = "default_branch")
     private String defaultBranch;
 
-    @Column(name = "clone_url")
     private String cloneUrl;
 
-    @Column
     private Date created;
 
-    @Column
     private Date updated;
 
-    @Column
     private Date pushed;
 
     public Long getGitHubResourceId() {

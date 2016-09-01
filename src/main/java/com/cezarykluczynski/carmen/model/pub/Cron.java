@@ -13,22 +13,16 @@ public class Cron extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column
     private String name;
 
-    @Column
     private String server;
 
-    @Column
     private boolean enabled;
 
-    @Column
     private boolean running;
 
-    @Column
     private Date updated;
 
 }

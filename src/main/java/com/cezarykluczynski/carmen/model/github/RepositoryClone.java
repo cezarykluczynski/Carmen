@@ -23,22 +23,16 @@ public class RepositoryClone extends CarmenRelationalEntity {
     @JoinColumn(name="parent_id")
     private RepositoryClone parent;
 
-    @Column(name="location_directory")
     private String locationDirectory;
 
-    @Column(name="location_subdirectory")
     private String locationSubdirectory;
 
-    @Column(name="server_id")
     private String serverId;
 
-    @Column
     private Date cloned;
 
-    @Column
     private Date updated;
 
-    @Column(name = "commits_statistics_until")
     private Date commitsStatisticsUntil;
 
 }

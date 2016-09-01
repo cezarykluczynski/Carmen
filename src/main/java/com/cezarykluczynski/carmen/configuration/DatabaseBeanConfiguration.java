@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.configuration;
 
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.ImprovedNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -43,6 +44,7 @@ public class DatabaseBeanConfiguration  {
 
         localSessionFactoryBean.setDataSource((BasicDataSource) ctx.getBean("myDataSource"));
         localSessionFactoryBean.setPackagesToScan("com.cezarykluczynski.carmen.model");
+        localSessionFactoryBean.setNamingStrategy(new ImprovedNamingStrategy());
 
         return localSessionFactoryBean;
     }

@@ -15,20 +15,16 @@ public class Repositories extends CarmenRelationalEntity implements Propagation 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "github_user_id", referencedColumnName = "id")
     private User user;
 
-    @Column
     private String phase;
 
-    @Column
     private Integer page;
 
-    @Column
     private Date updated;
 
 }

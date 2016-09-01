@@ -12,7 +12,6 @@ public class User extends CarmenRelationalEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "id")
     private Long id;
 
 }

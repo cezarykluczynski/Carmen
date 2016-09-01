@@ -27,58 +27,44 @@ public class User extends CarmenRelationalEntity {
     @JoinColumn(name = "user_id")
     private com.cezarykluczynski.carmen.model.users.User user;
 
-    @Column(name = "github_id")
     private Long githubId;
 
-    @Column
     private String name;
 
-    @Column
     private String login;
 
-    @Column
     private Date updated;
 
-    @Column
     private boolean found;
 
-    @Column
     private boolean requested;
 
-    @Column(name = "opt_out")
     private boolean optOut;
 
-    @Column(name = "avatar_url")
     private String avatarUrl;
 
     @Column(name = "github_type")
     private String type;
 
-    @Column(name = "site_admin")
     private boolean siteAdmin;
 
-    @Column
     private String company;
 
-    @Column
     private String  blog;
 
     @Column(name = "github_location")
     private String  location;
 
-    @Column
     private String  email;
 
-    @Column
     private boolean hireable;
 
-    @Column
     private String bio;
 
-    @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserFollowers userFollowers;
 
-    @OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private UserFollowing userFollowing;
 
     public boolean canBeUpdated() {

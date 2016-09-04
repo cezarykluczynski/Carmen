@@ -25,6 +25,7 @@ dependencies:
     - npm install --global grunt-cli typings tsd
     - cd src/main/webapp/frontend && npm install && cd ../../../..
     - mvn test -Dtest="BeforeAll" -DfailIfNoTests=false
+    - ruby ruby/bin/server start
 test:
   override:
     - cd src/main/webapp/frontend && grunt to && cd ../../../..

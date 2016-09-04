@@ -63,6 +63,29 @@ describe 'server' do
     expect($?.exitstatus).to eq(1)
   end
 
+  it 'should restart two times' do
+    `ruby ./ruby/bin/server start`
+
+    response = `ruby ./ruby/bin/server restart`
+    expect(response).to include('Server stopped')
+    expect(response).to include('Server started')
+    expect($?.exitstatus).to eq(0)
+
+    response = `ruby ./ruby/bin/server restart`
+    expect(response).to include('Server stopped')
+    expect(response).to include('Server started')
+    expect($?.exitstatus).to eq(0)
+  end
+
+  it 'should restart when it was stopped' do
+    `ruby ./ruby/bin/server stop`
+
+    response = `ruby ./ruby/bin/server restart`
+    expect(response).to include('Server already stopped')
+    expect(response).to include('Server started')
+    expect($?.exitstatus).to eq(0)
+  end
+
   after(:all) do
     if (was_stopped) then `ruby ./ruby/bin/server start` end
   end

@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.vcs.git.persistence
+package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github
 
 import com.cezarykluczynski.carmen.model.github.RepositoryClone
 import com.cezarykluczynski.carmen.util.DateUtil

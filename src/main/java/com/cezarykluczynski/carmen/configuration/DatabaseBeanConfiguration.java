@@ -59,7 +59,7 @@ public class DatabaseBeanConfiguration  {
     }
 
     private SessionFactory getSessionFactoryBean() {
-        return (SessionFactory) ctx.getBean("sessionFactory");
+        return ctx.getBean(SessionFactory.class);
     }
 
 }

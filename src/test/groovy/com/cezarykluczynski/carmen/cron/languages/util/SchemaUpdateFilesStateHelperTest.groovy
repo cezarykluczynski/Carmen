@@ -7,7 +7,7 @@ import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesAnnotationIt
 import com.cezarykluczynski.carmen.cron.languages.iterator.LanguagesIteratorsFactory
 import com.cezarykluczynski.carmen.cron.languages.iterator.RefreshableTableIterator
 import com.cezarykluczynski.carmen.util.exec.executor.Executor
-import com.cezarykluczynski.carmen.vcs.git.util.GitCommand
+import com.cezarykluczynski.carmen.vcs.git.command.GitCommand
 import spock.lang.Specification
 
 class SchemaUpdateFilesStateHelperTest extends Specification {

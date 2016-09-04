@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.worker
 
-import com.cezarykluczynski.carmen.vcs.git.persistence.GitHubRepositoryClonePersister
+import com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github.GitHubRepositoryClonePersister
 import spock.lang.Specification
 
 class RepositoryHistoryPersistenceWorkerTest extends Specification {

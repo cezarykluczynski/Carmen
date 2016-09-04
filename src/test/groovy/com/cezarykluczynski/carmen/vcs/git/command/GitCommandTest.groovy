@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.vcs.git.util
+package com.cezarykluczynski.carmen.vcs.git.command
 
 import com.cezarykluczynski.carmen.util.exec.executor.Executor
 import com.cezarykluczynski.carmen.util.exec.result.Result
@@ -14,7 +14,7 @@ class GitCommandTest extends Specification {
         result.isSuccessFul()
     }
 
-    void "git version is sufficient"() {
+    def "git version is sufficient"() {
         when:
         Result result = Executor.execute(new GitCommand("--version"))
         String output = result.getOutput()

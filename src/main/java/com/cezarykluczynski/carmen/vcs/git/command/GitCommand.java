@@ -1,4 +1,4 @@
-package com.cezarykluczynski.carmen.vcs.git.util;
+package com.cezarykluczynski.carmen.vcs.git.command;
 
 import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
 

@@ -1,12 +1,12 @@
-package com.cezarykluczynski.carmen.vcs.git.persistence;
+package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github;
 
 import com.cezarykluczynski.carmen.model.github.RepositoryClone;
-import com.cezarykluczynski.carmen.util.factory.DateFactory;
 import com.cezarykluczynski.carmen.util.exec.executor.Executor;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
+import com.cezarykluczynski.carmen.util.factory.DateFactory;
+import com.cezarykluczynski.carmen.vcs.git.command.GitLogSinceCommand;
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash;
 import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameBuilder;
-import com.cezarykluczynski.carmen.vcs.git.util.GitLogSinceCommand;
 import com.cezarykluczynski.carmen.vcs.server.Server;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

@@ -44,12 +44,12 @@ class GitHubRepositoryCommitsToPersistFinderTest extends Specification {
 
     def "returns list of commit hashes for a given period"() {
         given:
-        dateFactoryMock.getEndOfAlreadyClosedMonth() >> DateUtil.convert(LocalDateTime.of(2016, 06, 30, 23, 59, 00))
+        dateFactoryMock.getEndOfAlreadyClosedMonth() >> DateUtil.toDate(LocalDateTime.of(2016, 06, 30, 23, 59, 00))
         serverMock.getCloneRoot() >> '.'
         RepositoryClone repositoryCloneMock = Mock(RepositoryClone) {
             getLocationDirectory() >> '.'
             getLocationSubdirectory() >> '.'
-            getCommitsStatisticsUntil() >> DateUtil.convert(LocalDateTime.of(2016, 06, 01, 0, 0, 0))
+            getCommitsStatisticsUntil() >> DateUtil.toDate(LocalDateTime.of(2016, 06, 01, 0, 0, 0))
         }
 
         when:

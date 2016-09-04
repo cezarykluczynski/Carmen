@@ -15,14 +15,14 @@ public class DateUtil {
         return new Date();
     }
 
-    public static LocalDateTime convert(Date date) {
+    public static LocalDateTime toLocalDateTime(Date date) {
         if (date == null) {
             return null;
         }
         return date.toInstant().atZone(getDefaultZoneId()).toLocalDateTime();
     }
 
-    public static Date convert(LocalDateTime date) {
+    public static Date toDate(LocalDateTime date) {
         if (date == null) {
             return null;
         }

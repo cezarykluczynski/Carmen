@@ -54,7 +54,7 @@ public class DatabaseManageableTask {
     }
 
     public LocalDateTime getUpdated() {
-        return DateUtil.convert(findEntity().getUpdated());
+        return DateUtil.toLocalDateTime(findEntity().getUpdated());
     }
 
     private Cron findEntity() {

@@ -3,6 +3,8 @@ package com.cezarykluczynski.carmen.util.exec;
 import com.cezarykluczynski.carmen.util.OS;
 import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand;
 
+import static com.cezarykluczynski.carmen.util.filesystem.Directory.sanitizePathForOs;
+
 public class MkDirCommand extends ApacheCommonsCommand {
 
     public MkDirCommand(String command) {
@@ -10,6 +12,7 @@ public class MkDirCommand extends ApacheCommonsCommand {
     }
 
     private static String wrapCommand(String command) {
+        command = sanitizePathForOs(command);
         // TODO: it should not fail if directory exists
         if (OS.isLinux()) {
             return "mkdir -p " + command;

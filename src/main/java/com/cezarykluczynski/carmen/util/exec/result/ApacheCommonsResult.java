@@ -31,9 +31,8 @@ public class ApacheCommonsResult extends AbstractResult implements Result {
     }
 
     private void doExecuteCommandLine(CommandLine commandLine) {
-        int exitCode;
         try {
-            exitCode = executor.execute(commandLine);
+            int exitCode = executor.execute(commandLine);
             setSuccessful(exitCode == 0);
             setOutput(outputStream.toString());
         } catch(IOException e) {

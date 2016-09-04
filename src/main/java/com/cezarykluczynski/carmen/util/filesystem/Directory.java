@@ -12,7 +12,7 @@ import java.util.List;
 public class Directory {
 
     public static Result create(List<String> pathElements) {
-        return Executor.execute(new MkDirCommand(sanitizePathForOs(joinRelativeDirectories(pathElements))));
+        return Executor.execute(new MkDirCommand(joinRelativeDirectories(pathElements)));
     }
 
     public static Result delete(String directory) {

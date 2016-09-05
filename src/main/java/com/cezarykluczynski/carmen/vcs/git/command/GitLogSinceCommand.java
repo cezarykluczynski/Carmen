@@ -13,7 +13,7 @@ public class GitLogSinceCommand extends ProcessBuilderCommand {
         super(getCommandParts(since, before), directory);
     }
 
-    private static String[] getCommandParts(Date since, Date before) {
+    private static List<String> getCommandParts(Date since, Date before) {
         List<String> commandParts = Lists.newArrayList("git", "log", "--pretty=%H,%ct,%ae", "--date-order",
             "--reverse");
 
@@ -25,10 +25,7 @@ public class GitLogSinceCommand extends ProcessBuilderCommand {
             commandParts.add("--before=" + DateUtil.toGitReadableDateTime(before));
         }
 
-        String[] commandPartsArray = new String[commandParts.size()];
-        commandPartsArray = commandParts.toArray(commandPartsArray);
-
-        return commandPartsArray;
+        return commandParts;
     }
 
 }

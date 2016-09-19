@@ -1,10 +1,10 @@
 package com.cezarykluczynski.carmen.vcs.git.worker;
 
 import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO;
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
-import com.cezarykluczynski.carmen.model.github.Repository;
-import com.cezarykluczynski.carmen.model.github.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryCloneRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryRepository;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.vcs.git.GitRemote;
 import com.cezarykluczynski.carmen.vcs.git.util.DirectoryNameBuilder;
@@ -16,28 +16,28 @@ import org.springframework.stereotype.Component;
 @DatabaseSwitchableJob
 public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
 
-    private RepositoriesDAO repositoriesDAO;
+    private RepositoryRepository repositoryRepository;
 
-    private RepositoriesClonesDAO repositoriesClonesDAO;
+    private RepositoryCloneRepository repositoryCloneRepository;
 
     private Server server;
 
     @Autowired
-    public GitHubCloneWorker(RepositoriesDAO repositoriesDAO, RepositoriesClonesDAO repositoriesClonesDAO,
-                             Server server) {
-        this.repositoriesDAO = repositoriesDAO;
-        this.repositoriesClonesDAO = repositoriesClonesDAO;
+    public GitHubCloneWorker(RepositoryRepository repositoryRepository,
+            RepositoryCloneRepository repositoryCloneRepository, Server server) {
+        this.repositoryRepository = repositoryRepository;
+        this.repositoryCloneRepository = repositoryCloneRepository;
         this.server = server;
     }
 
     @Override
     public void run() {
-        Repository repositoryEntity = repositoriesDAO.findNotForkedRepositoryWithoutClone();
+        Repository repositoryEntity = repositoryRepository.findFirstByRepositoryCloneIsNullAndForkFalse();
         if (repositoryEntity == null) {
             return;
         }
 
-        RepositoryClone repositoryCloneEntity = repositoriesClonesDAO.createStubEntity(server, repositoryEntity);
+        RepositoryClone repositoryCloneEntity = repositoryCloneRepository.createStubEntity(server, repositoryEntity);
         if (repositoryCloneEntity == null) {
             return;
         }
@@ -46,9 +46,9 @@ public class GitHubCloneWorker extends AbstractCloneWorker implements Runnable {
         Result cloneResult = clone(repositoryEntity, cloneDirectory, repositoryEntity.getFullName());
 
         if (cloneResult.isSuccessFul()) {
-            repositoriesClonesDAO.setStatusToCloned(repositoryCloneEntity);
+            repositoryCloneRepository.setStatusToCloned(repositoryCloneEntity);
         } else {
-            repositoriesClonesDAO.truncateEntity(server, repositoryCloneEntity);
+            repositoryCloneRepository.truncateEntity(server, repositoryCloneEntity);
         }
     }
 

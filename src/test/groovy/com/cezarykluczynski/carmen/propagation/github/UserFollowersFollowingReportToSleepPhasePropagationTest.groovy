@@ -1,22 +1,22 @@
 package com.cezarykluczynski.carmen.propagation.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowers
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowing
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowersRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowersRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
 import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserFollowersFollowingReportToSleepPhasePropagationTest extends IntegrationTest {
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
     private UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase
@@ -25,16 +25,16 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends Integratio
     private FollowersAndFolloweesRepository followersAndFolloweesRepository
 
     @Autowired
-    private UserFollowersDAO propagationsUserFollowersDAOImpl
+    private UserFollowersRepository userFollowersRepository
 
     @Autowired
-    private UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures
+    private UserFollowersRepositoryFixtures userFollowersRepositoryFixtures
 
     @Autowired
-    private UserFollowingDAO propagationsUserFollowingDAOImpl
+    private UserFollowingRepository userFollowingRepository
 
     @Autowired
-    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    private UserFollowingRepositoryFixtures userFollowingRepositoryFixtures
 
     private User userEntity
 
@@ -43,16 +43,16 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends Integratio
     private UserFollowing userFollowingEntity
 
     def setup() {
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         propagationUserFollowersFollowingReportToSleepPhase.setUserEntity userEntity
-        userFollowersEntity = propagationsUserFollowersDAOImplFixtures
+        userFollowersEntity = userFollowersRepositoryFixtures
             .createUserFollowersEntityUsingUserEntityAndPhase userEntity, "report"
-        userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+        userFollowingEntity = userFollowingRepositoryFixtures
             .createUserFollowingEntityUsingUserEntityAndPhase userEntity, "report"
     }
 
     def cleanup() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "propagates non-existing followers and followees entity"() {
@@ -60,8 +60,8 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends Integratio
         propagationUserFollowersFollowingReportToSleepPhase.propagate()
 
         then:
-        propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase() == "sleep"
-        propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase() == "sleep"
+        userFollowersRepository.findOne(userFollowersEntity.getId()).getPhase() == "sleep"
+        userFollowingRepository.findOne(userFollowingEntity.getId()).getPhase() == "sleep"
         followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
     }
 
@@ -76,8 +76,8 @@ class UserFollowersFollowingReportToSleepPhasePropagationTest extends Integratio
         propagationUserFollowersFollowingReportToSleepPhase.propagate()
 
         then:
-        propagationsUserFollowersDAOImpl.findById(userFollowersEntity.getId()).getPhase() == "sleep"
-        propagationsUserFollowingDAOImpl.findById(userFollowingEntity.getId()).getPhase() == "sleep"
+        userFollowersRepository.findOne(userFollowersEntity.getId()).getPhase() == "sleep"
+        userFollowingRepository.findOne(userFollowingEntity.getId()).getPhase() == "sleep"
         followersAndFolloweesRepository.findByUserId(userEntity.getId()) instanceof FollowersAndFollowees
     }
 

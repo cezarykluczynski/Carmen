@@ -1,27 +1,26 @@
 package com.cezarykluczynski.carmen.propagation.github;
 
+import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowers;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowersRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory;
-import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.model.propagations.Propagation;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
 
 @Component
 public class UserFollowersPropagation implements com.cezarykluczynski.carmen.propagation.Propagation {
 
-    private UserFollowersDAO propagationsUserFollowersDAOImpl;
+    private UserFollowersRepository userFollowersRepository;
 
     private PendingRequestFactory pendingRequestFactory;
 
     private User userEntity;
 
     @Autowired
-    public UserFollowersPropagation(UserFollowersDAO propagationsUserFollowersDAOImpl,
+    public UserFollowersPropagation(UserFollowersRepository userFollowersRepository,
                                     PendingRequestFactory pendingRequestFactory) {
-        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
+        this.userFollowersRepository = userFollowersRepository;
         this.pendingRequestFactory = pendingRequestFactory;
     }
 
@@ -36,7 +35,7 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
             return;
         }
 
-        tryCreateDiscoverPhase(propagationsUserFollowersDAOImpl.findByUser(userEntity));
+        tryCreateDiscoverPhase(userFollowersRepository.findOneByUser(userEntity));
     }
 
     private void tryCreateDiscoverPhase(UserFollowers propagationUserFollowersEntity) {
@@ -46,8 +45,7 @@ public class UserFollowersPropagation implements com.cezarykluczynski.carmen.pro
     }
 
     private void createDiscoverPhase(User baseUserEntity) {
-        Propagation propagationUserFollowersEntity =
-                propagationsUserFollowersDAOImpl.create(baseUserEntity, "discover");
+        Propagation propagationUserFollowersEntity = userFollowersRepository.create(baseUserEntity, "discover");
         pendingRequestFactory.createPendingRequestForUserFollowersPropagation(propagationUserFollowersEntity);
     }
 

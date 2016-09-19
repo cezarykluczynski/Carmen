@@ -1,10 +1,9 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
-
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowing;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +11,19 @@ import org.springframework.stereotype.Component;
 @DatabaseSwitchableJob
 public class UserFollowingDiscoverToReportPhasePropagationExecutor implements Runnable {
 
-    private UserFollowingDAO propagationsUserFollowingDAOImpl;
+    private UserFollowingRepository userFollowingRepository;
 
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
     @Autowired
-    public UserFollowingDiscoverToReportPhasePropagationExecutor(UserFollowingDAO propagationsUserFollowingDAOImpl,
-                                                                 PendingRequestDAO apiqueuePendingRequestDAOImpl) {
-        this.propagationsUserFollowingDAOImpl = propagationsUserFollowingDAOImpl;
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+    public UserFollowingDiscoverToReportPhasePropagationExecutor(UserFollowingRepository  userFollowingRepository,
+            PendingRequestRepository pendingRequestRepository) {
+        this.userFollowingRepository = userFollowingRepository;
+        this.pendingRequestRepository = pendingRequestRepository;
     }
 
     public void run() {
-        UserFollowing userFollowing = propagationsUserFollowingDAOImpl.findOldestPropagationInDiscoverPhase();
+        UserFollowing userFollowing = userFollowingRepository.findOldestPropagationInDiscoverPhase();
         tryToMoveToReportPhase(userFollowing);
     }
 
@@ -34,14 +33,14 @@ public class UserFollowingDiscoverToReportPhasePropagationExecutor implements Ru
         }
 
         Long propagationId = userFollowing.getId();
-        Long count = apiqueuePendingRequestDAOImpl.countByPropagationId(propagationId);
+        Long count = pendingRequestRepository.countByPropagationId(propagationId);
 
         if (count > 0) {
             return;
         }
 
         userFollowing.setPhase("report");
-        propagationsUserFollowingDAOImpl.update(userFollowing);
+        userFollowingRepository.save(userFollowing);
     }
 
 }

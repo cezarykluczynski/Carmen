@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron;
 
-import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
-import com.cezarykluczynski.carmen.model.pub.Cron;
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepository;
+import com.cezarykluczynski.carmen.cron.model.entity.Cron;
 import com.cezarykluczynski.carmen.util.DateUtil;
 import com.google.common.base.Preconditions;
 
@@ -9,21 +9,21 @@ import java.time.LocalDateTime;
 
 public class DatabaseManageableTask {
 
-    private CronsDAO cronsDAO;
+    private CronRepository cronRepository;
 
     private String name;
 
     private String server = null;
 
-    public DatabaseManageableTask(CronsDAO cronsDAO, String name) {
-        Preconditions.checkNotNull(cronsDAO);
+    public DatabaseManageableTask(CronRepository cronRepository, String name) {
+        Preconditions.checkNotNull(cronRepository);
         Preconditions.checkNotNull(name);
-        this.cronsDAO = cronsDAO;
+        this.cronRepository = cronRepository;
         this.name = name;
     }
 
-    public DatabaseManageableTask(CronsDAO cronsDAO, String name, String server) {
-        this(cronsDAO, name);
+    public DatabaseManageableTask(CronRepository cronRepository, String name, String server) {
+        this(cronRepository, name);
         Preconditions.checkNotNull(server);
         this.server = server;
     }
@@ -31,13 +31,13 @@ public class DatabaseManageableTask {
     public void enable() {
         Cron cron = findEntity();
         cron.setEnabled(true);
-        cronsDAO.update(cron);
+        cronRepository.save(cron);
     }
 
     public void disable() {
         Cron cron = findEntity();
         cron.setEnabled(false);
-        cronsDAO.update(cron);
+        cronRepository.save(cron);
     }
 
     public boolean isOff() {
@@ -58,6 +58,7 @@ public class DatabaseManageableTask {
     }
 
     private Cron findEntity() {
-        return server != null ? cronsDAO.findByNameAndServer(name, server) : cronsDAO.findByName(name).get(0);
+        return server != null ? cronRepository.findFirstByNameAndServer(name, server) :
+                cronRepository.findFirstByName(name);
     }
 }

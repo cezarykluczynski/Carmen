@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.web;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.dao.users.CarmenUserDAO;
+import com.cezarykluczynski.carmen.common.user.model.repository.CommonUserRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,26 +13,27 @@ import java.util.Map;
 @Controller
 public class WelcomeController {
 
-    private CarmenUserDAO carmenUserDAO;
+    private CommonUserRepository commonUserRepository;
 
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     @Autowired
-    public WelcomeController(CarmenUserDAO carmenUserDAO, UserDAO userDAO) {
-        this.carmenUserDAO = carmenUserDAO;
-        this.userDAO = userDAO;
+    public WelcomeController(CommonUserRepository commonUserRepository, UserRepository userRepository) {
+        this.commonUserRepository = commonUserRepository;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping("")
     public ModelAndView welcome() {
         Map<String, Object> viewVariables = Maps.newHashMap();
 
-        Object analyzedUsersCount = userDAO.countFound();
-        Object connectedUsersCount = carmenUserDAO.count();
+        Object analyzedUsersCount = userRepository.countByFoundTrue();
+        Object connectedUsersCount = commonUserRepository.count();
 
         viewVariables.put("analyzedUsersCount", analyzedUsersCount);
         viewVariables.put("connectedUsersCount", connectedUsersCount);
 
         return new ModelAndView("welcome", viewVariables);
     }
+
 }

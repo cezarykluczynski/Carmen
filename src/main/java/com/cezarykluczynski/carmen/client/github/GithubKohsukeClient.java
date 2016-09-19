@@ -1,16 +1,15 @@
 package com.cezarykluczynski.carmen.client.github;
 
-import java.io.IOException;
-import java.util.List;
-
-import com.cezarykluczynski.carmen.set.github.User;
-import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
 import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.UserDTO;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
-
 import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
 
 @Component
 public class GithubKohsukeClient implements GithubClientInterface {
@@ -22,15 +21,15 @@ public class GithubKohsukeClient implements GithubClientInterface {
 
     private GitHub github;
 
-    public RateLimit getCoreLimit() throws IOException {
+    public RateLimitDTO getCoreLimit() throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public RateLimit getSearchLimit() throws IOException {
+    public RateLimitDTO getSearchLimit() throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public User getUser(String name) throws IOException {
+    public UserDTO getUser(String name) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
@@ -38,11 +37,13 @@ public class GithubKohsukeClient implements GithubClientInterface {
         throw new IOException("Implemented in different provider.");
     }
 
-    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
+            throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
+            throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 

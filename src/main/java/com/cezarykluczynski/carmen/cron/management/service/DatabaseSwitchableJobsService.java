@@ -3,8 +3,8 @@ package com.cezarykluczynski.carmen.cron.management.service;
 import com.cezarykluczynski.carmen.configuration.AdminPanelConfiguration;
 import com.cezarykluczynski.carmen.cron.management.converter.DatabaseSwitchableJobDTOConverter;
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO;
-import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
-import com.cezarykluczynski.carmen.model.pub.Cron;
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepository;
+import com.cezarykluczynski.carmen.cron.model.entity.Cron;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +21,19 @@ public class DatabaseSwitchableJobsService {
             AdminPanelConfiguration.LANGUAGES_SCHEMA_UPDATE_TASK
     );
 
-    private CronsDAO cronsDAO;
+    private CronRepository cronRepository;
 
     private DatabaseSwitchableJobListProvider databaseSwitchableJobListProvider;
 
     @Autowired
-    public DatabaseSwitchableJobsService(CronsDAO cronsDAO,
+    public DatabaseSwitchableJobsService(CronRepository cronRepository,
         DatabaseSwitchableJobListProvider databaseSwitchableJobListProvider) {
-        this.cronsDAO = cronsDAO;
+        this.cronRepository = cronRepository;
         this.databaseSwitchableJobListProvider = databaseSwitchableJobListProvider;
     }
 
     public List<DatabaseSwitchableJobDTO> getAll() {
-        return cronsDAO.findAll().stream()
+        return cronRepository.findAll().stream()
                 .filter(this::isSimpleDatabaseSwitchable)
                 .map(DatabaseSwitchableJobDTOConverter::fromEntity)
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class DatabaseSwitchableJobsService {
     }
 
     private Cron findCronByName(String name) {
-        return cronsDAO.findAll().stream()
+        return cronRepository.findAll().stream()
                 .filter(this::isSimpleDatabaseSwitchable)
                 .filter(cron -> cron.getName().equals(name))
                 .findFirst().orElse(null);
@@ -85,7 +85,7 @@ public class DatabaseSwitchableJobsService {
         }
 
         cron.setEnabled(enabled);
-        cronsDAO.update(cron);
+        cronRepository.save(cron);
     }
 
     private List<String> getClassNames() {
@@ -95,7 +95,7 @@ public class DatabaseSwitchableJobsService {
     }
 
     private List<String> getCronNames() {
-        return cronsDAO.findAll().stream()
+        return cronRepository.findAll().stream()
                 .filter(DatabaseSwitchableJobsService::isNotDatabaseControllableComplexJob)
                 .map(Cron::getName)
                 .collect(Collectors.toList());
@@ -128,11 +128,11 @@ public class DatabaseSwitchableJobsService {
     private void createCron(String cronName) {
         Cron cron = new Cron();
         cron.setName(cronName);
-        cronsDAO.create(cron);
+        cronRepository.save(cron);
     }
 
     private void removeCron(String cronName) {
-        cronsDAO.delete(cronsDAO.findByName(cronName).get(0));
+        cronRepository.delete(cronRepository.findFirstByName(cronName));
     }
 
 }

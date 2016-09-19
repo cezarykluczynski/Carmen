@@ -1,9 +1,9 @@
 package com.cezarykluczynski.carmen.cron.linguist.executor
 
 import com.cezarykluczynski.carmen.IntegrationTest
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
+import com.cezarykluczynski.carmen.data.language.model.entity.Language
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter
-import com.cezarykluczynski.carmen.model.pub.Language
 import org.springframework.beans.factory.annotation.Autowired
 
 class LanguagesListUpdateExecutorTest extends IntegrationTest {
@@ -12,7 +12,7 @@ class LanguagesListUpdateExecutorTest extends IntegrationTest {
     LanguagesListUpdateExecutor languagesListUpdateExecutor
 
     @Autowired
-    LanguagesDAO languagesDAO
+    LanguageRepository languageRepository
 
     @Autowired
     LangsStatsAdapter langsStatsAdapter
@@ -29,7 +29,7 @@ class LanguagesListUpdateExecutorTest extends IntegrationTest {
         languagesListUpdateExecutor.run() // run twice to ensure languages are persisted once
 
         when:
-        List<Language> languagesList = languagesDAO.findAll()
+        List<Language> languagesList = languageRepository.findAll()
         Language languageBison = languagesList.stream().filter({ language -> language.getName() == "Bison" }).findFirst().get()
         Language languageYacc = languagesList.stream().filter({ language -> language.getName() == "Yacc" }).findFirst().get()
         Language languageColdFusion = languagesList.stream().filter({ language -> language.getName() == "ColdFusion" }).findFirst().get()

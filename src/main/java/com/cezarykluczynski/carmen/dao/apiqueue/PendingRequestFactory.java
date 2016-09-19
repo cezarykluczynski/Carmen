@@ -1,25 +1,27 @@
 package com.cezarykluczynski.carmen.dao.apiqueue;
 
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
-import com.cezarykluczynski.carmen.model.propagations.Repositories;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.Repositories;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowers;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowing;
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
 
 import java.util.HashMap;
 
 @Component
 public class PendingRequestFactory {
 
-    PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
     @Autowired
-    public PendingRequestFactory(PendingRequestDAO apiqueuePendingRequestDAOImpl) {
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+    public PendingRequestFactory(PendingRequestRepository pendingRequestRepository) {
+        this.pendingRequestRepository = pendingRequestRepository;
     }
 
     public PendingRequest createPendingRequestForUserRepositoriesPropagation(Propagation repositoriesEntity) {
@@ -39,26 +41,22 @@ public class PendingRequestFactory {
 
     private PendingRequest createPendingRequestEntity(User userEntity, Propagation propagationEntity, String executor,
                                                       String endpoint) {
-        return apiqueuePendingRequestDAOImpl.create(
+        return pendingRequestRepository.create(
             executor,
             userEntity,
             createPropagationPathParams(userEntity, "following_url"),
-            newHashMap(),
-            newHashMap(),
+            Maps.newHashMap(),
+            Maps.newHashMap(),
             propagationEntity,
             1
         );
     }
 
     private HashMap<String, Object> createPropagationPathParams(User userEntity, String endpoint) {
-        HashMap<String, Object> pathParams = new HashMap<String, Object>();
+        HashMap<String, Object> pathParams = Maps.newHashMap();
         pathParams.put("endpoint", endpoint);
         pathParams.put("login", userEntity.getLogin());
         return pathParams;
-    }
-
-    private HashMap<String, Object> newHashMap() {
-        return new HashMap<String, Object>();
     }
 
 }

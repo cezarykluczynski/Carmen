@@ -1,10 +1,10 @@
 package com.cezarykluczynski.carmen.vcs.git.worker
 
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
-import com.cezarykluczynski.carmen.model.github.Repository
-import com.cezarykluczynski.carmen.model.github.RepositoryClone
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryCloneRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.exec.command.ApacheCommonsCommand
 import com.cezarykluczynski.carmen.util.exec.command.Command
@@ -23,11 +23,11 @@ class GitHubCloneWorkerTest extends Specification {
     private static final String CLONE_URL = '.'
     private static final String RESULTING_CLONE_DIRECTORY = 'target/test-storage/c/c2/test/test'
 
-    private RepositoriesClonesDAO repositoriesClonesDAOMock
+    private RepositoryCloneRepository repositoryCloneRepository
 
     private GitHubCloneWorker gitHubCloneWorker
 
-    private RepositoriesDAO repositoriesDAOMock
+    private RepositoryRepository repositoryRepository
 
     private Server serverMock
 
@@ -50,23 +50,23 @@ class GitHubCloneWorkerTest extends Specification {
             getFullName() >> LOCATION_SUBDIRECTORY
         }
 
-        repositoriesClonesDAOMock = Mock RepositoriesClonesDAO
-        repositoriesDAOMock = Mock RepositoriesDAO
+        repositoryCloneRepository = Mock RepositoryCloneRepository
+        repositoryRepository = Mock RepositoryRepository
         serverMock = Mock(Server) {
             getCloneRoot() >> ServerTest.CLONE_ROOT
         }
 
-        gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAOMock, repositoriesClonesDAOMock, serverMock)
+        gitHubCloneWorker = new GitHubCloneWorker(repositoryRepository, repositoryCloneRepository, serverMock)
     }
 
     def "local repository can be cloned"() {
         given:
-        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> repositoryEntity
+        repositoryRepository.findFirstByRepositoryCloneIsNullAndForkFalse() >> repositoryEntity
         RepositoryClone repositoryCloneEntity = Mock(RepositoryClone) {
             getLocationDirectory() >> LOCATION_DIRECTORY
             getLocationSubdirectory() >> LOCATION_SUBDIRECTORY
         }
-        repositoriesClonesDAOMock.createStubEntity(*_) >> repositoryCloneEntity
+        repositoryCloneRepository.createStubEntity(*_) >> repositoryCloneEntity
 
         when:
         gitHubCloneWorker.run()
@@ -77,7 +77,7 @@ class GitHubCloneWorkerTest extends Specification {
         Result revParseCommandResult = Executor.execute(revParseCommand)
 
         then:
-        1 * repositoriesClonesDAOMock.setStatusToCloned(repositoryCloneEntity)
+        1 * repositoryCloneRepository.setStatusToCloned(repositoryCloneEntity)
         revParseCommandResult.isSuccessFul()
         revParseCommandResult.getOutput().contains(repositoryEntity.getFullName())
 
@@ -87,30 +87,30 @@ class GitHubCloneWorkerTest extends Specification {
 
     def "null repository entity does not generate clone repository entity"() {
         given:
-        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> null
+        repositoryRepository.findFirstByRepositoryCloneIsNullAndForkFalse() >> null
 
         when:
         gitHubCloneWorker.run()
 
         then:
-        0 * repositoriesClonesDAOMock.createStubEntity(*_) >> null
+        0 * repositoryCloneRepository.createStubEntity(*_)
     }
 
     def "invalid repository cannot be cloned"() {
         given:
-        repositoriesDAOMock.findNotForkedRepositoryWithoutClone() >> repositoryEntity
+        repositoryRepository.findFirstByRepositoryCloneIsNullAndForkFalse() >> repositoryEntity
         RepositoryClone repositoryCloneEntity = Mock(RepositoryClone) {
             getLocationDirectory() >> '.'
             getLocationSubdirectory() >> '.'
         }
-        repositoriesClonesDAOMock.createStubEntity(*_) >> repositoryCloneEntity
+        repositoryCloneRepository.createStubEntity(*_) >> repositoryCloneEntity
         repositoryEntity.getCloneUrl() >> "target"
 
         when:
         gitHubCloneWorker.run()
 
         then:
-        1 * repositoriesClonesDAOMock.truncateEntity(*_)
+        1 * repositoryCloneRepository.truncateEntity(*_)
 
         cleanup:
         Directory.delete RESULTING_CLONE_DIRECTORY
@@ -118,15 +118,15 @@ class GitHubCloneWorkerTest extends Specification {
 
     def "invalid clone repository does not make clone"() {
         given:
-        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoriesDAOMock, repositoriesClonesDAOMock, serverMock)
-        repositoriesClonesDAOMock.createStubEntity(serverMock, repositoryEntity) >> null
+        GitHubCloneWorker gitHubCloneWorker = new GitHubCloneWorker(repositoryRepository, repositoryCloneRepository, serverMock)
+        repositoryCloneRepository.createStubEntity(serverMock, repositoryEntity) >> null
 
         when:
         gitHubCloneWorker.run()
 
         then:
-        0 * repositoriesClonesDAOMock.setStatusToCloned(_)
-        0 * repositoriesClonesDAOMock.truncateEntity(*_)
+        0 * repositoryCloneRepository.setStatusToCloned(_)
+        0 * repositoryCloneRepository.truncateEntity(*_)
     }
 
 }

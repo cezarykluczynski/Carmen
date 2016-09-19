@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.vcs.git.persistence
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter
 import com.cezarykluczynski.carmen.lang.stats.domain.CommitDescription
 import com.cezarykluczynski.carmen.lang.stats.domain.RepositoryDescription
-import com.cezarykluczynski.carmen.model.github.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHashDescriptions
 import com.cezarykluczynski.carmen.vcs.server.Server

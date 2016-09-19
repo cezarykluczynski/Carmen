@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github
 
-import com.cezarykluczynski.carmen.model.github.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.factory.DateFactory
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash

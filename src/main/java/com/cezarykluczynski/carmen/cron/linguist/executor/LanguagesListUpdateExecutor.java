@@ -1,9 +1,10 @@
 package com.cezarykluczynski.carmen.cron.linguist.executor;
 
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
-import com.cezarykluczynski.carmen.dao.pub.enums.LinguistLanguageType;
+import com.cezarykluczynski.carmen.data.language.model.entity.enums.LinguistLanguageType;
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository;
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter;
 import com.cezarykluczynski.carmen.lang.stats.domain.Language;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,44 +17,46 @@ public class LanguagesListUpdateExecutor implements Runnable {
 
     private LangsStatsAdapter langsStatsAdapter;
 
-    private LanguagesDAO languagesDAO;
+    private LanguageRepository languageRepository;
 
     @Autowired
-    public LanguagesListUpdateExecutor(LangsStatsAdapter langsStatsAdapter, LanguagesDAO languagesDAO) {
+    public LanguagesListUpdateExecutor(LangsStatsAdapter langsStatsAdapter, LanguageRepository languageRepository) {
         this.langsStatsAdapter = langsStatsAdapter;
-        this.languagesDAO = languagesDAO;
+        this.languageRepository = languageRepository;
     }
 
     @Override
     public void run() {
         List<Language> linguistLanguageList = langsStatsAdapter.getSupportedLanguages();
-        List<com.cezarykluczynski.carmen.model.pub.Language> initiallySavedLanguagesList = languagesDAO.findAll();
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> initiallySavedLanguagesList =
+                languageRepository.findAll();
         List<Language> missingLinguistLanguageList = linguistLanguageList.stream()
             .filter(language -> !listHasLanguage(initiallySavedLanguagesList, language))
             .collect(Collectors.toList());
 
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesListToSave =
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> languagesListToSave =
                 createLanguagesListToSave(missingLinguistLanguageList);
-        languagesDAO.saveAll(languagesListToSave);
+        languageRepository.save(languagesListToSave);
 
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = getLanguagesWithParents(
-                linguistLanguageList);
-        languagesDAO.saveAll(languagesWithParentsToSave);
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> languagesWithParentsToSave =
+                getLanguagesWithParents(linguistLanguageList);
+        languageRepository.save(languagesWithParentsToSave);
     }
 
-    private boolean listHasLanguage(List<com.cezarykluczynski.carmen.model.pub.Language> list, Language language) {
+    private boolean listHasLanguage(List<com.cezarykluczynski.carmen.data.language.model.entity.Language> list,
+            Language language) {
         return list.stream()
                 .filter(languageEntity -> languageEntity.getName().equals(language.getName()))
                 .collect(Collectors.toList()).size() > 0;
     }
 
-    private List<com.cezarykluczynski.carmen.model.pub.Language> createLanguagesListToSave(
+    private List<com.cezarykluczynski.carmen.data.language.model.entity.Language> createLanguagesListToSave(
             List<Language> languagesList) {
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesListToSave = new ArrayList<>();
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> languagesListToSave = new ArrayList<>();
 
         languagesList.stream().forEach(language -> {
-            com.cezarykluczynski.carmen.model.pub.Language languageToSave =
-                    new com.cezarykluczynski.carmen.model.pub.Language();
+            com.cezarykluczynski.carmen.data.language.model.entity.Language languageToSave =
+                    new com.cezarykluczynski.carmen.data.language.model.entity.Language();
             languageToSave.setLinguistColor(language.getColor());
             languageToSave.setLinguistLanguageType(LinguistLanguageType.valueOf(language.getType().toString()));
             languageToSave.setName(language.getName());
@@ -63,18 +66,21 @@ public class LanguagesListUpdateExecutor implements Runnable {
         return languagesListToSave;
     }
 
-    private List<com.cezarykluczynski.carmen.model.pub.Language> getLanguagesWithParents(
+    private List<com.cezarykluczynski.carmen.data.language.model.entity.Language> getLanguagesWithParents(
             List<Language> linguistLanguageList) {
-        List<com.cezarykluczynski.carmen.model.pub.Language> savedLanguagesList = languagesDAO.findAll();
-        List<com.cezarykluczynski.carmen.model.pub.Language> languagesWithParentsToSave = new ArrayList<>();
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> savedLanguagesList =
+                languageRepository.findAll();
+        List<com.cezarykluczynski.carmen.data.language.model.entity.Language> languagesWithParentsToSave =
+                Lists.newArrayList();
 
-        for (com.cezarykluczynski.carmen.model.pub.Language savedLanguage : savedLanguagesList) {
+        for (com.cezarykluczynski.carmen.data.language.model.entity.Language savedLanguage : savedLanguagesList) {
             for (Language linguistLanguage : linguistLanguageList) {
                 if (linguistLanguage.getName().equals(savedLanguage.getName()) &&
                         linguistLanguage.getParent() != null) {
-                    for(com.cezarykluczynski.carmen.model.pub.Language savedLanguageParent : savedLanguagesList) {
+                    for(com.cezarykluczynski.carmen.data.language.model.entity.Language savedLanguageParent :
+                            savedLanguagesList) {
                         if (savedLanguageParent.getName().equals(linguistLanguage.getParent().getName())) {
-                            if (savedLanguage.getId() != savedLanguageParent.getId() &&
+                            if (!savedLanguage.getId().equals(savedLanguageParent.getId()) &&
                                     (savedLanguage.getLinguistParent() == null ||
                                     !savedLanguage.getLinguistParent().getName().equals(savedLanguageParent.getName())))
                             savedLanguage.setLinguistParent(savedLanguageParent);

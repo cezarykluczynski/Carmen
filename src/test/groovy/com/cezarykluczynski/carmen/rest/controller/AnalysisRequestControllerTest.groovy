@@ -1,33 +1,30 @@
 package com.cezarykluczynski.carmen.rest.controller
 
-import spock.lang.Specification
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.dao.github.UserDAO
 import com.cezarykluczynski.carmen.client.github.GithubRateLimitExceededException
-
-import static org.hamcrest.CoreMatchers.is
-
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import spock.lang.Specification
+
+import static org.hamcrest.CoreMatchers.is
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class AnalysisRequestControllerTest extends Specification {
 
     private static final String LOGIN = "LOGIN"
 
-    private UserDAO userDAOMock
+    private UserRepository userRepository
 
     private AnalysisRequestController analysisRequestController
 
     private MockMvc mockMvc
 
     void setup() {
-        userDAOMock = Mock UserDAO
-        analysisRequestController = new AnalysisRequestController(userDAOMock)
+        userRepository = Mock UserRepository
+        analysisRequestController = new AnalysisRequestController(userRepository)
         mockMvc = MockMvcBuilders.standaloneSetup(analysisRequestController).build()
     }
 
@@ -37,7 +34,7 @@ class AnalysisRequestControllerTest extends Specification {
             getLogin() >> LOGIN
             isFound() >> true
         }
-        userDAOMock.createOrUpdateRequestedEntity(LOGIN) >> userEntity
+        userRepository.createOrUpdateRequestedEntity(LOGIN) >> userEntity
 
         expect:
         mockMvc.perform(get("/rest/analyze/github/${userEntity.getLogin()}"))
@@ -52,7 +49,7 @@ class AnalysisRequestControllerTest extends Specification {
             getLogin() >> LOGIN
             isFound() >> false
         }
-        userDAOMock.createOrUpdateRequestedEntity(LOGIN) >> userEntity
+        userRepository.createOrUpdateRequestedEntity(LOGIN) >> userEntity
 
         expect:
         mockMvc.perform(get("/rest/analyze/github/${LOGIN}"))
@@ -63,7 +60,7 @@ class AnalysisRequestControllerTest extends Specification {
 
     def githubGithubRateLimitExceededException() {
         given:
-        userDAOMock.createOrUpdateRequestedEntity(_) >> { String login ->
+        userRepository.createOrUpdateRequestedEntity(_) >> { String login ->
             throw new GithubRateLimitExceededException()
         }
 

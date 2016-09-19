@@ -1,8 +1,7 @@
 package com.cezarykluczynski.carmen.cron
 
-import com.cezarykluczynski.carmen.dao.pub.CronsDAO
-import com.cezarykluczynski.carmen.model.pub.Cron
-import com.google.common.collect.Lists
+import com.cezarykluczynski.carmen.cron.model.entity.Cron
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepository
 import spock.lang.Specification
 
 class DatabaseManageableTaskTest extends Specification {
@@ -12,7 +11,7 @@ class DatabaseManageableTaskTest extends Specification {
 
     private DatabaseManageableTask databaseManageableTask
 
-    private CronsDAO cronsDAOMock
+    private CronRepository cronRepositoryMock
 
     private Cron cron
 
@@ -24,7 +23,7 @@ class DatabaseManageableTaskTest extends Specification {
         databaseManageableTask.enable()
 
         then:
-        1 * cronsDAOMock.update(cron)
+        1 * cronRepositoryMock.save(cron)
         cron.isEnabled()
     }
 
@@ -36,7 +35,7 @@ class DatabaseManageableTaskTest extends Specification {
         databaseManageableTask.disable()
 
         then:
-        1 * cronsDAOMock.update(cron)
+        1 * cronRepositoryMock.save(cron)
         !cron.isEnabled()
     }
 
@@ -97,7 +96,7 @@ class DatabaseManageableTaskTest extends Specification {
     }
 
     private void createTask(boolean enabled, boolean running, boolean withServer) {
-        cronsDAOMock = Mock CronsDAO
+        cronRepositoryMock = Mock CronRepository
 
         cron = new Cron(
                 name: NAME,
@@ -106,13 +105,13 @@ class DatabaseManageableTaskTest extends Specification {
                 running: running
         )
 
-        cronsDAOMock.findByName(NAME) >> Lists.newArrayList(cron)
-        cronsDAOMock.findByNameAndServer(NAME, SERVER) >> cron
+        cronRepositoryMock.findFirstByName(NAME) >> cron
+        cronRepositoryMock.findFirstByNameAndServer(NAME, SERVER) >> cron
 
         if (withServer) {
-            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, NAME, SERVER)
+            databaseManageableTask = new DatabaseManageableTask(cronRepositoryMock, NAME, SERVER)
         } else {
-            databaseManageableTask = new DatabaseManageableTask(cronsDAOMock, NAME)
+            databaseManageableTask = new DatabaseManageableTask(cronRepositoryMock, NAME)
         }
     }
 }

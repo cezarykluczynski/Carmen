@@ -1,20 +1,21 @@
 package com.cezarykluczynski.carmen.model.enums;
 
+import com.cezarykluczynski.carmen.data.language.model.entity.enums.LinguistLanguageType;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SessionImplementor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import com.cezarykluczynski.carmen.dao.pub.enums.LinguistLanguageType;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
-
 /**
  *
  * @author lb@octagen.at
  *
  */
+// TODO: remove
 public class LinguistLanguageTypeEnumType extends GenericEnumType<String, LinguistLanguageType> {
 
     public LinguistLanguageTypeEnumType() throws NoSuchMethodException,

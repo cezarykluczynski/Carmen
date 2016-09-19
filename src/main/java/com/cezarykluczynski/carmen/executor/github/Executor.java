@@ -1,8 +1,8 @@
 package com.cezarykluczynski.carmen.executor.github;
 
-import java.io.IOException;
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
 
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
+import java.io.IOException;
 
 public interface Executor {
 

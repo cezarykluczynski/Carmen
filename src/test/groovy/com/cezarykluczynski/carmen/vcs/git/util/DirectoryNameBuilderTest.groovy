@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.util
 
-import com.cezarykluczynski.carmen.model.github.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone
 import com.cezarykluczynski.carmen.vcs.server.Server
 import spock.lang.Specification
 

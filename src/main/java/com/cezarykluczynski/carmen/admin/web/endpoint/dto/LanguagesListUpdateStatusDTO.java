@@ -15,8 +15,8 @@ public class LanguagesListUpdateStatusDTO {
 
     private Boolean updatable;
 
-    private Integer persistedLanguagesCount;
+    private Long persistedLanguagesCount;
 
-    private Integer linguistLanguagesCount;
+    private Long linguistLanguagesCount;
 
 }

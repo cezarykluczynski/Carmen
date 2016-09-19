@@ -1,9 +1,9 @@
 package com.cezarykluczynski.carmen.lang.stats.mapper
 
 import com.cezarykluczynski.carmen.cron.languages.fixture.entity.EntityOne
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
+import com.cezarykluczynski.carmen.data.language.model.entity.Language as LanguageEntity
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository
 import com.cezarykluczynski.carmen.lang.stats.domain.*
-import com.cezarykluczynski.carmen.model.pub.Language as LanguageEntity
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import spock.lang.Specification
@@ -27,8 +27,8 @@ class LinguistDescriptionToEntityMapperTest extends Specification {
     def "updates commit entity from commit description"() {
         given:
         List languagesList = getLanguages()
-        LanguagesDAO languagesDAOMock = Mock LanguagesDAO
-        languagesDAOMock.findAll() >> languagesList
+        LanguageRepository languageRepository = Mock LanguageRepository
+        languageRepository.findAll() >> languagesList
 
         EntityOne entityOne = new EntityOne()
         entityOne.language_1_added = 11
@@ -41,7 +41,7 @@ class LinguistDescriptionToEntityMapperTest extends Specification {
         CommitDescription commitDescription = new CommitDescription(COMMIT_HASH, lineDiffStats)
 
         LinguistDescriptionToEntityMapper linguistDescriptionToEntityMapper =
-                new LinguistDescriptionToEntityMapper(languagesDAOMock)
+                new LinguistDescriptionToEntityMapper(languageRepository)
 
         when:
         EntityOne resultCommit = (EntityOne) linguistDescriptionToEntityMapper
@@ -61,8 +61,8 @@ class LinguistDescriptionToEntityMapperTest extends Specification {
     def "updates commit entity from repository description"() {
         given:
         List languagesList = getLanguages()
-        LanguagesDAO languagesDAOMock = Mock LanguagesDAO
-        languagesDAOMock.findAll() >> languagesList
+        LanguageRepository languageRepository = Mock LanguageRepository
+        languageRepository.findAll() >> languagesList
 
         EntityOne entityOne = new EntityOne()
         entityOne.language_1 = 11
@@ -74,7 +74,7 @@ class LinguistDescriptionToEntityMapperTest extends Specification {
         RepositoryDescription repositoryDescription = new RepositoryDescription(COMMIT_HASH, lineStats)
 
         LinguistDescriptionToEntityMapper linguistDescriptionToEntityMapper =
-                new LinguistDescriptionToEntityMapper(languagesDAOMock)
+                new LinguistDescriptionToEntityMapper(languageRepository)
 
         when:
         EntityOne resultCommit = (EntityOne) linguistDescriptionToEntityMapper

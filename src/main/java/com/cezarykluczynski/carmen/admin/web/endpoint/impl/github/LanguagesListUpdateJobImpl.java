@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github;
 import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.LanguagesListUpdateJob;
 import com.cezarykluczynski.carmen.admin.web.endpoint.dto.LanguagesListUpdateStatusDTO;
 import com.cezarykluczynski.carmen.cron.linguist.executor.LanguagesListUpdateExecutor;
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository;
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -19,14 +19,14 @@ public class LanguagesListUpdateJobImpl implements LanguagesListUpdateJob {
 
     private LangsStatsAdapter langsStatsAdapter;
 
-    private LanguagesDAO languagesDAO;
+    private LanguageRepository languageRepository;
 
     @Autowired
     public LanguagesListUpdateJobImpl(LanguagesListUpdateExecutor languagesListUpdateExecutor,
-                                      LangsStatsAdapter langsStatsAdapter, LanguagesDAO languagesDAO) {
+                                      LangsStatsAdapter langsStatsAdapter, LanguageRepository languageRepository) {
         this.languagesListUpdateExecutor = languagesListUpdateExecutor;
         this.langsStatsAdapter = langsStatsAdapter;
-        this.languagesDAO = languagesDAO;
+        this.languageRepository = languageRepository;
     }
 
     @Override
@@ -40,20 +40,20 @@ public class LanguagesListUpdateJobImpl implements LanguagesListUpdateJob {
     }
 
     private Response respond(boolean updateWhenCountsDiffers) {
-        Integer persistedLanguagesCount = languagesDAO.countAll();
+        Long persistedLanguagesCount = languageRepository.count();
         Integer linguistLanguagesCount = langsStatsAdapter.getSupportedLanguages().size();
-        Boolean countsDiffers = !linguistLanguagesCount.equals(persistedLanguagesCount);
+        Boolean countsDiffers = Long.compare(linguistLanguagesCount.longValue(), persistedLanguagesCount) != 0;
 
         if (updateWhenCountsDiffers && countsDiffers) {
             languagesListUpdateExecutor.run();
-            persistedLanguagesCount = languagesDAO.countAll();
-            countsDiffers = !linguistLanguagesCount.equals(persistedLanguagesCount);
+            persistedLanguagesCount = languageRepository.count();
+            countsDiffers = Long.compare(linguistLanguagesCount.longValue(), persistedLanguagesCount) != 0;
         }
 
         return Response.ok().entity(LanguagesListUpdateStatusDTO.builder()
                 .updatable(countsDiffers)
                 .persistedLanguagesCount(persistedLanguagesCount)
-                .linguistLanguagesCount(linguistLanguagesCount)
+                .linguistLanguagesCount(new Long(linguistLanguagesCount))
                 .build()).build();
     }
 }

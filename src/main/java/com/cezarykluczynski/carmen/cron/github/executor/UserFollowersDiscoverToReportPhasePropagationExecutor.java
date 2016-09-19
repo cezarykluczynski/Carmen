@@ -1,10 +1,9 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
-
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowers;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,19 +11,19 @@ import org.springframework.stereotype.Component;
 @DatabaseSwitchableJob
 public class UserFollowersDiscoverToReportPhasePropagationExecutor implements Runnable {
 
-    private UserFollowersDAO propagationsUserFollowersDAOImpl;
+    private UserFollowersRepository userFollowersRepository;
 
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
     @Autowired
-    public UserFollowersDiscoverToReportPhasePropagationExecutor(UserFollowersDAO propagationsUserFollowersDAOImpl,
-                                                                 PendingRequestDAO apiqueuePendingRequestDAOImpl) {
-        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+    public UserFollowersDiscoverToReportPhasePropagationExecutor(UserFollowersRepository userFollowersRepository,
+            PendingRequestRepository pendingRequestRepository) {
+        this.userFollowersRepository = userFollowersRepository;
+        this.pendingRequestRepository = pendingRequestRepository;
     }
 
     public void run() {
-        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findOldestPropagationInDiscoverPhase();
+        UserFollowers userFollowers = userFollowersRepository.findOldestPropagationInDiscoverPhase();
         tryToMoveToReportPhase(userFollowers);
     }
 
@@ -34,14 +33,14 @@ public class UserFollowersDiscoverToReportPhasePropagationExecutor implements Ru
         }
 
         Long propagationId = userFollowers.getId();
-        Long count = apiqueuePendingRequestDAOImpl.countByPropagationId(propagationId);
+        Long count = pendingRequestRepository.countByPropagationId(propagationId);
 
         if (count > 0) {
             return;
         }
 
         userFollowers.setPhase("report");
-        propagationsUserFollowersDAOImpl.update(userFollowers);
+        userFollowersRepository.save(userFollowers);
     }
 
 }

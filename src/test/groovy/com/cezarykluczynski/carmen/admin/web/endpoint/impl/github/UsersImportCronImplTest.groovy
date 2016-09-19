@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask
-import com.cezarykluczynski.carmen.dao.github.UserDAO
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
 import org.json.JSONObject
 import spock.lang.Specification
 
@@ -13,19 +13,19 @@ public class UsersImportCronImplTest extends Specification {
 
     private UsersImportCronImpl usersImportCron
 
-    private UserDAO userDao
+    private UserRepository userRepository
 
     private DatabaseManageableTask usersImportTask
 
     def setup() {
-        userDao = Mock UserDAO
+        userRepository = Mock UserRepository
         usersImportTask = Mock DatabaseManageableTask
-        usersImportCron = new UsersImportCronImpl(userDao, usersImportTask)
+        usersImportCron = new UsersImportCronImpl(userRepository, usersImportTask)
     }
 
     def "import status contains highest github id"() {
         given:
-        userDao.findHighestGitHubUserId() >> HIGHEST_GITHUB_USER_ID
+        userRepository.findHighestGitHubUserId() >> HIGHEST_GITHUB_USER_ID
 
         when:
         Response response = usersImportCron.get()
@@ -67,6 +67,5 @@ public class UsersImportCronImplTest extends Specification {
         responseStatus == 200
         !responseBody.getBoolean("enabled")
     }
-
 
 }

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.lang.stats.mapper;
 
 import com.cezarykluczynski.carmen.cron.languages.util.FieldNameUtil;
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository;
 import com.cezarykluczynski.carmen.lang.stats.domain.*;
 import com.cezarykluczynski.carmen.model.cassandra.GitDescription;
 import com.google.common.collect.Lists;
@@ -15,16 +15,17 @@ import java.util.Map;
 @Component
 public class LinguistDescriptionToEntityMapper {
 
-    private LanguagesDAO languagesDAO;
+    private LanguageRepository languageRepository;
 
     @Autowired
-    public LinguistDescriptionToEntityMapper(LanguagesDAO languagesDAO) {
-        this.languagesDAO = languagesDAO;
+    public LinguistDescriptionToEntityMapper(LanguageRepository languageRepository) {
+        this.languageRepository = languageRepository;
     }
 
     public GitDescription updateCommitUsingCommitDescription(GitDescription gitDescription,
                                                      CommitDescription commitDescription) {
-        Map<Long, com.cezarykluczynski.carmen.model.pub.Language> map = listToLanguagesMap(languagesDAO.findAll());
+        Map<Long, com.cezarykluczynski.carmen.data.language.model.entity.Language> map =
+                listToLanguagesMap(languageRepository.findAll());
         Map<Language, LineDiffStat> lineDiffStatMap = commitDescription.getLineDiffStats();
 
         Lists.newArrayList(gitDescription.getClass().getFields()).stream()
@@ -45,8 +46,7 @@ public class LinguistDescriptionToEntityMapper {
                         } else {
                             field.set(gitDescription, 0);
                         }
-                    } catch (IllegalAccessException e) {
-                    }
+                    } catch (IllegalAccessException e) {}
                 });
 
         return gitDescription;
@@ -54,7 +54,8 @@ public class LinguistDescriptionToEntityMapper {
 
     public GitDescription updateCommitUsingRepositoryDescription(GitDescription gitDescription,
                                                                  RepositoryDescription repositoryDescription) {
-        Map<Long, com.cezarykluczynski.carmen.model.pub.Language> map = listToLanguagesMap(languagesDAO.findAll());
+        Map<Long, com.cezarykluczynski.carmen.data.language.model.entity.Language> map =
+                listToLanguagesMap(languageRepository.findAll());
         Map<Language, LineStat> lineStatMap = repositoryDescription.getLineStats();
 
         Lists.newArrayList(gitDescription.getClass().getFields()).stream()
@@ -76,9 +77,9 @@ public class LinguistDescriptionToEntityMapper {
         return gitDescription;
     }
 
-    private Map<Long, com.cezarykluczynski.carmen.model.pub.Language> listToLanguagesMap(
-            List<com.cezarykluczynski.carmen.model.pub.Language> list) {
-        Map<Long, com.cezarykluczynski.carmen.model.pub.Language> map = Maps.newHashMap();
+    private Map<Long, com.cezarykluczynski.carmen.data.language.model.entity.Language> listToLanguagesMap(
+            List<com.cezarykluczynski.carmen.data.language.model.entity.Language> list) {
+        Map<Long, com.cezarykluczynski.carmen.data.language.model.entity.Language> map = Maps.newHashMap();
         list.stream().forEach(language -> map.put(language.getId(), language));
         return map;
     }

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.management.converter
 
 import com.cezarykluczynski.carmen.cron.management.dto.DatabaseSwitchableJobDTO
-import com.cezarykluczynski.carmen.model.pub.Cron
+import com.cezarykluczynski.carmen.cron.model.entity.Cron
 import spock.lang.Specification
 
 class DatabaseSwitchableJobDTOConverterTest extends Specification {

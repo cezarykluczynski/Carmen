@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github;
 
-import com.cezarykluczynski.carmen.model.github.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone;
 import com.cezarykluczynski.carmen.util.exec.executor.Executor;
 import com.cezarykluczynski.carmen.util.exec.result.Result;
 import com.cezarykluczynski.carmen.util.factory.DateFactory;

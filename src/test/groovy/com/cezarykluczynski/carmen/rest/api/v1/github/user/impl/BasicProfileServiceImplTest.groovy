@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
 import org.json.JSONObject
 import spock.lang.Specification
 
@@ -21,16 +21,16 @@ public class BasicProfileServiceImplTest extends Specification {
 
     private BasicProfileServiceImpl basicProfileService
 
-    private UserDAO userDAOMock
+    private UserRepository userRepository
 
-    void setup() {
-        userDAOMock = Mock UserDAO
-        basicProfileService = new BasicProfileServiceImpl(userDAOMock)
+    def setup() {
+        userRepository = Mock UserRepository
+        basicProfileService = new BasicProfileServiceImpl(userRepository)
     }
 
     def "existing user is shown"() {
         given:
-        userDAOMock.findByLogin("login") >> createUserEntity()
+        userRepository.findByLogin("login") >> createUserEntity()
 
         when:
         Response response = basicProfileService.get("login")

@@ -1,12 +1,13 @@
 package com.cezarykluczynski.carmen.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import lombok.Data;
 import org.eclipse.egit.github.core.client.PageIterator;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Data
+// TODO make into pageable
 public class PaginationAwareArrayList<E> extends ArrayList<E> {
 
     private Integer offset;

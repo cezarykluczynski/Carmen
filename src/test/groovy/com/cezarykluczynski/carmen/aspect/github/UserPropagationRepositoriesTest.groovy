@@ -1,19 +1,19 @@
 package com.cezarykluczynski.carmen.aspect.github
 
 import com.cezarykluczynski.carmen.AspectIntegrationTest
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserPropagationRepositoriesTest extends AspectIntegrationTest {
 
     @Autowired
-    private UserDAO githubUserDAOImpl
+    private UserRepository userRepository
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
     private UserPropagationRepositories userPropagationRepositories
@@ -24,17 +24,17 @@ class UserPropagationRepositoriesTest extends AspectIntegrationTest {
 
     def setup() {
         userRepositoriesPropagation = Mock UserRepositoriesPropagation
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userPropagationRepositories.userRepositoriesPropagation = userRepositoriesPropagation
     }
 
     def cleanup() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def repositoriesPropagateAfterUserCreation() {
         when:
-        githubUserDAOImpl.createOrUpdateRequestedEntity userEntity.getLogin()
+        userRepository.createOrUpdateRequestedEntity userEntity.getLogin()
 
         then:
         1 * userRepositoriesPropagation.propagate()

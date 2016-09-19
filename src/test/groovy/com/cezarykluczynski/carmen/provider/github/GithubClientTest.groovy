@@ -1,10 +1,9 @@
 package com.cezarykluczynski.carmen.client.github
 
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImpl
-import com.cezarykluczynski.carmen.set.github.RateLimit
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository
 import com.cezarykluczynski.carmen.set.github.Repository
-import com.cezarykluczynski.carmen.set.github.User as UserSet
+import com.cezarykluczynski.carmen.set.github.UserDTO as UserSet
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
 import spock.lang.Specification
 
@@ -20,11 +19,11 @@ class GithubClientTest extends Specification {
 
     private GithubKohsukeClient githubKohsukeClientMock
 
-    private RateLimitDAO rateLimitDAOImplMock
+    private RateLimitRepository rateLimitRepositoryMock
 
-    private RateLimit rateLimitSetCore
+    private RateLimitDTO rateLimitSetCore
 
-    private RateLimit rateLimitSetSearch
+    private RateLimitDTO rateLimitSetSearch
 
     private UserSet userSet
 
@@ -38,9 +37,9 @@ class GithubClientTest extends Specification {
         githubJcabiClientMock = Mock GithubJcabiClient
         githubEgitClientMock = Mock GithubEgitClient
         githubKohsukeClientMock = Mock GithubKohsukeClient
-        rateLimitDAOImplMock = Mock RateLimitDAOImpl
-        rateLimitSetCore = Mock RateLimit
-        rateLimitSetSearch = Mock RateLimit
+        rateLimitRepositoryMock = Mock RateLimitRepository
+        rateLimitSetCore = Mock RateLimitDTO
+        rateLimitSetSearch = Mock RateLimitDTO
         userSet = Mock UserSet
         repositoriesList = Mock List
         followersList = Mock PaginationAwareArrayList
@@ -50,13 +49,13 @@ class GithubClientTest extends Specification {
             githubJcabiClientMock,
             githubKohsukeClientMock,
             githubEgitClientMock,
-            rateLimitDAOImplMock
+            rateLimitRepositoryMock
         )
     }
 
     def "gets core limit"() {
         when:
-        RateLimit rateLimitSetCoreReturned = githubClient.getCoreLimit()
+        RateLimitDTO rateLimitSetCoreReturned = githubClient.getCoreLimit()
 
         then:
         1 * githubJcabiClientMock.getCoreLimit() >> rateLimitSetCore
@@ -65,7 +64,7 @@ class GithubClientTest extends Specification {
 
     def "gets search limit"() {
         when:
-        RateLimit rateLimitSetSearchReturned = githubClient.getSearchLimit()
+        RateLimitDTO rateLimitSetSearchReturned = githubClient.getSearchLimit()
 
         then:
         1 * githubJcabiClientMock.getSearchLimit() >> rateLimitSetSearch

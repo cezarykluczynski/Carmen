@@ -1,22 +1,21 @@
 package com.cezarykluczynski.carmen.cron.github.executor;
 
 import com.cezarykluczynski.carmen.cron.management.annotations.DatabaseSwitchableJob;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
 import com.cezarykluczynski.carmen.executor.github.RepositoriesExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostExecutor;
 import com.cezarykluczynski.carmen.executor.github.UserGhostPaginatorExecutor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 @DatabaseSwitchableJob
 public class APIRequestExecutor implements Runnable {
 
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
     private RepositoriesExecutor repositoriesExecutor;
 
@@ -25,18 +24,18 @@ public class APIRequestExecutor implements Runnable {
     private UserGhostExecutor userGhostExecutor;
 
     @Autowired
-    public APIRequestExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl,
+    public APIRequestExecutor(PendingRequestRepository pendingRequestRepository,
                               RepositoriesExecutor repositoriesExecutor,
                               UserGhostPaginatorExecutor userGhostPaginatorExecutor,
                               UserGhostExecutor userGhostExecutor) {
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+        this.pendingRequestRepository = pendingRequestRepository;
         this.repositoriesExecutor = repositoriesExecutor;
         this.userGhostPaginatorExecutor = userGhostPaginatorExecutor;
         this.userGhostExecutor = userGhostExecutor;
     }
 
     public void run() {
-        PendingRequest pendingRequest = apiqueuePendingRequestDAOImpl.findMostImportantPendingRequest();
+        PendingRequest pendingRequest = pendingRequestRepository.findMostImportantPendingRequest();
         if (pendingRequest != null) {
             runExecutor(pendingRequest);
         }

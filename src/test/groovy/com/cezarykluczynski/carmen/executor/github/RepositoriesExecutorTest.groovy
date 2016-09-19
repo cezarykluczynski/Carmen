@@ -2,11 +2,11 @@ package com.cezarykluczynski.carmen.executor.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO as PropagationsRepositoriesDAO
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
 import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
 import com.google.common.collect.Lists
@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired
 class RepositoriesExecutorTest extends IntegrationTest {
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
-    private RepositoriesDAO githubRepositoriesDAOImpl
+    private RepositoryRepository repositoryRepository
 
     @Autowired
-    private PropagationsRepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesRepository repositoriesRepository
 
     @Autowired
     private UserRepositoriesPropagation userRepositoriesPropagation
@@ -48,7 +48,7 @@ class RepositoriesExecutorTest extends IntegrationTest {
         githubClientMock = Mock GithubClient
         repositoriesExecutor.githubClient = githubClientMock
 
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
         userRepositoriesPropagation.propagate()
 
@@ -60,6 +60,7 @@ class RepositoriesExecutorTest extends IntegrationTest {
         pathParams = Maps.newHashMap()
         pathParams.put("login", userEntityLogin)
         pendingRequestEntity.setPathParams pathParams
+        pendingRequestEntity.setPriority 10
 
         repositoriesSetList = Lists.newArrayList()
         RepositorySet repositorySet = Mock RepositorySet
@@ -68,7 +69,7 @@ class RepositoriesExecutorTest extends IntegrationTest {
     }
 
     void cleanup() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "executes"() {
@@ -76,8 +77,8 @@ class RepositoriesExecutorTest extends IntegrationTest {
         repositoriesExecutor.execute pendingRequestEntity
 
         then:
-        githubRepositoriesDAOImpl.findByUser(userEntity).get(0).getFullName() == mockRepositoryFullName
-        propagationsRepositoriesDAOImpl.findByUser(userEntity).getPhase() == "sleep"
+        repositoryRepository.findByUser(userEntity).get(0).getFullName() == mockRepositoryFullName
+        repositoriesRepository.findOneByUser(userEntity).getPhase() == "sleep"
         1 * githubClientMock.getRepositories(userEntityLogin) >> repositoriesSetList
     }
 

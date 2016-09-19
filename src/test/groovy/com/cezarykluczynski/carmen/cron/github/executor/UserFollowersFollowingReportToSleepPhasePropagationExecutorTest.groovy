@@ -1,14 +1,13 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImpl
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
 import com.cezarykluczynski.carmen.propagation.github.UserFollowersFollowingReportToSleepPhasePropagation
 import spock.lang.Specification
 
 class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Specification {
 
-    private UserDAO userDAO
+    private UserRepository userRepository
 
     private UserFollowersFollowingReportToSleepPhasePropagation propagationUserFollowersFollowingReportToSleepPhase
 
@@ -18,16 +17,16 @@ class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Sp
 
     def setup() {
         userEntity = new User()
-        userDAO = Mock UserDAOImpl
+        userRepository = Mock UserRepository
         propagationUserFollowersFollowingReportToSleepPhase = Mock UserFollowersFollowingReportToSleepPhasePropagation
         userFollowersFollowingReportToSleepPhasePropagationExecutor = new UserFollowersFollowingReportToSleepPhasePropagationExecutor(
-                userDAO, propagationUserFollowersFollowingReportToSleepPhase
+                userRepository, propagationUserFollowersFollowingReportToSleepPhase
         )
     }
 
     def "existing entity is used for propagation"() {
         given:
-        userDAO.findUserInReportFollowersFolloweesPhase() >> userEntity
+        userRepository.findUserInReportFollowersFolloweesPhase() >> userEntity
 
         when:
         userFollowersFollowingReportToSleepPhasePropagationExecutor.run()
@@ -39,7 +38,7 @@ class UserFollowersFollowingReportToSleepPhasePropagationExecutorTest extends Sp
 
     def "null entity does not trigger propagation"() {
         given:
-        userDAO.findUserInReportFollowersFolloweesPhase() >> null
+        userRepository.findUserInReportFollowersFolloweesPhase() >> null
 
         when:
         userFollowersFollowingReportToSleepPhasePropagationExecutor.run()

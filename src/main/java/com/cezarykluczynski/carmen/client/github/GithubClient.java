@@ -1,9 +1,9 @@
 package com.cezarykluczynski.carmen.client.github;
 
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
-import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository;
 import com.cezarykluczynski.carmen.set.github.Repository;
-import com.cezarykluczynski.carmen.set.github.User;
+import com.cezarykluczynski.carmen.set.github.UserDTO;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import java.io.IOException;
@@ -18,30 +18,30 @@ public class GithubClient implements GithubClientInterface {
 
     private GithubClientInterface githubEgitClient;
 
-    private RateLimitDAO rateLimitDAOImpl;
+    private RateLimitRepository rateLimitRepository;
 
 
     public GithubClient(GithubClientInterface githubJcabiClient, GithubClientInterface githubKohsukeClient,
-        GithubClientInterface githubEgitClient, RateLimitDAO rateLimitDAOImpl) {
+        GithubClientInterface githubEgitClient, RateLimitRepository rateLimitRepository) {
         this.githubJcabiClient = githubJcabiClient;
         this.githubKohsukeClient = githubKohsukeClient;
         this.githubEgitClient = githubEgitClient;
-        this.rateLimitDAOImpl = rateLimitDAOImpl;
+        this.rateLimitRepository = rateLimitRepository;
     }
 
-    public RateLimit getCoreLimit() throws IOException {
+    public RateLimitDTO getCoreLimit() throws IOException {
         return githubJcabiClient.getCoreLimit();
     }
 
-    public RateLimit getSearchLimit() throws IOException {
+    public RateLimitDTO getSearchLimit() throws IOException {
         return githubJcabiClient.getSearchLimit();
     }
 
-    public User getUser(String name) throws IOException {
+    public UserDTO getUser(String name) throws IOException {
         checkApiLimit("getUser");
-        User user = githubJcabiClient.getUser(name);
+        UserDTO userDTO = githubJcabiClient.getUser(name);
         decrementRateLimitRemainingCounter("getUser");
-        return user;
+        return userDTO;
     }
 
     public List<Repository> getRepositories(String name) throws IOException {
@@ -51,11 +51,13 @@ public class GithubClient implements GithubClientInterface {
         return repositoriesList;
     }
 
-    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
+            throws IOException {
         return githubEgitClient.getFollowers(name, limit, offset);
     }
 
-    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
+            throws IOException {
         return githubEgitClient.getFollowing(name, limit, offset);
     }
 
@@ -76,7 +78,7 @@ public class GithubClient implements GithubClientInterface {
         Date now = new Date();
 
         try {
-             com.cezarykluczynski.carmen.model.github.RateLimit rateLimit = rateLimitDAOImpl.getCoreLimit();
+             com.cezarykluczynski.carmen.model.github.RateLimit rateLimit = rateLimitRepository.getCoreLimit();
 
             if (rateLimit.getReset().before(now)) {
                 /** If limit was just refreshed, we're not bellow it, so it only refresh new and delete old limit. */
@@ -93,11 +95,11 @@ public class GithubClient implements GithubClientInterface {
     }
 
     private void decrementCoreRateLimitRemainingCounter() {
-        rateLimitDAOImpl.decrementRateLimitRemainingCounter();
+        rateLimitRepository.decrementRateLimitRemainingCounter();
     }
 
     private void deleteOldCoreLimits() {
-        rateLimitDAOImpl.deleteOldLimits("core");
+        rateLimitRepository.deleteOldLimits("core");
     }
 
     private boolean methodIsCoreMethod(String methodName) {
@@ -106,8 +108,8 @@ public class GithubClient implements GithubClientInterface {
     }
 
     private void refreshCoreLimit() throws IOException {
-        com.cezarykluczynski.carmen.set.github.RateLimit coreRateLimitSet = getCoreLimit();
-        rateLimitDAOImpl.create(coreRateLimitSet);
+        RateLimitDTO coreRateLimitSet = getCoreLimit();
+        rateLimitRepository.create(coreRateLimitSet);
     }
 
 }

@@ -1,50 +1,50 @@
 package com.cezarykluczynski.carmen.executor.github;
 
+import com.cezarykluczynski.carmen.client.github.GithubClient;
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
+import com.cezarykluczynski.carmen.set.github.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO;
-import com.cezarykluczynski.carmen.set.github.Repository;
-import com.cezarykluczynski.carmen.client.github.GithubClient;
-
 @Component
 public class RepositoriesExecutor implements Executor {
 
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
-    private UserDAO githubUserDAOImpl;
+    private UserRepository userRepository;
 
-    private RepositoriesDAO githubRepositoriesDAOImpl;
+    private RepositoryRepository repositoryRepository;
 
-    private com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl;
+    private RepositoriesRepository repositoriesRepository;
 
     private GithubClient githubClient;
 
     @Autowired
-    public RepositoriesExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl, UserDAO githubUserDAOImpl,
-                        com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO propagationsRepositoriesDAOImpl,
-                                RepositoriesDAO githubRepositoriesDAOImpl, GithubClient githubClient) {
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
-        this.githubUserDAOImpl = githubUserDAOImpl;
-        this.propagationsRepositoriesDAOImpl = propagationsRepositoriesDAOImpl;
-        this.githubRepositoriesDAOImpl = githubRepositoriesDAOImpl;
+    public RepositoriesExecutor(PendingRequestRepository pendingRequestRepository, UserRepository userRepository,
+            RepositoriesRepository repositoriesRepository, RepositoryRepository repositoryRepository,
+            GithubClient githubClient) {
+        this.pendingRequestRepository = pendingRequestRepository;
+        this.userRepository = userRepository;
+        this.repositoriesRepository = repositoriesRepository;
+        this.repositoryRepository = repositoryRepository;
         this. githubClient = githubClient;
     }
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         String login = (String) pendingRequest.getPathParams().get("login");
-        User userEntity = githubUserDAOImpl.findByLogin(login);
+        User userEntity = userRepository.findByLogin(login);
         List<Repository> repositoriesSetList = githubClient.getRepositories(login);
-        githubRepositoriesDAOImpl.refresh(userEntity, repositoriesSetList);
-        propagationsRepositoriesDAOImpl.moveToSleepPhaseUsingUserEntity(userEntity);
-        apiqueuePendingRequestDAOImpl.delete(pendingRequest);
+        repositoryRepository.refresh(userEntity, repositoriesSetList);
+        repositoriesRepository.moveToSleepPhaseUsingUserEntity(userEntity);
+        pendingRequestRepository.delete(pendingRequest);
     }
 
 }

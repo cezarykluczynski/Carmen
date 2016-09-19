@@ -1,56 +1,56 @@
 package com.cezarykluczynski.carmen.propagation.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowing
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserFollowingPropagationTest extends IntegrationTest {
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
     private UserFollowingPropagation userFollowingPropagation
 
     @Autowired
-    private UserFollowingDAO propagationsUserFollowingDAOImpl
+    private UserFollowingRepository userFollowingRepository
 
     @Autowired
-    private UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures
+    private UserFollowingRepositoryFixtures userFollowingRepositoryFixtures
 
     private User userEntity
 
     void cleanup() {
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntityByUserEntity userEntity
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userFollowingRepositoryFixtures.deleteUserFollowingEntityByUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "propagates not found entity"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createNotFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createNotFoundRequestedUserEntity()
         userFollowingPropagation.setUserEntity userEntity
 
         when:
         userFollowingPropagation.propagate()
 
         then:
-        propagationsUserFollowingDAOImpl.findByUser(userEntity) == null
+        userFollowingRepository.findOneByUser(userEntity) == null
     }
 
     def "propagates non-empty propagations"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        UserFollowing userFollowingEntity = propagationsUserFollowingDAOImplFixtures
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
+        UserFollowing userFollowingEntity = userFollowingRepositoryFixtures
             .createUserFollowingEntityUsingUserEntityAndPhase(userEntity, "discover")
         userFollowingPropagation.setUserEntity userEntity
 
         when:
         userFollowingPropagation.propagate()
-        UserFollowing propagationsUserFollowingEntity = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        UserFollowing propagationsUserFollowingEntity = userFollowingRepository.findOneByUser(userEntity)
 
         then:
         propagationsUserFollowingEntity instanceof UserFollowing
@@ -58,17 +58,17 @@ class UserFollowingPropagationTest extends IntegrationTest {
         propagationsUserFollowingEntity.getPhase() == userFollowingEntity.getPhase()
 
         cleanup:
-        propagationsUserFollowingDAOImplFixtures.deleteUserFollowingEntity userFollowingEntity
+        userFollowingRepositoryFixtures.deleteUserFollowingEntity userFollowingEntity
     }
 
     def "propagates found entity"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userFollowingPropagation.setUserEntity userEntity
 
         when:
         userFollowingPropagation.propagate()
-        UserFollowing propagationsUserFollowingEntity = propagationsUserFollowingDAOImpl.findByUser(userEntity)
+        UserFollowing propagationsUserFollowingEntity = userFollowingRepository.findOneByUser(userEntity)
 
         then:
         propagationsUserFollowingEntity instanceof UserFollowing

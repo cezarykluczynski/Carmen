@@ -1,9 +1,10 @@
 package com.cezarykluczynski.carmen.util;
 
+import com.google.common.collect.Maps;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.json.JSONObject;
 
 public class HashMapJsonConverter {
 
@@ -12,7 +13,7 @@ public class HashMapJsonConverter {
     }
 
     public static HashMap<String, Object> jsonStringToHashMap(String jsonString) {
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        HashMap<String, Object> hashMap = Maps.newHashMap();
         JSONObject json = new JSONObject(jsonString);
         Iterator keys = json.keys();
         String key;

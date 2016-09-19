@@ -4,21 +4,18 @@ import com.cezarykluczynski.carmen.client.github.GithubClient;
 import com.cezarykluczynski.carmen.client.github.GithubEgitClient;
 import com.cezarykluczynski.carmen.client.github.GithubJcabiClient;
 import com.cezarykluczynski.carmen.client.github.GithubKohsukeClient;
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAO;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository;
+import com.jcabi.github.RtGithub;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.kohsuke.github.GitHub;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
-
-import com.jcabi.github.RtGithub;
-
-import org.kohsuke.github.GitHub;
-
-import org.eclipse.egit.github.core.client.GitHubClient;
 
 @Configuration
 @ComponentScan("com.cezarykluczynski.carmen")
@@ -47,7 +44,7 @@ public class GitHubClientsBeanConfiguration {
                 (GithubJcabiClient) ctx.getBean("githubJcabiClient"),
                 (GithubKohsukeClient) ctx.getBean("githubKohsukeClient"),
                 (GithubEgitClient) ctx.getBean("githubEgitClient"),
-                (RateLimitDAO) ctx.getBean("rateLimitDAOImpl")
+                ctx.getBean(RateLimitRepository.class)
         );
     }
 

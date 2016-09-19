@@ -3,8 +3,8 @@ package com.cezarykluczynski.carmen.cron.languages.visitor;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable;
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTableVisitor;
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField;
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO;
-import com.cezarykluczynski.carmen.model.pub.Language;
+import com.cezarykluczynski.carmen.data.language.model.entity.Language;
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +14,17 @@ import java.util.SortedSet;
 @Component
 public class LanguagesDiffStatisticsUpdaterVisitor implements RefreshableTableVisitor {
 
-    private LanguagesDAO languagesDAO;
+    private LanguageRepository languageRepository;
 
     @Autowired
-    public LanguagesDiffStatisticsUpdaterVisitor(LanguagesDAO languagesDAO) {
-        this.languagesDAO = languagesDAO;
+    public LanguagesDiffStatisticsUpdaterVisitor(LanguageRepository languageRepository) {
+        this.languageRepository = languageRepository;
     }
 
     @Override
     public void visit(RefreshableTable refreshableTable) {
         SortedSet<EntityField> fields = refreshableTable.getFields();
-        List<Language> languageList = languagesDAO.findAll();
+        List<Language> languageList = languageRepository.findAll();
 
         languageList.stream().forEach(language -> {
             fields.add(new EntityField("language_" + language.getId() + "_added"));

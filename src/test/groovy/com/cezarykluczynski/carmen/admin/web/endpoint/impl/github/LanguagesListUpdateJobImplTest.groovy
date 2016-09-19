@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github
 
 import com.cezarykluczynski.carmen.cron.linguist.executor.LanguagesListUpdateExecutor
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository
 import com.cezarykluczynski.carmen.lang.stats.adapter.LangsStatsAdapter
 import com.cezarykluczynski.carmen.lang.stats.domain.Language
 import org.json.JSONObject
@@ -17,14 +17,14 @@ class LanguagesListUpdateJobImplTest extends Specification {
 
     private LangsStatsAdapter langsStatsAdapter
 
-    private LanguagesDAO languagesDAO
+    private LanguageRepository languageRepository
 
     def setup() {
         languagesListUpdateExecutor = Mock LanguagesListUpdateExecutor
         langsStatsAdapter = Mock LangsStatsAdapter
-        languagesDAO = Mock LanguagesDAO
+        languageRepository = Mock LanguageRepository
         languagesListUpdateJob = new LanguagesListUpdateJobImpl(languagesListUpdateExecutor, langsStatsAdapter,
-            languagesDAO)
+            languageRepository)
     }
 
     def "gets status when all languages are persisted"() {
@@ -32,7 +32,7 @@ class LanguagesListUpdateJobImplTest extends Specification {
         List<Language> linguistLanguages = Mock List
         linguistLanguages.size() >> 3
         langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
-        languagesDAO.countAll() >> 3
+        languageRepository.count() >> 3
 
         when:
         Response response = languagesListUpdateJob.getStatus()
@@ -51,7 +51,7 @@ class LanguagesListUpdateJobImplTest extends Specification {
         List<Language> linguistLanguages = Mock List
         linguistLanguages.size() >> 4
         langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
-        languagesDAO.countAll() >> 3
+        languageRepository.count() >> 3
 
         when:
         Response response = languagesListUpdateJob.getStatus()
@@ -70,7 +70,7 @@ class LanguagesListUpdateJobImplTest extends Specification {
         List<Language> linguistLanguages = Mock List
         linguistLanguages.size() >> 4
         langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
-        languagesDAO.countAll() >>> [3, 4]
+        languageRepository.count() >>> [3, 4]
 
         when:
         Response response = languagesListUpdateJob.run()
@@ -91,7 +91,7 @@ class LanguagesListUpdateJobImplTest extends Specification {
         List<Language> linguistLanguages = Mock List
         linguistLanguages.size() >> 3
         langsStatsAdapter.getSupportedLanguages() >> linguistLanguages
-        languagesDAO.countAll() >> 3
+        languageRepository.count() >> 3
 
         when:
         Response response = languagesListUpdateJob.run()

@@ -1,14 +1,12 @@
 package com.cezarykluczynski.carmen.aspect.github;
 
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.AfterReturning;
-
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation;
 
 @Aspect
 @Component
@@ -22,7 +20,8 @@ public class UserPropagationRepositories {
     }
 
     @AfterReturning(
-        pointcut = "execution(* com.cezarykluczynski.carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",
+        pointcut = "execution(* com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model" +
+            ".repository.UserRepositoryImpl.createOrUpdateRequestedEntity(..))",
         returning = "userEntity"
     )
     public void userRepositories(JoinPoint joinPoint, User userEntity) {

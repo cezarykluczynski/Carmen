@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github;
 
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO;
-import com.cezarykluczynski.carmen.model.github.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryCloneRepository;
 import com.cezarykluczynski.carmen.util.factory.DateFactory;
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash;
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHashDescriptions;
@@ -18,22 +18,22 @@ public class GitHubRepositoryClonePersister {
 
     private GitHubRepositoryCommitsToPersistFinder gitHubRepositoryCommitsToPersistFinder;
 
-    private RepositoriesClonesDAO repositoriesClonesDAO;
+    private RepositoryCloneRepository repositoryCloneRepository;
 
     private DateFactory dateFactory;
 
     @Autowired
     public GitHubRepositoryClonePersister(CommitHashPersistenceService commitHashPersistenceService,
             GitHubRepositoryCommitsToPersistFinder gitHubRepositoryCommitsToPersistFinder,
-            RepositoriesClonesDAO repositoriesClonesDAO, DateFactory dateFactory) {
+            RepositoryCloneRepository repositoryCloneRepository, DateFactory dateFactory) {
         this.commitHashPersistenceService = commitHashPersistenceService;
         this.gitHubRepositoryCommitsToPersistFinder = gitHubRepositoryCommitsToPersistFinder;
-        this.repositoriesClonesDAO = repositoriesClonesDAO;
+        this.repositoryCloneRepository = repositoryCloneRepository;
         this.dateFactory = dateFactory;
     }
 
     public void persist() {
-        RepositoryClone repositoryClone = repositoriesClonesDAO.findRepositoryCloneWithCommitsToPersist();
+        RepositoryClone repositoryClone = repositoryCloneRepository.findRepositoryCloneWithCommitsToPersist();
 
         if (repositoryClone != null) {
             doPersist(repositoryClone);
@@ -47,7 +47,7 @@ public class GitHubRepositoryClonePersister {
             return;
         } else if (commitHashes.isEmpty()) {
             repositoryClone.setCommitsStatisticsUntil(dateFactory.getBeginningOfNotYetOpenedMonth());
-            repositoriesClonesDAO.update(repositoryClone);
+            repositoryCloneRepository.save(repositoryClone);
             return;
         }
 
@@ -57,7 +57,7 @@ public class GitHubRepositoryClonePersister {
             repositoryClone.setCommitsStatisticsUntil(commitHashDescriptions.getCommitHash().getDate());
         });
 
-        repositoriesClonesDAO.update(repositoryClone);
+        repositoryCloneRepository.save(repositoryClone);
     }
 
     private List<CommitHash> getCommitsHashFromRepositoryClone(RepositoryClone repositoryClone) {

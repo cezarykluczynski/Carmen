@@ -1,31 +1,23 @@
 package com.cezarykluczynski.carmen.configuration
 
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAO
-import com.cezarykluczynski.carmen.dao.github.RateLimitDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAO as GithubRepositoriesDAO
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.RepositoriesDAOImplFixtures as GithubRepositoriesDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO as PropagationsRepositoriesDAO
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures as PropagationsRepositoriesDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.pub.CronsDAO
-import com.cezarykluczynski.carmen.dao.pub.CronsDAOImplFixtures
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepository
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepositoryFixtures
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.*
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.*
 import com.cezarykluczynski.carmen.vcs.server.Server
-import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+
+import javax.persistence.EntityManager
 
 @Configuration
 @Import([
@@ -34,53 +26,52 @@ import org.springframework.context.annotation.Import
 class TestableApplicationConfiguration {
 
     @Autowired
-    private ApplicationContext ctx;
+    private ApplicationContext ctx
 
     @Bean
-    public PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures() {
-        return new PendingRequestDAOImplFixtures(ctx.getBean(PendingRequestDAO))
+    public PendingRequestRepositoryFixtures pendingRequestRepositoryFixtures() {
+        return new PendingRequestRepositoryFixtures(ctx.getBean(PendingRequestRepository))
     }
 
     @Bean
-    public RateLimitDAOImplFixtures githubRateLimitDAOImplFixtures() {
-        return new RateLimitDAOImplFixtures(ctx.getBean(RateLimitDAO))
+    public RateLimitRepositoryFixtures rateLimitRepositoryFixtures() {
+        return new RateLimitRepositoryFixtures(ctx.getBean(RateLimitRepository))
     }
 
     @Bean
-    public PropagationsRepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures() {
-        return new PropagationsRepositoriesDAOImplFixtures(ctx.getBean(PropagationsRepositoriesDAO))
+    public RepositoriesRepositoryFixtures repositoriesRepositoryFixtures() {
+        return new RepositoriesRepositoryFixtures(ctx.getBean(RepositoriesRepository))
     }
 
     @Bean
-    public UserDAOImplFixtures githubUserDAOImplFixtures() {
-        return new UserDAOImplFixtures(ctx.getBean(UserDAO));
+    public UserRepositoryFixtures userRepositoryFixtures() {
+        return new UserRepositoryFixtures(ctx.getBean(UserRepository))
     }
 
     @Bean
-    public GithubRepositoriesDAOImplFixtures githubRepositoriesDAOImplFixtures() {
-        return new GithubRepositoriesDAOImplFixtures(ctx.getBean(GithubRepositoriesDAO),
-                ctx.getBean(SessionFactory))
+    public UserFollowersRepositoryFixtures userFollowersRepositoryFixtures() {
+        return new UserFollowersRepositoryFixtures(ctx.getBean(UserFollowersRepository))
     }
 
     @Bean
-    public UserFollowersDAOImplFixtures propagationsUserFollowersDAOImplFixtures() {
-        return new UserFollowersDAOImplFixtures(ctx.getBean(UserFollowersDAO))
+    public UserFollowingRepositoryFixtures userFollowingRepositoryFixtures() {
+        return new UserFollowingRepositoryFixtures(ctx.getBean(UserFollowingRepository))
     }
 
     @Bean
-    public UserFollowingDAOImplFixtures propagationsUserFollowingDAOImplFixtures() {
-        return new UserFollowingDAOImplFixtures(ctx.getBean(UserFollowingDAO))
+    public CronRepositoryFixtures cronRepositoryFixtures() {
+        return new CronRepositoryFixtures(ctx.getBean(CronRepository))
     }
 
     @Bean
-    public CronsDAOImplFixtures cronsDAOImplFixtures() {
-        return new CronsDAOImplFixtures(ctx.getBean(CronsDAO))
+    public RepositoryCloneRepositoryFixtures repositoryCloneRepositoryFixtures() {
+        return new RepositoryCloneRepositoryFixtures(ctx.getBean(UserRepositoryFixtures),
+                ctx.getBean(RepositoryCloneRepository), ctx.getBean(RepositoryRepository), ctx.getBean(Server),
+                ctx.getBean(EntityManager))
     }
 
-    @Bean
-    public RepositoriesClonesDAOImplFixtures repositoriesClonesDAOImplFixtures() {
-        return new RepositoriesClonesDAOImplFixtures(ctx.getBean(UserDAOImplFixtures),
-                ctx.getBean(RepositoriesDAOImplFixtures), ctx.getBean(RepositoriesClonesDAO), ctx.getBean(Server))
+    @Bean RepositoryRepositoryFixtures repositoryRepositoryFixtures() {
+        return new RepositoryRepositoryFixtures(ctx.getBean(RepositoryRepository))
     }
 
 }

@@ -1,11 +1,10 @@
 package com.cezarykluczynski.carmen.rest.api.v1.github.user.impl;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
 import com.cezarykluczynski.carmen.rest.api.v1.github.user.api.BasicProfileService;
 import com.cezarykluczynski.carmen.rest.dto.api.v1.github.error.Error404ResponseDTO;
 import com.cezarykluczynski.carmen.rest.dto.api.v1.github.user.BasicProfileDTO;
-import com.cezarykluczynski.carmen.model.github.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,16 @@ import javax.ws.rs.core.Response;
 @Service("basicProfileService")
 public class BasicProfileServiceImpl implements BasicProfileService {
 
-    UserDAO githubUserDAOImpl;
+    private UserRepository userRepository;
 
     @Autowired
-    public BasicProfileServiceImpl(UserDAO githubUserDAOImpl) {
-        this.githubUserDAOImpl = githubUserDAOImpl;
+    public BasicProfileServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public Response get(String login) {
-        User userEntity = githubUserDAOImpl.findByLogin(login);
+        User userEntity = userRepository.findByLogin(login);
 
         if (null == userEntity) {
             return Response.status(Response.Status.NOT_FOUND)

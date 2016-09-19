@@ -1,9 +1,9 @@
 package com.cezarykluczynski.carmen.cron.github.executor
 
 import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestFactory
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.propagations.Repositories
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.Repositories
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepository
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
 import com.cezarykluczynski.carmen.util.DateTimeConstants
 import spock.lang.Specification
 
@@ -11,7 +11,7 @@ class RepositoriesWakeUpExecutorTest extends Specification {
 
     private Integer refreshIntervalDays
 
-    private RepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesRepository repositoriesRepository
 
     private PendingRequestFactory pendingRequestFactory
 
@@ -25,16 +25,16 @@ class RepositoriesWakeUpExecutorTest extends Specification {
         refreshIntervalDays = 3
         repositoriesEntity = Mock Repositories
         pendingRequestEntity = Mock PendingRequest
-        propagationsRepositoriesDAOImpl = Mock RepositoriesDAO
+        repositoriesRepository = Mock RepositoriesRepository
         pendingRequestFactory = Mock PendingRequestFactory
         pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity) >> pendingRequestEntity
-        repositoriesWakeUpExecutor = new RepositoriesWakeUpExecutor(propagationsRepositoriesDAOImpl,
+        repositoriesWakeUpExecutor = new RepositoriesWakeUpExecutor(repositoriesRepository,
                 pendingRequestFactory, refreshIntervalDays)
     }
 
     def "null entity does not throw exceptions"() {
         given:
-        propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> null
+        repositoriesRepository.findOldestPropagationInSleepPhase() >> null
 
         when:
         repositoriesWakeUpExecutor.run()
@@ -45,7 +45,7 @@ class RepositoriesWakeUpExecutorTest extends Specification {
 
     def "not updatable entity is not updated"() {
         given:
-        propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> repositoriesEntity
+        repositoriesRepository.findOldestPropagationInSleepPhase() >> repositoriesEntity
 
         when:
         repositoriesWakeUpExecutor.run()
@@ -53,7 +53,7 @@ class RepositoriesWakeUpExecutorTest extends Specification {
         then:
         1 * repositoriesEntity.getUpdated() >> new Date()
         0 * pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity)
-        0 * propagationsRepositoriesDAOImpl.moveToRefreshPhase(repositoriesEntity)
+        0 * repositoriesRepository.moveToRefreshPhase(repositoriesEntity)
     }
 
     def "updatable entity is updated"() {
@@ -64,9 +64,9 @@ class RepositoriesWakeUpExecutorTest extends Specification {
         repositoriesWakeUpExecutor.run()
 
         then:
-        1 * propagationsRepositoriesDAOImpl.findOldestPropagationInSleepPhase() >> repositoriesEntity
+        1 * repositoriesRepository.findOldestPropagationInSleepPhase() >> repositoriesEntity
         1 * pendingRequestFactory.createPendingRequestForUserRepositoriesPropagation(repositoriesEntity)
-        1 * propagationsRepositoriesDAOImpl.moveToRefreshPhase(repositoriesEntity)
+        1 * repositoriesRepository.moveToRefreshPhase(repositoriesEntity)
     }
 
 }

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.cron.languages.visitor
 
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository
 import spock.lang.Specification
 
 class UpdaterVisitorCompositeTest extends Specification {
@@ -16,13 +16,13 @@ class UpdaterVisitorCompositeTest extends Specification {
 
     private UpdaterVisitorComposite updaterVisitorComposite
 
-    private LanguagesDAO languagesDAO
+    private LanguageRepository languageRepository
 
     private RefreshableTable refreshableTable
 
     def setup() {
         refreshableTable = Mock RefreshableTable
-        languagesDAO = Mock LanguagesDAO
+        languageRepository = Mock LanguageRepository
         entityUpdaterVisitor = Mock EntityUpdaterVisitor
         languagesDiffStatisticsUpdaterVisitor = Mock LanguagesDiffStatisticsUpdaterVisitor
         languagesStatisticsUpdaterVisitor = Mock LanguagesStatisticsUpdaterVisitor

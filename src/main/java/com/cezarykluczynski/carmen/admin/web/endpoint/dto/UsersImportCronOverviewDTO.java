@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UsersImportCronOverviewDTO {
 
-    private Integer highestGitHubUserId;
+    private Long highestGitHubUserId;
 
     private boolean enabled;
 

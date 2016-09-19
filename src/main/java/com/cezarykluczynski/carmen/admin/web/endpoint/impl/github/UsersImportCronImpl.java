@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.admin.web.endpoint.impl.github;
 import com.cezarykluczynski.carmen.admin.web.endpoint.api.github.UsersImportCron;
 import com.cezarykluczynski.carmen.admin.web.endpoint.dto.UsersImportCronOverviewDTO;
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask;
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -15,14 +15,14 @@ import javax.ws.rs.core.Response;
 @Profile("admin-panel")
 public class UsersImportCronImpl implements UsersImportCron {
 
-    private UserDAO userDao;
+    private UserRepository userRepository;
 
     private DatabaseManageableTask usersImportTask;
 
     @Autowired
-    public UsersImportCronImpl(UserDAO userDao,
-                               @Qualifier("usersImportTask") DatabaseManageableTask usersImportTask) {
-        this.userDao = userDao;
+    public UsersImportCronImpl(UserRepository userRepository,
+            @Qualifier("usersImportTask") DatabaseManageableTask usersImportTask) {
+        this.userRepository = userRepository;
         this.usersImportTask = usersImportTask;
     }
 
@@ -30,7 +30,7 @@ public class UsersImportCronImpl implements UsersImportCron {
     public Response get() {
         return Response.ok(UsersImportCronOverviewDTO.builder()
                 .enabled(usersImportTask.isEnabled())
-                .highestGitHubUserId(userDao.findHighestGitHubUserId())
+                .highestGitHubUserId(userRepository.findHighestGitHubUserId())
                 .running(usersImportTask.isRunning())
                 .build()).build();
     }
@@ -45,7 +45,7 @@ public class UsersImportCronImpl implements UsersImportCron {
 
         return Response.ok(UsersImportCronOverviewDTO.builder()
                 .enabled(status)
-                .highestGitHubUserId(userDao.findHighestGitHubUserId())
+                .highestGitHubUserId(userRepository.findHighestGitHubUserId())
                 .running(usersImportTask.isRunning())
                 .build()).build();
     }

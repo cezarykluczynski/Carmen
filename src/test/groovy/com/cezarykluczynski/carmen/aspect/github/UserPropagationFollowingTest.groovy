@@ -1,19 +1,19 @@
 package com.cezarykluczynski.carmen.aspect.github
 
 import com.cezarykluczynski.carmen.AspectIntegrationTest
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.model.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserPropagationFollowingTest extends AspectIntegrationTest {
 
     @Autowired
-    private UserDAO githubUserDAOImpl
+    private UserRepository userRepository
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
     private UserPropagationFollowing userPropagationFollowing
@@ -24,17 +24,17 @@ class UserPropagationFollowingTest extends AspectIntegrationTest {
 
     def setup() {
         userFollowingPropagation = Mock UserFollowingPropagation
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userPropagationFollowing.userFollowingPropagation = userFollowingPropagation
     }
 
     def cleanup() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def followingPropagateAfterUserCreation() {
         when:
-        githubUserDAOImpl.createOrUpdateRequestedEntity userEntity.getLogin()
+        userRepository.createOrUpdateRequestedEntity userEntity.getLogin()
 
         then:
         1 * userFollowingPropagation.propagate()

@@ -3,8 +3,8 @@ package com.cezarykluczynski.carmen.cron.languages.visitor
 import com.cezarykluczynski.carmen.cron.languages.api.RefreshableTable
 import com.cezarykluczynski.carmen.cron.languages.factory.TreeSetEntityFieldFactory
 import com.cezarykluczynski.carmen.cron.languages.model.EntityField
-import com.cezarykluczynski.carmen.dao.pub.LanguagesDAO
-import com.cezarykluczynski.carmen.model.pub.Language
+import com.cezarykluczynski.carmen.data.language.model.entity.Language
+import com.cezarykluczynski.carmen.data.language.model.repository.LanguageRepository
 import com.google.common.collect.Lists
 import spock.lang.Specification
 
@@ -12,14 +12,14 @@ class LanguagesStatisticsUpdaterVisitorTest extends Specification {
 
     private LanguagesStatisticsUpdaterVisitor languagesStatisticsUpdaterVisitor
 
-    private LanguagesDAO languagesDAO
+    private LanguageRepository languageRepository
 
     private RefreshableTable refreshableTable
 
     def setup() {
         refreshableTable = Mock RefreshableTable
-        languagesDAO = Mock LanguagesDAO
-        languagesStatisticsUpdaterVisitor = new LanguagesStatisticsUpdaterVisitor(languagesDAO)
+        languageRepository = Mock LanguageRepository
+        languagesStatisticsUpdaterVisitor = new LanguagesStatisticsUpdaterVisitor(languageRepository)
     }
 
     def "field list is updated"() {
@@ -35,7 +35,7 @@ class LanguagesStatisticsUpdaterVisitorTest extends Specification {
         language4.setId 4
         languageList.add language3
         languageList.add language4
-        languagesDAO.findAll() >> languageList
+        languageRepository.findAll() >> languageList
 
         when:
         languagesStatisticsUpdaterVisitor.visit refreshableTable

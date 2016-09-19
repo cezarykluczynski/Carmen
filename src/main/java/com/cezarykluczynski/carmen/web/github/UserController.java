@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.web.github;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,16 +16,16 @@ import java.util.Map;
 @RequestMapping("/github")
 public class UserController {
 
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserController(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @RequestMapping("/{login}")
     public ModelAndView user(@PathVariable String login, HttpServletResponse response) {
-        User user = userDAO.findByLogin(login);
+        User user = userRepository.findByLogin(login);
 
         Map<String, Object> viewVariables = Maps.newHashMap();
         viewVariables.put("login", login);

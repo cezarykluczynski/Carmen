@@ -2,37 +2,41 @@ package com.cezarykluczynski.carmen.executor.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.set.github.User as UserSet
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
+import com.cezarykluczynski.carmen.set.github.UserDTO as UserSet
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import com.cezarykluczynski.carmen.util.db.TransactionalExecutor
 import com.google.common.collect.Maps
-import org.hibernate.Session
-import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+
+import javax.persistence.EntityManager
 
 class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
     @Autowired
-    private SessionFactory sessionFactory
+    private EntityManager entityManager
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    TransactionalExecutor transactionalExecutor
 
     @Autowired
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
-    private PendingRequestDAOImplFixtures apiqueuePendingRequestDAOImplFixtures
+    private PendingRequestRepository pendingRequestRepository
+
+    @Autowired
+    private PendingRequestRepositoryFixtures pendingRequestRepositoryFixtures
 
     @Autowired
     private UserGhostPaginatorExecutor userGhostPaginatorExecutor
 
-    GithubClient githubClientMock
+    private GithubClient githubClientMock
 
     @Value('${executor.UserGhostPaginatorExecutor.paginationLimit}')
     private Integer limit
@@ -49,15 +53,11 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
     private String executor = "UsersGhostPaginator"
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     def setup() {
         githubClientMock = Mock GithubClient
         userGhostPaginatorExecutor.githubClient = githubClientMock
 
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
 
         pendingRequestEntity = new PendingRequest()
         pendingRequestEntity.setExecutor executor
@@ -71,7 +71,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
     }
 
     void cleanup() {
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "executes followers url endpoint with no follower"() {
@@ -79,10 +79,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pathParams.put("endpoint", "followers_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
+        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
 
@@ -93,7 +93,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         then:
         1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
         pendingRequestList.empty
-        apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
     }
 
     def "executes following url endpoint with no follower"() {
@@ -101,10 +101,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pathParams.put("endpoint", "following_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
+        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
 
@@ -115,7 +115,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         then:
         1 *  githubClientMock.getFollowing(userEntityLogin, limit, 1) >> userSetsList
         pendingRequestList.empty
-        apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
     }
 
     def "execute followers url endpoint with single follower"() {
@@ -123,10 +123,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pathParams.put("endpoint", "followers_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
+        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
         UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
@@ -139,10 +139,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         then:
         1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
         pendingRequestList.size() == 1
-        apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
 
         cleanup:
-        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
+        pendingRequestRepositoryFixtures.deletePendingRequestEntity pendingRequestList.get(0)
     }
 
     def "executes following url endpoint with single follower"() {
@@ -150,10 +150,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pathParams.put("endpoint", "following_url")
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
+        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
         UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
@@ -166,10 +166,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         then:
         1 * githubClientMock.getFollowing(userEntityLogin, limit, 1) >> userSetsList
         pendingRequestList.size() == 1
-        apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
 
         cleanup:
-        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
+        pendingRequestRepositoryFixtures.deletePendingRequestEntity pendingRequestList.get(0)
     }
 
     def "pagination is moved"() {
@@ -178,10 +178,10 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestEntity.setPathParams pathParams
         queryParams.put("page", 1)
         pendingRequestEntity.setQueryParams queryParams
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = githubUserDAOImplFixtures.generateRandomLogin()
+        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
         userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, false)
         UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
@@ -191,7 +191,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
-        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById(pendingRequestEntity.getId())
+        PendingRequest pendingRequestEntityFound = pendingRequestRepository.findOne(pendingRequestEntity.getId())
 
         then:
         1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
@@ -200,57 +200,56 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestEntityFound.getQueryParams().get("page") == 2
 
         cleanup:
-        apiqueuePendingRequestDAOImplFixtures.deletePendingRequestEntity pendingRequestList.get(0)
+        pendingRequestRepositoryFixtures.deletePendingRequestEntity pendingRequestList.get(0)
     }
 
     def "pending request can be blocked"() {
         given:
-        User userEntityBlocking = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
-        Session session = sessionFactory.openSession()
-        session.createSQLQuery('''\
-            INSERT INTO github.user_followers (followee_id, follower_id) VALUES (:userEntityId, :userEntityBlockingId)
-        ''')
-        .setParameter("userEntityId", userEntity.getId())
-        .setParameter("userEntityBlockingId", userEntityBlocking.getId())
-        .executeUpdate()
-        session.close()
+        User userEntityBlocking = userRepositoryFixtures.createFoundRequestedUserEntity()
+
+        transactionalExecutor.execute({ entityManager ->
+            entityManager.createNativeQuery('''\
+                               INSERT INTO github.user_followers (followee_id, follower_id) VALUES (:userEntityId, :userEntityBlockingId)
+                           ''')
+                    .setParameter("userEntityId", userEntity.getId())
+                    .setParameter("userEntityBlockingId", userEntityBlocking.getId())
+                    .executeUpdate()
+        })
+
 
         PendingRequest pendingRequestEntityBlocking =
-            apiqueuePendingRequestDAOImplFixtures.createPendingRequestEntityUsingUserEntity userEntityBlocking
+            pendingRequestRepositoryFixtures.createPendingRequestEntityUsingUserEntity userEntityBlocking
         pendingRequestEntityBlocking.setExecutor executor
-        apiqueuePendingRequestDAOImpl.update pendingRequestEntityBlocking
+        pendingRequestRepository.save pendingRequestEntityBlocking
 
         queryParams.put "page", 1
         pendingRequestEntity.setQueryParams queryParams
         pendingRequestEntity.setPathParams pathParams
         pendingRequestEntity.setUpdated new Date()
-        apiqueuePendingRequestDAOImpl.create pendingRequestEntity
+        pendingRequestRepository.create pendingRequestEntity
         Date updatedBefore = pendingRequestEntity.getUpdated()
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
-        PendingRequest pendingRequestEntityFound = apiqueuePendingRequestDAOImpl.findById pendingRequestEntity.getId()
+        PendingRequest pendingRequestEntityFound = pendingRequestRepository.findOne pendingRequestEntity.getId()
 
         then:
         updatedBefore.getTime() < pendingRequestEntityFound.getUpdated().getTime()
 
         cleanup:
-        githubUserDAOImplFixtures.deleteUserEntity userEntityBlocking
+        userRepositoryFixtures.deleteUserEntity userEntityBlocking
     }
 
     private List<PendingRequest> getUserGhostPendingRequestMachingLogin(login) {
-        Session session = sessionFactory.openSession()
-
-        List<PendingRequest> list = session.createQuery('''\
+        List<PendingRequest> list = entityManager.createQuery('''\
             SELECT pr FROM api_queue.PendingRequests pr
             WHERE pr.executor = :executor
                 AND pr.pathParams like :pathParams
         ''')
-            .setString("executor", "UserGhost")
-            .setString("pathParams", "%${login}%")
+            .setParameter("executor", "UserGhost")
+            .setParameter("pathParams", '%' + login + '%')
             .setMaxResults(1)
-            .list();
-        session.close()
+            .getResultList()
 
         return list
     }

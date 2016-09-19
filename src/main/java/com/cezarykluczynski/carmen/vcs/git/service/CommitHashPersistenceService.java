@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.service;
 
 import com.cezarykluczynski.carmen.lang.stats.persistence.Persister;
-import com.cezarykluczynski.carmen.model.github.RepositoryClone;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone;
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHash;
 import com.cezarykluczynski.carmen.vcs.git.model.CommitHashDescriptions;
 import com.cezarykluczynski.carmen.vcs.git.persistence.CommitHashDescriptionsFactory;

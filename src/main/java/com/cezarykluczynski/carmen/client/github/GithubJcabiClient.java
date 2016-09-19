@@ -1,23 +1,20 @@
 package com.cezarykluczynski.carmen.client.github;
 
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
+import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.UserDTO;
+import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
+import com.jcabi.github.Limits;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.User.Smart;
-import com.jcabi.github.Limits;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.json.JsonObject;
 import java.io.IOException;
-
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import javax.json.JsonObject;
-
-import com.cezarykluczynski.carmen.set.github.User;
-import com.cezarykluczynski.carmen.set.github.RateLimit;
-import com.cezarykluczynski.carmen.set.github.Repository;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service("githubJcabiClient")
 public class GithubJcabiClient implements GithubClientInterface {
@@ -29,11 +26,11 @@ public class GithubJcabiClient implements GithubClientInterface {
 
     private RtGithub github;
 
-    public RateLimit getCoreLimit() throws IOException {
+    public RateLimitDTO getCoreLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart coreLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("core"));
         JsonObject coreLimitsJson = coreLimits.json();
-        return new RateLimit(
+        return new RateLimitDTO(
             "core",
             coreLimitsJson.getInt("limit"),
             coreLimitsJson.getInt("remaining"),
@@ -41,11 +38,11 @@ public class GithubJcabiClient implements GithubClientInterface {
         );
     }
 
-    public RateLimit getSearchLimit() throws IOException {
+    public RateLimitDTO getSearchLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart searchLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("search"));
         JsonObject searchLimitsJson = searchLimits.json();
-        return new RateLimit(
+        return new RateLimitDTO(
             "search",
             searchLimitsJson.getInt("limit"),
             searchLimitsJson.getInt("remaining"),
@@ -53,14 +50,14 @@ public class GithubJcabiClient implements GithubClientInterface {
         );
     }
 
-    public User getUser(String name) throws IOException {
+    public UserDTO getUser(String name) throws IOException {
         com.jcabi.github.User privateUser = github.users().get(name);
         Smart user = new Smart(privateUser);
 
         try {
             JsonObject userJson = user.json();
 
-            return User.builder()
+            return UserDTO.builder()
                     .login(userJson.getString("login"))
                     .id((long) userJson.getInt("id"))
                     .name(getUserName(userJson))
@@ -75,7 +72,7 @@ public class GithubJcabiClient implements GithubClientInterface {
                     .bio(getUserBio(userJson))
                     .build();
         } catch (AssertionError e) {
-            return User.builder().login(name).build();
+            return UserDTO.builder().login(name).build();
         }
     }
 
@@ -83,11 +80,13 @@ public class GithubJcabiClient implements GithubClientInterface {
         throw new IOException("Implemented in different provider.");
     }
 
-    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
+            throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
+            throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 

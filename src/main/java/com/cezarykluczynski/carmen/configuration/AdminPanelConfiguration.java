@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.configuration;
 
 import com.cezarykluczynski.carmen.cron.DatabaseManageableTask;
-import com.cezarykluczynski.carmen.dao.pub.CronsDAO;
+import com.cezarykluczynski.carmen.cron.model.repository.CronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -23,21 +23,21 @@ public class AdminPanelConfiguration {
 
     @Bean(name = "usersImportTask")
     DatabaseManageableTask usersImportTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), USERS_IMPORT_TASK);
+        return new DatabaseManageableTask(getCronRepositoryBean(), USERS_IMPORT_TASK);
     }
 
     @Bean(name = "repositoriesImportTask")
     DatabaseManageableTask repositoriesImportTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), REPOSITORIES_IMPORT_TASK);
+        return new DatabaseManageableTask(getCronRepositoryBean(), REPOSITORIES_IMPORT_TASK);
     }
 
     @Bean(name = "languagesSchemaUpdateTask")
     DatabaseManageableTask languagesSchemaUpdateTask() {
-        return new DatabaseManageableTask(getCronsDAOBean(), LANGUAGES_SCHEMA_UPDATE_TASK);
+        return new DatabaseManageableTask(getCronRepositoryBean(), LANGUAGES_SCHEMA_UPDATE_TASK);
     }
 
-    private CronsDAO getCronsDAOBean() {
-        return ctx.getBean(CronsDAO.class);
+    private CronRepository getCronRepositoryBean() {
+        return ctx.getBean(CronRepository.class);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.cezarykluczynski.carmen.propagation;
 
-import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
 
 public interface Propagation {
 

@@ -7,7 +7,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cezarykluczynski.carmen.model.github.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
 import com.cezarykluczynski.carmen.propagation.github.UserFollowingPropagation;
 
 @Aspect
@@ -22,7 +22,8 @@ public class UserPropagationFollowing {
     }
 
     @AfterReturning(
-        pointcut = "execution(* com.cezarykluczynski.carmen.dao.github.UserDAOImpl.createOrUpdateRequestedEntity(..))",
+        pointcut = "execution(* com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model" +
+            ".repository.UserRepositoryImpl.createOrUpdateRequestedEntity(..))",
         returning = "userEntity"
     )
     public void userFollowing(JoinPoint joinPoint, User userEntity) {

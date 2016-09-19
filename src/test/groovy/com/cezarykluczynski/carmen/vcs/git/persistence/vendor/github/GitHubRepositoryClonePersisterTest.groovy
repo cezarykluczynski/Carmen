@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.vcs.git.persistence.vendor.github
 
-import com.cezarykluczynski.carmen.dao.github.RepositoriesClonesDAO
-import com.cezarykluczynski.carmen.model.github.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.RepositoryClone
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryCloneRepository
 import com.cezarykluczynski.carmen.util.DateUtil
 import com.cezarykluczynski.carmen.util.factory.DateFactory
 import com.cezarykluczynski.carmen.util.factory.NowDateProvider
@@ -19,7 +19,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
 
     private GitHubRepositoryCommitsToPersistFinder gitHubRepositoryCommitsToPersistFinderMock
 
-    private RepositoriesClonesDAO repositoriesClonesDAOMock
+    private RepositoryCloneRepository repositoryCloneRepository
 
     private DateFactory dateFactoryMock
 
@@ -28,7 +28,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
     def setup() {
         commitHashPersistenceServiceMock = Mock CommitHashPersistenceService
         gitHubRepositoryCommitsToPersistFinderMock = Mock GitHubRepositoryCommitsToPersistFinder
-        repositoriesClonesDAOMock = Mock RepositoriesClonesDAO
+        repositoryCloneRepository = Mock RepositoryCloneRepository
         dateFactoryMock = new DateFactory(new NowDateProvider() {
             @Override
             public Date createNowDate() {
@@ -39,13 +39,13 @@ class GitHubRepositoryClonePersisterTest extends Specification {
         repositoryCloneMock = Mock RepositoryClone
 
         gitHubRepositoryClonePersister = new GitHubRepositoryClonePersister(commitHashPersistenceServiceMock,
-                gitHubRepositoryCommitsToPersistFinderMock, repositoriesClonesDAOMock, dateFactoryMock)
+                gitHubRepositoryCommitsToPersistFinderMock, repositoryCloneRepository, dateFactoryMock)
 
     }
 
     def "persist when there is no repository clones to process"() {
         given:
-        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> null
+        repositoryCloneRepository.findRepositoryCloneWithCommitsToPersist() >> null
 
         when:
         gitHubRepositoryClonePersister.persist()
@@ -56,20 +56,19 @@ class GitHubRepositoryClonePersisterTest extends Specification {
 
     def "persist when there are error while retrieving hashes"() {
         given:
-        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
+        repositoryCloneRepository.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
         gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> null
 
         when:
         gitHubRepositoryClonePersister.persist()
 
         then:
-        0 * repositoriesClonesDAOMock.update(*_) >> null
-        0 * repositoriesClonesDAOMock.update(null) >> null
+        0 * repositoryCloneRepository.save(*_)
     }
 
     def "sets commitsStatisticsUntil field to the beginning o not yet opened month, when commit list is empty"() {
         given:
-        repositoriesClonesDAOMock.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
+        repositoryCloneRepository.findRepositoryCloneWithCommitsToPersist() >> repositoryCloneMock
         gitHubRepositoryCommitsToPersistFinderMock.getCommitHashesToPersist(repositoryCloneMock) >> Lists.newArrayList()
 
         when:
@@ -79,7 +78,7 @@ class GitHubRepositoryClonePersisterTest extends Specification {
         1 * repositoryCloneMock.setCommitsStatisticsUntil(_ as Date) >> { date ->
             assert date != null
         }
-        1 * repositoriesClonesDAOMock.update(repositoryCloneMock)
+        1 * repositoryCloneRepository.save(repositoryCloneMock)
     }
 
 }

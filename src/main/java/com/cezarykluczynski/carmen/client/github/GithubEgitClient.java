@@ -1,23 +1,21 @@
 package com.cezarykluczynski.carmen.client.github;
 
-import java.io.IOException;
-
-import com.cezarykluczynski.carmen.set.github.User;
-import com.cezarykluczynski.carmen.set.github.RateLimit;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
 import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.UserDTO;
 import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
-
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class GithubEgitClient implements GithubClientInterface {
@@ -29,15 +27,15 @@ public class GithubEgitClient implements GithubClientInterface {
 
     private GitHubClient github;
 
-    public RateLimit getCoreLimit() throws IOException {
+    public RateLimitDTO getCoreLimit() throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public RateLimit getSearchLimit() throws IOException {
+    public RateLimitDTO getSearchLimit() throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
-    public User getUser(String name) throws IOException {
+    public UserDTO getUser(String name) throws IOException {
         throw new IOException("Implemented in different provider.");
     }
 
@@ -47,18 +45,22 @@ public class GithubEgitClient implements GithubClientInterface {
         return mapToNativeRepositoriesPOJOList(repositoriesList);
     }
 
-    public PaginationAwareArrayList<User> getFollowers(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
+            throws IOException {
         UserService userService = new UserService(github);
-        PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowers(name, offset, limit));
-        userList.addPaginationLimitAndOffset(limit, offset);
-        return userList;
+        PaginationAwareArrayList<UserDTO> userDTOList =
+                pageIteratorToList(userService.pageFollowers(name, offset, limit));
+        userDTOList.addPaginationLimitAndOffset(limit, offset);
+        return userDTOList;
     }
 
-    public PaginationAwareArrayList<User> getFollowing(String name, Integer limit, Integer offset) throws IOException {
+    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
+            throws IOException {
         UserService userService = new UserService(github);
-        PaginationAwareArrayList<User> userList = pageIteratorToList(userService.pageFollowing(name, offset, limit));
-        userList.addPaginationLimitAndOffset(limit, offset);
-        return userList;
+        PaginationAwareArrayList<UserDTO> userDTOList =
+                pageIteratorToList(userService.pageFollowing(name, offset, limit));
+        userDTOList.addPaginationLimitAndOffset(limit, offset);
+        return userDTOList;
     }
 
     private List<Repository> mapToNativeRepositoriesPOJOList(
@@ -86,21 +88,21 @@ public class GithubEgitClient implements GithubClientInterface {
         return repositoryListLocal;
     }
 
-    private PaginationAwareArrayList<User> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users)
+    private PaginationAwareArrayList<UserDTO> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users)
             throws IOException {
         Iterator<Collection<org.eclipse.egit.github.core.User>> iterator = users.iterator();
         Collection<org.eclipse.egit.github.core.User> collection = iterator.next();
-        PaginationAwareArrayList<User> userList = new PaginationAwareArrayList<User>();
+        PaginationAwareArrayList<UserDTO> userDTOList = new PaginationAwareArrayList<UserDTO>();
 
         for (org.eclipse.egit.github.core.User user : collection) {
-            User userSet = User.builder().login(user.getLogin()).build();
-            userList.add(userSet);
+            UserDTO userDTOSet = UserDTO.builder().login(user.getLogin()).build();
+            userDTOList.add(userDTOSet);
         }
 
-        userList.extractPaginationDataFromIterator(users);
-        userList.extractPaginationDataFromCollection(collection);
+        userDTOList.extractPaginationDataFromIterator(users);
+        userDTOList.extractPaginationDataFromCollection(collection);
 
-        return userList;
+        return userDTOList;
     }
 
 }

@@ -1,12 +1,12 @@
 package com.cezarykluczynski.carmen.propagation.github;
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowersDAO;
-import com.cezarykluczynski.carmen.dao.propagations.UserFollowingDAO;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowers;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.UserFollowing;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowersRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepository;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
 import com.cezarykluczynski.carmen.model.cassandra.carmen.FollowersAndFollowees;
-import com.cezarykluczynski.carmen.model.github.User;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowers;
-import com.cezarykluczynski.carmen.model.propagations.UserFollowing;
 import com.cezarykluczynski.carmen.repository.carmen.FollowersAndFolloweesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 public class UserFollowersFollowingReportToSleepPhasePropagation implements
         com.cezarykluczynski.carmen.propagation.Propagation {
 
-    private UserDAO githubUserDAOImpl;
+    private UserRepository userRepository;
 
-    private UserFollowersDAO propagationsUserFollowersDAOImpl;
+    private UserFollowersRepository userFollowersRepository;
 
-    private UserFollowingDAO propagationsUserFollowingDAOImpl;
+    private UserFollowingRepository userFollowingRepository;
 
     private FollowersAndFolloweesRepository followersAndFolloweesRepository;
 
@@ -29,13 +29,12 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements
     private FollowersAndFollowees followersAndFollowees;
 
     @Autowired
-    public UserFollowersFollowingReportToSleepPhasePropagation(UserDAO githubUserDAOImpl,
-                                                   UserFollowersDAO propagationsUserFollowersDAOImpl,
-                                                   UserFollowingDAO propagationsUserFollowingDAOImpl,
-                                                   FollowersAndFolloweesRepository followersAndFolloweesRepository) {
-        this.githubUserDAOImpl = githubUserDAOImpl;
-        this.propagationsUserFollowersDAOImpl = propagationsUserFollowersDAOImpl;
-        this.propagationsUserFollowingDAOImpl = propagationsUserFollowingDAOImpl;
+    public UserFollowersFollowingReportToSleepPhasePropagation(UserRepository userRepository,
+            UserFollowersRepository userFollowersRepository, UserFollowingRepository userFollowingRepository,
+            FollowersAndFolloweesRepository followersAndFolloweesRepository) {
+        this.userRepository = userRepository;
+        this.userFollowersRepository = userFollowersRepository;
+        this.userFollowingRepository = userFollowingRepository;
         this.followersAndFolloweesRepository = followersAndFolloweesRepository;
     }
 
@@ -63,9 +62,9 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements
     }
 
     private void hydrateFollowersAndFollowees() {
-        int followersCount = githubUserDAOImpl.countFollowers(userEntity);
-        int followeesCount = githubUserDAOImpl.countFollowees(userEntity);
-        int followersFolloweesCount = githubUserDAOImpl.countFollowersFollowing(userEntity);
+        int followersCount = userRepository.countFollowers(userEntity);
+        int followeesCount = userRepository.countFollowees(userEntity);
+        int followersFolloweesCount = userRepository.countFollowersFollowing(userEntity);
 
         followersAndFollowees.setFollowersCount(followersCount);
         followersAndFollowees.setFolloweesCount(followeesCount);
@@ -77,14 +76,14 @@ public class UserFollowersFollowingReportToSleepPhasePropagation implements
     }
 
     private void moveFollowersFollowingPropagationToSleepPhase() {
-        UserFollowers userFollowers = propagationsUserFollowersDAOImpl.findByUser(userEntity);
-        UserFollowing userFollowing = propagationsUserFollowingDAOImpl.findByUser(userEntity);
+        UserFollowers userFollowers = userFollowersRepository.findOneByUser(userEntity);
+        UserFollowing userFollowing = userFollowingRepository.findOneByUser(userEntity);
 
         userFollowers.setPhase("sleep");
         userFollowing.setPhase("sleep");
 
-        propagationsUserFollowersDAOImpl.update(userFollowers);
-        propagationsUserFollowingDAOImpl.update(userFollowing);
+        userFollowersRepository.save(userFollowers);
+        userFollowingRepository.save(userFollowing);
     }
 
 }

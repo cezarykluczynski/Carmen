@@ -2,8 +2,8 @@ package com.cezarykluczynski.carmen.provider.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubJcabiClient
-import com.cezarykluczynski.carmen.set.github.RateLimit
-import com.cezarykluczynski.carmen.set.github.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO
+import com.cezarykluczynski.carmen.set.github.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
 
 class GithubJcabiClientTest extends IntegrationTest {
@@ -13,7 +13,7 @@ class GithubJcabiClientTest extends IntegrationTest {
 
     def "gets core limit"() {
         when:
-        RateLimit rateLimitSet = githubJcabiClient.getCoreLimit()
+        RateLimitDTO rateLimitSet = githubJcabiClient.getCoreLimit()
 
         then:
         rateLimitSet.getResource() == "core"
@@ -24,7 +24,7 @@ class GithubJcabiClientTest extends IntegrationTest {
 
     def "gets search limit"() {
         when:
-        RateLimit rateLimitSet = githubJcabiClient.getSearchLimit()
+        RateLimitDTO rateLimitSet = githubJcabiClient.getSearchLimit()
 
         then:
         rateLimitSet.getResource() == "search"
@@ -35,7 +35,7 @@ class GithubJcabiClientTest extends IntegrationTest {
 
     def "gets existing user"() {
         when:
-        User userSet = githubJcabiClient.getUser "octocat"
+        UserDTO userSet = githubJcabiClient.getUser "octocat"
 
         then:
         userSet.getId() != null
@@ -54,7 +54,7 @@ class GithubJcabiClientTest extends IntegrationTest {
 
     def "gets non existing user"() {
         when:
-        User userSet = githubJcabiClient.getUser "carmen-user-404-integration-test"
+        UserDTO userSet = githubJcabiClient.getUser "carmen-user-404-integration-test"
 
         then:
         userSet.getId() == null

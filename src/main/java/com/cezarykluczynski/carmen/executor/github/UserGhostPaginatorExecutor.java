@@ -1,5 +1,11 @@
 package com.cezarykluczynski.carmen.executor.github;
 
+import com.cezarykluczynski.carmen.client.github.GithubClient;
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
+import com.cezarykluczynski.carmen.set.github.UserDTO;
+import com.cezarykluczynski.carmen.util.DateTimeConstants;
+import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,53 +14,46 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.cezarykluczynski.carmen.set.github.User;
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest;
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO;
-import com.cezarykluczynski.carmen.client.github.GithubClient;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
-import com.cezarykluczynski.carmen.util.DateTimeConstants;
-
 @Component
 public class UserGhostPaginatorExecutor implements Executor {
 
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl;
+    private PendingRequestRepository pendingRequestRepository;
 
     private GithubClient githubClient;
 
     private Integer paginationLimit;
 
     @Autowired
-    public UserGhostPaginatorExecutor(PendingRequestDAO apiqueuePendingRequestDAOImpl, GithubClient githubClient,
+    public UserGhostPaginatorExecutor(PendingRequestRepository pendingRequestRepository, GithubClient githubClient,
                           @Value("${executor.UserGhostPaginatorExecutor.paginationLimit}") Integer paginationLimit) {
-        this.apiqueuePendingRequestDAOImpl = apiqueuePendingRequestDAOImpl;
+        this.pendingRequestRepository = pendingRequestRepository;
         this.githubClient = githubClient;
         this.paginationLimit = paginationLimit;
     }
 
     public void execute(PendingRequest pendingRequest) throws IOException {
         if (isPendingRequestOnFirstPage(pendingRequest) && isPendingRequestBlocked(pendingRequest)) {
-            apiqueuePendingRequestDAOImpl.postponeRequest(pendingRequest, DateTimeConstants.MILLISECONDS_IN_HOUR);
+            pendingRequestRepository.postponeRequest(pendingRequest, DateTimeConstants.MILLISECONDS_IN_HOUR);
         } else {
             doExecutePendingRequest(pendingRequest);
         }
     }
 
     private void doExecutePendingRequest(PendingRequest pendingRequest) throws IOException {
-        PaginationAwareArrayList<User> users = getUserListFromPendingRequest(pendingRequest);
+        PaginationAwareArrayList<UserDTO> userDTOs = getUserListFromPendingRequest(pendingRequest);
 
-        if (users.size() > 0) {
-            createUserGhostPendingRequests(users, pendingRequest);
+        if (userDTOs.size() > 0) {
+            createUserGhostPendingRequests(userDTOs, pendingRequest);
         }
 
-        if (users.isLastPage()) {
-            apiqueuePendingRequestDAOImpl.delete(pendingRequest);
+        if (userDTOs.isLastPage()) {
+            pendingRequestRepository.delete(pendingRequest);
         } else {
-            continuePagination(pendingRequest, users);
+            continuePagination(pendingRequest, userDTOs);
         }
     }
 
-    private PaginationAwareArrayList<User> getUserListFromPendingRequest(PendingRequest pendingRequest)
+    private PaginationAwareArrayList<UserDTO> getUserListFromPendingRequest(PendingRequest pendingRequest)
             throws IOException {
         HashMap<String, Object> pathParams = pendingRequest.getPathParams();
 
@@ -67,8 +66,8 @@ public class UserGhostPaginatorExecutor implements Executor {
             githubClient.getFollowing(login, paginationLimit, page);
     }
 
-    private void createUserGhostPendingRequests(PaginationAwareArrayList<User> users, PendingRequest pendingRequest)
-            throws IOException {
+    private void createUserGhostPendingRequests(PaginationAwareArrayList<UserDTO> userDTOs,
+            PendingRequest pendingRequest) throws IOException {
         HashMap<String, Object> pathParams = Maps.newHashMap();
         HashMap<String, Object> queryParams = Maps.newHashMap();
         HashMap<String, Object> params = Maps.newHashMap();
@@ -76,9 +75,9 @@ public class UserGhostPaginatorExecutor implements Executor {
         params.put("link_with", pendingRequest.getUser().getId());
         params.put("link_as", convertPendingRequestToRole(pendingRequest));
 
-        for (User user : users) {
-            pathParams.put("login", user.getLogin());
-            apiqueuePendingRequestDAOImpl.create(
+        for (UserDTO userDTO : userDTOs) {
+            pathParams.put("login", userDTO.getLogin());
+            pendingRequestRepository.create(
                 "UserGhost",
                 null,
                 pathParams,
@@ -90,11 +89,11 @@ public class UserGhostPaginatorExecutor implements Executor {
         }
     }
 
-    private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<User> users) {
+    private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<UserDTO> userDTOs) {
         HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
-        queryParams.put("page", users.getNextPage());
+        queryParams.put("page", userDTOs.getNextPage());
         pendingRequest.setQueryParams(queryParams);
-        apiqueuePendingRequestDAOImpl.update(pendingRequest);
+        pendingRequestRepository.save(pendingRequest);
     }
 
     private Integer getPageFromPendingRequest(PendingRequest pendingRequest) {
@@ -107,8 +106,9 @@ public class UserGhostPaginatorExecutor implements Executor {
     }
 
     private boolean isPendingRequestBlocked(PendingRequest pendingRequest) {
-        com.cezarykluczynski.carmen.model.github.User userEntity = pendingRequest.getUser();
-        return apiqueuePendingRequestDAOImpl.userEntityFollowersRequestIsBlocked(userEntity);
+        com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User userEntity =
+                pendingRequest.getUser();
+        return pendingRequestRepository.userEntityFollowersRequestIsBlocked(userEntity);
     }
 
     private String convertPendingRequestToRole(PendingRequest pendingRequest) {

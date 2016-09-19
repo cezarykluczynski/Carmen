@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.web
 
-import com.cezarykluczynski.carmen.dao.github.UserDAO
-import com.cezarykluczynski.carmen.dao.users.CarmenUserDAO
+import com.cezarykluczynski.carmen.common.user.model.repository.CommonUserRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository
 import org.springframework.web.servlet.ModelAndView
 import spock.lang.Specification
 
@@ -11,22 +11,22 @@ class WelcomeControllerTest extends Specification {
     private static final Object ANALYZED_CONNECTED_COUNT = 3
     private static final String VIEW_NAME = "welcome"
 
-    private CarmenUserDAO carmenUserDAOMock
+    private CommonUserRepository commonUserRepository
 
-    private UserDAO userDAOMock
+    private UserRepository userRepository
 
     private WelcomeController welcomeController
 
     def setup() {
-        carmenUserDAOMock = Mock CarmenUserDAO
-        userDAOMock = Mock UserDAO
-        welcomeController = new WelcomeController(carmenUserDAOMock, userDAOMock)
+        commonUserRepository = Mock CommonUserRepository
+        userRepository = Mock UserRepository
+        welcomeController = new WelcomeController(commonUserRepository, userRepository)
     }
 
     def welcome() {
         given:
-        carmenUserDAOMock.count() >> CONNECTED_USERS_COUNT
-        userDAOMock.countFound() >> ANALYZED_CONNECTED_COUNT
+        commonUserRepository.count() >> CONNECTED_USERS_COUNT
+        userRepository.countByFoundTrue() >> ANALYZED_CONNECTED_COUNT
 
         when:
         ModelAndView modelAndView = welcomeController.welcome()
@@ -35,7 +35,6 @@ class WelcomeControllerTest extends Specification {
         modelAndView.model.get("analyzedUsersCount") == ANALYZED_CONNECTED_COUNT
         modelAndView.model.get("connectedUsersCount") == CONNECTED_USERS_COUNT
         modelAndView.viewName == VIEW_NAME
-
     }
 
 }

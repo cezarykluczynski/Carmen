@@ -1,31 +1,31 @@
 package com.cezarykluczynski.carmen.propagation.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
-import com.cezarykluczynski.carmen.dao.apiqueue.PendingRequestDAO
-import com.cezarykluczynski.carmen.dao.github.UserDAOImplFixtures
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAO
-import com.cezarykluczynski.carmen.dao.propagations.RepositoriesDAOImplFixtures
-import com.cezarykluczynski.carmen.model.apiqueue.PendingRequest
-import com.cezarykluczynski.carmen.model.github.User
-import com.cezarykluczynski.carmen.model.propagations.Repositories
+import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
+import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.entity.Repositories
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepository
+import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.RepositoriesRepositoryFixtures
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
+import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import org.springframework.beans.factory.annotation.Autowired
 
 class UserRepositoriesPropagationTest extends IntegrationTest {
 
     @Autowired
-    private UserDAOImplFixtures githubUserDAOImplFixtures
+    private UserRepositoryFixtures userRepositoryFixtures
 
     @Autowired
-    private RepositoriesDAO propagationsRepositoriesDAOImpl
+    private RepositoriesRepository RepositoriesRepository
 
     @Autowired
     private UserRepositoriesPropagation userRepositoriesPropagation
 
     @Autowired
-    private RepositoriesDAOImplFixtures propagationsRepositoriesDAOImplFixtures
+    private RepositoriesRepositoryFixtures repositoriesRepositoryFixtures
 
     @Autowired
-    private PendingRequestDAO apiqueuePendingRequestDAOImpl
+    private PendingRequestRepository pendingRequestRepository
 
     private User userEntity
 
@@ -33,27 +33,27 @@ class UserRepositoriesPropagationTest extends IntegrationTest {
 
     def "propagates not found entity"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createNotFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createNotFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
 
         when:
         userRepositoriesPropagation.propagate()
 
         then:
-        propagationsRepositoriesDAOImpl.findByUser(userEntity) == null
+        RepositoriesRepository.findOneByUser(userEntity) == null
 
         cleanup:
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "propagates found entity"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
 
         when:
         userRepositoriesPropagation.propagate()
-        repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
+        repositoriesEntity = RepositoriesRepository.findOneByUser(userEntity)
 
         then:
         repositoriesEntity instanceof Repositories
@@ -61,30 +61,30 @@ class UserRepositoriesPropagationTest extends IntegrationTest {
         findPendingRequestEntity() instanceof PendingRequest
 
         cleanup:
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     def "propagates found entity that is already propagated"() {
         given:
-        userEntity = githubUserDAOImplFixtures.createFoundRequestedUserEntity()
+        userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         userRepositoriesPropagation.setUserEntity userEntity
 
         when:
         userRepositoriesPropagation.propagate()
-        repositoriesEntity = propagationsRepositoriesDAOImpl.findByUser(userEntity)
+        repositoriesEntity = RepositoriesRepository.findOneByUser(userEntity)
         userRepositoriesPropagation.propagate()
-        propagationsRepositoriesDAOImplFixtures.deleteRepositoriesEntity repositoriesEntity
+        repositoriesRepositoryFixtures.deleteRepositoriesEntity repositoriesEntity
 
         then:
-        propagationsRepositoriesDAOImpl.findByUser(userEntity) == null
+        RepositoriesRepository.findOneByUser(userEntity) == null
 
         cleanup:
-        githubUserDAOImplFixtures.deleteUserEntity userEntity
+        userRepositoryFixtures.deleteUserEntity userEntity
     }
 
     private PendingRequest findPendingRequestEntity() {
         PendingRequest pendingRequestEntityFound = null
-        List<PendingRequest> pendingRequestEntitiesList = apiqueuePendingRequestDAOImpl.findByUser(userEntity)
+        List<PendingRequest> pendingRequestEntitiesList = pendingRequestRepository.findAllByUser(userEntity)
         for(PendingRequest pendingRequestEntity in pendingRequestEntitiesList) {
             if (pendingRequestEntity.getExecutor() == "Repositories") {
                 if (pendingRequestEntityFound == null) {

@@ -6,16 +6,19 @@ import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.mod
 import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.model.repository.UserFollowingRepositoryFixtures
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
 import com.cezarykluczynski.carmen.set.github.UserDTO as UserSet
+import com.cezarykluczynski.carmen.util.db.TransactionalExecutor
 import org.joda.time.MutableDateTime
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
+
+import javax.persistence.EntityManager
 
 class UserRepositoryImplTest extends IntegrationTest {
 
-    @Autowired
-    private UserRepository userRepository
+    private UserRepositoryImpl userRepositoryImpl
 
     @Autowired
-    private UserRepositoryImpl userRepositoryImpl
+    private UserRepository userRepository
 
     @Autowired
     private UserRepositoryFixtures userRepositoryFixtures
@@ -26,19 +29,25 @@ class UserRepositoryImplTest extends IntegrationTest {
     @Autowired
     private UserFollowingRepositoryFixtures userFollowingRepositoryFixtures
 
-    @Autowired
-    private GithubClient githubClient
+    GithubClient githubClientMock
 
+    @Autowired
+    private ApplicationContext ctx
+
+    def setup() {
+        githubClientMock = getGithubClientMock()
+        userRepositoryImpl = new UserRepositoryImpl(ctx.getBean(EntityManager.class), githubClientMock,
+                 ctx.getBean(TransactionalExecutor.class))
+        userRepositoryImpl.userRepository = userRepository
+    }
 
     def "creates or updates existing requested entity that cannot be updated"() {
         given:
         User userEntity = userRepositoryFixtures.createFoundRequestedUserEntity()
         String currentLogin = userEntity.getLogin()
-        GithubClient githubClientMock = getGithubClientMock()
-        setGithubClientToDao userRepositoryImpl, githubClientMock
 
         when:
-        userRepository.createOrUpdateRequestedEntity currentLogin
+        userRepositoryImpl.createOrUpdateRequestedEntity currentLogin
         User userEntityUpdated = userRepository.findByLogin currentLogin
 
         then:
@@ -49,7 +58,6 @@ class UserRepositoryImplTest extends IntegrationTest {
         userFollowersRepositoryFixtures.deleteUserFollowersEntityByUserEntity userEntity
         userFollowingRepositoryFixtures.deleteUserFollowingEntityByUserEntity userEntity
         userRepositoryFixtures.deleteUserEntity userEntity
-        setGithubClientToDao userRepositoryImpl, githubClient
     }
 
     def "creates or updates existing requested entity that can be updated"() {
@@ -59,11 +67,9 @@ class UserRepositoryImplTest extends IntegrationTest {
         String currentLogin = userEntity.getLogin()
         String newLogin = userRepositoryFixtures.generateRandomLogin()
         UserSet userSetMock = UserSet.builder().login(newLogin).build()
-        GithubClient githubClientMock = getGithubClientMock()
-        setGithubClientToDao userRepositoryImpl, githubClientMock
 
         when:
-        userRepository.createOrUpdateRequestedEntity currentLogin
+        userRepositoryImpl.createOrUpdateRequestedEntity currentLogin
         User userEntityUpdated = userRepository.findByLogin newLogin
 
         then:
@@ -73,7 +79,6 @@ class UserRepositoryImplTest extends IntegrationTest {
 
         cleanup:
         userRepositoryFixtures.deleteUserEntity userEntity
-        setGithubClientToDao userRepositoryImpl, githubClient
     }
 
     def "creates or updates existing ghost entity"() {
@@ -83,12 +88,10 @@ class UserRepositoryImplTest extends IntegrationTest {
         String currentLogin = userEntity.getLogin()
         String newLogin = userRepositoryFixtures.generateRandomLogin()
         UserSet userSet = UserSet.builder().login(newLogin).build()
-        GithubClient githubClientMock = getGithubClientMock()
         githubClientMock.getUser(currentLogin) >> userSet
-        setGithubClientToDao userRepositoryImpl, githubClientMock
 
         when:
-        userRepository.createOrUpdateGhostEntity currentLogin
+        userRepositoryImpl.createOrUpdateGhostEntity currentLogin
         User userEntityUpdated = userRepository.findByLogin newLogin
 
         then:
@@ -97,7 +100,6 @@ class UserRepositoryImplTest extends IntegrationTest {
 
         cleanup:
         userRepositoryFixtures.deleteUserEntity userEntity
-        setGithubClientToDao userRepositoryImpl, githubClient
     }
 
     def "creates or updates existing ghost entity with existing requested entity"() {
@@ -106,12 +108,10 @@ class UserRepositoryImplTest extends IntegrationTest {
         String currentLogin = userEntity.getLogin()
         String newLogin = userRepositoryFixtures.generateRandomLogin()
         UserSet userSet = UserSet.builder().login(newLogin).build()
-        GithubClient githubClientMock = getGithubClientMock()
         githubClientMock.getUser(currentLogin) >> userSet
-        setGithubClientToDao userRepositoryImpl, githubClientMock
 
         when:
-        userRepository.createOrUpdateRequestedEntity currentLogin
+        userRepositoryImpl.createOrUpdateRequestedEntity currentLogin
         User userEntityUpdated = userRepository.findByLogin newLogin
 
         then:
@@ -120,7 +120,6 @@ class UserRepositoryImplTest extends IntegrationTest {
 
         cleanup:
         userRepositoryFixtures.deleteUserEntity userEntity
-        setGithubClientToDao userRepositoryImpl, githubClient
     }
 
     def "creates or updates non-existing entity"() {
@@ -129,7 +128,6 @@ class UserRepositoryImplTest extends IntegrationTest {
         GithubClient githubClientMock = getGithubClientMock()
         UserSet userSetMock = UserSet.builder().login(currentLogin).build()
         githubClientMock.getUser(currentLogin) >> userSetMock
-        setGithubClientToDao userRepositoryImpl, githubClient
 
         when:
         User userEntityUpdated = userRepository.createOrUpdateRequestedEntity currentLogin
@@ -139,7 +137,6 @@ class UserRepositoryImplTest extends IntegrationTest {
 
         cleanup:
         userRepositoryFixtures.deleteUserEntity userEntityUpdated
-        setGithubClientToDao userRepositoryImpl, githubClient
     }
 
     private GithubClient getGithubClientMock() {
@@ -152,10 +149,6 @@ class UserRepositoryImplTest extends IntegrationTest {
         Date twoDaysAgoDate = twoDaysAgo.toDate()
         userEntity.setUpdated twoDaysAgoDate
         userRepository.save userEntity
-    }
-
-    private static void setGithubClientToDao(UserRepositoryImpl userRepository, GithubClient githubClient) {
-        userRepository.githubClient = githubClient
     }
 
 }

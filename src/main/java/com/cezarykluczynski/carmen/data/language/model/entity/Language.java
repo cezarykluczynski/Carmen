@@ -3,6 +3,7 @@ package com.cezarykluczynski.carmen.data.language.model.entity;
 import com.cezarykluczynski.carmen.data.language.model.entity.enums.LinguistLanguageType;
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Data
 @Entity(name = "public.Language")
 @Table(schema = "public", name = "languages")
+@EqualsAndHashCode(callSuper = false)
 public class Language extends CarmenRelationalEntity {
 
     @Id

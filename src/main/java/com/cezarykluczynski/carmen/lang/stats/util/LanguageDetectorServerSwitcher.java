@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class LanguageDetectorServerSwitcher {
 
-    private static final String RUBY_PID_PATH = "./target/.ruby_server_pid";
+    private static final String RUBY_PID_PATH = "./ruby/bin/.server_pid";
 
     private static ClassLoader CLASS_LOADER = Thread.currentThread().getContextClassLoader();
 

@@ -17,7 +17,7 @@ gpg --export --armor 0353B12C | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install cassandra
 
-sudo sed -i 's/#MAX_HEAP_SIZE="4G"/MAX_HEAP_SIZE="1G"/' /etc/cassandra/cassandra-env.sh
+sudo sed -i 's/#MAX_HEAP_SIZE="4G"/MAX_HEAP_SIZE="500M"/' /etc/cassandra/cassandra-env.sh
 sudo sed -i 's/#HEAP_NEWSIZE="800M"/HEAP_NEWSIZE="100M"/' /etc/cassandra/cassandra-env.sh
 
 sudo service cassandra restart

@@ -18,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class CronBeanConfiguration {
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Bean
     @Profile("scheduled")

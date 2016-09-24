@@ -28,6 +28,7 @@ class CassandraMigrations {
 
         configure();
         createAndMigrateKeyspace(new CarmenKeyspaceDefinition());
+        log.info("Carmen: Cassandra migrations finished.");
         System.exit(0);
     }
 

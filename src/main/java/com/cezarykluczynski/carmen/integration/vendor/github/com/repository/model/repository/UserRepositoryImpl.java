@@ -7,7 +7,7 @@ import com.cezarykluczynski.carmen.set.github.UserDTO;
 import com.cezarykluczynski.carmen.util.db.TransactionalExecutor;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Service
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Autowired

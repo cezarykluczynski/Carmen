@@ -10,6 +10,10 @@ machine:
       5.5.0
 dependencies:
   pre:
+    - set GRADLE_OPTS="-Xms256m -Xmx256m  -XX:MaxPermSize=256m -Dorg.gradle.daemon=false"
+    - sudo add-apt-repository ppa:cwchien/gradle -y
+    - sudo apt-get update
+    - sudo apt-get install gradle
     - sudo ./install-cassandra.sh
     - nvm install 0.12
     - nvm use 0.12
@@ -18,18 +22,15 @@ dependencies:
     - cp src/main/resources/travis/logback.xml src/main/resources/logback.xml
     - cp src/main/resources/travis/hibernate.cfg.xml src/main/resources/hibernate.cfg.xml
     - bundle install
-    - mvn compile
     - gem install sass
-    - mvn flyway:migrate
-    - mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
+    - gradle cassandraMigrate flywayMigrate -i test -Dtest.single="BeforeAll"
     - npm install --global grunt-cli typings tsd
-    - cd src/main/webapp/frontend && npm install && cd ../../../..
-    - mvn test -Dtest="BeforeAll" -DfailIfNoTests=false
+    - cd src/main/resources/static && npm install && cd ../../../..
     - ruby ruby/bin/server start
 test:
   override:
-    - cd src/main/webapp/frontend && grunt to && cd ../../../..
-    - mvn verify
+    - cd src/main/resources/static && grunt to && cd ../../../..
+    - gradle test -i jacocoTestReport
     - rspec
   post:
-    - bash <(curl -s https://codecov.io/bash) -f "src/main/webapp/frontend/coverage/coverage-final.json" -f "target/site/jacoco/ut/jacoco.xml" -f "target/site/jacoco/it/jacoco.xml" -f "target/site/simplecov/.resultset.json"
+    - bash <(curl -s https://codecov.io/bash) -f "src/main/resources/static/coverage/coverage-final.json" -f "build/reports/jacoco/test/jacocoTestReport.xml" -f "build/simplecov/.resultset.json"

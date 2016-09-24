@@ -4,7 +4,6 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -21,7 +20,6 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource(value = { "classpath:application.properties" })
-@ComponentScan("com.cezarykluczynski.carmen")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.cezarykluczynski.carmen")
 public class DatabaseBeanConfiguration {
@@ -51,10 +49,12 @@ public class DatabaseBeanConfiguration {
         lef.setDataSource(ctx.getBean(DataSource.class));
         lef.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         lef.setPackagesToScan("com.cezarykluczynski.carmen");
-        lef.setPersistenceUnitName("SpringDataJPA");
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
-        properties.put("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+        properties.put("hibernate.implicit_naming_strategy",
+                "org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl");
+        properties.put("hibernate.physical_naming_strategy",
+                "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
         lef.setJpaProperties(properties);
         lef.afterPropertiesSet();
         return lef.getObject();

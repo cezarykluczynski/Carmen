@@ -1,12 +1,14 @@
 package com.cezarykluczynski.carmen.util;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.eclipse.egit.github.core.client.PageIterator;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 // TODO make into pageable
 public class PaginationAwareArrayList<E> extends ArrayList<E> {
 

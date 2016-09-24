@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mode
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @Entity(name = "propagations.Repositories")
 @Table(schema = "propagations", name = "repositories")
+@EqualsAndHashCode(callSuper = false)
 public class Repositories extends CarmenRelationalEntity implements Propagation {
 
     @Id

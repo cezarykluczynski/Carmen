@@ -1,7 +1,7 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter '/spec/'
-  coverage_dir 'target/site/simplecov/'
+  coverage_dir 'build/simplecov/'
 end
 
 if ENV['CI'] == 'true'

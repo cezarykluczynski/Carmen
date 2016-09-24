@@ -99,6 +99,7 @@ class LanguageDetectorServerSwitcherTest extends Specification {
         String content = new String(input, "UTF-8")
         byte[] out = content.replace("detector.client=cli", "detector.client=unknown").getBytes()
 
+        ClassLoader originalClassLoader = LanguageDetectorServerSwitcher.CLASS_LOADER
         ClassLoader classLoaderMock = new ClassLoader() {
             @Override
             InputStream getResourceAsStream(String name) {
@@ -115,6 +116,9 @@ class LanguageDetectorServerSwitcherTest extends Specification {
 
         then:
         output.contains("Client name misconfiguration")
+
+        cleanup:
+        LanguageDetectorServerSwitcher.CLASS_LOADER = originalClassLoader
     }
 
 }

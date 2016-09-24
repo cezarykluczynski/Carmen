@@ -16,12 +16,11 @@ This is your personal token. Do not commit it.
 Install using:
 ```sh
 cp src/main/resources/example/application.properties src/main/resources/application.properties
-mvn exec:java -Dexec.mainClass="com.cezarykluczynski.carmen.db.CassandraMigrations"
+gradle cassandraMigrate
 psql -c 'create database carmen;' -U postgres
-mvn clean compile
-mvn flyway:migrate
+gradle flywayMigrate -i
 npm install --global gulp
-cd src/main/webapp/frontend && npm install && gulp
+cd src/main/resources/static && npm install && gulp
 ```
 
 You may need to customize PostgreSQL and Cassandra credendials.
@@ -30,23 +29,21 @@ You may need to customize PostgreSQL and Cassandra credendials.
 Start using:
 
 ```sh
-mvn clean tomcat7:run
+gradle bootRun
 ```
 
 ## Tests
 
 ### Java tests
-There are unit tests and integration tests.
 
 ```sh
-mvn clean test
-mvn clean verify
+gradle test
 ```
 
 ### TypeScript tests
 
 ```sh
-cd src/main/webapp/frontend && npm install && grunt to
+cd src/main/resources/static && npm install && grunt to
 ```
 
 ### Ruby

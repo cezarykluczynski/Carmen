@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				files: [
 					{
 						src: ['typescript/**/*.ts'],
-						dest: 'dist/javascript'
+						dest: '../../resources/static/dist/javascript'
 					}
 				]
 			}

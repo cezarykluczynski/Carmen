@@ -3,10 +3,11 @@ package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mod
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
 import com.cezarykluczynski.carmen.set.github.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@org.springframework.stereotype.Repository
+@Service
 public class RepositoryRepositoryImpl implements RepositoryRepositoryCustom {
 
     @Autowired

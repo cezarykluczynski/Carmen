@@ -4,6 +4,7 @@ import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mode
 import com.cezarykluczynski.carmen.model.CarmenRelationalEntity;
 import com.cezarykluczynski.carmen.model.propagations.Propagation;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Entity(name = "propagations.UserFollowers")
 @Table(schema = "propagations", name = "user_followers")
 @ToString(exclude = {"user"})
+@EqualsAndHashCode(callSuper = false)
 public class UserFollowers extends CarmenRelationalEntity implements Propagation {
 
     @Id

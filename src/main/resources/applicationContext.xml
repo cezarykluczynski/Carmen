@@ -15,9 +15,6 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
        ">
-    <mvc:resources mapping="/resources/**" location="/resources/"/>
-    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
-    <mvc:default-servlet-handler />
     <mvc:annotation-driven />
 
     <aop:aspectj-autoproxy proxy-target-class="true">

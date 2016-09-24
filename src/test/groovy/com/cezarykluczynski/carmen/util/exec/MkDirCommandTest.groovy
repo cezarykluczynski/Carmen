@@ -5,7 +5,7 @@ import spock.lang.Specification
 
 class MkDirCommandTest extends Specification {
 
-    private static final String DIRECTORY = "./target/MkDirTest" + System.currentTimeMillis()
+    private static final String DIRECTORY = "./tmp/MkDirTest" + System.currentTimeMillis()
 
     def "should create directory"() {
         given:

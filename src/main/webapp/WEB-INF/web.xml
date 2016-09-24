@@ -5,10 +5,7 @@
   xsi:schemaLocation="
     http://java.sun.com/xml/ns/javaee
     http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd
-    http://www.springframework.org/schema/mvc
-    http://www.springframework.org/schema/mvc/spring-mvc.xsd
     "
-  xmlns:mvc="http://www.springframework.org/schema/mvc"
   version="3.0">
   <display-name>Carmen</display-name>
   <welcome-file-list>
@@ -24,15 +21,13 @@
   </context-param>
 
   <servlet>
-    <mvc:default-servlet-handler />
     <servlet-name>Carmen</servlet-name>
     <servlet-class>
         org.springframework.web.servlet.DispatcherServlet
     </servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>
-      </param-value>
+      <param-value>classpath:applicationContext.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -40,18 +35,4 @@
       <servlet-name>Carmen</servlet-name>
       <url-pattern>/</url-pattern>
   </servlet-mapping>
-
-  <servlet>
-    <servlet-name>CXFServlet</servlet-name>
-    <servlet-class>
-      org.apache.cxf.transport.servlet.CXFServlet
-    </servlet-class>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-     <servlet-name>CXFServlet</servlet-name>
-     <url-pattern>/api/*</url-pattern>
-  </servlet-mapping>
-
 </web-app>

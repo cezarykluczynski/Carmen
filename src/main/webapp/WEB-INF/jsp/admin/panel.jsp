@@ -3,12 +3,12 @@
 <head>
 	<meta charset="utf-8" />
 	<spring:url value="/" var="appBase"/>
-	<spring:url value="/frontend/dist/javascript" var="appBaseJavaScript"/>
-	<spring:url value="/frontend/node_modules/rxjs" var="rxjs"/>
-	<spring:url value="/frontend/node_modules/@angular" var="angular2"/>
-	<spring:url value="/frontend/dist/javascript/vendor.js" var="vendorJs"/>
-	<spring:url value="/frontend/dist/css/vendor.css" var="vendorCss"/>
-	<spring:url value="/frontend/dist/css/admin.css" var="adminCss"/>
+	<spring:url value="/static/dist/javascript" var="appBaseJavaScript"/>
+	<spring:url value="/static/node_modules/rxjs" var="rxjs"/>
+	<spring:url value="/static/node_modules/@angular" var="angular2"/>
+	<spring:url value="/static/dist/javascript/vendor.js" var="vendorJs"/>
+	<spring:url value="/static/dist/css/vendor.css" var="vendorCss"/>
+	<spring:url value="/static/dist/css/admin.css" var="adminCss"/>
 	<link href="${vendorCss}" rel="stylesheet"/>
 	<link href="${adminCss}" rel="stylesheet"/>
 	<script src="${vendorJs}"></script>

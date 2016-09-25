@@ -41,6 +41,7 @@ apply plugin: 'groovy'
 apply plugin: 'checkstyle'
 apply plugin: 'spring-boot'
 apply plugin: 'jacoco'
+apply from: 'testing.gradle'
 
 group = 'Carmen'
 version = '0.0.1-SNAPSHOT'
@@ -54,47 +55,6 @@ tasks.withType(JavaCompile) {
 
 springBoot {
     mainClass = "com.cezarykluczynski.carmen.Application"
-}
-
-checkstyle {
-    configFile = new File("checkstyle.xml")
-    toolVersion = "7.1.1"
-}
-
-test {
-    jacoco {
-        append = false
-        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$buildDir/jacoco/classpathdumps")
-    }
-
-    testLogging {
-        events "passed", "skipped", "failed", "standardOut", "standardError"
-    }
-
-    testLogging.showStandardStreams = true
-
-    minHeapSize = "64m"
-    maxHeapSize = "256m"
-    jvmArgs '-XX:MaxPermSize=256m'
-}
-
-jacoco {
-    toolVersion = "0.7.7.201606060606"
-    reportsDir = file("$buildDir/reports/jacoco")
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        csv.enabled false
-        html.destination "${buildDir}/reports/jacoco/html"
-    }
-    afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: 'com/cezarykluczynski/carmen/db/**')
-        })
-    }
 }
 
 dependencies {

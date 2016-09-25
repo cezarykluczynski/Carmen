@@ -30,7 +30,7 @@ dependencies:
 test:
   override:
     - cd src/main/resources/static && grunt to && cd ../../../..
-    - gradle test -i jacocoTestReport
+    - gradle test -i
     - rspec
   post:
     - bash <(curl -s https://codecov.io/bash) -f "src/main/resources/static/coverage/coverage-final.json" -f "build/reports/jacoco/test/jacocoTestReport.xml" -f "build/simplecov/.resultset.json"

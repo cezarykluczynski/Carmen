@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Builder
 @Data
-public class Repository implements GitHubResource {
+public class RepositoryDTO implements GitHubResource {
 
     private Long id;
 

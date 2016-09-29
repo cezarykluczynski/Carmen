@@ -1,6 +1,8 @@
 package com.cezarykluczynski.carmen.provider.github
 
+import com.cezarykluczynski.carmen.client.github.GithubClientInterface
 import com.cezarykluczynski.carmen.client.github.GithubKohsukeClient
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager
 import spock.lang.Specification
 
 class GithubKohsukeClientTest extends Specification {
@@ -17,7 +19,7 @@ class GithubKohsukeClientTest extends Specification {
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "getSearchLimit throws exception"() {
@@ -26,7 +28,7 @@ class GithubKohsukeClientTest extends Specification {
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "getUser throws exception"() {
@@ -35,7 +37,7 @@ class GithubKohsukeClientTest extends Specification {
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "getRepositories throws exception"() {
@@ -44,25 +46,25 @@ class GithubKohsukeClientTest extends Specification {
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "getFollowers throws exception"() {
         when:
-        githubKohsukeClient.getFollowers "name", 1, 0
+        githubKohsukeClient.getFollowers "name", new Pager()
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "getFollowing throws exception"() {
         when:
-        githubKohsukeClient.getFollowing "name", 1, 0
+        githubKohsukeClient.getFollowing "name", new Pager()
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
 }

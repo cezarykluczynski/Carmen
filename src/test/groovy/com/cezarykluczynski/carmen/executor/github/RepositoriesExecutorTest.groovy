@@ -8,7 +8,7 @@ import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mode
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
 import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
 import com.cezarykluczynski.carmen.propagation.github.UserRepositoriesPropagation
-import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO as RepositorySet
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import org.springframework.beans.factory.annotation.Autowired

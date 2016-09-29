@@ -1,10 +1,11 @@
 package com.cezarykluczynski.carmen.client.github
 
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository
-import com.cezarykluczynski.carmen.set.github.Repository
-import com.cezarykluczynski.carmen.set.github.UserDTO as UserSet
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO
+import com.cezarykluczynski.carmen.set.github.UserDTO
 import spock.lang.Specification
 
 class GithubClientTest extends Specification {
@@ -25,13 +26,13 @@ class GithubClientTest extends Specification {
 
     private RateLimitDTO rateLimitSetSearch
 
-    private UserSet userSet
+    private UserDTO userSet
 
-    private PaginationAwareArrayList followersList
+    private Slice followersSlice
 
-    private PaginationAwareArrayList followingList
+    private Slice followingSlice
 
-    private List<Repository> repositoriesList
+    private List<RepositoryDTO> repositoriesList
 
     def setup() {
         githubJcabiClientMock = Mock GithubJcabiClient
@@ -40,10 +41,10 @@ class GithubClientTest extends Specification {
         rateLimitRepositoryMock = Mock RateLimitRepository
         rateLimitSetCore = Mock RateLimitDTO
         rateLimitSetSearch = Mock RateLimitDTO
-        userSet = Mock UserSet
+        userSet = Mock UserDTO
         repositoriesList = Mock List
-        followersList = Mock PaginationAwareArrayList
-        followingList = Mock PaginationAwareArrayList
+        followersSlice = Mock Slice
+        followingSlice = Mock Slice
 
         githubClient = new GithubClient(
             githubJcabiClientMock,
@@ -73,7 +74,7 @@ class GithubClientTest extends Specification {
 
     def "gets user"() {
         when:
-        UserSet userSetReturned = githubClient.getUser(LOGIN)
+        UserDTO userSetReturned = githubClient.getUser(LOGIN)
 
         then:
         1 * githubJcabiClientMock.getUser(LOGIN) >> userSet
@@ -82,7 +83,7 @@ class GithubClientTest extends Specification {
 
     def "gets repositories"() {
         when:
-        List<Repository> repositoriesListReturned = githubClient.getRepositories(LOGIN)
+        List<RepositoryDTO> repositoriesListReturned = githubClient.getRepositories(LOGIN)
 
         then:
         1 * githubEgitClientMock.getRepositories(LOGIN) >> repositoriesList
@@ -90,21 +91,27 @@ class GithubClientTest extends Specification {
     }
 
     def "gets followers"() {
+        given:
+        Pager pager = Mock(Pager)
+
         when:
-        PaginationAwareArrayList<UserSet> followersListReturned = githubClient.getFollowers(LOGIN, 1, 0)
+        Slice<UserDTO> followersListReturned = githubClient.getFollowers(LOGIN, pager)
 
         then:
-        1 * githubEgitClientMock.getFollowers(LOGIN, 1, 0) >> followersList
-        followersListReturned == followersList
+        1 * githubEgitClientMock.getFollowers(LOGIN, pager) >> followersSlice
+        followersListReturned == followersSlice
     }
 
     def "gets following"() {
+        given:
+        Pager pager = Mock(Pager)
+
         when:
-        PaginationAwareArrayList<UserSet> followingListReturned = githubClient.getFollowing(LOGIN, 1, 0)
+        Slice<UserDTO> followingListReturned = githubClient.getFollowing(LOGIN, pager)
 
         then:
-        1 * githubEgitClientMock.getFollowing(LOGIN, 1, 0) >> followingList
-        followingListReturned == followingList
+        1 * githubEgitClientMock.getFollowing(LOGIN, pager) >> followingSlice
+        followingListReturned == followingSlice
     }
 
 }

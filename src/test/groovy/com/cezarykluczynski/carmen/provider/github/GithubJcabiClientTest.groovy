@@ -1,7 +1,9 @@
 package com.cezarykluczynski.carmen.provider.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
+import com.cezarykluczynski.carmen.client.github.GithubClientInterface
 import com.cezarykluczynski.carmen.client.github.GithubJcabiClient
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO
 import com.cezarykluczynski.carmen.set.github.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,7 +51,7 @@ class GithubJcabiClientTest extends IntegrationTest {
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "gets non existing user"() {
@@ -63,20 +65,20 @@ class GithubJcabiClientTest extends IntegrationTest {
 
     def "get followers throws exception"() {
         when:
-        githubJcabiClient.getFollowers "name", 1, 0
+        githubJcabiClient.getFollowers "name", new Pager()
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
     def "get following throws exception"() {
         when:
-        githubJcabiClient.getFollowing "name", 1, 0
+        githubJcabiClient.getFollowing "name", new Pager()
 
         then:
         IOException ex = thrown()
-        ex.message == "Implemented in different provider."
+        ex.message == GithubClientInterface.NOT_IMPLEMENTED
     }
 
 }

@@ -1,10 +1,11 @@
 package com.cezarykluczynski.carmen.client.github;
 
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.model.repository.RateLimitRepository;
-import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import com.cezarykluczynski.carmen.set.github.UserDTO;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import java.io.IOException;
 import java.util.Date;
@@ -44,21 +45,19 @@ public class GithubClient implements GithubClientInterface {
         return userDTO;
     }
 
-    public List<Repository> getRepositories(String name) throws IOException {
+    public List<RepositoryDTO> getRepositories(String name) throws IOException {
         checkApiLimit("getRepositories");
-        List<Repository> repositoriesList = githubEgitClient.getRepositories(name);
+        List<RepositoryDTO> repositoriesList = githubEgitClient.getRepositories(name);
         decrementRateLimitRemainingCounter("getRepositories");
         return repositoriesList;
     }
 
-    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
-            throws IOException {
-        return githubEgitClient.getFollowers(name, limit, offset);
+    public Slice<UserDTO> getFollowers(String name, Pager pager) throws IOException {
+        return githubEgitClient.getFollowers(name, pager);
     }
 
-    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
-            throws IOException {
-        return githubEgitClient.getFollowing(name, limit, offset);
+    public Slice<UserDTO> getFollowing(String name, Pager pager) throws IOException {
+        return githubEgitClient.getFollowing(name, pager);
     }
 
     public void checkApiLimit(String methodName) throws GithubRateLimitExceededException, IOException {

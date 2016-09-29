@@ -7,14 +7,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Pager {
 
-    Long pageNumber;
+    Integer pageNumber;
 
-    Long pagesCount;
+    Integer pagesCount;
 
-    Long itemsCount;
+    Integer itemsCount;
 
-    Long itemsPerPage;
+    Integer itemsPerPage;
 
 }

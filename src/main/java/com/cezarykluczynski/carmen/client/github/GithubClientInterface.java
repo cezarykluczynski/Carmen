@@ -1,25 +1,40 @@
 package com.cezarykluczynski.carmen.client.github;
 
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
-import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import com.cezarykluczynski.carmen.set.github.UserDTO;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface GithubClientInterface {
 
-    RateLimitDTO getCoreLimit() throws IOException;
+    String NOT_IMPLEMENTED = "Not implemented.";
 
-    RateLimitDTO getSearchLimit() throws IOException;
+    default RateLimitDTO getCoreLimit() throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
 
-    UserDTO getUser(String name) throws IOException;
+    default RateLimitDTO getSearchLimit() throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
 
-    List<Repository> getRepositories(String login) throws IOException;
+    default UserDTO getUser(String name) throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
 
-    PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset) throws IOException;
+    default List<RepositoryDTO> getRepositories(String login) throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
 
-    PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset) throws IOException;
+    default Slice<UserDTO> getFollowers(String name, Pager pager) throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
+
+    default Slice<UserDTO> getFollowing(String name, Pager pager) throws IOException {
+        throw new IOException(NOT_IMPLEMENTED);
+    }
 
 }

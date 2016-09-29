@@ -1,9 +1,14 @@
 package com.cezarykluczynski.carmen.client.github;
 
-import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
-import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.common.util.pagination.calculator.PagerCalculator;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager;
+import com.cezarykluczynski.carmen.common.util.pagination.factory.PagerFactory;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import com.cezarykluczynski.carmen.set.github.UserDTO;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
+import com.google.common.collect.Lists;
+import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -12,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -20,89 +24,70 @@ import java.util.List;
 @Component
 public class GithubEgitClient implements GithubClientInterface {
 
+    private GitHubClient gitHubClient;
+
     @Autowired
-    public GithubEgitClient(GitHubClient github) {
-        this.github = github;
+    public GithubEgitClient(GitHubClient gitHubClient) {
+        this.gitHubClient = gitHubClient;
     }
 
-    private GitHubClient github;
-
-    public RateLimitDTO getCoreLimit() throws IOException {
-        throw new IOException("Implemented in different provider.");
-    }
-
-    public RateLimitDTO getSearchLimit() throws IOException {
-        throw new IOException("Implemented in different provider.");
-    }
-
-    public UserDTO getUser(String name) throws IOException {
-        throw new IOException("Implemented in different provider.");
-    }
-
-    public List<Repository> getRepositories(String login) throws IOException {
-        RepositoryService repositoryService = new RepositoryService(github);
-        List<org.eclipse.egit.github.core.Repository> repositoriesList = repositoryService.getRepositories(login);
+    public List<RepositoryDTO> getRepositories(String login) throws IOException {
+        RepositoryService repositoryService = new RepositoryService(gitHubClient);
+        List<Repository> repositoriesList = repositoryService.getRepositories(login);
         return mapToNativeRepositoriesPOJOList(repositoriesList);
     }
 
-    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
-            throws IOException {
-        UserService userService = new UserService(github);
-        PaginationAwareArrayList<UserDTO> userDTOList =
-                pageIteratorToList(userService.pageFollowers(name, offset, limit));
-        userDTOList.addPaginationLimitAndOffset(limit, offset);
-        return userDTOList;
+    public Slice<UserDTO> getFollowers(String name, Pager pager) throws IOException {
+        UserService userService = new UserService(gitHubClient);
+        PageIterator<User> userPageIterator = userService
+                .pageFollowers(name, PagerCalculator.toGitHubApiPageNumber(pager), pager.getItemsPerPage());
+        return toPage(userPageIterator, pager);
     }
 
-    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
-            throws IOException {
-        UserService userService = new UserService(github);
-        PaginationAwareArrayList<UserDTO> userDTOList =
-                pageIteratorToList(userService.pageFollowing(name, offset, limit));
-        userDTOList.addPaginationLimitAndOffset(limit, offset);
-        return userDTOList;
+    public Slice<UserDTO> getFollowing(String name, Pager pager) throws IOException {
+        UserService userService = new UserService(gitHubClient);
+        PageIterator<User> userPageIterator = userService
+                .pageFollowing(name, PagerCalculator.toGitHubApiPageNumber(pager), pager.getItemsPerPage());
+        return toPage(userPageIterator, pager);
     }
 
-    private List<Repository> mapToNativeRepositoriesPOJOList(
-            List<org.eclipse.egit.github.core.Repository> repositoriesListRemote) {
-        List<Repository> repositoryListLocal = new ArrayList<Repository>();
+    private List<RepositoryDTO> mapToNativeRepositoriesPOJOList(
+            List<Repository> repositoriesListRemote) {
+        List<RepositoryDTO> repositoryDTOListLocal = Lists.newArrayList();
 
-        for (org.eclipse.egit.github.core.Repository repository : repositoriesListRemote) {
-            repositoryListLocal.add(Repository.builder()
-                            .id(repository.getId())
-                            .parentId(repository.getParent() == null ? null : repository.getParent().getId())
-                            .name(repository.getName())
-                            .fullName(repository.generateId())
-                            .description(repository.getDescription())
-                            .homepage(repository.getHomepage())
-                            .fork(repository.isFork())
-                            .defaultBranch(repository.getMasterBranch())
-                            .cloneUrl(repository.getCloneUrl())
-                            .created(repository.getCreatedAt())
-                            .pushed(repository.getPushedAt())
-                            .updated(repository.getUpdatedAt())
-                            .build()
+        for (Repository repository : repositoriesListRemote) {
+            repositoryDTOListLocal.add(RepositoryDTO.builder()
+                    .id(repository.getId())
+                    .parentId(repository.getParent() == null ? null : repository.getParent().getId())
+                    .name(repository.getName())
+                    .fullName(repository.generateId())
+                    .description(repository.getDescription())
+                    .homepage(repository.getHomepage())
+                    .fork(repository.isFork())
+                    .defaultBranch(repository.getMasterBranch())
+                    .cloneUrl(repository.getCloneUrl())
+                    .created(repository.getCreatedAt())
+                    .pushed(repository.getPushedAt())
+                    .updated(repository.getUpdatedAt())
+                    .build()
             );
         }
 
-        return repositoryListLocal;
+        return repositoryDTOListLocal;
     }
 
-    private PaginationAwareArrayList<UserDTO> pageIteratorToList(PageIterator<org.eclipse.egit.github.core.User> users)
+    private Slice<UserDTO> toPage(PageIterator<org.eclipse.egit.github.core.User> users, Pager requestPager)
             throws IOException {
         Iterator<Collection<org.eclipse.egit.github.core.User>> iterator = users.iterator();
         Collection<org.eclipse.egit.github.core.User> collection = iterator.next();
-        PaginationAwareArrayList<UserDTO> userDTOList = new PaginationAwareArrayList<UserDTO>();
+        List<UserDTO> userDTOList = Lists.newArrayList();
 
         for (org.eclipse.egit.github.core.User user : collection) {
             UserDTO userDTOSet = UserDTO.builder().login(user.getLogin()).build();
             userDTOList.add(userDTOSet);
         }
 
-        userDTOList.extractPaginationDataFromIterator(users);
-        userDTOList.extractPaginationDataFromCollection(collection);
-
-        return userDTOList;
+        return Slice.of(userDTOList, PagerFactory.of(users, requestPager));
     }
 
 }

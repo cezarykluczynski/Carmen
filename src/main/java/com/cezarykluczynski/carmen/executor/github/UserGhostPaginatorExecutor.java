@@ -1,11 +1,13 @@
 package com.cezarykluczynski.carmen.executor.github;
 
 import com.cezarykluczynski.carmen.client.github.GithubClient;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager;
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice;
+import com.cezarykluczynski.carmen.common.util.pagination.factory.PagerFactory;
 import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest;
 import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository;
 import com.cezarykluczynski.carmen.set.github.UserDTO;
 import com.cezarykluczynski.carmen.util.DateTimeConstants;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class UserGhostPaginatorExecutor implements Executor {
@@ -40,20 +43,19 @@ public class UserGhostPaginatorExecutor implements Executor {
     }
 
     private void doExecutePendingRequest(PendingRequest pendingRequest) throws IOException {
-        PaginationAwareArrayList<UserDTO> userDTOs = getUserListFromPendingRequest(pendingRequest);
+        Slice<UserDTO> slice = getUserListFromPendingRequest(pendingRequest);
+        List<UserDTO> page = slice.getPage();
+        Pager pager = slice.getPager();
 
-        if (userDTOs.size() > 0) {
-            createUserGhostPendingRequests(userDTOs, pendingRequest);
-        }
-
-        if (userDTOs.isLastPage()) {
-            pendingRequestRepository.delete(pendingRequest);
+        if (page.size() > 0 && pager.getPageNumber() < pager.getPagesCount()) {
+            createUserGhostPendingRequests(slice, pendingRequest);
+            continuePagination(pendingRequest, slice);
         } else {
-            continuePagination(pendingRequest, userDTOs);
+            pendingRequestRepository.delete(pendingRequest);
         }
     }
 
-    private PaginationAwareArrayList<UserDTO> getUserListFromPendingRequest(PendingRequest pendingRequest)
+    private Slice<UserDTO> getUserListFromPendingRequest(PendingRequest pendingRequest)
             throws IOException {
         HashMap<String, Object> pathParams = pendingRequest.getPathParams();
 
@@ -61,13 +63,13 @@ public class UserGhostPaginatorExecutor implements Executor {
         String endpoint = (String) pathParams.get("endpoint");
         Integer page = getPageFromPendingRequest(pendingRequest);
 
-        return endpoint.equals("followers_url") ?
-            githubClient.getFollowers(login, paginationLimit, page) :
-            githubClient.getFollowing(login, paginationLimit, page);
+        Pager pager = PagerFactory.ofPageAndLimit(page, paginationLimit);
+
+        return endpoint.equals("followers_url") ? githubClient.getFollowers(login, pager) :
+            githubClient.getFollowing(login, pager);
     }
 
-    private void createUserGhostPendingRequests(PaginationAwareArrayList<UserDTO> userDTOs,
-            PendingRequest pendingRequest) throws IOException {
+    private void createUserGhostPendingRequests(Slice<UserDTO> userDTOs, PendingRequest pendingRequest) throws IOException {
         HashMap<String, Object> pathParams = Maps.newHashMap();
         HashMap<String, Object> queryParams = Maps.newHashMap();
         HashMap<String, Object> params = Maps.newHashMap();
@@ -75,7 +77,7 @@ public class UserGhostPaginatorExecutor implements Executor {
         params.put("link_with", pendingRequest.getUser().getId());
         params.put("link_as", convertPendingRequestToRole(pendingRequest));
 
-        for (UserDTO userDTO : userDTOs) {
+        for (UserDTO userDTO : userDTOs.getPage()) {
             pathParams.put("login", userDTO.getLogin());
             pendingRequestRepository.create(
                 "UserGhost",
@@ -89,9 +91,9 @@ public class UserGhostPaginatorExecutor implements Executor {
         }
     }
 
-    private void continuePagination(PendingRequest pendingRequest, PaginationAwareArrayList<UserDTO> userDTOs) {
+    private void continuePagination(PendingRequest pendingRequest, Slice<UserDTO> slice) {
         HashMap<String, Object> queryParams = pendingRequest.getQueryParams();
-        queryParams.put("page", userDTOs.getNextPage());
+        queryParams.put("page", slice.getPager().getPageNumber() + 1);
         pendingRequest.setQueryParams(queryParams);
         pendingRequestRepository.save(pendingRequest);
     }

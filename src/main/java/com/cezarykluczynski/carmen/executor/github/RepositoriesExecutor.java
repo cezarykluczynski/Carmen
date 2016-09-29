@@ -7,7 +7,7 @@ import com.cezarykluczynski.carmen.integration.vendor.github.com.propagation.mod
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.RepositoryRepository;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepository;
-import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,7 +41,7 @@ public class RepositoriesExecutor implements Executor {
     public void execute(PendingRequest pendingRequest) throws IOException {
         String login = (String) pendingRequest.getPathParams().get("login");
         User userEntity = userRepository.findByLogin(login);
-        List<Repository> repositoriesSetList = githubClient.getRepositories(login);
+        List<RepositoryDTO> repositoriesSetList = githubClient.getRepositories(login);
         repositoryRepository.refresh(userEntity, repositoriesSetList);
         repositoriesRepository.moveToSleepPhaseUsingUserEntity(userEntity);
         pendingRequestRepository.delete(pendingRequest);

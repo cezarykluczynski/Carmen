@@ -3,7 +3,7 @@ package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mod
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
-import com.cezarykluczynski.carmen.set.github.Repository as RepositorySet
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO as RepositorySet
 import org.springframework.beans.factory.annotation.Autowired
 
 class RepositoryRepositoryTest extends IntegrationTest {

@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mod
 
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface RepositoryRepository extends JpaRepository<Repository, Long>, R
 
     List<Repository> findByUser(User userEntity);
 
-    void refresh(User userEntity, List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesList);
+    void refresh(User userEntity, List<RepositoryDTO> repositoriesList);
 
     Repository findFirstByRepositoryCloneIsNullAndForkFalse();
 

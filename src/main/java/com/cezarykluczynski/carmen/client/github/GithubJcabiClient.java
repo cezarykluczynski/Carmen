@@ -1,9 +1,7 @@
 package com.cezarykluczynski.carmen.client.github;
 
 import com.cezarykluczynski.carmen.integration.vendor.github.com.api.dto.RateLimitDTO;
-import com.cezarykluczynski.carmen.set.github.Repository;
 import com.cezarykluczynski.carmen.set.github.UserDTO;
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList;
 import com.jcabi.github.Limits;
 import com.jcabi.github.RtGithub;
 import com.jcabi.github.User.Smart;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonObject;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service("githubJcabiClient")
@@ -26,6 +23,7 @@ public class GithubJcabiClient implements GithubClientInterface {
 
     private RtGithub github;
 
+    @Override
     public RateLimitDTO getCoreLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart coreLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("core"));
@@ -38,6 +36,7 @@ public class GithubJcabiClient implements GithubClientInterface {
         );
     }
 
+    @Override
     public RateLimitDTO getSearchLimit() throws IOException {
         Limits privateLimits = github.limits();
         com.jcabi.github.Limit.Smart searchLimits = new com.jcabi.github.Limit.Smart(privateLimits.get("search"));
@@ -50,6 +49,7 @@ public class GithubJcabiClient implements GithubClientInterface {
         );
     }
 
+    @Override
     public UserDTO getUser(String name) throws IOException {
         com.jcabi.github.User privateUser = github.users().get(name);
         Smart user = new Smart(privateUser);
@@ -74,20 +74,6 @@ public class GithubJcabiClient implements GithubClientInterface {
         } catch (AssertionError e) {
             return UserDTO.builder().login(name).build();
         }
-    }
-
-    public List<Repository> getRepositories(String login) throws IOException {
-        throw new IOException("Implemented in different provider.");
-    }
-
-    public PaginationAwareArrayList<UserDTO> getFollowers(String name, Integer limit, Integer offset)
-            throws IOException {
-        throw new IOException("Implemented in different provider.");
-    }
-
-    public PaginationAwareArrayList<UserDTO> getFollowing(String name, Integer limit, Integer offset)
-            throws IOException {
-        throw new IOException("Implemented in different provider.");
     }
 
     private Date dateFromSecondsTimestamp(Integer limit) {

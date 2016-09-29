@@ -2,14 +2,16 @@ package com.cezarykluczynski.carmen.executor.github
 
 import com.cezarykluczynski.carmen.IntegrationTest
 import com.cezarykluczynski.carmen.client.github.GithubClient
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Pager
+import com.cezarykluczynski.carmen.common.util.pagination.dto.Slice
 import com.cezarykluczynski.carmen.cron.model.entity.PendingRequest
 import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepository
 import com.cezarykluczynski.carmen.cron.model.repository.PendingRequestRepositoryFixtures
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository.UserRepositoryFixtures
-import com.cezarykluczynski.carmen.set.github.UserDTO as UserSet
-import com.cezarykluczynski.carmen.util.PaginationAwareArrayList
+import com.cezarykluczynski.carmen.set.github.UserDTO
 import com.cezarykluczynski.carmen.util.db.TransactionalExecutor
+import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -43,7 +45,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
     private User userEntity
 
-    private PaginationAwareArrayList<UserSet> userSetsList
+    private Slice<UserDTO> userSetsList
 
     private PendingRequest pendingRequestEntity
 
@@ -82,16 +84,16 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
+        String login = userRepositoryFixtures.generateRandomLogin()
 
-        userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
+        userSetsList = createSliceOfDTOs(10, 0, 0)
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
-        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
+        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin login
 
         then:
-        1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
+        1 * githubClientMock.getFollowers(userEntityLogin, _) >> userSetsList
         pendingRequestList.empty
         pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
     }
@@ -104,21 +106,21 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
+        String login = userRepositoryFixtures.generateRandomLogin()
 
-        userSetsList = createPaginationAwareArrayListWithUserSets(0, 0, true)
+        userSetsList = createSliceOfDTOs(10, 0, 0)
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
-        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
+        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin login
 
         then:
-        1 *  githubClientMock.getFollowing(userEntityLogin, limit, 1) >> userSetsList
+        1 *  githubClientMock.getFollowing(userEntityLogin, _) >> userSetsList
         pendingRequestList.empty
         pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
     }
 
-    def "execute followers url endpoint with single follower"() {
+    def "executes followers url endpoint with single follower"() {
         given:
         pathParams.put("endpoint", "followers_url")
         pendingRequestEntity.setPathParams pathParams
@@ -128,18 +130,18 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         String userEntityLogin = userEntity.getLogin()
         String userSetLogin = userRepositoryFixtures.generateRandomLogin()
 
-        userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
-        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
-        userSetsList.add userSetFollower
+        userSetsList = createSliceOfDTOs(10, 1, 2)
+        UserDTO followerDTO = UserDTO.builder().login(userSetLogin).build()
+        userSetsList.getPage().add followerDTO
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
         List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
 
         then:
-        1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
+        1 * githubClientMock.getFollowers(userEntityLogin, _) >> userSetsList
         pendingRequestList.size() == 1
-        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) != null
 
         cleanup:
         pendingRequestRepositoryFixtures.deletePendingRequestEntity pendingRequestList.get(0)
@@ -153,20 +155,20 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
+        String login = userRepositoryFixtures.generateRandomLogin()
 
-        userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, true)
-        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
-        userSetsList.add userSetFollower
+        userSetsList = createSliceOfDTOs(10, 1, 2)
+        UserDTO followerDTO = UserDTO.builder().login(login).build()
+        userSetsList.getPage().add followerDTO
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
-        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
+        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin login
 
         then:
-        1 * githubClientMock.getFollowing(userEntityLogin, limit, 1) >> userSetsList
+        1 * githubClientMock.getFollowing(userEntityLogin, _) >> userSetsList
         pendingRequestList.size() == 1
-        pendingRequestRepository.findOne(pendingRequestEntity.getId()) == null
+        pendingRequestRepository.findOne(pendingRequestEntity.getId()) != null
 
         cleanup:
         pendingRequestRepositoryFixtures.deletePendingRequestEntity pendingRequestList.get(0)
@@ -181,20 +183,20 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         pendingRequestRepository.create pendingRequestEntity
 
         String userEntityLogin = userEntity.getLogin()
-        String userSetLogin = userRepositoryFixtures.generateRandomLogin()
+        String login = userRepositoryFixtures.generateRandomLogin()
 
-        userSetsList = createPaginationAwareArrayListWithUserSets(1, 0, false)
-        UserSet userSetFollower = UserSet.builder().login(userSetLogin).build()
-        userSetsList.setNextPage 2
-        userSetsList.add userSetFollower
+        userSetsList = createSliceOfDTOs(10, 1, 2)
+        UserDTO userSetFollower = UserDTO.builder().login(login).build()
+        userSetsList.getPager().pageNumber = 1
+        userSetsList.getPage().add userSetFollower
 
         when:
         userGhostPaginatorExecutor.execute pendingRequestEntity
-        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin userSetLogin
+        List<PendingRequest> pendingRequestList = getUserGhostPendingRequestMachingLogin login
         PendingRequest pendingRequestEntityFound = pendingRequestRepository.findOne(pendingRequestEntity.getId())
 
         then:
-        1 * githubClientMock.getFollowers(userEntityLogin, limit, 1) >> userSetsList
+        1 * githubClientMock.getFollowers(userEntityLogin, _) >> userSetsList
         pendingRequestList.size() == 1
         pendingRequestEntityFound != null
         pendingRequestEntityFound.getQueryParams().get("page") == 2
@@ -209,7 +211,8 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
 
         transactionalExecutor.execute({ entityManager ->
             entityManager.createNativeQuery('''\
-                               INSERT INTO github.user_followers (followee_id, follower_id) VALUES (:userEntityId, :userEntityBlockingId)
+                                INSERT INTO github.user_followers (followee_id, follower_id)
+                                    VALUES (:userEntityId, :userEntityBlockingId)
                            ''')
                     .setParameter("userEntityId", userEntity.getId())
                     .setParameter("userEntityBlockingId", userEntityBlocking.getId())
@@ -243,7 +246,7 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
     private List<PendingRequest> getUserGhostPendingRequestMachingLogin(login) {
         List<PendingRequest> list = entityManager.createQuery('''\
             SELECT pr FROM api_queue.PendingRequests pr
-            WHERE pr.executor = :executor
+                WHERE pr.executor = :executor
                 AND pr.pathParams like :pathParams
         ''')
             .setParameter("executor", "UserGhost")
@@ -254,13 +257,19 @@ class UserGhostPaginatorExecutorTest extends IntegrationTest {
         return list
     }
 
-    private PaginationAwareArrayList<UserSet> createPaginationAwareArrayListWithUserSets(Integer limit, Integer offset,
-            Boolean lastPage) {
-        userSetsList = new PaginationAwareArrayList<UserSet>()
-        userSetsList.setLimit limit
-        userSetsList.setOffset offset
-        userSetsList.setLastPage lastPage
-        return userSetsList
+    private Slice<UserDTO> createSliceOfDTOs(Integer itemsPerPage, Integer pageNumber, Integer pageCount) {
+        return new Slice(Lists.newArrayList(), new Pager(
+                itemsCount: itemsPerPage,
+                pageNumber: pageNumber,
+                pagesCount: pageCount
+        ))
+//
+//        return
+//        userSetsList = new PaginationAwareArrayList<UserDTO>()
+//        userSetsList.setLimit limit
+//        userSetsList.setOffset offset
+//        userSetsList.setLastPage lastPage
+//        return userSetsList
     }
 
 }

@@ -3,11 +3,13 @@ package com.cezarykluczynski.carmen.common.util.pagination.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor(staticName = "of")
-public class Page<T> {
+public class Slice<T> {
 
-    T page;
+    List<T> page;
 
     Pager pager;
 

@@ -1,7 +1,7 @@
 package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.repository;
 
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
-import com.cezarykluczynski.carmen.set.github.Repository;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class RepositoryRepositoryImpl implements RepositoryRepositoryCustom {
     }
 
     @Override
-    public void refresh(User userEntity, List<Repository> repositoriesSetList) {
+    public void refresh(User userEntity, List<RepositoryDTO> repositoriesSetList) {
         List<com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository>
                 repositoriesListExisting = repositoryRepository.findByUser(userEntity);
         repositoryRepositoryRefresherDelegate.refresh(userEntity, repositoriesSetList, repositoriesListExisting);

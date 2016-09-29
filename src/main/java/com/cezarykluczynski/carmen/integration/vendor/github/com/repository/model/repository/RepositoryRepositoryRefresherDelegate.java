@@ -2,6 +2,7 @@ package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mod
 
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository;
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User;
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO;
 import com.cezarykluczynski.carmen.util.github.GitHubResource;
 import com.cezarykluczynski.carmen.util.github.GitHubResourcesSynchronizer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,21 @@ public class RepositoryRepositoryRefresherDelegate {
 
     private User user;
 
-    private List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesDTOs;
+    private List<RepositoryDTO> repositoriesDTOs;
 
     private List<Repository> existingRepositories;
 
-    private List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesToCreate;
+    private List<RepositoryDTO> repositoriesToCreate;
 
     private List<Repository> repositoriesToDelete;
 
-    private List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesToPreserve;
+    private List<RepositoryDTO> repositoriesToPreserve;
 
     private GitHubResourcesSynchronizer repositoriesSynchronizer;
 
     // TODO remove synchronized
     public synchronized void refresh(User userEntity,
-            List<com.cezarykluczynski.carmen.set.github.Repository> repositoriesSetList,
+            List<RepositoryDTO> repositoriesSetList,
             List<Repository> repositoriesListExisting) {
         this.user = userEntity;
         this.repositoriesDTOs = repositoriesSetList;
@@ -53,10 +54,10 @@ public class RepositoryRepositoryRefresherDelegate {
     }
 
     private void extractGitHubRepositoriesSynchronizerLists() {
-        repositoriesToCreate = (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>)
+        repositoriesToCreate = (List<RepositoryDTO>)(List<?>)
                 repositoriesSynchronizer.getResourcesToCreate();
         repositoriesToDelete = (List<Repository>)(List<?>) repositoriesSynchronizer.getResourcesToDelete();
-        repositoriesToPreserve = (List<com.cezarykluczynski.carmen.set.github.Repository>)(List<?>)
+        repositoriesToPreserve = (List<RepositoryDTO>)(List<?>)
                 repositoriesSynchronizer.getResourcesToPreserve();
     }
 
@@ -73,18 +74,18 @@ public class RepositoryRepositoryRefresherDelegate {
     }
 
     private void createRepositoriesToCreate() {
-        for (com.cezarykluczynski.carmen.set.github.Repository repositoryToCreate : repositoriesToCreate) {
+        for (RepositoryDTO repositoryDTOToCreate : repositoriesToCreate) {
             Repository repositoryEntity = new Repository();
-            repositoryEntity = hydrateEntityWithSet(repositoryEntity, repositoryToCreate);
+            repositoryEntity = hydrateEntityWithSet(repositoryEntity, repositoryDTOToCreate);
             repositoryRepository.save(repositoryEntity);
         }
     }
 
     private void refreshRepositoriesToPreserve() {
-        for (com.cezarykluczynski.carmen.set.github.Repository repositoryToPreserve : repositoriesToPreserve) {
+        for (RepositoryDTO repositoryDTOToPreserve : repositoriesToPreserve) {
             for (Repository repositoryEntity : existingRepositories) {
-                if (repositoryToPreserve.getId().equals(repositoryEntity.getId()) ){
-                    repositoryEntity = hydrateEntityWithSet(repositoryEntity, repositoryToPreserve);
+                if (repositoryDTOToPreserve.getId().equals(repositoryEntity.getId()) ){
+                    repositoryEntity = hydrateEntityWithSet(repositoryEntity, repositoryDTOToPreserve);
                     repositoryRepository.save(repositoryEntity);
                     break;
                 }
@@ -93,22 +94,22 @@ public class RepositoryRepositoryRefresherDelegate {
     }
 
     private Repository hydrateEntityWithSet(Repository repositoryEntity,
-            com.cezarykluczynski.carmen.set.github.Repository repositorySet) {
+            RepositoryDTO repositoryDTO) {
         repositoryEntity.setUser(user);
-        repositoryEntity.setGithubId(repositorySet.getId());
+        repositoryEntity.setGithubId(repositoryDTO.getId());
 
-        repositoryEntity.setName(repositorySet.getName());
-        repositoryEntity.setFullName(repositorySet.getFullName());
-        repositoryEntity.setDescription(repositorySet.getDescription());
-        repositoryEntity.setHomepage(repositorySet.getHomepage());
+        repositoryEntity.setName(repositoryDTO.getName());
+        repositoryEntity.setFullName(repositoryDTO.getFullName());
+        repositoryEntity.setDescription(repositoryDTO.getDescription());
+        repositoryEntity.setHomepage(repositoryDTO.getHomepage());
 
-        repositoryEntity.setFork(repositorySet.isFork());
-        repositoryEntity.setDefaultBranch(repositorySet.getDefaultBranch());
-        repositoryEntity.setCloneUrl(repositorySet.getCloneUrl());
+        repositoryEntity.setFork(repositoryDTO.isFork());
+        repositoryEntity.setDefaultBranch(repositoryDTO.getDefaultBranch());
+        repositoryEntity.setCloneUrl(repositoryDTO.getCloneUrl());
 
-        repositoryEntity.setPushed(repositorySet.getPushed());
-        repositoryEntity.setCreated(repositorySet.getCreated());
-        repositoryEntity.setUpdated(repositorySet.getUpdated());
+        repositoryEntity.setPushed(repositoryDTO.getPushed());
+        repositoryEntity.setCreated(repositoryDTO.getCreated());
+        repositoryEntity.setUpdated(repositoryDTO.getUpdated());
 
         return repositoryEntity;
     }

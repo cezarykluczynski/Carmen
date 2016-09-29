@@ -2,7 +2,7 @@ package com.cezarykluczynski.carmen.integration.vendor.github.com.repository.mod
 
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.Repository as GitHubRepository
 import com.cezarykluczynski.carmen.integration.vendor.github.com.repository.model.entity.User
-import com.cezarykluczynski.carmen.set.github.Repository
+import com.cezarykluczynski.carmen.set.github.RepositoryDTO
 import com.google.common.collect.Lists
 import spock.lang.Specification
 
@@ -25,7 +25,7 @@ class RepositoryRepositoryImplTest extends Specification {
         given:
         User user = Mock(User)
         List<GitHubRepository> gitHubRepositories = Lists.newArrayList()
-        List<Repository> repositories = Lists.newArrayList()
+        List<RepositoryDTO> repositories = Lists.newArrayList()
 
         when:
         repositoryRepositoryImpl.refresh(user, repositories)
